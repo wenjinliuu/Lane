@@ -29,3 +29,16 @@ def test_auto_excludes_high_multiplier_but_fallback_keeps_it() -> None:
     filters = _filters()
     assert not re.fullmatch(filters["auto"], "Hong Kong 2x")
     assert re.fullmatch(filters["fallback"], "Hong Kong 2x")
+
+
+def test_information_nodes_are_not_globally_excluded() -> None:
+    filters = _filters()
+    assert re.fullmatch(filters["manual"], "剩余流量 100 GB")
+    assert re.fullmatch(filters["auto"], "官网订阅信息")
+
+
+def test_automatic_groups_only_exclude_unhealthy_nodes() -> None:
+    filters = _filters()
+    assert not re.fullmatch(filters["auto"], "慢速 US01")
+    assert not re.fullmatch(filters["fallback"], "不可用 HK01")
+    assert re.fullmatch(filters["fallback"], "Hong Kong 5x")

@@ -31,22 +31,20 @@ def region_filter(region_pattern: str, excluded: list[str], extra_pattern: str |
 
 def build_filters(policies: dict[str, Any]) -> dict[str, Any]:
     settings = policies["node_filters"]
-    manual_exclude = list(settings.get("manual_exclude", []))
-    auto_exclude = manual_exclude + list(settings.get("auto_exclude", []))
-    fallback_exclude = manual_exclude + list(settings.get("fallback_exclude", []))
+    auto_exclude = list(settings.get("auto_exclude", []))
+    fallback_exclude = list(settings.get("fallback_exclude", []))
     high_multiplier = settings.get("high_multiplier_pattern")
 
     regions: dict[str, dict[str, str]] = {}
     for region in policies["regions"]:
         regions[region["name"]] = {
-            "select": region_filter(region["pattern"], manual_exclude),
+            "select": region_filter(region["pattern"], []),
             "auto": region_filter(region["pattern"], auto_exclude, high_multiplier),
         }
 
     return {
-        "manual": exclusion_filter(manual_exclude),
+        "manual": exclusion_filter([]),
         "auto": exclusion_filter(auto_exclude, high_multiplier),
         "fallback": exclusion_filter(fallback_exclude),
         "regions": regions,
     }
-

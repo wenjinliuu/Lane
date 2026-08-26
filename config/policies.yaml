@@ -1,26 +1,4 @@
 node_filters:
-  manual_exclude:
-    - 流量
-    - 剩余
-    - 到期
-    - 过期
-    - 重置
-    - 官网
-    - 客服
-    - 订阅
-    - 通知
-    - 公告
-    - 教程
-    - traffic
-    - quota
-    - expire
-    - expiry
-    - reset
-    - official
-    - support
-    - subscription
-    - notice
-    - tutorial
   auto_exclude:
     - 慢速
     - 限速
@@ -106,4 +84,3 @@ service_options:
   - Taiwan
   - Singapore
   - South Korea
-

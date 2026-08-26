@@ -7,6 +7,7 @@
 - 所有策略组名称均使用简洁英文。
 - `AI`、`Google`、`Developer`、`Telegram`、`Social`、券商、交易所、视频、游戏平台等服务组均默认选择 `Manual`。
 - 服务组可切换到 `DIRECT`、`Auto`、`Fallback` 或六个地区组。
+- `Manual` 包含订阅中的全部节点；`Auto` 仅排除慢速、限速、维护等节点及高倍率节点，`Fallback` 仅排除明确不可用的节点。
 - 地区组包括 `United States`、`Japan`、`Hong Kong`、`Taiwan`、`Singapore`、`South Korea`，可选择地区自动优选、`Manual`、`DIRECT` 或具体地区节点。
 - `Brokerage` 只合并 Futu、Tiger 与 Longbridge；`Schwab` 单独成组。
 - `Crypto` 只匹配 Binance、OKX、Bybit 与 Bitget。其他交易所不单独分类，按后续规则或 `Final` 处理。
@@ -71,7 +72,7 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 2. 编译三端规则并运行测试、结构校验。
 3. 仅在 `dist/` 真实变化时创建自动更新提交。
 
-`dist/metadata.json` 固定记录上游 commit、文本源 SHA-256 与各规则集数量；`dist/report.json` 明确记录不同客户端无法表示的规则类型。生成文件不写入当前时间，因此上游未变化时不会制造无意义提交。
+`dist/metadata.json` 固定记录上游 commit、文本源 SHA-256 与各规则集数量；`dist/report.json` 明确记录不同客户端无法表示的规则类型。三份主配置记录最后一次实际内容更新的北京时间；内容未变化时保留原时间，不会制造无意义提交。
 
 ## 规则来源与许可
 
