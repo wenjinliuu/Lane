@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "unsupported_rules": {
+    "stash": {},
+    "loon": {
+      "lan": 1,
+      "ai": 1,
+      "streaming": 5,
+      "gaming": 3,
+      "developer": 1,
+      "google": 2,
+      "proxy": 158,
+      "china": 3
+    },
+    "shadowrocket": {
+      "lan": 1,
+      "ai": 1,
+      "streaming": 5,
+      "gaming": 3,
+      "developer": 1,
+      "google": 2,
+      "proxy": 158,
+      "china": 3
+    }
+  },
+  "notes": {
+    "stash": "DOMAIN-REGEX is retained.",
+    "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it.",
+    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility."
+  }
+}

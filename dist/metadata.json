@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "project": "wenjinliuu/ProxyRules",
+  "sources": {
+    "v2fly": {
+      "repository": "https://github.com/v2fly/domain-list-community.git",
+      "revision": "a995aa578e715d617b1b544f4549a58e616e860f"
+    },
+    "telegram_cidr": {
+      "url": "https://core.telegram.org/resources/cidr.txt",
+      "sha256": "3ecd072cedf72eceee6961b18a51e37f905d5ce4a656a5d24cf5fea63e6ec651"
+    }
+  },
+  "rulesets": [
+    {
+      "id": "lan",
+      "policy": "DIRECT",
+      "rules": 131,
+      "kinds": {
+        "domain": 118,
+        "full": 12,
+        "regexp": 1
+      }
+    },
+    {
+      "id": "custom-direct",
+      "policy": "DIRECT",
+      "rules": 0,
+      "kinds": {}
+    },
+    {
+      "id": "custom-proxy",
+      "policy": "Manual",
+      "rules": 0,
+      "kinds": {}
+    },
+    {
+      "id": "ai",
+      "policy": "AI",
+      "rules": 180,
+      "kinds": {
+        "domain": 151,
+        "full": 28,
+        "regexp": 1
+      }
+    },
+    {
+      "id": "schwab",
+      "policy": "Schwab",
+      "rules": 7,
+      "kinds": {
+        "domain": 7
+      }
+    },
+    {
+      "id": "brokerage",
+      "policy": "Brokerage",
+      "rules": 42,
+      "kinds": {
+        "domain": 42
+      }
+    },
+    {
+      "id": "crypto",
+      "policy": "Crypto",
+      "rules": 72,
+      "kinds": {
+        "domain": 68,
+        "full": 4
+      }
+    },
+    {
+      "id": "youtube",
+      "policy": "YouTube",
+      "rules": 178,
+      "kinds": {
+        "domain": 177,
+        "full": 1
+      }
+    },
+    {
+      "id": "tiktok",
+      "policy": "TikTok",
+      "rules": 36,
+      "kinds": {
+        "domain": 31,
+        "full": 5
+      }
+    },
+    {
+      "id": "emby",
+      "policy": "Emby",
+      "rules": 82,
+      "kinds": {
+        "domain": 30,
+        "full": 52
+      }
+    },
+    {
+      "id": "streaming",
+      "policy": "Streaming",
+      "rules": 432,
+      "kinds": {
+        "domain": 359,
+        "full": 68,
+        "regexp": 5
+      }
+    },
+    {
+      "id": "gaming",
+      "policy": "Gaming",
+      "rules": 865,
+      "kinds": {
+        "domain": 767,
+        "full": 95,
+        "regexp": 3
+      }
+    },
+    {
+      "id": "telegram",
+      "policy": "Telegram",
+      "rules": 21,
+      "kinds": {
+        "domain": 21
+      }
+    },
+    {
+      "id": "telegram-ip",
+      "policy": "Telegram",
+      "rules": 14,
+      "kinds": {
+        "ipcidr": 9,
+        "ipcidr6": 5
+      }
+    },
+    {
+      "id": "social",
+      "policy": "Social",
+      "rules": 731,
+      "kinds": {
+        "domain": 714,
+        "full": 17
+      }
+    },
+    {
+      "id": "developer",
+      "policy": "Developer",
+      "rules": 665,
+      "kinds": {
+        "domain": 576,
+        "full": 88,
+        "regexp": 1
+      }
+    },
+    {
+      "id": "google",
+      "policy": "Google",
+      "rules": 1114,
+      "kinds": {
+        "domain": 879,
+        "full": 233,
+        "regexp": 2
+      }
+    },
+    {
+      "id": "microsoft",
+      "policy": "Microsoft",
+      "rules": 753,
+      "kinds": {
+        "domain": 640,
+        "full": 113
+      }
+    },
+    {
+      "id": "apple",
+      "policy": "Apple",
+      "rules": 1825,
+      "kinds": {
+        "domain": 1576,
+        "full": 249
+      }
+    },
+    {
+      "id": "proxy",
+      "policy": "Final",
+      "rules": 25899,
+      "kinds": {
+        "domain": 24330,
+        "full": 1411,
+        "regexp": 158
+      }
+    },
+    {
+      "id": "china",
+      "policy": "DIRECT",
+      "rules": 8195,
+      "kinds": {
+        "domain": 8125,
+        "full": 67,
+        "regexp": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+sources:
+  v2fly:
+    kind: git
+    repository: https://github.com/v2fly/domain-list-community.git
+    ref: master
+    data_path: data
+    license: MIT
+  telegram_cidr:
+    kind: text
+    url: https://core.telegram.org/resources/cidr.txt
+    license_note: Official Telegram network resource
+

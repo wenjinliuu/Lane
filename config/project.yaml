@@ -1,0 +1,18 @@
+project:
+  name: ProxyRules
+  repository: wenjinliuu/ProxyRules
+  branch: main
+  raw_base: https://raw.githubusercontent.com/wenjinliuu/ProxyRules/main
+
+benchmark:
+  url: http://cp.cloudflare.com/generate_204
+  interval: 600
+  timeout: 5
+  tolerance: 50
+  lazy: true
+
+updates:
+  rule_interval: 86400
+  schedule: "0 4 * * *"
+  timezone_note: "12:00 Asia/Shanghai"
+

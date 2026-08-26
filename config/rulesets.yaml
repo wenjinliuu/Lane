@@ -1,0 +1,110 @@
+rulesets:
+  - id: lan
+    title: LAN
+    policy: DIRECT
+    v2fly: [private]
+    custom: rules/custom/lan.list
+
+  - id: custom-direct
+    title: Custom Direct
+    policy: DIRECT
+    custom: rules/custom/direct.list
+
+  - id: custom-proxy
+    title: Custom Proxy
+    policy: Manual
+    custom: rules/custom/proxy.list
+
+  - id: ai
+    title: AI
+    policy: AI
+    v2fly: [category-ai-!cn]
+
+  - id: schwab
+    title: Schwab
+    policy: Schwab
+    v2fly: [schwab]
+
+  - id: brokerage
+    title: Brokerage
+    policy: Brokerage
+    v2fly: [futu, itiger, longbridge]
+
+  - id: crypto
+    title: Crypto
+    policy: Crypto
+    v2fly: [binance, okx, bybit]
+    custom: rules/custom/crypto.list
+
+  - id: youtube
+    title: YouTube
+    policy: YouTube
+    v2fly: [youtube]
+
+  - id: tiktok
+    title: TikTok
+    policy: TikTok
+    v2fly: [tiktok]
+
+  - id: emby
+    title: Emby
+    policy: Emby
+    v2fly: [category-emby]
+    custom: rules/custom/emby.list
+
+  - id: streaming
+    title: Streaming
+    policy: Streaming
+    v2fly: [netflix, disney, hbo, primevideo, hulu, spotify, twitch, apple-tvplus, apple-music]
+
+  - id: gaming
+    title: Gaming
+    policy: Gaming
+    v2fly: [category-games-!cn]
+
+  - id: telegram
+    title: Telegram
+    policy: Telegram
+    v2fly: [telegram]
+
+  - id: telegram-ip
+    title: Telegram IP
+    policy: Telegram
+    text_source: telegram_cidr
+    no_resolve: true
+
+  - id: social
+    title: Social
+    policy: Social
+    v2fly: [category-social-media-!cn, discord, reddit, whatsapp, pinterest]
+
+  - id: developer
+    title: Developer
+    policy: Developer
+    v2fly: [category-dev]
+
+  - id: google
+    title: Google
+    policy: Google
+    v2fly: [google]
+
+  - id: microsoft
+    title: Microsoft
+    policy: Microsoft
+    v2fly: [microsoft]
+
+  - id: apple
+    title: Apple
+    policy: Apple
+    v2fly: [apple]
+
+  - id: proxy
+    title: General Proxy
+    policy: Final
+    v2fly: [geolocation-!cn]
+
+  - id: china
+    title: China
+    policy: DIRECT
+    v2fly: [cn]
+
