@@ -9,11 +9,13 @@ rulesets:
     title: Custom Direct
     policy: DIRECT
     custom: rules/custom/direct.list
+    omit_if_empty: true
 
   - id: custom-proxy
     title: Custom Proxy
     policy: Manual
     custom: rules/custom/proxy.list
+    omit_if_empty: true
 
   - id: ai
     title: AI
@@ -24,11 +26,14 @@ rulesets:
     title: Schwab
     policy: Schwab
     v2fly: [schwab]
+    custom: rules/custom/schwab.list
 
   - id: brokerage
     title: Brokerage
     policy: Brokerage
     v2fly: [futu, itiger, longbridge]
+    custom: rules/custom/brokerage.list
+    no_resolve: true
 
   - id: crypto
     title: Crypto
@@ -107,4 +112,3 @@ rulesets:
     title: China
     policy: DIRECT
     v2fly: [cn]
-

@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import yaml
+
 from proxyrules.config import load_project_config, validate_config
 from proxyrules.model import Rule
 from proxyrules.render import _with_stable_update_time, render_rule
@@ -44,6 +46,19 @@ def test_checked_in_outputs_are_valid_and_have_no_reject() -> None:
         path.read_text(encoding="utf-8") for path in main_configs
     )
     assert all(word not in main_text for word in ("剩余", "到期", "官网", "客服"))
+
+    stash_text = main_configs[0].read_text(encoding="utf-8")
+    loon_text = main_configs[1].read_text(encoding="utf-8")
+    shadow_text = main_configs[2].read_text(encoding="utf-8")
+    stash = yaml.safe_load(stash_text)
+    assert "proxy-providers" not in stash
+    assert "replace-with-your-subscription" not in main_text
+    assert "添加节点订阅" in stash_text
+    assert "添加节点订阅" in loon_text
+    assert "添加节点订阅" not in shadow_text
+    assert "US Auto" in stash_text and "US Manual" in stash_text
+    assert "Fallback" not in main_text
+    assert "South Korea" not in main_text
 
 
 def test_update_time_is_preserved_when_content_is_unchanged(tmp_path: Path) -> None:

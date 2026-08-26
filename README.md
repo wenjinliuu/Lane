@@ -6,10 +6,11 @@
 
 - 所有策略组名称均使用简洁英文。
 - `AI`、`Google`、`Developer`、`Telegram`、`Social`、券商、交易所、视频、游戏平台等服务组均默认选择 `Manual`。
-- 服务组可切换到 `DIRECT`、`Auto`、`Fallback` 或六个地区组。
-- `Manual` 包含订阅中的全部节点；`Auto` 仅排除慢速、限速、维护等节点及高倍率节点，`Fallback` 仅排除明确不可用的节点。
-- 地区组包括 `United States`、`Japan`、`Hong Kong`、`Taiwan`、`Singapore`、`South Korea`，可选择地区自动优选、`Manual`、`DIRECT` 或具体地区节点。
-- `Brokerage` 只合并 Futu、Tiger 与 Longbridge；`Schwab` 单独成组。
+- `Manual` 包含用户导入的全部节点，不排除流量、到期、高倍率或维护信息项。
+- 地区仅保留美国、日本、香港、台湾与新加坡；每个地区分别提供 `XX Auto` 自动优选和 `XX Manual` 手动选点。
+- 地区筛选只使用国旗、简体中文地区名、英文全称与常见简称做正向匹配，不使用城市、机场代码或排除词。
+- 服务组可切换到 `DIRECT`，或五个地区各自的 Auto / Manual 策略。
+- `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段。
 - `Crypto` 只匹配 Binance、OKX、Bybit 与 Bitget。其他交易所不单独分类，按后续规则或 `Final` 处理。
 - 中国大陆 AI 不设专门规则，自然落入 `cn` / `GEOIP,CN` 直连。
 - 不设置游戏大文件下载特例，不内置广告拦截，也不生成默认 `REJECT` 规则。
@@ -25,7 +26,7 @@
 | Loon | `https://raw.githubusercontent.com/wenjinliuu/ProxyRules/main/dist/loon/loon.conf` |
 | Shadowrocket | `https://raw.githubusercontent.com/wenjinliuu/ProxyRules/main/dist/shadowrocket/shadowrocket.conf` |
 
-Stash 与 Loon 的公开配置故意使用 `https://example.com/replace-with-your-subscription` 作为节点订阅占位符。导入后请只在本地替换它，**不要把私人订阅地址提交到公开仓库**。Shadowrocket 请先在客户端中添加节点订阅，再使用本配置的策略组与规则。
+三份公开配置均不包含订阅地址或占位符。Stash 导入后请进入「设置 → 配置文件 → 选中本配置 → 可视化编辑 → 远程代理集 → +」添加节点订阅；Loon 请进入「配置 → 节点 → + → 添加订阅」。Shadowrocket 直接使用客户端中已有的节点订阅。
 
 图标通过 Qure 的公开 Raw URL 引用：Stash 使用 `icon`，Loon 使用 `img-url`，Shadowrocket 不强制设置自定义图标。
 

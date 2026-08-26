@@ -13,32 +13,31 @@ def _filters():
 
 
 def test_us_filter_matches_bounded_code_but_not_russia() -> None:
-    pattern = _filters()["regions"]["United States"]["select"]
+    pattern = _filters()["regions"]["United States"]
     assert re.fullmatch(pattern, "Premium US01")
     assert re.fullmatch(pattern, "🇺🇸 Los Angeles")
+    assert re.fullmatch(pattern, "United States 02")
     assert not re.fullmatch(pattern, "RUSSIA 01")
 
 
-def test_taiwan_filter_does_not_use_china_flag() -> None:
-    pattern = _filters()["regions"]["Taiwan"]["select"]
-    assert re.fullmatch(pattern, "🇹🇼 TW02")
-    assert not re.fullmatch(pattern, "🇨🇳 China 01")
+def test_region_filters_use_only_the_settled_positive_terms() -> None:
+    filters = _filters()["regions"]
+    assert re.fullmatch(filters["Japan"], "日本 01")
+    assert re.fullmatch(filters["Hong Kong"], "Hong Kong 02")
+    assert re.fullmatch(filters["Taiwan"], "TW03")
+    assert re.fullmatch(filters["Singapore"], "新加坡 04")
+    assert not re.fullmatch(filters["United States"], "LAX 01")
+    assert not re.fullmatch(filters["United States"], "美西 01")
+    assert not re.fullmatch(filters["Taiwan"], "台灣 01")
 
 
-def test_auto_excludes_high_multiplier_but_fallback_keeps_it() -> None:
-    filters = _filters()
-    assert not re.fullmatch(filters["auto"], "Hong Kong 2x")
-    assert re.fullmatch(filters["fallback"], "Hong Kong 2x")
+def test_region_filters_do_not_exclude_multiplier_or_status_words() -> None:
+    pattern = _filters()["regions"]["United States"]
+    assert re.fullmatch(pattern, "US 10x")
+    assert re.fullmatch(pattern, "US 维护")
 
 
-def test_information_nodes_are_not_globally_excluded() -> None:
-    filters = _filters()
-    assert re.fullmatch(filters["manual"], "剩余流量 100 GB")
-    assert re.fullmatch(filters["auto"], "官网订阅信息")
-
-
-def test_automatic_groups_only_exclude_unhealthy_nodes() -> None:
-    filters = _filters()
-    assert not re.fullmatch(filters["auto"], "慢速 US01")
-    assert not re.fullmatch(filters["fallback"], "不可用 HK01")
-    assert re.fullmatch(filters["fallback"], "Hong Kong 5x")
+def test_manual_keeps_every_imported_node() -> None:
+    pattern = _filters()["manual"]
+    assert re.fullmatch(pattern, "剩余流量 100 GB")
+    assert re.fullmatch(pattern, "官网订阅信息")

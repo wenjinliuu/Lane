@@ -2,14 +2,11 @@ base: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color
 
 icons:
   Manual: Proxy.png
-  Auto: Auto.png
-  Fallback: Available.png
   United States: United_States.png
   Japan: Japan.png
   Hong Kong: Hong_Kong.png
   Taiwan: Taiwan.png
   Singapore: Singapore.png
-  South Korea: Korea.png
   AI: AI.png
   Apple: Apple.png
   Microsoft: Microsoft.png
@@ -26,4 +23,3 @@ icons:
   Schwab: Global.png
   Crypto: Cryptocurrency.png
   Final: Final.png
-

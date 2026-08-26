@@ -5,6 +5,8 @@ from typing import Any
 
 import yaml
 
+from .v2fly import parse_custom_file
+
 
 class ValidationError(ValueError):
     pass
@@ -13,14 +15,12 @@ class ValidationError(ValueError):
 def _validate_policy_graph(policies: dict[str, Any]) -> None:
     base_names = {entry["name"] for entry in policies["base_groups"]}
     regions = policies["regions"]
-    region_names = {entry["name"] for entry in regions}
     region_auto_names = {entry["auto_name"] for entry in regions}
+    region_manual_names = {entry["manual_name"] for entry in regions}
     services = set(policies["service_groups"])
-    all_groups = base_names | region_names | region_auto_names | services
+    all_groups = base_names | region_auto_names | region_manual_names | services
 
     graph: dict[str, set[str]] = {name: set() for name in all_groups}
-    for region in regions:
-        graph[region["name"]].update({region["auto_name"], "Manual"})
     for service in services:
         graph[service].update(
             option for option in policies["service_options"] if option in all_groups
@@ -57,6 +57,17 @@ def _section(text: str, name: str) -> list[str]:
     return lines
 
 
+def _active_rule_ids(root: Path, entries: list[dict[str, Any]]) -> list[str]:
+    output: list[str] = []
+    for entry in entries:
+        if entry.get("omit_if_empty"):
+            custom = entry.get("custom")
+            if custom and not parse_custom_file(root / custom):
+                continue
+        output.append(entry["id"])
+    return output
+
+
 def validate_generated(root: Path, config: dict[str, Any]) -> None:
     _validate_policy_graph(config["policies"])
     dist = root / "dist"
@@ -74,8 +85,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     stash = yaml.safe_load((dist / "stash" / "stash.yaml").read_text(encoding="utf-8"))
     expected_groups = (
         {item["name"] for item in config["policies"]["base_groups"]}
-        | {item["name"] for item in config["policies"]["regions"]}
         | {item["auto_name"] for item in config["policies"]["regions"]}
+        | {item["manual_name"] for item in config["policies"]["regions"]}
         | set(config["policies"]["service_groups"])
     )
     stash_groups = {entry["name"] for entry in stash.get("proxy-groups", [])}
@@ -83,7 +94,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Stash strategy groups do not match the policy manifest")
 
     rulesets = config["rulesets"]["rulesets"]
-    expected_rule_ids = [entry["id"] for entry in rulesets]
+    expected_rule_ids = _active_rule_ids(root, rulesets)
     if list(stash.get("rule-providers", {})) != expected_rule_ids:
         raise ValidationError("Stash rule-provider order differs from the manifest")
     if stash.get("rules", [])[-2:] != ["GEOIP,CN,DIRECT", "MATCH,Final"]:

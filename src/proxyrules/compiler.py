@@ -41,14 +41,16 @@ def compile_rulesets(
             if source_id not in text_sources:
                 raise ValueError(f"Missing text source {source_id}")
             rules.extend(parse_cidr_text(text_sources[source_id], source_id))
+        compiled_rules = _deduplicate(rules)
+        if entry.get("omit_if_empty") and not compiled_rules:
+            continue
         output.append(
             CompiledRuleset(
                 id=entry["id"],
                 title=entry["title"],
                 policy=entry["policy"],
-                rules=_deduplicate(rules),
+                rules=compiled_rules,
                 no_resolve=bool(entry.get("no_resolve")),
             )
         )
     return output
-

@@ -46,6 +46,18 @@ def validate_config(config: dict[str, Any]) -> None:
         raise ConfigError("Every service group must expose DIRECT")
     if len({item["name"] for item in regions}) != len(regions):
         raise ConfigError("Region names must be unique")
+    if [item.get("code") for item in regions] != ["US", "JP", "HK", "TW", "SG"]:
+        raise ConfigError("Regions must be US, JP, HK, TW and SG in that order")
+
+    base_names = [entry.get("name") for entry in policies.get("base_groups", [])]
+    if base_names != ["Manual"]:
+        raise ConfigError("Manual must be the only base strategy group")
+
+    expected_options = ["Manual", "DIRECT"]
+    for region in regions:
+        expected_options.extend([region.get("auto_name"), region.get("manual_name")])
+    if options != expected_options:
+        raise ConfigError("Service options must expose each region's Auto and Manual groups")
 
     allowed_policies = set(services) | {"DIRECT", "Manual"}
     ids: set[str] = set()
@@ -59,8 +71,17 @@ def validate_config(config: dict[str, Any]) -> None:
                 f"Unknown policy {entry.get('policy')!r} in ruleset {rule_id}"
             )
 
-    forbidden_groups = {"Major Crypto Exchanges", "Other Crypto Exchanges", "Reject"}
-    if forbidden_groups.intersection(services):
+    forbidden_groups = {
+        "Auto",
+        "Fallback",
+        "South Korea",
+        "Global",
+        "Major Crypto Exchanges",
+        "Other Crypto Exchanges",
+        "Reject",
+    }
+    configured_groups = set(services) | set(base_names) | set(options)
+    if forbidden_groups.intersection(configured_groups):
         raise ConfigError("Removed policy groups must not be reintroduced")
 
     crypto = next((item for item in rulesets if item.get("id") == "crypto"), None)
@@ -72,4 +93,3 @@ def validate_config(config: dict[str, Any]) -> None:
     ai = next((item for item in rulesets if item.get("id") == "ai"), None)
     if not ai or "category-ai-cn" in ai.get("v2fly", []):
         raise ConfigError("Mainland AI must not be captured by the AI policy")
-

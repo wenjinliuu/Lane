@@ -23,18 +23,6 @@
       }
     },
     {
-      "id": "custom-direct",
-      "policy": "DIRECT",
-      "rules": 0,
-      "kinds": {}
-    },
-    {
-      "id": "custom-proxy",
-      "policy": "Manual",
-      "rules": 0,
-      "kinds": {}
-    },
-    {
       "id": "ai",
       "policy": "AI",
       "rules": 180,
@@ -47,17 +35,19 @@
     {
       "id": "schwab",
       "policy": "Schwab",
-      "rules": 7,
+      "rules": 9,
       "kinds": {
-        "domain": 7
+        "domain": 9
       }
     },
     {
       "id": "brokerage",
       "policy": "Brokerage",
-      "rules": 42,
+      "rules": 140,
       "kinds": {
-        "domain": 42
+        "domain": 66,
+        "full": 11,
+        "ipcidr": 63
       }
     },
     {
