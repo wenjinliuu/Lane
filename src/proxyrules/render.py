@@ -117,6 +117,19 @@ def _stash_config(
         )
     )
 
+    for service in policies["service_groups"]:
+        groups.append(
+            _with_icon(
+                {
+                    "name": service,
+                    "type": "select",
+                    "proxies": list(policies["service_options"]),
+                },
+                icons,
+                service,
+            )
+        )
+
     for region in policies["regions"]:
         region_filter = filters["regions"][region["name"]]
         groups.append(
@@ -144,19 +157,6 @@ def _stash_config(
                 },
                 icons,
                 region["name"],
-            )
-        )
-
-    for service in policies["service_groups"]:
-        groups.append(
-            _with_icon(
-                {
-                    "name": service,
-                    "type": "select",
-                    "proxies": list(policies["service_options"]),
-                },
-                icons,
-                service,
             )
         )
 
@@ -191,7 +191,7 @@ def _stash_config(
     )
     body = body.replace(
         "proxy-groups:\n",
-        "# Base, region, and service strategy groups.\nproxy-groups:\n",
+        "# Base, service, and region strategy groups.\nproxy-groups:\n",
         1,
     )
     body = body.replace(
@@ -260,7 +260,7 @@ def _loon_config(
         region_filter = filters["regions"][region["name"]]
         lines.append(f'{code} Nodes = NameRegex, FilterKey = "{region_filter}"')
 
-    lines.extend(["", "# Base, region, and service strategy groups.", "[Proxy Group]"])
+    lines.extend(["", "# Base, service, and region strategy groups.", "[Proxy Group]"])
     lines.append(
         _loon_group(
             "Manual",
@@ -270,6 +270,16 @@ def _loon_config(
             _icon(icons, "Manual"),
         )
     )
+    for service in policies["service_groups"]:
+        lines.append(
+            _loon_group(
+                service,
+                "select",
+                list(policies["service_options"]),
+                benchmark,
+                _icon(icons, service),
+            )
+        )
     for region in policies["regions"]:
         code = region["code"]
         lines.append(
@@ -289,16 +299,6 @@ def _loon_config(
                 [f"{code} Nodes"],
                 benchmark,
                 _icon(icons, region["name"]),
-            )
-        )
-    for service in policies["service_groups"]:
-        lines.append(
-            _loon_group(
-                service,
-                "select",
-                list(policies["service_options"]),
-                benchmark,
-                _icon(icons, service),
             )
         )
 
@@ -331,7 +331,7 @@ def _shadowrocket_config(
         "# Remote URL used to refresh this configuration.",
         f"update-url = {config_url}",
         "",
-        "# Base, region, and service strategy groups.",
+        "# Base, service, and region strategy groups.",
         "[Proxy Group]",
         (
             "Manual = select,"
@@ -340,6 +340,12 @@ def _shadowrocket_config(
             f"policy-regex-filter={filters['manual']}"
         ),
     ]
+    for service in policies["service_groups"]:
+        members = ",".join(policies["service_options"])
+        lines.append(
+            f"{service} = select,{members},url={benchmark['url']},"
+            f"interval={benchmark['interval']},timeout={benchmark['timeout']},select=0"
+        )
     for region in policies["regions"]:
         region_filter = filters["regions"][region["name"]]
         lines.append(
@@ -353,12 +359,6 @@ def _shadowrocket_config(
             f"url={benchmark['url']},interval={benchmark['interval']},"
             f"timeout={benchmark['timeout']},select=0,"
             f"policy-regex-filter={region_filter}"
-        )
-    for service in policies["service_groups"]:
-        members = ",".join(policies["service_options"])
-        lines.append(
-            f"{service} = select,{members},url={benchmark['url']},"
-            f"interval={benchmark['interval']},timeout={benchmark['timeout']},select=0"
         )
 
     lines.extend(["", "# Ordered remote rules; the first match wins.", "[Rule]"])

@@ -60,6 +60,48 @@ def test_checked_in_outputs_are_valid_and_have_no_reject() -> None:
     assert "Fallback" not in main_text
     assert "South Korea" not in main_text
 
+    service_names = config["policies"]["service_groups"]
+    region_names = [
+        name
+        for region in config["policies"]["regions"]
+        for name in (region["auto_name"], region["manual_name"])
+    ]
+    expected_group_names = ["Manual", *service_names, *region_names]
+    assert [group["name"] for group in stash["proxy-groups"]] == expected_group_names
+
+    loon_group_block = loon_text.split("[Proxy Group]\n", 1)[1].split(
+        "\n[Remote Rule]", 1
+    )[0]
+    assert [
+        line.split(" = ", 1)[0]
+        for line in loon_group_block.splitlines()
+        if " = " in line
+    ] == expected_group_names
+
+    shadow_group_block = shadow_text.split("[Proxy Group]\n", 1)[1].split(
+        "\n[Rule]", 1
+    )[0]
+    assert [
+        line.split(" = ", 1)[0]
+        for line in shadow_group_block.splitlines()
+        if " = " in line
+    ] == expected_group_names
+
+    expected_icons = {
+        "Google": "Google_Search.png",
+        "TW Auto": "China.png",
+        "TW Manual": "China.png",
+        "Gaming": "Steam.png",
+        "Social": "X.png",
+        "Streaming": "ForeignMedia.png",
+        "Crypto": "Cryptocurrency_3.png",
+        "Brokerage": "Magic.png",
+        "Schwab": "SSID_1.png",
+    }
+    for group in stash["proxy-groups"]:
+        if filename := expected_icons.get(group["name"]):
+            assert group["icon"].endswith(f"/{filename}")
+
 
 def test_update_time_is_preserved_when_content_is_unchanged(tmp_path: Path) -> None:
     path = tmp_path / "config.conf"

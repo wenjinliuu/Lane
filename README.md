@@ -8,6 +8,7 @@
 - `AI`、`Google`、`Developer`、`Telegram`、`Social`、券商、交易所、视频、游戏平台等服务组均默认选择 `Manual`。
 - `Manual` 包含用户导入的全部节点，不排除流量、到期、高倍率或维护信息项。
 - 地区仅保留美国、日本、香港、台湾与新加坡；每个地区分别提供 `XX Auto` 自动优选和 `XX Manual` 手动选点。
+- 策略组按 `Manual`、服务组、地区组排列，十个地区 Auto / Manual 组统一放在列表末尾。
 - 地区筛选只使用国旗、简体中文地区名、英文全称与常见简称做正向匹配，不使用城市、机场代码或排除词。
 - 服务组可切换到 `DIRECT`，或五个地区各自的 Auto / Manual 策略。
 - `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段。
