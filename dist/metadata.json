@@ -4,7 +4,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "a995aa578e715d617b1b544f4549a58e616e860f"
+      "revision": "8858cfe6f8b4c7167d1833e490eba98f3a55f118"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -89,9 +89,9 @@
     {
       "id": "streaming",
       "policy": "Streaming",
-      "rules": 432,
+      "rules": 433,
       "kinds": {
-        "domain": 359,
+        "domain": 360,
         "full": 68,
         "regexp": 5
       }
@@ -173,9 +173,9 @@
     {
       "id": "proxy",
       "policy": "Final",
-      "rules": 25899,
+      "rules": 25902,
       "kinds": {
-        "domain": 24330,
+        "domain": 24333,
         "full": 1411,
         "regexp": 158
       }
