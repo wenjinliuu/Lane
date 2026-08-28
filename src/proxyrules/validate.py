@@ -6,7 +6,7 @@ from typing import Any
 import yaml
 
 from .filters import build_filters
-from .render import CONFIG_FILENAMES, SUBSCRIPTION_URL, rule_filename
+from .render import CONFIG_FILENAMES, SUBSCRIPTION_PLACEHOLDER, rule_filename
 from .v2fly import parse_custom_file
 
 
@@ -54,9 +54,34 @@ def _section(text: str, name: str) -> list[str]:
         if stripped.startswith("[") and stripped.endswith("]"):
             active = stripped == f"[{name}]"
             continue
-        if active and stripped and not stripped.startswith("#"):
+        if active and stripped and not stripped.startswith(("#", ";", "//")):
             lines.append(stripped)
     return lines
+
+
+def _validate_subscription_template(target: str, text: str) -> None:
+    active = [
+        line for line in text.splitlines()
+        if SUBSCRIPTION_PLACEHOLDER in line
+        and not line.lstrip().startswith(("#", ";", "//"))
+    ]
+    if target == "shadowrocket":
+        if SUBSCRIPTION_PLACEHOLDER in text:
+            raise ValidationError("Shadowrocket must not contain subscription templates")
+        return
+    if len(active) != 1:
+        raise ValidationError(f"{target}: exactly one active subscription placeholder is required")
+    if any(f"{quote}{SUBSCRIPTION_PLACEHOLDER}{quote}" in text for quote in ('"', "'")):
+        raise ValidationError(f"{target}: subscription placeholders must not be quoted")
+    optional_templates = {
+        "stash": f"  # Subscription2:\n  #   url: {SUBSCRIPTION_PLACEHOLDER}\n",
+        "loon": f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n",
+        "surge": f"# Subscription2 = select,policy-path={SUBSCRIPTION_PLACEHOLDER},",
+        "qx": f"# {SUBSCRIPTION_PLACEHOLDER}, tag=Subscription2,",
+        "egern": f"    # - {SUBSCRIPTION_PLACEHOLDER}\n",
+    }
+    if optional_templates[target] not in text:
+        raise ValidationError(f"{target}: a commented second subscription template is required")
 
 
 def _active_rule_ids(root: Path, entries: list[dict[str, Any]]) -> list[str]:
@@ -127,7 +152,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     stash_by_name = {group["name"]: group for group in stash["proxy-groups"]}
     if list(stash_by_name) != expected_order:
         raise ValidationError("Stash groups must be base, services, then regions")
-    if stash["proxy-providers"]["Subscription"]["url"] != SUBSCRIPTION_URL:
+    if (list(stash.get("proxy-providers", {})) != ["Subscription1"]
+            or stash["proxy-providers"]["Subscription1"]["url"] != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")
     if not stash_by_name["Manual"].get("include-all"):
         raise ValidationError("Stash Manual must include subscription nodes")
@@ -138,15 +164,25 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     for target in ("loon", "shadowrocket", "surge"):
         groups = {line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
                   for line in _section(texts[target], "Proxy Group")}
-        if list(groups) != expected_order:
+        target_order = ["Subscription1", *expected_order] if target == "surge" else expected_order
+        if list(groups) != target_order:
             raise ValidationError(f"{target}: invalid group order or missing groups")
         for service in policies["service_groups"]:
             if not groups[service].startswith(f"select,{','.join(options)}"):
                 raise ValidationError(f"{target}: {service} must default to Manual")
-    if _section(loon_text, "Remote Proxy") != [f"Subscription = {SUBSCRIPTION_URL}"]:
+    if _section(loon_text, "Remote Proxy") != [f"Subscription1 = {SUBSCRIPTION_PLACEHOLDER}"]:
         raise ValidationError("Loon subscription template must be enabled")
-    if f"policy-path={SUBSCRIPTION_URL}" not in texts["surge"]:
-        raise ValidationError("Surge must expose policy-path")
+    surge_groups = {
+        line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+        for line in _section(texts["surge"], "Proxy Group")
+    }
+    node_interval = config["project"]["updates"]["node_interval"]
+    if surge_groups["Subscription1"] != (
+        f"select,policy-path={SUBSCRIPTION_PLACEHOLDER},update-interval={node_interval},hidden=true"
+    ):
+        raise ValidationError("Surge must load subscriptions through a hidden source group")
+    if surge_groups["Manual"] != "select,include-other-group=Subscription1,include-all-proxies=true":
+        raise ValidationError("Surge Manual must expand the hidden subscription group")
     for region in policies["regions"]:
         for name, group_type in ((region["auto_name"], "url-test"), (region["manual_name"], "select")):
             group = stash_by_name[name]
@@ -162,7 +198,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     egern_groups = {next(iter(group.values()))["name"]: group for group in egern["policy_groups"]}
     if list(egern_groups) != expected_order:
         raise ValidationError("Egern group order differs from the manifest")
-    if egern_groups["Manual"]["select"]["urls"] != [SUBSCRIPTION_URL]:
+    if egern_groups["Manual"]["select"]["urls"] != [SUBSCRIPTION_PLACEHOLDER]:
         raise ValidationError("Egern subscription template must be enabled")
     for service in policies["service_groups"]:
         if egern_groups[service]["select"]["policies"] != options:
@@ -196,15 +232,18 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             actual, value = qx_groups[name]
             if actual != kind or f"server-tag-regex={filters['regions'][region['name']]}" not in value:
                 raise ValidationError(f"Invalid QX region group: {name}")
-    if not _section(texts["qx"], "server_remote")[0].startswith(SUBSCRIPTION_URL + ","):
+    if _section(texts["qx"], "server_remote") != [
+        f"{SUBSCRIPTION_PLACEHOLDER}, tag=Subscription1, update-interval={node_interval}, enabled=true"
+    ]:
         raise ValidationError("QX subscription template must be enabled")
+    if texts["qx"].index("\n[server_remote]\n") < texts["qx"].index("\n[policy]\n"):
+        raise ValidationError("QX subscription section must remain after policy groups")
     if _section(texts["qx"], "filter_local")[-2:] != ["geoip,cn,direct", "final,Final"]:
         raise ValidationError("QX final routing rules are invalid")
 
     raw_base = config["project"]["project"]["raw_base"].rstrip("/")
     for target, text in texts.items():
-        if text.count(SUBSCRIPTION_URL) != (0 if target == "shadowrocket" else 1):
-            raise ValidationError(f"{target}: exactly one subscription edit point is required")
+        _validate_subscription_template(target, text)
         if "# Last updated: " not in text:
             raise ValidationError(f"{target}: missing update timestamp")
         if target == "stash":

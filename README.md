@@ -21,6 +21,20 @@
 
 完整策略声明见 [`config/policies.yaml`](config/policies.yaml)，规则顺序见 [`config/rulesets.yaml`](config/rulesets.yaml)。
 
+### Brokerage、Crypto 与 Schwab
+
+这三个组都默认选择 `Manual`，也可独立切换为 `DIRECT` 或某个地区的 Auto / Manual。下面的直连建议不会改变配置的默认值；六端配置顶部也保留了简短说明。
+
+| 策略组 | 覆盖范围 | 用途与选择建议 |
+| --- | --- | --- |
+| `Brokerage` | 富途 / Moomoo、老虎 Tiger、长桥 Longbridge | 统一处理相关域名与 IP 的网络分流，用于登录、行情及入金、交易相关连接；可按实际连通性选择代理或直连。 |
+| `Crypto` | 币安 Binance、OKX、Bybit、Bitget，仅这四家 | 当前网络可以正常访问时，建议手动选择 `DIRECT`；无法正常访问时可按实际情况选择代理。其他交易所按后续规则或 `Final` 处理。 |
+| `Schwab` | 嘉信 Charles Schwab | 与 `Brokerage` 分开控制网络路径；当前网络可以正常访问时，可手动选择 `DIRECT`，也保留代理选项。 |
+
+`Brokerage` 在上游规则外，保留了实际使用中补充的域名与 Futu IP 段，包括老虎的 `skytigris.cn` 和长桥的 `geotest.lbkrs.com`。这些规则是域名/IP 匹配，不是对整个应用的识别；入金流程涉及的外部银行、支付页面仍按各自命中的规则处理。
+
+Lane 只控制网络路径，不保证入金或交易成功，也不改变账户权限、银行处理或平台限制。三个组彼此独立，但选择 `Manual` 时都会跟随同一个手动节点。
+
 ## 使用配置
 
 | 客户端 | 配置地址 |
@@ -34,23 +48,40 @@
 
 ### 首次使用
 
-1. 下载对应配置，复制或保存为本地配置，不让整份配置继续跟随远程更新。仅改显示名称不等于本地化；Surge 托管配置需先创建普通副本，Egern 不设置主配置 `auto_update`。
-2. 除 Shadowrocket 外，每份配置只有一处 `https://example.com/replace-with-your-subscription`，替换为服务提供商为该客户端提供的节点订阅。模板默认启用，无需取消注释；占位地址没有节点，首次连接前必须替换。
-3. 保存并启用配置，在 `Manual` 中选一个节点。服务组默认跟随 `Manual`，也可选择直连或地区 Auto / Manual。
+1. 下载对应配置。除 Shadowrocket 外，在下表指定的订阅字段中，将 `你的订阅地址` 替换为服务提供商为该客户端提供的完整订阅链接；占位符统一不加引号。第一份模板默认启用，第二份已注释，只有一个订阅时无需改动第二份。
+2. `你的订阅地址` 只是占位文字，不是有效 URL，Lane 不提供节点。部分客户端可能在导入时校验地址，请先在本地填写，再导入并复制/保存为本地配置，不让整份配置继续跟随远程更新。仅改显示名称不等于本地化；Surge 托管配置需先创建普通副本，Egern 不设置主配置 `auto_update`。
+3. 保存并启用配置，在 `Manual` 中选一个节点。服务组默认跟随 `Manual`，也可选择直连或地区 Auto / Manual。Shadowrocket 不含订阅模板，继续使用应用内已有节点订阅。
 4. 开启客户端的节点与规则资源自动更新。配置内能指定的更新间隔为 24 小时；Loon 的资源定时更新在应用设置中管理。客户端后台调度、联网状态和订阅可用性仍会影响实际更新时间。
 
-| 客户端 | 唯一订阅填写位置 |
+| 客户端 | 第一份订阅填写位置 |
 | --- | --- |
-| Stash | `proxy-providers → Subscription → url`，使用 Stash / Clash 格式节点订阅 |
-| Loon | `[Remote Proxy]` 的 `Subscription =` 后面，使用 Loon 支持的格式 |
-| Surge | `[Proxy Group]` 的 `Manual` 行，替换 `policy-path=` 后面的地址；使用 Surge 节点列表或包含 `[Proxy]` 的配置 |
-| Quantumult X | `[server_remote]` 的示例链接，使用 QX 原生节点订阅 |
-| Egern | `policy_groups → Manual → urls` 的示例链接，使用 Egern 支持的节点订阅 |
+| Stash | `proxy-providers → Subscription1 → url`，使用 Stash / Clash 格式节点订阅 |
+| Loon | `[Remote Proxy]` 的 `Subscription1 =` 后面，使用 Loon 支持的格式 |
+| Surge | `[Proxy Group]` 的隐藏组 `Subscription1`，替换 `policy-path=` 后面的占位符；使用 Surge 节点列表或包含 `[Proxy]` 的配置 |
+| Quantumult X | `[server_remote]` 中 `tag=Subscription1` 那一行的占位符，使用 QX 原生节点订阅；该段保持在 `[policy]` 之后 |
+| Egern | `policy_groups → Manual → urls` 的第一个占位符，使用 Egern 支持的节点订阅 |
 | Shadowrocket | 无模板，直接使用应用内已有节点订阅 |
 
 订阅格式必须兼容目标客户端：不能保证同一条链接在六个软件里通用。本项目不代用户转换或收集私人订阅；不要把填好的配置上传到公开仓库。
 
 Loon 用户若选择重新导入远程配置，请选择保留现有节点/订阅，不要全部覆盖。其他客户端也应先备份；换用新版完整主配置时，重新填入订阅地址并迁移个人修改。
+
+### 多份订阅
+
+每个带订阅模板的客户端都提供一份启用模板和一份注释模板，填写位置旁也有简短操作提示。需要第二份时，取消对应模板行首的 `#` 和紧跟的一个空格、填入第二份链接；YAML 要保留原有缩进。不要直接取消全部注释，也不要把多个链接拼进同一个 URL 字段。
+
+| 客户端 | 第二份订阅 | 第三份及更多订阅 |
+| --- | --- | --- |
+| Stash | 取消 `Subscription2` 整块注释并填写 `url`，包括该块的更新与测速参数 | 复制整块，名称依次改为 `Subscription3` 等；现有 `include-all` 会纳入全部代理集，无需逐个改策略组 |
+| Loon | 取消 `Subscription2 =` 行的注释并填写 | 复制该行，使用不同别名；现有节点筛选会处理所有订阅 |
+| Surge | 取消隐藏组 `Subscription2` 的注释并填写，再把 Manual 的参数改为 `include-other-group="Subscription1,Subscription2"` | 新增 `Subscription3` 等隐藏组，并逐一加入 Manual 的引用列表 |
+| Quantumult X | 取消 `tag=Subscription2` 那一行的注释并填写 | 复制该行，使用不同的 `tag`；现有策略组会按节点名称筛选 |
+| Egern | 取消 Manual 的 `urls` 下第二个列表项的注释并填写 | 在同一 `urls` 列表下逐行追加地址，无需新增策略组 |
+| Shadowrocket | 在应用内添加 | 在应用内继续添加，Lane 不放订阅模板 |
+
+Surge 的订阅由隐藏组加载，`Manual` 通过 `include-other-group` 展开这些组的全部节点，地区组再从 Manual 中筛选，并非只取得隐藏组当前选中的一个节点。因此可见策略组仍按 Manual、服务组、地区组排列；不能只启用第二份订阅却漏改 Manual 的引用。[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)、[隐藏组参数](https://manual.nssurge.com/policy-groups/parameters.html)。
+
+订阅别名不同不代表节点名称不会重复。多个订阅尽量避免同名节点：Surge 和 Egern 都有按名称去重的行为；Surge 如需区分，可在各订阅组分别添加 `external-policy-name-prefix=S1-`、`external-policy-name-prefix=S2-`。这不是默认配置，不影响地区正向匹配。[Surge 节点命名](https://manual.nssurge.com/policy-groups/policy-including.html)、[Egern 多订阅](https://egernapp.com/docs/configuration/policy_groups/)。
 
 ### 哪些内容会更新？
 

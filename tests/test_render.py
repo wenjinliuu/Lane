@@ -4,7 +4,7 @@ import yaml
 
 from proxyrules.config import load_project_config, validate_config
 from proxyrules.model import Rule
-from proxyrules.render import CONFIG_FILENAMES, PROFILE_HEADER, SUBSCRIPTION_URL, _with_stable_update_time, render_rule
+from proxyrules.render import CONFIG_FILENAMES, PROFILE_HEADER, SUBSCRIPTION_PLACEHOLDER, _with_stable_update_time, render_rule
 from proxyrules.validate import validate_generated
 
 
@@ -48,7 +48,7 @@ def test_checked_in_outputs_are_valid_and_have_no_reject() -> None:
     loon_text = main_configs[1].read_text(encoding="utf-8")
     shadow_text = main_configs[2].read_text(encoding="utf-8")
     stash = yaml.safe_load(stash_text)
-    assert stash["proxy-providers"]["Subscription"]["url"] == SUBSCRIPTION_URL
+    assert stash["proxy-providers"]["Subscription1"]["url"] == SUBSCRIPTION_PLACEHOLDER
     assert "Stash / Clash" in stash_text
     assert "Loon 格式" in loon_text
     assert "添加节点订阅" not in shadow_text

@@ -10,7 +10,7 @@ from proxyrules.compiler import CompiledRuleset
 from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
-    CONFIG_FILENAMES, EGERN_RULE_FIELDS, SUBSCRIPTION_URL, TARGETS,
+    CONFIG_FILENAMES, EGERN_RULE_FIELDS, SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -81,16 +81,16 @@ def test_all_templates_have_one_active_subscription_and_local_update_guidance():
     for target, filename in CONFIG_FILENAMES.items():
         text = (ROOT / "dist" / target / filename).read_text()
         if target == "shadowrocket":
-            assert SUBSCRIPTION_URL not in text
+            assert SUBSCRIPTION_PLACEHOLDER not in text
             continue
-        occurrences = [line for line in text.splitlines() if SUBSCRIPTION_URL in line]
+        occurrences = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
+                       and not line.lstrip().startswith(("#", ";", "//"))]
         assert len(occurrences) == 1
-        assert not occurrences[0].lstrip().startswith(("#", ";", "//"))
         assert "本地配置" in text and "重新填入" in text
         assert "#!MANAGED-CONFIG" not in text
         assert "auto_update:" not in text
     stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
-    provider = stash["proxy-providers"]["Subscription"]
+    provider = stash["proxy-providers"]["Subscription1"]
     assert provider["interval"] > 0
     assert provider["benchmark-url"] == load_project_config(ROOT)["project"]["benchmark"]["url"]
 
@@ -106,6 +106,7 @@ def test_region_groups_match_only_positive_terms_even_with_high_multiplier():
             assert group["flatten"] is True
             assert re.search(expression, f"{label} 10x 高倍率")
             assert re.search(expression, f"{code.lower()} 01")
+            assert re.search(expression, f"S1-{code.lower()} 01")
             assert not re.search(expression, "韩国 KR 01")
             assert "(?!" not in expression
 
@@ -113,6 +114,9 @@ def test_region_groups_match_only_positive_terms_even_with_high_multiplier():
 def test_surge_expands_subscription_members_instead_of_selected_node():
     groups = _section((ROOT / "dist/surge/Lane_surge.conf").read_text(), "Proxy Group")
     assert "policy-path=" in groups[0]
+    assert groups[0].startswith("Subscription1 = select,")
+    assert groups[0].endswith(",hidden=true")
+    assert groups[1] == "Manual = select,include-other-group=Subscription1,include-all-proxies=true"
     for line in groups[-10:]:
         assert "include-other-group=Manual" in line
         assert "policy-regex-filter=" in line

@@ -1,8 +1,13 @@
 # Lane | Local profile template
-# Last updated: 2026-08-28 21:30:49 (Asia/Shanghai)
-# 使用前将示例链接替换为本客户端支持的节点订阅；示例地址不提供节点。
+# Last updated: 2026-08-28 22:31:53 (Asia/Shanghai)
+# Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
-# 换用新版完整配置前，请备份并重新填入订阅地址及个人修改；勿上传私人订阅。
+# 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
+# Brokerage：富途/Moomoo、老虎、长桥，统一分流登录、行情及入金/交易相关连接。
+# Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。
+# Schwab：嘉信独立分流，可单独选择 DIRECT 或代理。
+# 上述三组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。
+
 ipv6: false
 allow_external_connections: false
 proxy_latency_test_url: http://cp.cloudflare.com/generate_204
@@ -13,12 +18,14 @@ dns:
   - wildcard:
       match: '*'
       value: bootstrap
-# 在 Manual 的 urls 中填写 Egern 支持的节点订阅。
+# 在 Manual 的 urls 中填写 Egern 支持的节点订阅；第一份默认启用。
 policy_groups:
 - select:
     name: Manual
     urls:
-    - https://example.com/replace-with-your-subscription
+    - 你的订阅地址
+    # 多订阅：取消下一行注释并填写；更多地址在 urls 中逐行追加，保留缩进。
+    # - 你的订阅地址
     update_interval: 86400
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png
 - select:
