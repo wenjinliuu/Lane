@@ -73,7 +73,7 @@ def fetch_text_source(
     target = cache_dir / "text" / f"{source_id}.txt"
     if (refresh or not target.exists()) and not offline:
         request = urllib.request.Request(
-            source["url"], headers={"User-Agent": "ProxyRules/0.1"}
+            source["url"], headers={"User-Agent": "Lane/0.2"}
         )
         try:
             with urllib.request.urlopen(request, timeout=30) as response:

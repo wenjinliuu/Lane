@@ -5,6 +5,8 @@ from typing import Any
 
 import yaml
 
+from .filters import build_filters
+from .render import CONFIG_FILENAMES, SUBSCRIPTION_URL, rule_filename
 from .v2fly import parse_custom_file
 
 
@@ -72,9 +74,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     _validate_policy_graph(config["policies"])
     dist = root / "dist"
     required = [
-        dist / "stash" / "stash.yaml",
-        dist / "loon" / "loon.conf",
-        dist / "shadowrocket" / "shadowrocket.conf",
+        *(dist / target / filename for target, filename in CONFIG_FILENAMES.items()),
         dist / "metadata.json",
         dist / "report.json",
     ]
@@ -82,7 +82,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     if missing:
         raise ValidationError(f"Missing generated files: {', '.join(missing)}")
 
-    stash = yaml.safe_load((dist / "stash" / "stash.yaml").read_text(encoding="utf-8"))
+    texts = {target: (dist / target / filename).read_text(encoding="utf-8")
+             for target, filename in CONFIG_FILENAMES.items()}
+    stash = yaml.safe_load(texts["stash"])
     expected_groups = (
         {item["name"] for item in config["policies"]["base_groups"]}
         | {item["auto_name"] for item in config["policies"]["regions"]}
@@ -100,10 +102,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     if stash.get("rules", [])[-2:] != ["GEOIP,CN,DIRECT", "MATCH,Final"]:
         raise ValidationError("Stash final routing rules are invalid")
 
-    loon_text = (dist / "loon" / "loon.conf").read_text(encoding="utf-8")
-    shadow_text = (dist / "shadowrocket" / "shadowrocket.conf").read_text(
-        encoding="utf-8"
-    )
+    loon_text = texts["loon"]
+    shadow_text = texts["shadowrocket"]
     loon_groups = {line.split("=", 1)[0].strip() for line in _section(loon_text, "Proxy Group")}
     shadow_groups = {
         line.split("=", 1)[0].strip()
@@ -116,6 +116,117 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         expected_default = f"{service} = select,Manual,"
         if expected_default not in loon_text or expected_default not in shadow_text:
             raise ValidationError(f"{service} must default to Manual")
+
+    policies = config["policies"]
+    expected_order = ["Manual", *policies["service_groups"], *[
+        name for region in policies["regions"]
+        for name in (region["auto_name"], region["manual_name"])
+    ]]
+    filters = build_filters(policies)
+    options = list(policies["service_options"])
+    stash_by_name = {group["name"]: group for group in stash["proxy-groups"]}
+    if list(stash_by_name) != expected_order:
+        raise ValidationError("Stash groups must be base, services, then regions")
+    if stash["proxy-providers"]["Subscription"]["url"] != SUBSCRIPTION_URL:
+        raise ValidationError("Stash must contain the public subscription placeholder")
+    if not stash_by_name["Manual"].get("include-all"):
+        raise ValidationError("Stash Manual must include subscription nodes")
+    for service in policies["service_groups"]:
+        if stash_by_name[service].get("proxies") != options:
+            raise ValidationError(f"Stash {service} options differ from the manifest")
+
+    for target in ("loon", "shadowrocket", "surge"):
+        groups = {line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+                  for line in _section(texts[target], "Proxy Group")}
+        if list(groups) != expected_order:
+            raise ValidationError(f"{target}: invalid group order or missing groups")
+        for service in policies["service_groups"]:
+            if not groups[service].startswith(f"select,{','.join(options)}"):
+                raise ValidationError(f"{target}: {service} must default to Manual")
+    if _section(loon_text, "Remote Proxy") != [f"Subscription = {SUBSCRIPTION_URL}"]:
+        raise ValidationError("Loon subscription template must be enabled")
+    if f"policy-path={SUBSCRIPTION_URL}" not in texts["surge"]:
+        raise ValidationError("Surge must expose policy-path")
+    for region in policies["regions"]:
+        for name, group_type in ((region["auto_name"], "url-test"), (region["manual_name"], "select")):
+            group = stash_by_name[name]
+            if (group["type"] != group_type or not group.get("include-all")
+                    or group.get("filter") != filters["regions"][region["name"]]):
+                raise ValidationError(f"Invalid Stash region group: {name}")
+            surge_line = next(line for line in _section(texts["surge"], "Proxy Group")
+                              if line.startswith(f"{name} = "))
+            if f"{name} = {group_type},include-other-group=Manual," not in surge_line:
+                raise ValidationError(f"Surge {name} must expand subscription nodes")
+
+    egern = yaml.safe_load(texts["egern"])
+    egern_groups = {next(iter(group.values()))["name"]: group for group in egern["policy_groups"]}
+    if list(egern_groups) != expected_order:
+        raise ValidationError("Egern group order differs from the manifest")
+    if egern_groups["Manual"]["select"]["urls"] != [SUBSCRIPTION_URL]:
+        raise ValidationError("Egern subscription template must be enabled")
+    for service in policies["service_groups"]:
+        if egern_groups[service]["select"]["policies"] != options:
+            raise ValidationError(f"Egern {service} options differ from the manifest")
+    for region in policies["regions"]:
+        for name, kind in ((region["auto_name"], "auto_test"), (region["manual_name"], "select")):
+            group = egern_groups[name][kind]
+            if (group.get("policies") != ["Manual"] or not group.get("flatten")
+                    or group.get("filter") != filters["regions"][region["name"]]):
+                raise ValidationError(f"Egern {name} must flatten and filter nodes")
+    if egern["rules"][-2:] != [{"geoip": {"match": "CN", "policy": "DIRECT"}},
+                               {"default": {"policy": "Final"}}]:
+        raise ValidationError("Egern final routing rules are invalid")
+    if "auto_update" in egern:
+        raise ValidationError("Egern must not automatically replace the local profile")
+
+    qx_groups = {}
+    for line in _section(texts["qx"], "policy"):
+        kind, value = line.split("=", 1)
+        name = value.split(",", 1)[0].strip()
+        qx_groups[name] = (kind.strip(), value.strip())
+    if list(qx_groups) != expected_order:
+        raise ValidationError("QX group order differs from the manifest")
+    qx_options = ", ".join("direct" if option == "DIRECT" else option for option in options)
+    for service in policies["service_groups"]:
+        kind, value = qx_groups[service]
+        if kind != "static" or not value.startswith(f"{service}, {qx_options}"):
+            raise ValidationError(f"QX {service} must default to Manual")
+    for region in policies["regions"]:
+        for name, kind in ((region["auto_name"], "url-latency-benchmark"), (region["manual_name"], "static")):
+            actual, value = qx_groups[name]
+            if actual != kind or f"server-tag-regex={filters['regions'][region['name']]}" not in value:
+                raise ValidationError(f"Invalid QX region group: {name}")
+    if not _section(texts["qx"], "server_remote")[0].startswith(SUBSCRIPTION_URL + ","):
+        raise ValidationError("QX subscription template must be enabled")
+    if _section(texts["qx"], "filter_local")[-2:] != ["geoip,cn,direct", "final,Final"]:
+        raise ValidationError("QX final routing rules are invalid")
+
+    raw_base = config["project"]["project"]["raw_base"].rstrip("/")
+    for target, text in texts.items():
+        if text.count(SUBSCRIPTION_URL) != (0 if target == "shadowrocket" else 1):
+            raise ValidationError(f"{target}: exactly one subscription edit point is required")
+        if "# Last updated: " not in text:
+            raise ValidationError(f"{target}: missing update timestamp")
+        if target == "stash":
+            actual_urls = [entry["url"] for entry in stash["rule-providers"].values()]
+        elif target == "egern":
+            actual_urls = [entry["rule_set"]["match"] for entry in egern["rules"] if "rule_set" in entry]
+        elif target == "qx":
+            actual_urls = [line.split(",", 1)[0] for line in _section(text, "filter_remote")]
+        elif target == "loon":
+            actual_urls = [line.split(",", 1)[0] for line in _section(text, "Remote Rule")]
+        else:
+            actual_urls = [line.split(",")[1] for line in _section(text, "Rule") if line.startswith("RULE-SET,")]
+        expected_urls = [f"{raw_base}/dist/{target}/rules/{rule_filename(target, rule_id)}"
+                         for rule_id in expected_rule_ids]
+        if actual_urls != expected_urls:
+            raise ValidationError(f"{target}: remote rule URLs or order differ from the manifest")
+        for rule_id in expected_rule_ids:
+            path = dist / target / "rules" / rule_filename(target, rule_id)
+            if not path.is_file():
+                raise ValidationError(f"Missing referenced rule file: {path}")
+            if target == "egern" and not isinstance(yaml.safe_load(path.read_text()), dict):
+                raise ValidationError(f"Invalid Egern rule set: {path}")
 
     generated_text = "\n".join(
         path.read_text(encoding="utf-8")

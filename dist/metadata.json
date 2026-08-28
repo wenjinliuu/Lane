@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "project": "wenjinliuu/ProxyRules",
+  "project": "wenjinliuu/Lane",
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",

@@ -3,9 +3,9 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "proxyrules"
-version = "0.1.0"
-description = "One routing manifest, generated for Stash, Loon, and Shadowrocket."
+name = "lane-routing"
+version = "0.2.0"
+description = "Lane: one routing manifest for Stash, Loon, Shadowrocket, Surge, Quantumult X and Egern."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -16,6 +16,7 @@ dependencies = ["PyYAML>=6.0,<7"]
 dev = ["pytest>=8,<9"]
 
 [project.scripts]
+lane = "proxyrules.cli:main"
 proxyrules = "proxyrules.cli:main"
 
 [tool.setuptools]
@@ -27,4 +28,3 @@ where = ["src"]
 [tool.pytest.ini_options]
 addopts = "-q"
 testpaths = ["tests"]
-

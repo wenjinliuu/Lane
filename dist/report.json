@@ -21,11 +21,35 @@
       "google": 2,
       "proxy": 158,
       "china": 3
-    }
+    },
+    "surge": {
+      "lan": 1,
+      "ai": 1,
+      "streaming": 5,
+      "gaming": 3,
+      "developer": 1,
+      "google": 2,
+      "proxy": 158,
+      "china": 3
+    },
+    "qx": {
+      "lan": 1,
+      "ai": 1,
+      "streaming": 5,
+      "gaming": 3,
+      "developer": 1,
+      "google": 2,
+      "proxy": 158,
+      "china": 3
+    },
+    "egern": {}
   },
   "notes": {
     "stash": "DOMAIN-REGEX is retained.",
     "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it.",
-    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility."
+    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility.",
+    "surge": "DOMAIN-REGEX is unsupported and omitted. Native url-test groups allow temporary manual override; icons are omitted for iOS compatibility.",
+    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities.",
+    "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support."
   }
 }

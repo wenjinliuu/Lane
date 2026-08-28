@@ -15,8 +15,8 @@ def _default_root() -> Path:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="proxyrules",
-        description="Generate Stash, Loon, and Shadowrocket routing configurations.",
+        prog="lane",
+        description="Generate Lane routing configurations for six clients.",
     )
     parser.add_argument("--root", type=Path, default=_default_root())
     commands = parser.add_subparsers(dest="command", required=True)
@@ -48,5 +48,5 @@ def main(argv: list[str] | None = None) -> int:
     config = load_project_config(root)
     validate_config(config)
     validate_generated(root, config)
-    print("ProxyRules configuration and generated outputs are valid.")
+    print("Lane configuration and generated outputs are valid.")
     return 0

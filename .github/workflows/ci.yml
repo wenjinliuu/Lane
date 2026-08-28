@@ -22,4 +22,4 @@ jobs:
       - name: Test
         run: python -m pytest
       - name: Validate generated outputs
-        run: python -m proxyrules check
+        run: lane check

@@ -1,0 +1,446 @@
+# Lane | Local profile template
+# Last updated: 2026-08-28 21:30:49 (Asia/Shanghai)
+# 使用前将示例链接替换为本客户端支持的节点订阅；示例地址不提供节点。
+# 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
+# 换用新版完整配置前，请备份并重新填入订阅地址及个人修改；勿上传私人订阅。
+ipv6: false
+allow_external_connections: false
+proxy_latency_test_url: http://cp.cloudflare.com/generate_204
+dns:
+  bootstrap:
+  - system
+  forward:
+  - wildcard:
+      match: '*'
+      value: bootstrap
+# 在 Manual 的 urls 中填写 Egern 支持的节点订阅。
+policy_groups:
+- select:
+    name: Manual
+    urls:
+    - https://example.com/replace-with-your-subscription
+    update_interval: 86400
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png
+- select:
+    name: AI
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png
+- select:
+    name: Schwab
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SSID_1.png
+- select:
+    name: Brokerage
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Magic.png
+- select:
+    name: Crypto
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cryptocurrency_3.png
+- select:
+    name: YouTube
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+- select:
+    name: TikTok
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png
+- select:
+    name: Emby
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png
+- select:
+    name: Streaming
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png
+- select:
+    name: Gaming
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Steam.png
+- select:
+    name: Telegram
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png
+- select:
+    name: Social
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/X.png
+- select:
+    name: Developer
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png
+- select:
+    name: Google
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png
+- select:
+    name: Microsoft
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png
+- select:
+    name: Apple
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png
+- select:
+    name: Final
+    policies:
+    - Manual
+    - DIRECT
+    - US Auto
+    - US Manual
+    - JP Auto
+    - JP Manual
+    - HK Auto
+    - HK Manual
+    - TW Auto
+    - TW Manual
+    - SG Auto
+    - SG Manual
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png
+- auto_test:
+    name: US Auto
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    interval: 600
+    tolerance: 50
+    timeout: 5
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png
+- select:
+    name: US Manual
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png
+- auto_test:
+    name: JP Auto
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    interval: 600
+    tolerance: 50
+    timeout: 5
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png
+- select:
+    name: JP Manual
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png
+- auto_test:
+    name: HK Auto
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    interval: 600
+    tolerance: 50
+    timeout: 5
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png
+- select:
+    name: HK Manual
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png
+- auto_test:
+    name: TW Auto
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇹🇼|台湾|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    interval: 600
+    tolerance: 50
+    timeout: 5
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
+- select:
+    name: TW Manual
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇹🇼|台湾|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
+- auto_test:
+    name: SG Auto
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇸🇬|新加坡|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    interval: 600
+    tolerance: 50
+    timeout: 5
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png
+- select:
+    name: SG Manual
+    policies:
+    - Manual
+    flatten: true
+    filter: (?i)^.*(?:(?:🇸🇬|新加坡|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png
+rules:
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/lan.yaml
+    policy: DIRECT
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/ai.yaml
+    policy: AI
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/schwab.yaml
+    policy: Schwab
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/brokerage.yaml
+    policy: Brokerage
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/crypto.yaml
+    policy: Crypto
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/youtube.yaml
+    policy: YouTube
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/tiktok.yaml
+    policy: TikTok
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/emby.yaml
+    policy: Emby
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/streaming.yaml
+    policy: Streaming
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/gaming.yaml
+    policy: Gaming
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/telegram.yaml
+    policy: Telegram
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/telegram-ip.yaml
+    policy: Telegram
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/social.yaml
+    policy: Social
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/developer.yaml
+    policy: Developer
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/google.yaml
+    policy: Google
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/microsoft.yaml
+    policy: Microsoft
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/apple.yaml
+    policy: Apple
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/proxy.yaml
+    policy: Final
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/china.yaml
+    policy: DIRECT
+    update_interval: 86400
+- geoip:
+    match: CN
+    policy: DIRECT
+- default:
+    policy: Final

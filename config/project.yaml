@@ -1,8 +1,8 @@
 project:
-  name: ProxyRules
-  repository: wenjinliuu/ProxyRules
+  name: Lane
+  repository: wenjinliuu/Lane
   branch: main
-  raw_base: https://raw.githubusercontent.com/wenjinliuu/ProxyRules/main
+  raw_base: https://raw.githubusercontent.com/wenjinliuu/Lane/main
 
 benchmark:
   url: http://cp.cloudflare.com/generate_204
@@ -12,7 +12,7 @@ benchmark:
   lazy: true
 
 updates:
+  node_interval: 86400
   rule_interval: 86400
   schedule: "0 4 * * *"
   timezone_note: "12:00 Asia/Shanghai"
-
