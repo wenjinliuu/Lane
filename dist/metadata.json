@@ -4,7 +4,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "8858cfe6f8b4c7167d1833e490eba98f3a55f118"
+      "revision": "06111d32139e3497a20fded97ca2b4424ad87e60"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -183,9 +183,9 @@
     {
       "id": "china",
       "policy": "DIRECT",
-      "rules": 8195,
+      "rules": 8199,
       "kinds": {
-        "domain": 8125,
+        "domain": 8129,
         "full": 67,
         "regexp": 3
       }
