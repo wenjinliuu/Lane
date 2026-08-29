@@ -75,7 +75,8 @@ def validate_config(config: dict[str, Any]) -> None:
             raise ConfigError(f"Invalid text sources in {rule_id}: {exc}") from exc
         for source_id in source_ids:
             source = sources.get(source_id, {})
-            if source.get("kind") != "text" or source.get("role") == "validation-only":
+            if (source.get("kind") not in {"text", "git-history-cidr"}
+                    or source.get("role") == "validation-only"):
                 raise ConfigError(f"Invalid routing source {source_id!r} in {rule_id}")
         if entry.get("policy") not in allowed_policies:
             raise ConfigError(
@@ -132,18 +133,30 @@ def validate_config(config: dict[str, Any]) -> None:
             or cn_ip.get("no_resolve") or cn_ip.get("v2fly") or cn_ip.get("custom")):
         raise ConfigError("cn-ip must be the last ruleset, DIRECT, using the primary CN source")
     primary_spec = sources["cn_ip_primary"]
-    if primary_spec.get("format") != "cidr" or primary_spec.get("ip_versions") != [4, 6]:
-        raise ConfigError("Primary CN IP source must contain IPv4 and IPv6")
-    for version in (4, 6):
-        spec = sources[f"cn_ipv{version}_reference"]
-        if spec.get("format") != "cidr" or spec.get("ip_version") != version:
-            raise ConfigError(f"CN IPv{version} source must enforce its address family")
+    if (primary_spec.get("kind") != "git-history-cidr"
+            or primary_spec.get("format") != "cidr"
+            or primary_spec.get("ip_versions") != [4, 6]
+            or primary_spec.get("repository") != "https://github.com/gaoyifan/china-operator-ip.git"
+            or primary_spec.get("ref") != "ip-lists"
+            or primary_spec.get("files") != {"ipv4": "china.txt", "ipv6": "china6.txt"}
+            or primary_spec.get("window_days") != 7
+            or primary_spec.get("minimum_presence_days") != 5
+            or primary_spec.get("breaker_percent") != 1
+            or primary_spec.get("license") != "MIT"):
+        raise ConfigError("Primary CN IP source must be gaoyifan's 5-of-7 dual-stack window")
+    reference_spec = sources.get("cn_ipv4_reference", {})
+    if (reference_spec.get("kind") != "text"
+            or reference_spec.get("format") != "cidr"
+            or reference_spec.get("ip_version") != 4
+            or reference_spec.get("role") != "validation-only"
+            or "misakaio/chnroutes2" not in reference_spec.get("url", "")):
+        raise ConfigError("CN IPv4 reference must be independent misakaio/chnroutes2 data")
+    if "cn_ipv6_reference" in sources:
+        raise ConfigError("No independent CN IPv6 reference is currently configured")
     check = config["sources"].get("cross_validation", {}).get("cn_ip", {})
     if (check.get("ruleset") != "cn-ip"
-            or check.get("reference_sources") != ["cn_ipv4_reference", "cn_ipv6_reference"]
-            or check.get("independent") is not False
-            or any(sources.get(key, {}).get("role") != "validation-only"
-                   for key in ("cn_ipv4_reference", "cn_ipv6_reference"))):
-        raise ConfigError("gaoyifan must be a validation-only, non-independent CN reference")
+            or check.get("reference_sources") != ["cn_ipv4_reference"]
+            or check.get("independent") is not True):
+        raise ConfigError("misakaio must be the independent CN IPv4 reference")
     if text_source_ids(by_id["china"]):
         raise ConfigError("CN exceptions and CN IP must not be merged into China")

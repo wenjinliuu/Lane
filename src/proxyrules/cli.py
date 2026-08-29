@@ -26,6 +26,11 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--upstream-dir", type=Path)
     build.add_argument("--refresh", action="store_true")
     build.add_argument("--offline", action="store_true")
+    build.add_argument(
+        "--accept-cn-ip-change",
+        action="store_true",
+        help="accept a reviewed CN-IP stable-window change above the 1%% breaker",
+    )
 
     commands.add_parser("check", help="Validate the manifest and generated files")
     return parser
@@ -41,6 +46,7 @@ def main(argv: list[str] | None = None) -> int:
             upstream_dir=args.upstream_dir,
             refresh=args.refresh,
             offline=args.offline,
+            accept_cn_ip_change=args.accept_cn_ip_change,
         )
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0

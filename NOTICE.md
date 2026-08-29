@@ -17,21 +17,23 @@ Generated files record their upstream revision in `dist/metadata.json`.
 
 ## CN IP data
 
-The primary CN IPv4/IPv6 input is
-[`Loyalsoldier/geoip`](https://github.com/Loyalsoldier/geoip), specifically
-[`release/text/cn.txt`](https://github.com/Loyalsoldier/geoip/blob/release/text/cn.txt).
-It is attributed to Loyalsoldier and contributors and distributed under
-[CC BY-SA 4.0](licenses/Loyalsoldier-CC-BY-SA-4.0.txt).
-Lane normalizes/deduplicates CIDRs and translates them into client-native syntax.
-Generated `dist/*/rules/cn-ip.*` and the derived CN IP comparison data retain
-CC BY-SA 4.0; Lane's MIT code license does not replace the data license.
-
-CN data in that project also derives from
+The primary CN IPv4/IPv6 input is the `ip-lists` git history from
 [`gaoyifan/china-operator-ip`](https://github.com/gaoyifan/china-operator-ip)
 (Copyright (c) 2017 Yifan Gao;
-[MIT License](licenses/gaoyifan-MIT.txt)). Lane uses gaoyifan's `ip-lists/china.txt`
-and `china6.txt` for comparison only, not as an additional routing source.
-This is a shared-upstream consistency check, not independent geolocation validation.
+[MIT License](licenses/gaoyifan-MIT.txt)). Lane reads seven distinct daily
+snapshots of `china.txt` and `china6.txt` and keeps address space present in at
+least five snapshots. CIDR spelling is normalized before coverage is counted.
+Generated `dist/*/rules/cn-ip.*` files are an adapted MIT-licensed output.
+
+[`misakaio/chnroutes2`](https://github.com/misakaio/chnroutes2) provides the
+independent BGP-derived IPv4 reference used in `dist/cn-ip-validation.json`.
+Copyright (c) 2021 Misaka Network, Inc.; its repository LICENSE identifies the
+data as [CC BY-SA 4.0](licenses/CC-BY-SA-4.0.txt). The reference is used only for
+comparison and is never merged into routing output. chnroutes2 does not publish
+an IPv6 text list, which the report records explicitly.
+
+`Loyalsoldier/geoip` remains useful for manual difference audits, but Lane no
+longer consumes its release files as a build source.
 
 ## AppleCN
 
