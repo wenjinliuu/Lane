@@ -133,7 +133,11 @@ def test_network_failure_uses_visible_cached_fallback(tmp_path, monkeypatch):
         fetch_text_source("missing", {"url": "https://example.org"}, tmp_path, True, False)
 
 
-@pytest.mark.parametrize("change", ["cn-first", "cn-no-resolve", "apple-policy", "google-late", "china-merged", "reference-routed"])
+@pytest.mark.parametrize(
+    "change",
+    ["cn-first", "cn-no-resolve", "apple-policy", "apple-late", "china-merged",
+     "reference-routed", "google-cn-restored", "lan-late", "lan-resolves"],
+)
 def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
     config = deepcopy(load_project_config(ROOT))
     entries = config["rulesets"]["rulesets"]
@@ -144,11 +148,26 @@ def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
         by_id["cn-ip"]["no_resolve"] = True
     elif change == "apple-policy":
         by_id["apple-cn"]["policy"] = "Apple"
-    elif change == "google-late":
-        entries.remove(by_id["google-cn"])
-        entries.insert(-1, by_id["google-cn"])
+    elif change == "apple-late":
+        entries.remove(by_id["apple-cn"])
+        entries.insert(-1, by_id["apple-cn"])
     elif change == "china-merged":
         by_id["china"]["text_source"] = "apple_cn"
+    elif change == "google-cn-restored":
+        config["sources"]["sources"]["google_cn"] = {
+            "kind": "text", "format": "dnsmasq",
+            "url": "https://example.invalid/google.china.conf", "license": "WTFPL-2.0",
+        }
+        entries.insert(
+            entries.index(by_id["ai"]),
+            {"id": "google-cn", "title": "GoogleCN", "policy": "DIRECT",
+             "text_source": "google_cn"},
+        )
+    elif change == "lan-late":
+        entries.remove(by_id["lan"])
+        entries.insert(2, by_id["lan"])
+    elif change == "lan-resolves":
+        by_id["lan"].pop("no_resolve", None)
     else:
         by_id["cn-ip"]["text_source"] = "cn_ipv4_reference"
     with pytest.raises(ConfigError):
@@ -194,12 +213,44 @@ def _domain_policy(domain):
 
 
 @pytest.mark.parametrize("domain,policy", [
-    ("apps.apple.com", "DIRECT"), ("fonts.gstatic.com", "DIRECT"),
+    ("apps.apple.com", "DIRECT"), ("music.apple.com", "DIRECT"),
     ("www.google.com", "Google"), ("www.youtube.com", "YouTube"),
-    ("api.openai.com", "AI"), ("trade.futunn.com", "Brokerage"),
+    ("api.openai.com", "AI"), ("ai.google.dev", "AI"),
+    ("trade.futunn.com", "Brokerage"),
 ])
 def test_representative_domain_priority(domain, policy):
     assert _domain_policy(domain) == policy
+
+
+@pytest.mark.parametrize("domain", [
+    "fonts.gstatic.com", "dl.google.com", "clientservices.googleapis.com",
+    "app-measurement.com", "doubleclick.net", "recaptcha.net", "2mdn.net",
+])
+def test_former_google_cn_domains_now_follow_the_google_group(domain):
+    """GoogleCN was removed on 2026-08-29. Its entries used to resolve to DIRECT;
+    they now follow the Google policy group like every other Google domain.
+
+    This is the one routing change that removal introduces, so it is pinned here
+    rather than left implicit."""
+
+    assert _domain_policy(domain) == "Google"
+
+
+@pytest.mark.parametrize("prefix", ["10.0.0.0/8", "192.168.0.0/16", "172.16.0.0/12"])
+def test_private_prefixes_are_direct_and_do_not_force_resolution(prefix):
+    """Without these, traffic addressed to a router or a NAS by IP matches no rule
+    and is proxied by FINAL. lan is the first ruleset, so the prefixes must carry
+    no-resolve or every domain request would pay for a lookup at rule one."""
+
+    lines = (ROOT / "dist/surge/rules/lan.list").read_text().splitlines()
+    assert f"IP-CIDR,{prefix},no-resolve" in lines
+
+
+def test_lan_omits_the_client_fake_ip_range():
+    """Every supported client uses 198.18.0.0/15 for fake IP; claiming it as LAN
+    would collide with that machinery."""
+
+    assert "198.18." not in (ROOT / "dist/surge/rules/lan.list").read_text()
 
 
 def test_cn_ip_does_not_override_brokerage_ip():

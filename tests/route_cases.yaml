@@ -1,0 +1,90 @@
+schema: 1
+description: First-match routing cases that must remain stable across generated profiles.
+cases:
+  - id: lan-domain
+    input:
+      type: domain
+      value: routerlogin.com
+    expected:
+      ruleset: lan
+      policy: DIRECT
+
+  - id: lan-private-ip
+    input:
+      type: ip
+      value: 192.168.1.1
+    expected:
+      ruleset: lan
+      policy: DIRECT
+
+  - id: apple-cn-before-apple
+    input:
+      type: domain
+      value: apps.apple.com
+    expected:
+      ruleset: apple-cn
+      policy: DIRECT
+
+  - id: google-cn-removed-from-default
+    input:
+      type: domain
+      value: clientservices.googleapis.com
+    expected:
+      ruleset: google
+      policy: Google
+
+  - id: ai-before-google
+    input:
+      type: domain
+      value: ai.google.dev
+    expected:
+      ruleset: ai
+      policy: AI
+
+  - id: youtube-before-google
+    input:
+      type: domain
+      value: www.youtube.com
+    expected:
+      ruleset: youtube
+      policy: YouTube
+
+  - id: brokerage-domain
+    input:
+      type: domain
+      value: trade.futunn.com
+    expected:
+      ruleset: brokerage
+      policy: Brokerage
+
+  - id: brokerage-ip-before-cn-ip
+    input:
+      type: ip
+      value: 1.14.242.1
+    expected:
+      ruleset: brokerage
+      policy: Brokerage
+
+  - id: general-proxy-guard
+    input:
+      type: domain
+      value: www.cloudflare.com
+    expected:
+      ruleset: proxy
+      policy: Final
+
+  - id: china-domain
+    input:
+      type: domain
+      value: www.baidu.com
+    expected:
+      ruleset: china
+      policy: DIRECT
+
+  - id: cn-ip-fallback
+    input:
+      type: ip
+      value: 1.0.1.1
+    expected:
+      ruleset: cn-ip
+      policy: DIRECT

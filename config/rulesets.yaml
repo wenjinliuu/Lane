@@ -1,9 +1,15 @@
 rulesets:
+  # LAN stays first. The custom file carries the RFC private and special-use
+  # prefixes; no_resolve applies to IP rules only, so the first IP rule in the
+  # profile does not force a lookup for every domain that reaches it. Without
+  # these prefixes, traffic addressed to a router or a NAS by IP matches nothing
+  # and falls through to FINAL, which proxies it.
   - id: lan
     title: LAN
     policy: DIRECT
     v2fly: [private]
     custom: rules/custom/lan.list
+    no_resolve: true
 
   - id: custom-direct
     title: Custom Direct
@@ -22,11 +28,15 @@ rulesets:
     policy: DIRECT
     text_source: apple_cn
 
-  - id: google-cn
-    title: GoogleCN
-    policy: DIRECT
-    text_source: google_cn
-
+  # GoogleCN was removed on 2026-08-29. felixonmars/dnsmasq-china-list is a DNS
+  # acceleration project: google.china.conf lists domains that a Chinese resolver
+  # answers with Google's China front-end addresses, and upstream marks the file
+  # "not considered stable, use at your own risk". Resolving is not the same as
+  # reaching: 91 of its 112 entries were global Google domains, and dl.google.com,
+  # clientservices.googleapis.com and app-measurement.com each have public reports
+  # of failing when routed DIRECT from the mainland. Google traffic now goes to
+  # the Google policy group as a whole. AppleCN stays because its upstream entries
+  # really do resolve to mainland CDN nodes that are reachable directly.
   - id: ai
     title: AI
     policy: AI
@@ -113,6 +123,13 @@ rulesets:
     policy: Apple
     v2fly: [apple]
 
+  # Its policy is Final, the same destination as the profile's MATCH rule, so this
+  # set never sends traffic to a different exit. Its job is placement: it claims
+  # known non-CN domains before china, cn-ip and GEOIP,CN can direct-connect them
+  # by mistake. v2fly's cn list includes tld-cn, so foreign companies' .cn domains
+  # appear in both lists; whichever comes first wins. Deleting this set would flip
+  # 567 domains from Final to DIRECT, and would also leave GEOIP,CN's known
+  # mainland-IP misjudgements unguarded. Keep it and cn-ip; drop at most one.
   - id: proxy
     title: General Proxy
     policy: Final
@@ -123,6 +140,11 @@ rulesets:
     policy: DIRECT
     v2fly: [cn]
 
+  # cn-ip must stay last and must NOT carry no_resolve. A domain request skips a
+  # no-resolve IP rule entirely, so adding it here would hand the mainland verdict
+  # to whatever GeoIP database each client happens to ship, which is the opposite
+  # of what this set exists for. GEOIP,CN follows as a second layer for prefixes
+  # this snapshot misses.
   - id: cn-ip
     title: CN IP
     policy: DIRECT

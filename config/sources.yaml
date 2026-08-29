@@ -30,15 +30,14 @@ sources:
     url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt
     license: CC-BY-SA-4.0
     license_note: Loyalsoldier CN data derives from gaoyifan/china-operator-ip (MIT)
+  # Upstream ships apple.china.conf and google.china.conf as DNS acceleration
+  # lists, not routing lists. Apple's entries resolve to mainland CDN nodes that
+  # are directly reachable, so reusing them as DIRECT rules holds. Google's do
+  # not, which is why google_cn was dropped on 2026-08-29 (see rulesets.yaml).
   apple_cn:
     kind: text
     format: dnsmasq
     url: https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf
-    license: WTFPL-2.0
-  google_cn:
-    kind: text
-    format: dnsmasq
-    url: https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf
     license: WTFPL-2.0
 
 cross_validation:
