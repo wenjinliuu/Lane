@@ -4,7 +4,17 @@ import yaml
 
 from proxyrules.config import load_project_config, validate_config
 from proxyrules.model import Rule
-from proxyrules.render import CONFIG_FILENAMES, PROFILE_HEADER, SUBSCRIPTION_PLACEHOLDER, _with_stable_update_time, render_rule
+from proxyrules.render import (
+    CONFIG_FILENAMES,
+    HIJACK_DNS_SERVERS,
+    MULTICAST_EXCLUDED_ROUTES,
+    PROFILE_HEADER,
+    REAL_IP_DOMAINS,
+    STASH_REAL_IP_DOMAINS,
+    SUBSCRIPTION_PLACEHOLDER,
+    _with_stable_update_time,
+    render_rule,
+)
 from proxyrules.validate import validate_generated
 
 
@@ -97,6 +107,47 @@ def test_checked_in_outputs_are_valid_and_have_no_reject() -> None:
     for group in stash["proxy-groups"]:
         if filename := expected_icons.get(group["name"]):
             assert group["icon"].endswith(f"/{filename}")
+
+
+def test_client_dns_and_multicast_capability_matrix() -> None:
+    paths = {
+        target: ROOT / "dist" / target / filename
+        for target, filename in CONFIG_FILENAMES.items()
+    }
+    text = {target: path.read_text() for target, path in paths.items()}
+    route_csv = ", ".join(MULTICAST_EXCLUDED_ROUTES)
+    real_ip_csv = ", ".join(REAL_IP_DOMAINS)
+    hijack_csv = ", ".join(HIJACK_DNS_SERVERS)
+
+    assert f"bypass-tun = {route_csv}" in text["loon"]
+    assert f"tun-excluded-routes = {route_csv}" in text["shadowrocket"]
+    assert f"tun-excluded-routes = {route_csv}" in text["surge"]
+    assert f"excluded_routes = {route_csv}" in text["qx"]
+    egern = yaml.safe_load(text["egern"])
+    assert egern["vif_excluded_routes"] == list(MULTICAST_EXCLUDED_ROUTES)
+    assert "excluded" not in text["stash"]
+
+    stash = yaml.safe_load(text["stash"])
+    assert stash["dns"]["fake-ip-filter"] == list(STASH_REAL_IP_DOMAINS)
+    assert f"real-ip = {real_ip_csv}" in text["loon"]
+    assert f"always-real-ip = {real_ip_csv}" in text["shadowrocket"]
+    assert f"always-real-ip = {real_ip_csv}" in text["surge"]
+    assert f"dns_exclusion_list = {real_ip_csv}" in text["qx"]
+    assert egern["real_ip_domains"] == list(REAL_IP_DOMAINS)
+
+    for target in ("loon", "shadowrocket", "surge"):
+        assert f"hijack-dns = {hijack_csv}" in text[target]
+    assert egern["hijack_dns"] == list(HIJACK_DNS_SERVERS)
+    assert "hijack-dns" not in text["stash"]
+    assert "hijack-dns" not in text["qx"]
+    assert "*:53" not in "\n".join(text.values())
+    assert "dns-server = system" in text["surge"]
+    assert "server = system" in text["qx"]
+    assert egern["dns"]["bootstrap"] == ["system"]
+
+    all_profiles = "\n".join(text.values())
+    assert "lancache.steamcontent.com" not in all_profiles
+    assert "appboot.netflix.com" not in all_profiles
 
 
 def test_update_time_is_preserved_when_content_is_unchanged(tmp_path: Path) -> None:
