@@ -9,27 +9,28 @@ sources:
     kind: text
     url: https://core.telegram.org/resources/cidr.txt
     license_note: Official Telegram network resource
+  cn_ip_primary:
+    kind: git-history-cidr
+    format: cidr
+    ip_versions: [4, 6]
+    repository: https://github.com/gaoyifan/china-operator-ip.git
+    ref: ip-lists
+    url: https://github.com/gaoyifan/china-operator-ip/tree/ip-lists
+    files:
+      ipv4: china.txt
+      ipv6: china6.txt
+    window_days: 7
+    minimum_presence_days: 5
+    history_depth: 32
+    breaker_percent: 1
+    license: MIT
   cn_ipv4_reference:
     kind: text
     format: cidr
     ip_version: 4
     role: validation-only
-    url: https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt
-    license: MIT
-  cn_ipv6_reference:
-    kind: text
-    format: cidr
-    ip_version: 6
-    role: validation-only
-    url: https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt
-    license: MIT
-  cn_ip_primary:
-    kind: text
-    format: cidr
-    ip_versions: [4, 6]
-    url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt
+    url: https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt
     license: CC-BY-SA-4.0
-    license_note: Loyalsoldier CN data derives from gaoyifan/china-operator-ip (MIT)
   # Upstream ships apple.china.conf and google.china.conf as DNS acceleration
   # lists, not routing lists. Apple's entries resolve to mainland CDN nodes that
   # are directly reachable, so reusing them as DIRECT rules holds. Google's do
@@ -43,5 +44,5 @@ sources:
 cross_validation:
   cn_ip:
     ruleset: cn-ip
-    reference_sources: [cn_ipv4_reference, cn_ipv6_reference]
-    independent: false
+    reference_sources: [cn_ipv4_reference]
+    independent: true

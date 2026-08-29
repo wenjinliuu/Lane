@@ -1,14 +1,16 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+from .cn_window import canonical_cidr_text, coverage_stats
 from .filters import build_filters
 from .render import CONFIG_FILENAMES, SUBSCRIPTION_PLACEHOLDER, rule_filename
-from .v2fly import parse_custom_file
+from .v2fly import DomainListError, parse_cidr_text, parse_custom_file
 
 
 class ValidationError(ValueError):
@@ -103,6 +105,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         *(dist / target / filename for target, filename in CONFIG_FILENAMES.items()),
         dist / "metadata.json",
         dist / "report.json",
+        dist / "cn-ip-window.json",
         dist / "cn-ip-validation.json",
     ]
     missing = [str(path.relative_to(root)) for path in required if not path.is_file()]
@@ -314,17 +317,58 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Ad blocking and special download routing are out of scope")
 
     metadata = json.loads((dist / "metadata.json").read_text())
+    window = json.loads((dist / "cn-ip-window.json").read_text())
     comparison = json.loads((dist / "cn-ip-validation.json").read_text())
-    if (comparison.get("primary_ruleset") != "cn-ip" or comparison.get("independent") is not False
+    if (comparison.get("primary_ruleset") != "cn-ip" or comparison.get("independent") is not True
             or comparison.get("status") not in {"match", "differs"}):
         raise ValidationError("Invalid CN IP comparison report")
     comparison_sources = comparison.get("sources", {})
     for role, source_ids in (("primary", ["cn_ip_primary"]),
-                             ("reference", ["cn_ipv4_reference", "cn_ipv6_reference"])):
+                             ("reference", ["cn_ipv4_reference"])):
         if comparison_sources.get(role) != {key: metadata["sources"][key] for key in source_ids}:
             raise ValidationError("CN IP comparison source digests differ from build metadata")
+    primary_metadata = metadata["sources"]["cn_ip_primary"]
+    snapshots = window.get("snapshots", [])
+    breaker = window.get("breaker", {})
+    try:
+        published_values = [
+            line.split(",", 2)[1]
+            for line in (dist / "stash/rules/cn-ip.list").read_text(encoding="utf-8").splitlines()
+            if line.startswith(("IP-CIDR,", "IP-CIDR6,"))
+        ]
+        published_rules = tuple(
+            parse_cidr_text("\n".join(published_values), "published_cn_ip")
+        )
+    except (OSError, DomainListError, IndexError) as exc:
+        raise ValidationError(f"Invalid published CN IP output: {exc}") from exc
+    published_digest = hashlib.sha256(
+        canonical_cidr_text(published_rules).encode("utf-8")
+    ).hexdigest()
+    window_output = window.get("output", {})
+    breaker_state_valid = (
+        (breaker.get("exceeded") is False and breaker.get("accepted") is False)
+        or (breaker.get("exceeded") is True and breaker.get("accepted") is True)
+    )
+    if (window.get("source", {}).get("id") != "cn_ip_primary"
+            or window.get("window") != {
+                "snapshot_days": 7,
+                "minimum_presence_days": 5,
+                "selection": "latest commit for each distinct UTC date",
+            }
+            or len(snapshots) != 7
+            or len({snapshot.get("date") for snapshot in snapshots}) != 7
+            or window_output.get("sha256") != primary_metadata.get("sha256")
+            or window_output.get("sha256") != published_digest
+            or window_output.get("coverage") != coverage_stats(published_rules)
+            or primary_metadata.get("window_report") != "cn-ip-window.json"
+            or breaker.get("threshold_percent") != 1.0
+            or not breaker_state_valid):
+        raise ValidationError("Invalid CN IP stable-window report")
     cn_metadata = next(entry for entry in metadata["rulesets"] if entry["id"] == "cn-ip")
     for version, kind in ((4, "ipcidr"), (6, "ipcidr6")):
         family = comparison.get("families", {}).get(f"ipv{version}", {})
         if not family.get("primary_rule_count") or family["primary_rule_count"] != cn_metadata["kinds"].get(kind):
             raise ValidationError(f"CN IPv{version} rules differ from the comparison report")
+        expected_reference = version == 4
+        if family.get("reference_available") is not expected_reference:
+            raise ValidationError(f"Invalid CN IPv{version} reference availability")

@@ -10,19 +10,29 @@
       "url": "https://core.telegram.org/resources/cidr.txt",
       "sha256": "3ecd072cedf72eceee6961b18a51e37f905d5ce4a656a5d24cf5fea63e6ec651"
     },
-    "cn_ipv4_reference": {
-      "url": "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt",
-      "sha256": "6b70aa60b0eafb98c221748b3d2354fab22a9039f787dc4c406e5cbadc1731e4",
-      "license": "MIT"
-    },
-    "cn_ipv6_reference": {
-      "url": "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt",
-      "sha256": "d566db9967feae877ecdd46f3e75930f794aca7692bd7562ee72343a0da82de0",
-      "license": "MIT"
-    },
     "cn_ip_primary": {
-      "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt",
-      "sha256": "9640bcbdfbd4023d1f136e6613a1e38ad4ee5ff9a60bead76fd97107fe494bb5",
+      "repository": "https://github.com/gaoyifan/china-operator-ip.git",
+      "ref": "ip-lists",
+      "revision": "24afd7fadbe426a03660a2148adf00dd757e1cba",
+      "sha256": "31101531bef3413b3ca55becb910061117e77767dafca0a85a83682545e4a41b",
+      "license": "MIT",
+      "window_days": 7,
+      "minimum_presence_days": 5,
+      "breaker_percent": 1.0,
+      "snapshot_dates": [
+        "2026-08-29",
+        "2026-08-28",
+        "2026-08-27",
+        "2026-08-26",
+        "2026-08-25",
+        "2026-08-23",
+        "2026-08-22"
+      ],
+      "window_report": "cn-ip-window.json"
+    },
+    "cn_ipv4_reference": {
+      "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
+      "sha256": "0ba834e66d7934413a739e65dd17b8d1f21eb6c498cce2380598a93d449baaa7",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -223,10 +233,10 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9651,
+      "rules": 9374,
       "kinds": {
-        "ipcidr": 6223,
-        "ipcidr6": 3428
+        "ipcidr": 5947,
+        "ipcidr6": 3427
       }
     }
   ],
@@ -234,7 +244,7 @@
     "cn-ip": {
       "report": "cn-ip-validation.json",
       "status": "differs",
-      "independent": false
+      "independent": true
     }
   }
 }

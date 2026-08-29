@@ -129,6 +129,10 @@ python -m pytest
 lane check
 ```
 
+CN-IP 七日稳定窗相对上一个已发布版本的地址空间变化超过 1% 时，构建会在写入
+`dist` 前停止。人工核对 `dist/cn-ip-window.json` 与上游提交后，可显式运行
+`lane build --refresh --accept-cn-ip-change` 接受这一次变化；定时任务不会自动绕过熔断。
+
 离线复现已缓存的上游版本：
 
 ```bash
@@ -145,10 +149,10 @@ lane build --upstream-dir /path/to/domain-list-community
 
 GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 
-1. 拉取 v2fly、Telegram 官方 CIDR、Loyalsoldier CN IP、gaoyifan 对照数据和 felixonmars 的 Apple 国内域名名单。
-2. 检查文本格式与非空内容；CN 主源必须同时包含 IPv4 和 IPv6。无效下载不会覆盖已缓存的有效文件。
-3. 对 CN IP 做双栈地址覆盖交叉验证，编译六端规则并运行测试、结构校验。
-4. 仅在 `dist/` 真实变化时创建自动更新提交。
+1. 拉取 v2fly、Telegram 官方 CIDR、gaoyifan `ip-lists` git 历史、misakaio 独立 IPv4 对照数据和 felixonmars 的 Apple 国内域名名单。
+2. 从 gaoyifan 最近七个不同 UTC 日期的提交中读取 `china.txt` / `china6.txt`，按地址空间统计，只保留至少五份快照都出现的范围。
+3. 对窗口结果执行 1% 地址空间变化熔断，并与 misakaio 做独立 IPv4 交叉验证；所有快照和地址族验证通过后才原子替换缓存。
+4. 编译六端规则、运行测试和结构校验；仅在 `dist/` 真实变化时创建自动更新提交。
 
 `dist/metadata.json` 记录上游 commit、文本源 SHA-256 与规则集数量；`dist/report.json` 记录客户端转换差异。每日构建也检查主配置，但只有主配置实际内容变化才更新它及其北京时间；规则集更新不强制用户升级本地主配置。主配置里的时间不是设备上规则资源最近一次下载时间。
 
@@ -157,7 +161,7 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 | 规则集 | 来源 | 默认策略与位置 |
 | --- | --- | --- |
 | `apple-cn`（AppleCN） | felixonmars `apple.china.conf` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Apple 主规则 |
-| `cn-ip`（CN IP） | Loyalsoldier/geoip `release/text/cn.txt` | `DIRECT`，包含 IPv4 + IPv6，位于所有精细规则和 China 域名规则之后、原有 GEOIP 与最终兜底之前 |
+| `cn-ip`（CN IP） | gaoyifan `ip-lists` 的 5-of-7 七日稳定窗 | `DIRECT`，包含 IPv4 + IPv6，位于所有精细规则和 China 域名规则之后、原有 GEOIP 与最终兜底之前 |
 
 两者均为独立远程规则集，不并入 `china`，也不新增策略组。AppleCN 只提取上游的域名后缀，不复制 dnsmasq 的 DNS 服务器或其他指令。它不是整个 Apple 直连开关；未命中例外名单的连接仍由 Apple 策略组处理。上游说明 Apple 国内 CDN 在部分运营商网络下可能不可用，出现问题时可停止引用该规则集。
 
@@ -169,11 +173,13 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 
 该规则集设置 `no_resolve`，只作用于 IP 规则：`lan` 是配置中的第一条规则，不带 `no-resolve` 的话，任何域名请求在第一步就会被迫做一次本地解析。`198.18.0.0/15` 被有意排除——六个客户端都用它作为 fake-IP 段。Quantumult X 的原生 IP 匹配语义不接受 Surge 式修饰符，因此其产物不含 `no-resolve`，这与既有的 Brokerage / Telegram IP 处理一致。
 
-CN IP 的唯一发布主源是 **Loyalsoldier/geoip**。gaoyifan 的 `china.txt` / `china6.txt` **只参与交叉验证**，不会合并、取交集或自动替代主源。保留已有 `GEOIP,CN,DIRECT` 作为后备；`Final` 及其他服务组的默认选择不变。规则文件包含 IPv6 不等于打开 IPv6：本次不改变各模板原有的 IPv6 开关，实际使用 IPv6 需客户端及网络支持并启用。
+CN IP 的唯一发布主源是 **gaoyifan/china-operator-ip**，但不直接采用最新一天。构建从 git 历史选择最近七个不同 UTC 日期的快照，在合并过等价 CIDR 覆盖后，只发布至少五份快照均出现的地址空间。这样单日的异常增减不会立刻进入规则。保留已有 `GEOIP,CN,DIRECT` 作为第二层故障保险；`Final` 及其他服务组的默认选择不变。`cn-ip` 仍然不加 `no-resolve`。
 
-[`dist/cn-ip-validation.json`](dist/cn-ip-validation.json) 分别记录 IPv4/IPv6 地址覆盖、两侧独有网段和各源 SHA-256。比较按地址范围进行，等价的 CIDR 拆分不会误报差异；IPv6 地址数量用十进制字符串保存，避免精度丢失。两源覆盖不同会产生构建提示并保留差异报告，不会静默混合来源或中止正常版本差异的发布。空名单、缺失地址族、默认路由或格式错误则中止构建。网络下载失败但存在有效缓存时，会明确提示使用缓存；首次下载失败且无缓存则中止。
+[`dist/cn-ip-window.json`](dist/cn-ip-window.json) 记录七个日期、commit、双栈文件摘要、每天与最终窗口的规则数/地址覆盖，以及相对上次发布的变化。熔断按每个地址族的**对称地址空间差**计算，而不是按 CIDR 行数：等价的拆分/聚合不会误报，等量替换仍能被发现。变化超过 1% 时定时构建停止，旧 `dist` 和 last-known-good 缓存保持不变；必须人工复核后使用显式接受参数。
 
-注意：Loyalsoldier 自身的 CN 数据也取自 gaoyifan，因此这里校验的是**发布内容和处理结果的一致性**，不是独立地理归属的双重证明；上游更新周期不同，出现版本差异是可能的。
+[`dist/cn-ip-validation.json`](dist/cn-ip-validation.json) 使用 **misakaio/chnroutes2** 做独立 BGP IPv4 交叉验证，记录两侧地址覆盖，以及独有范围的总数、完整摘要和前 100 条样本，但绝不把参考源并入路由。misakaio 没有 IPv6 文本清单，因此报告会明确写 `IPv6 reference_available: false`；IPv6 仍经过七日窗口与格式验证，不冒充独立双栈验证。空名单、缺失主源地址族、默认路由、无效快照或缓存摘要不一致都会中止构建。
+
+候选 git 仓库先克隆到 staging，七份快照、双栈、窗口与熔断全部通过后，才用单一缓存工件做原子替换。网络失败且有有效缓存时会明确回退；首次拉取失败则中止。Loyalsoldier 三个仓库只保留作人工差分审计，不再作为 Lane 主上游。
 
 已有用户需要手动升级一次完整配置，才能新增这三个规则集的引用；升级时请保留或重新填入自己的节点订阅及个人修改。之后这些远程规则可独立更新。
 
@@ -185,8 +191,9 @@ Python 内部包名 `proxyrules` 和旧命令保留兼容，公开项目与新�
 
 - [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)（MIT）
 - [Telegram 官方 CIDR](https://core.telegram.org/resources/cidr.txt)
-- [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip)（CN IP 主源；CC BY-SA 4.0，转换后的 `cn-ip` 文件及其数据报告保留该许可）
-- [gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)（MIT；双栈对照源，也是 Loyalsoldier CN 数据的上游）
+- [gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)（MIT；CN IP 双栈七日稳定窗主源）
+- [misakaio/chnroutes2](https://github.com/misakaio/chnroutes2)（CC BY-SA 4.0；独立 IPv4 交叉验证，不并入路由）
+- [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip)（仅用于人工差分审计，不参与构建）
 - [felixonmars/dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)（WTFPL 2.0；独立 AppleCN）
 - [Koolson/Qure](https://github.com/Koolson/Qure)（仅引用图标 URL）
 

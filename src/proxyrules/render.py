@@ -76,7 +76,7 @@ SERVICE_GROUP_NOTICE = (
     "# LAN：私有网段与本地域名直连，位于全部规则之前，带 no-resolve。\n"
     "# General Proxy：策略同为 Final，作用是抢在 China / CN IP / GEOIP 之前接住已知境外域名，\n"
     "#   不是另一个出口。\n"
-    "# CN IP：Loyalsoldier IPv4+IPv6 直连兜底，位于精细规则之后、GEOIP / Final 之前。\n"
+    "# CN IP：gaoyifan IPv4+IPv6 七日稳定窗直连兜底，位于精细规则之后、GEOIP / Final 之前。\n"
 )
 EGERN_RULE_FIELDS = {
     "full": "domain_set", "domain": "domain_suffix_set",

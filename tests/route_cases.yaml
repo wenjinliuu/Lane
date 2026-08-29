@@ -84,7 +84,7 @@ cases:
   - id: cn-ip-fallback
     input:
       type: ip
-      value: 1.0.1.1
+      value: 1.12.0.1
     expected:
       ruleset: cn-ip
       policy: DIRECT

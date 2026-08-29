@@ -86,6 +86,8 @@ def test_coverage_records_both_directions_without_changing_primary():
     report = compare_cn_coverage(primary, reference)
     assert report["status"] == "differs"
     assert report["families"]["ipv4"]["primary_only_cidrs"] == ["1.2.3.128/25"]
+    assert report["families"]["ipv4"]["primary_only_cidr_count"] == 1
+    assert report["families"]["ipv4"]["primary_only_cidrs_truncated"] is False
     assert report["families"]["ipv4"]["reference_only_cidrs"] == ["1.2.4.0/24"]
     assert tuple(primary) == before
     with pytest.raises(ValueError, match="IPv6"):
@@ -136,7 +138,8 @@ def test_network_failure_uses_visible_cached_fallback(tmp_path, monkeypatch):
 @pytest.mark.parametrize(
     "change",
     ["cn-first", "cn-no-resolve", "apple-policy", "apple-late", "china-merged",
-     "reference-routed", "google-cn-restored", "lan-late", "lan-resolves"],
+     "reference-routed", "google-cn-restored", "lan-late", "lan-resolves",
+     "window-days", "presence-days", "breaker", "reference-shared"],
 )
 def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
     config = deepcopy(load_project_config(ROOT))
@@ -168,6 +171,14 @@ def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
         entries.insert(2, by_id["lan"])
     elif change == "lan-resolves":
         by_id["lan"].pop("no_resolve", None)
+    elif change == "window-days":
+        config["sources"]["sources"]["cn_ip_primary"]["window_days"] = 1
+    elif change == "presence-days":
+        config["sources"]["sources"]["cn_ip_primary"]["minimum_presence_days"] = 1
+    elif change == "breaker":
+        config["sources"]["sources"]["cn_ip_primary"]["breaker_percent"] = 5
+    elif change == "reference-shared":
+        config["sources"]["cross_validation"]["cn_ip"]["independent"] = False
     else:
         by_id["cn-ip"]["text_source"] = "cn_ipv4_reference"
     with pytest.raises(ConfigError):
@@ -179,8 +190,8 @@ def test_generated_cn_rules_are_dual_stack_and_direct(target):
     suffix = "yaml" if target == "egern" else "list"
     path = ROOT / "dist" / target / "rules" / f"cn-ip.{suffix}"
     text = path.read_text()
-    assert "Loyalsoldier/geoip/release/text/cn.txt" in text
-    assert "License: CC-BY-SA-4.0" in text
+    assert "gaoyifan/china-operator-ip/tree/ip-lists" in text
+    assert "License: MIT" in text
     assert "no-resolve" not in text and "no_resolve" not in text
     if target == "egern":
         data = yaml.safe_load(text)
@@ -290,12 +301,15 @@ def test_validator_rejects_wrong_cn_policy(target, tmp_path):
         validate_generated(tmp_path, load_project_config(ROOT))
 
 
-def test_comparison_is_explicitly_shared_upstream_and_primary_only():
+def test_comparison_is_independent_ipv4_and_primary_only():
     report = json.loads((ROOT / "dist/cn-ip-validation.json").read_text())
-    assert report["independent"] is False
+    assert report["independent"] is True
+    assert report["license"] == "CC-BY-SA-4.0"
     assert list(report["sources"]["primary"]) == ["cn_ip_primary"]
-    assert set(report["sources"]["reference"]) == {"cn_ipv4_reference", "cn_ipv6_reference"}
+    assert set(report["sources"]["reference"]) == {"cn_ipv4_reference"}
     assert set(report["families"]) == {"ipv4", "ipv6"}
+    assert report["families"]["ipv4"]["reference_available"] is True
+    assert report["families"]["ipv6"]["reference_available"] is False
     config = load_project_config(ROOT)
     entry = config["rulesets"]["rulesets"][-1]
     assert entry["id"] == "cn-ip" and entry["text_source"] == "cn_ip_primary"
@@ -326,3 +340,30 @@ def test_validator_rejects_mismatched_comparison_digest(tmp_path):
     path.write_text(json.dumps(data))
     with pytest.raises(ValidationError, match="digests"):
         validate_generated(tmp_path, load_project_config(ROOT))
+
+
+def test_validator_binds_window_digest_to_published_cn_ip(tmp_path):
+    shutil.copytree(ROOT / "dist", tmp_path / "dist")
+    shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    path = tmp_path / "dist/stash/rules/cn-ip.list"
+    text = path.read_text()
+    assert "IP-CIDR,1.12.0.0/14" in text
+    path.write_text(text.replace("IP-CIDR,1.12.0.0/14", "IP-CIDR,1.12.0.0/15", 1))
+    with pytest.raises(ValidationError, match="stable-window"):
+        validate_generated(tmp_path, load_project_config(ROOT))
+
+
+def test_validator_requires_explicit_breaker_acceptance(tmp_path):
+    shutil.copytree(ROOT / "dist", tmp_path / "dist")
+    shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    path = tmp_path / "dist/cn-ip-window.json"
+    data = json.loads(path.read_text())
+    data["breaker"]["exceeded"] = True
+    data["breaker"]["accepted"] = False
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValidationError, match="stable-window"):
+        validate_generated(tmp_path, load_project_config(ROOT))
+
+    data["breaker"]["accepted"] = True
+    path.write_text(json.dumps(data))
+    validate_generated(tmp_path, load_project_config(ROOT))
