@@ -36,7 +36,11 @@ SERVICE_GROUP_NOTICE = (
     "# Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。\n"
     "# Schwab：嘉信独立分流，可单独选择 DIRECT 或代理。\n"
     "# 上述三组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。\n"
-    "# AppleCN / GoogleCN：命中独立大陆服务名单时优先 DIRECT，其他服务仍按原策略组分流。\n"
+    "# AppleCN：命中苹果大陆服务名单时优先 DIRECT，其他 Apple 服务仍走 Apple 策略组。\n"
+    "# Google 不再有大陆直连例外名单，全部域名统一走 Google 策略组。\n"
+    "# LAN：私有网段与本地域名直连，位于全部规则之前，带 no-resolve。\n"
+    "# General Proxy：策略同为 Final，作用是抢在 China / CN IP / GEOIP 之前接住已知境外域名，\n"
+    "#   不是另一个出口。\n"
     "# CN IP：Loyalsoldier IPv4+IPv6 直连兜底，位于精细规则之后、GEOIP / Final 之前。\n"
 )
 EGERN_RULE_FIELDS = {

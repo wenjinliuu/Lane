@@ -12,12 +12,12 @@
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt",
-      "sha256": "3e077ee8d9e9536eddae110ec317c02b86bdeaf5797042bfef7e9af95fd05c32",
+      "sha256": "6b70aa60b0eafb98c221748b3d2354fab22a9039f787dc4c406e5cbadc1731e4",
       "license": "MIT"
     },
     "cn_ipv6_reference": {
       "url": "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt",
-      "sha256": "ad2b6a72b8a587ce3be5b498842286b584c67686e226f95d338369dcd8533584",
+      "sha256": "d566db9967feae877ecdd46f3e75930f794aca7692bd7562ee72343a0da82de0",
       "license": "MIT"
     },
     "cn_ip_primary": {
@@ -29,21 +29,18 @@
       "url": "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf",
       "sha256": "5b85e3febd8067233d86483299f257806428b5d520c65e3da3c0ce9465568f64",
       "license": "WTFPL-2.0"
-    },
-    "google_cn": {
-      "url": "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf",
-      "sha256": "ac6d5a7f6c034694bcb81dde0350bbed940e47d03a87da0a318afc99780bb7c6",
-      "license": "WTFPL-2.0"
     }
   },
   "rulesets": [
     {
       "id": "lan",
       "policy": "DIRECT",
-      "rules": 131,
+      "rules": 149,
       "kinds": {
         "domain": 118,
         "full": 12,
+        "ipcidr": 14,
+        "ipcidr6": 4,
         "regexp": 1
       }
     },
@@ -53,14 +50,6 @@
       "rules": 165,
       "kinds": {
         "domain": 165
-      }
-    },
-    {
-      "id": "google-cn",
-      "policy": "DIRECT",
-      "rules": 112,
-      "kinds": {
-        "domain": 112
       }
     },
     {

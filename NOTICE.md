@@ -33,13 +33,19 @@ CN data in that project also derives from
 and `china6.txt` for comparison only, not as an additional routing source.
 This is a shared-upstream consistency check, not independent geolocation validation.
 
-## AppleCN / GoogleCN
+## AppleCN
 
 [`felixonmars/dnsmasq-china-list`](https://github.com/felixonmars/dnsmasq-china-list)
-provides `apple.china.conf` and `google.china.conf`.
+provides `apple.china.conf`.
 Copyright © Felix Yan <felixonmars@archlinux.org>.
 The upstream [WTFPL 2.0 license and notice](licenses/dnsmasq-china-list-WTFPL.txt)
 are preserved. Lane extracts DNS domain selectors as suffix routing rules,
 normalizes and deduplicates them, and translates them to client-native syntax;
-it does not import upstream DNS server settings. These remain independent
-DIRECT rule sets rather than being merged into China.
+it does not import upstream DNS server settings. This remains an independent
+DIRECT rule set rather than being merged into China.
+
+Upstream is a DNS acceleration project, so its lists record which domains a
+Chinese resolver answers well — not which domains are reachable directly. For
+Apple the two coincide: its entries resolve to mainland CDN nodes that can be
+reached without a proxy. For Google they do not, which is why Lane no longer
+consumes `google.china.conf`.

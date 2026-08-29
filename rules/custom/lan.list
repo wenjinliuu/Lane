@@ -1,2 +1,33 @@
-# Additional local or private domains can be added here.
+# Private and special-use address space (RFC 1918, 5735, 5737, 6598, 4193, 4291).
+# These prefixes do not change, so they are pinned here rather than fetched.
+#
+# The lan ruleset sets no_resolve, which applies to IP rules only. That matters
+# because lan is the first ruleset in every profile: without no-resolve, the very
+# first rule a domain request meets would force a DNS lookup.
+#
+# 198.18.0.0/15 is deliberately absent. Every supported client uses it as its
+# fake-IP range, and claiming it here would collide with that machinery.
 
+# IPv4
+0.0.0.0/8
+10.0.0.0/8
+100.64.0.0/10
+127.0.0.0/8
+169.254.0.0/16
+172.16.0.0/12
+192.0.0.0/24
+192.0.2.0/24
+192.88.99.0/24
+192.168.0.0/16
+198.51.100.0/24
+203.0.113.0/24
+224.0.0.0/4
+255.255.255.255/32
+
+# IPv6
+::1/128
+fc00::/7
+fe80::/10
+ff00::/8
+
+# Additional local or private domains can be added below.

@@ -11,7 +11,7 @@
 - `Manual` 包含用户导入的全部节点，不排除流量、到期、高倍率或维护信息项。
 - 地区仅保留美国、日本、香港、台湾与新加坡；每个地区分别提供 `XX Auto` 自动优选和 `XX Manual` 手动选点。
 - 策略组按 `Manual`、服务组、地区组排列，十个地区 Auto / Manual 组统一放在列表末尾。
-- 地区筛选只使用国旗、简体中文地区名、英文全称与常见简称做正向匹配，不使用城市、机场代码或排除词。
+- 地区筛选只做正向匹配，不使用排除词：国旗、中文地区名（含繁体）、英文全称、带词边界的两字母代码，以及常见城市名与中转简称（如 `沪日`、`深港`、`洛杉矶`）。机场代码（LAX 等）不参与匹配。
 - 服务组可切换到 `DIRECT`，或五个地区各自的 Auto / Manual 策略。
 - `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段。
 - `Crypto` 只匹配 Binance、OKX、Bybit 与 Bitget。其他交易所不单独分类，按后续规则或 `Final` 处理。
@@ -145,7 +145,7 @@ lane build --upstream-dir /path/to/domain-list-community
 
 GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 
-1. 拉取 v2fly、Telegram 官方 CIDR、Loyalsoldier CN IP、gaoyifan 对照数据和 felixonmars 的 Apple/Google 国内域名名单。
+1. 拉取 v2fly、Telegram 官方 CIDR、Loyalsoldier CN IP、gaoyifan 对照数据和 felixonmars 的 Apple 国内域名名单。
 2. 检查文本格式与非空内容；CN 主源必须同时包含 IPv4 和 IPv6。无效下载不会覆盖已缓存的有效文件。
 3. 对 CN IP 做双栈地址覆盖交叉验证，编译六端规则并运行测试、结构校验。
 4. 仅在 `dist/` 真实变化时创建自动更新提交。
@@ -157,10 +157,17 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 | 规则集 | 来源 | 默认策略与位置 |
 | --- | --- | --- |
 | `apple-cn`（AppleCN） | felixonmars `apple.china.conf` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Apple 主规则 |
-| `google-cn`（GoogleCN） | felixonmars `google.china.conf` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Google 主规则 |
 | `cn-ip`（CN IP） | Loyalsoldier/geoip `release/text/cn.txt` | `DIRECT`，包含 IPv4 + IPv6，位于所有精细规则和 China 域名规则之后、原有 GEOIP 与最终兜底之前 |
 
-三者均为独立远程规则集，不并入 `china`，也不新增策略组。AppleCN / GoogleCN 只提取上游的域名后缀，不复制 dnsmasq 的 DNS 服务器或其他指令。它们不是整个 Apple / Google 直连开关；未命中例外名单的连接仍由原有服务组处理。上游说明 Google 国内解析结果并非始终稳定，Apple 国内 CDN 在部分运营商网络下也可能不可用，请按实际网络情况调整对应规则引用。
+两者均为独立远程规则集，不并入 `china`，也不新增策略组。AppleCN 只提取上游的域名后缀，不复制 dnsmasq 的 DNS 服务器或其他指令。它不是整个 Apple 直连开关；未命中例外名单的连接仍由 Apple 策略组处理。上游说明 Apple 国内 CDN 在部分运营商网络下可能不可用，出现问题时可停止引用该规则集。
+
+**GoogleCN 已于 2026-08-29 移除。** felixonmars/dnsmasq-china-list 是 DNS 加速项目，`google.china.conf` 的语义是"用国内 DNS 解析这些域名会得到 Google 的中国前端地址"，上游对该文件标注 *not considered stable, use at your own risk*。解析得到不等于直连可达：该列表 112 条中有 91 条是 Google 全球域名，其中 `dl.google.com`、`clientservices.googleapis.com`、`app-measurement.com` 均有直连失败的公开记录。Google 域名现统一走 Google 策略组。Apple 的情况不同——其条目确实解析到可直连的大陆 CDN 节点，因此 AppleCN 保留。
+
+### 局域网
+
+`lan` 规则集位于所有规则之前，除 v2fly `private` 的本地域名外，还包含 RFC 1918 / 5735 / 5737 / 6598 / 4193 / 4291 的私有与特殊用途网段（见 [`rules/custom/lan.list`](rules/custom/lan.list)）。这些前缀不随上游变化，因此直接固定在仓库内。
+
+该规则集设置 `no_resolve`，只作用于 IP 规则：`lan` 是配置中的第一条规则，不带 `no-resolve` 的话，任何域名请求在第一步就会被迫做一次本地解析。`198.18.0.0/15` 被有意排除——六个客户端都用它作为 fake-IP 段。Quantumult X 的原生 IP 匹配语义不接受 Surge 式修饰符，因此其产物不含 `no-resolve`，这与既有的 Brokerage / Telegram IP 处理一致。
 
 CN IP 的唯一发布主源是 **Loyalsoldier/geoip**。gaoyifan 的 `china.txt` / `china6.txt` **只参与交叉验证**，不会合并、取交集或自动替代主源。保留已有 `GEOIP,CN,DIRECT` 作为后备；`Final` 及其他服务组的默认选择不变。规则文件包含 IPv6 不等于打开 IPv6：本次不改变各模板原有的 IPv6 开关，实际使用 IPv6 需客户端及网络支持并启用。
 
@@ -180,7 +187,7 @@ Python 内部包名 `proxyrules` 和旧命令保留兼容，公开项目与新�
 - [Telegram 官方 CIDR](https://core.telegram.org/resources/cidr.txt)
 - [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip)（CN IP 主源；CC BY-SA 4.0，转换后的 `cn-ip` 文件及其数据报告保留该许可）
 - [gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)（MIT；双栈对照源，也是 Loyalsoldier CN 数据的上游）
-- [felixonmars/dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)（WTFPL 2.0；独立 AppleCN / GoogleCN）
+- [felixonmars/dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)（WTFPL 2.0；独立 AppleCN）
 - [Koolson/Qure](https://github.com/Koolson/Qure)（仅引用图标 URL）
 
 本项目自身代码以 MIT License 发布，第三方规则数据遵循各自许可。第三方来源、转换说明与借鉴边界见 [`NOTICE.md`](NOTICE.md) 和 [`licenses/`](licenses/)。

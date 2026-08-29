@@ -107,8 +107,7 @@ def validate_config(config: dict[str, Any]) -> None:
 
     ordered_ids = [entry["id"] for entry in rulesets]
     by_id = {entry["id"]: entry for entry in rulesets}
-    for rule_id, source_id, main_id in (("apple-cn", "apple_cn", "apple"),
-                                       ("google-cn", "google_cn", "google")):
+    for rule_id, source_id, main_id in (("apple-cn", "apple_cn", "apple"),):
         entry = by_id.get(rule_id, {})
         if (entry.get("policy") != "DIRECT" or text_source_ids(entry) != [source_id]
                 or sources[source_id].get("format") != "dnsmasq"
@@ -116,6 +115,17 @@ def validate_config(config: dict[str, Any]) -> None:
             raise ConfigError(f"{rule_id} must be an independent DIRECT dnsmasq ruleset")
         if ordered_ids.index(rule_id) >= ordered_ids.index(main_id):
             raise ConfigError(f"{rule_id} must precede {main_id}")
+    # google.china.conf is a DNS acceleration list, not a routing list: resolving
+    # a domain through a Chinese resolver does not make Google's China front-end
+    # addresses reachable. Reintroducing it would send dl.google.com and
+    # clientservices.googleapis.com DIRECT, which is a known way to hang Chrome
+    # and the Play Store. Apple's list is different and stays.
+    if "google-cn" in by_id or "google_cn" in sources:
+        raise ConfigError("GoogleCN was removed deliberately and must not return")
+
+    lan = by_id.get("lan", {})
+    if ordered_ids[0] != "lan" or lan.get("policy") != "DIRECT" or not lan.get("no_resolve"):
+        raise ConfigError("lan must be the first ruleset, DIRECT and no-resolve")
     cn_ip = by_id.get("cn-ip", {})
     if (ordered_ids[-1] != "cn-ip" or cn_ip.get("policy") != "DIRECT"
             or text_source_ids(cn_ip) != ["cn_ip_primary"]
