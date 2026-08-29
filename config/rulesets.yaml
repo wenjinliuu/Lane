@@ -28,15 +28,9 @@ rulesets:
     policy: DIRECT
     text_source: apple_cn
 
-  # GoogleCN was removed on 2026-08-29. felixonmars/dnsmasq-china-list is a DNS
-  # acceleration project: google.china.conf lists domains that a Chinese resolver
-  # answers with Google's China front-end addresses, and upstream marks the file
-  # "not considered stable, use at your own risk". Resolving is not the same as
-  # reaching: 91 of its 112 entries were global Google domains, and dl.google.com,
-  # clientservices.googleapis.com and app-measurement.com each have public reports
-  # of failing when routed DIRECT from the mainland. Google traffic now goes to
-  # the Google policy group as a whole. AppleCN stays because its upstream entries
-  # really do resolve to mainland CDN nodes that are reachable directly.
+  # GoogleCN stays out of this profile list. A complete, independently reusable
+  # copy is generated through full_only_rulesets below, but no default profile is
+  # allowed to reference it. Google traffic therefore follows the Google group.
   - id: ai
     title: AI
     policy: AI
@@ -52,8 +46,7 @@ rulesets:
     title: Brokerage
     policy: Brokerage
     v2fly: [futu, itiger, longbridge]
-    custom: rules/custom/brokerage.list
-    no_resolve: true
+    custom: rules/custom/brokerage-domain.list
 
   - id: crypto
     title: Crypto
@@ -91,12 +84,6 @@ rulesets:
     title: Telegram
     policy: Telegram
     v2fly: [telegram]
-
-  - id: telegram-ip
-    title: Telegram IP
-    policy: Telegram
-    text_source: telegram_cidr
-    no_resolve: true
 
   - id: social
     title: Social
@@ -140,6 +127,20 @@ rulesets:
     policy: DIRECT
     v2fly: [cn]
 
+  # Domain rules above must get first refusal before any service IP rules can
+  # trigger or skip resolution. LAN is the deliberate exception at position one.
+  - id: brokerage-ip
+    title: Brokerage IP
+    policy: Brokerage
+    custom: rules/custom/brokerage-ip.list
+    no_resolve: true
+
+  - id: telegram-ip
+    title: Telegram IP
+    policy: Telegram
+    text_source: telegram_cidr
+    no_resolve: true
+
   # cn-ip must stay last and must NOT carry no_resolve. A domain request skips a
   # no-resolve IP rule entirely, so adding it here would hand the mainland verdict
   # to whatever GeoIP database each client happens to ship, which is the opposite
@@ -149,3 +150,14 @@ rulesets:
     title: CN IP
     policy: DIRECT
     text_source: cn_ip_primary
+
+# These complete rulesets are published only under rules-full/. They are never
+# referenced by Lane profiles and are excluded from profile residual ordering.
+full_only_rulesets:
+  # google.china.conf is a DNS acceleration list, not a reachability guarantee.
+  # It remains available for explicit expert use, while default Google traffic
+  # stays on the Google policy group.
+  - id: google-cn
+    title: GoogleCN (full only)
+    policy: DIRECT
+    text_source: google_cn

@@ -62,7 +62,7 @@ cases:
       type: ip
       value: 1.14.242.1
     expected:
-      ruleset: brokerage
+      ruleset: brokerage-ip
       policy: Brokerage
 
   - id: general-proxy-guard

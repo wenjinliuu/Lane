@@ -10,7 +10,9 @@ from proxyrules.compiler import CompiledRuleset
 from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
-    CONFIG_FILENAMES, EGERN_RULE_FIELDS, SUBSCRIPTION_PLACEHOLDER, TARGETS,
+    CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER, RULES_FULL_DIR,
+    RULES_PROFILE_DIR,
+    SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -65,16 +67,34 @@ def test_egern_all_rule_kinds_and_no_resolve():
 def test_generated_rule_counts_agree_with_capability_report():
     metadata = json.loads((ROOT / "dist/metadata.json").read_text())
     report = json.loads((ROOT / "dist/report.json").read_text())
-    for target in TARGETS:
-        for entry in metadata["rulesets"]:
-            suffix = "yaml" if target == "egern" else "list"
-            path = ROOT / "dist" / target / "rules" / f"{entry['id']}.{suffix}"
-            if target == "egern":
-                parsed = yaml.safe_load(path.read_text())
-                count = sum(len(values) for values in parsed.values() if isinstance(values, list))
-            else:
-                count = sum(1 for line in path.read_text().splitlines() if line and not line.startswith("#"))
-            assert count + report["unsupported_rules"][target].get(entry["id"], 0) == entry["rules"]
+    collections = {
+        "full": (
+            RULES_FULL_DIR,
+            [*metadata["rulesets"], *metadata["full_only_rulesets"]],
+            "rules",
+        ),
+        "profile": (RULES_PROFILE_DIR, metadata["rulesets"], "profile_rules"),
+    }
+    for mode, (directory, entries, count_key) in collections.items():
+        for target in TARGETS:
+            for entry in entries:
+                suffix = "yaml" if target == "egern" else "list"
+                path = ROOT / "dist" / target / directory / f"{entry['id']}.{suffix}"
+                if target == "egern":
+                    parsed = yaml.safe_load(path.read_text())
+                    count = sum(
+                        len(values) for values in parsed.values() if isinstance(values, list)
+                    )
+                else:
+                    count = sum(
+                        1 for line in path.read_text().splitlines()
+                        if line and not line.startswith("#")
+                    )
+                assert (
+                    count
+                    + report["unsupported_rules"][mode][target].get(entry["id"], 0)
+                    == entry[count_key]
+                )
 
 
 def test_all_templates_have_one_active_subscription_and_local_update_guidance():
@@ -147,14 +167,42 @@ def test_egern_stale_generated_rule_files_are_removed(tmp_path):
     render_all(*args, [old])
     render_all(*args, [])
     for target in TARGETS:
-        assert not list((tmp_path / "dist" / target / "rules").iterdir())
+        for directory in (RULES_FULL_DIR, RULES_PROFILE_DIR):
+            path = tmp_path / "dist" / target / directory
+            assert path.is_dir() and not list(path.iterdir())
+        assert not (tmp_path / "dist" / target / "rules").exists()
+
+
+def test_legacy_migration_preserves_unrecognized_rule_files(tmp_path):
+    config = load_project_config(ROOT)
+    args = (tmp_path, config["project"], config["policies"], config["icons"])
+    for target in TARGETS:
+        suffix = "yaml" if target == "egern" else "list"
+        legacy = tmp_path / "dist" / target / "rules"
+        legacy.mkdir(parents=True)
+        (legacy / f"generated.{suffix}").write_text(
+            GENERATED_HEADER + "DOMAIN-SUFFIX,example.com\n"
+        )
+        (legacy / f"personal.{suffix}").write_text("personal content\n")
+
+    render_all(*args, [])
+
+    for target in TARGETS:
+        suffix = "yaml" if target == "egern" else "list"
+        legacy = tmp_path / "dist" / target / "rules"
+        assert not (legacy / f"generated.{suffix}").exists()
+        assert (legacy / f"personal.{suffix}").read_text() == "personal content\n"
 
 
 def test_validator_rejects_broken_remote_rule_reference(tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
     path = tmp_path / "dist/qx/Lane_qx.conf"
-    path.write_text(path.read_text().replace("/qx/rules/ai.list", "/qx/rules/missing.list"))
+    path.write_text(
+        path.read_text().replace(
+            "/qx/rules-profile/ai.list", "/qx/rules-profile/missing.list"
+        )
+    )
     with pytest.raises(ValidationError, match="remote rule URLs"):
         validate_generated(tmp_path, load_project_config(ROOT))
 

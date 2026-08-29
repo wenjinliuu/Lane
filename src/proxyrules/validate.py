@@ -9,7 +9,13 @@ import yaml
 
 from .cn_window import canonical_cidr_text, coverage_stats
 from .filters import build_filters
-from .render import CONFIG_FILENAMES, SUBSCRIPTION_PLACEHOLDER, rule_filename
+from .render import (
+    CONFIG_FILENAMES,
+    RULES_FULL_DIR,
+    RULES_PROFILE_DIR,
+    SUBSCRIPTION_PLACEHOLDER,
+    rule_filename,
+)
 from .v2fly import DomainListError, parse_cidr_text, parse_custom_file
 
 
@@ -126,7 +132,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Stash strategy groups do not match the policy manifest")
 
     rulesets = config["rulesets"]["rulesets"]
+    full_only_rulesets = config["rulesets"].get("full_only_rulesets", [])
     expected_rule_ids = _active_rule_ids(root, rulesets)
+    expected_full_rule_ids = [
+        *expected_rule_ids,
+        *_active_rule_ids(root, full_only_rulesets),
+    ]
     expected_policies = {entry["id"]: entry["policy"] for entry in rulesets}
     if list(stash.get("rule-providers", {})) != expected_rule_ids:
         raise ValidationError("Stash rule-provider order differs from the manifest")
@@ -262,7 +273,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             actual_urls = [line.split(",", 1)[0] for line in _section(text, "Remote Rule")]
         else:
             actual_urls = [line.split(",")[1] for line in _section(text, "Rule") if line.startswith("RULE-SET,")]
-        expected_urls = [f"{raw_base}/dist/{target}/rules/{rule_filename(target, rule_id)}"
+        expected_urls = [f"{raw_base}/dist/{target}/{RULES_PROFILE_DIR}/{rule_filename(target, rule_id)}"
                          for rule_id in expected_rule_ids]
         if actual_urls != expected_urls:
             raise ValidationError(f"{target}: remote rule URLs or order differ from the manifest")
@@ -298,11 +309,25 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             if target == "loon" and _section(text, "Rule") != ["GEOIP,CN,DIRECT", "FINAL,Final"]:
                 raise ValidationError("Loon local rules must only contain final routing")
         for rule_id in expected_rule_ids:
-            path = dist / target / "rules" / rule_filename(target, rule_id)
+            path = dist / target / RULES_PROFILE_DIR / rule_filename(target, rule_id)
             if not path.is_file():
                 raise ValidationError(f"Missing referenced rule file: {path}")
             if target == "egern" and not isinstance(yaml.safe_load(path.read_text()), dict):
                 raise ValidationError(f"Invalid Egern rule set: {path}")
+        for rule_id in expected_full_rule_ids:
+            path = dist / target / RULES_FULL_DIR / rule_filename(target, rule_id)
+            if not path.is_file():
+                raise ValidationError(f"Missing full rule file: {path}")
+            if target == "egern" and not isinstance(yaml.safe_load(path.read_text()), dict):
+                raise ValidationError(f"Invalid full Egern rule set: {path}")
+        if (dist / target / "rules").exists():
+            raise ValidationError(f"{target}: ambiguous legacy rules directory must be removed")
+        for full_only in full_only_rulesets:
+            profile_path = (
+                dist / target / RULES_PROFILE_DIR / rule_filename(target, full_only["id"])
+            )
+            if profile_path.exists():
+                raise ValidationError(f"{target}: full-only ruleset leaked into profile output")
 
     generated_text = "\n".join(
         path.read_text(encoding="utf-8")
@@ -317,6 +342,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Ad blocking and special download routing are out of scope")
 
     metadata = json.loads((dist / "metadata.json").read_text())
+    report = json.loads((dist / "report.json").read_text())
     window = json.loads((dist / "cn-ip-window.json").read_text())
     comparison = json.loads((dist / "cn-ip-validation.json").read_text())
     if (comparison.get("primary_ruleset") != "cn-ip" or comparison.get("independent") is not True
@@ -333,7 +359,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     try:
         published_values = [
             line.split(",", 2)[1]
-            for line in (dist / "stash/rules/cn-ip.list").read_text(encoding="utf-8").splitlines()
+            for line in (
+                dist / "stash" / RULES_FULL_DIR / "cn-ip.list"
+            ).read_text(encoding="utf-8").splitlines()
             if line.startswith(("IP-CIDR,", "IP-CIDR6,"))
         ]
         published_rules = tuple(
@@ -349,6 +377,44 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         (breaker.get("exceeded") is False and breaker.get("accepted") is False)
         or (breaker.get("exceeded") is True and breaker.get("accepted") is True)
     )
+    metadata_ids = [entry.get("id") for entry in metadata.get("rulesets", [])]
+    full_only_ids = [entry.get("id") for entry in metadata.get("full_only_rulesets", [])]
+    residual = metadata.get("profile_residual", {})
+    residual_total = sum(
+        entry.get("profile_removed", {}).get("total", -1)
+        for entry in metadata.get("rulesets", [])
+    )
+    if (metadata.get("schema") != 2
+            or metadata.get("artifacts") != {
+                "full": RULES_FULL_DIR,
+                "profile": RULES_PROFILE_DIR,
+                "default_profiles_use": RULES_PROFILE_DIR,
+            }
+            or metadata_ids != expected_rule_ids
+            or full_only_ids != [entry["id"] for entry in full_only_rulesets]
+            or residual.get("total") != residual_total
+            or residual.get("guarantee") != "first-match routing is unchanged"
+            or report.get("schema") != 2
+            or set(report.get("unsupported_rules", {})) != {"full", "profile"}):
+        raise ValidationError("Invalid full/profile artifact metadata")
+    metadata_by_id = {entry["id"]: entry for entry in metadata["rulesets"]}
+    for rule_id in expected_rule_ids:
+        entry = metadata_by_id[rule_id]
+        full_count = sum(
+            1 for line in (
+                dist / "stash" / RULES_FULL_DIR / f"{rule_id}.list"
+            ).read_text().splitlines() if line and not line.startswith("#")
+        )
+        profile_count = sum(
+            1 for line in (
+                dist / "stash" / RULES_PROFILE_DIR / f"{rule_id}.list"
+            ).read_text().splitlines() if line and not line.startswith("#")
+        )
+        if (entry.get("rules") != full_count
+                or entry.get("profile_rules") != profile_count
+                or entry.get("profile_removed", {}).get("total")
+                != full_count - profile_count):
+            raise ValidationError(f"Invalid full/profile counts for {rule_id}")
     if (window.get("source", {}).get("id") != "cn_ip_primary"
             or window.get("window") != {
                 "snapshot_days": 7,
