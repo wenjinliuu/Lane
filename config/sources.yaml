@@ -9,4 +9,40 @@ sources:
     kind: text
     url: https://core.telegram.org/resources/cidr.txt
     license_note: Official Telegram network resource
+  cn_ipv4_reference:
+    kind: text
+    format: cidr
+    ip_version: 4
+    role: validation-only
+    url: https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt
+    license: MIT
+  cn_ipv6_reference:
+    kind: text
+    format: cidr
+    ip_version: 6
+    role: validation-only
+    url: https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt
+    license: MIT
+  cn_ip_primary:
+    kind: text
+    format: cidr
+    ip_versions: [4, 6]
+    url: https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt
+    license: CC-BY-SA-4.0
+    license_note: Loyalsoldier CN data derives from gaoyifan/china-operator-ip (MIT)
+  apple_cn:
+    kind: text
+    format: dnsmasq
+    url: https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf
+    license: WTFPL-2.0
+  google_cn:
+    kind: text
+    format: dnsmasq
+    url: https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf
+    license: WTFPL-2.0
 
+cross_validation:
+  cn_ip:
+    ruleset: cn-ip
+    reference_sources: [cn_ipv4_reference, cn_ipv6_reference]
+    independent: false

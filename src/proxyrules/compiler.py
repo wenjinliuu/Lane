@@ -5,7 +5,8 @@ from pathlib import Path
 from typing import Any
 
 from .model import Rule
-from .v2fly import DomainListRepository, parse_cidr_text, parse_custom_file
+from .text_sources import parse_text_source, text_source_ids
+from .v2fly import DomainListRepository, parse_custom_file
 
 
 @dataclass(frozen=True)
@@ -15,6 +16,7 @@ class CompiledRuleset:
     policy: str
     rules: tuple[Rule, ...]
     no_resolve: bool = False
+    source_notices: tuple[str, ...] = ()
 
 
 def _deduplicate(rules: list[Rule]) -> tuple[Rule, ...]:
@@ -29,18 +31,27 @@ def compile_rulesets(
     entries: list[dict[str, Any]],
     repository: DomainListRepository,
     text_sources: dict[str, str],
+    source_specs: dict[str, dict[str, Any]] | None = None,
 ) -> list[CompiledRuleset]:
     output: list[CompiledRuleset] = []
     for entry in entries:
         rules: list[Rule] = []
+        notices: list[str] = []
         for name in entry.get("v2fly", []):
             rules.extend(repository.resolve(name))
         if custom := entry.get("custom"):
             rules.extend(parse_custom_file(root / custom))
-        if source_id := entry.get("text_source"):
+        for source_id in text_source_ids(entry):
             if source_id not in text_sources:
                 raise ValueError(f"Missing text source {source_id}")
-            rules.extend(parse_cidr_text(text_sources[source_id], source_id))
+            spec = (source_specs or {}).get(source_id, {})
+            if spec.get("role") == "validation-only":
+                raise ValueError(f"Validation-only source {source_id} cannot be routed")
+            rules.extend(parse_text_source(text_sources[source_id], source_id, spec))
+            if license_name := spec.get("license"):
+                notices.extend([f"Source: {spec['url']}", f"License: {license_name}"])
+        if notices:
+            notices.append("Adapted by Lane: extraction, normalization, deduplication and client format conversion.")
         compiled_rules = _deduplicate(rules)
         if entry.get("omit_if_empty") and not compiled_rules:
             continue
@@ -51,6 +62,7 @@ def compile_rulesets(
                 policy=entry["policy"],
                 rules=compiled_rules,
                 no_resolve=bool(entry.get("no_resolve")),
+                source_notices=tuple(notices),
             )
         )
     return output

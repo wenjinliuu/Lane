@@ -36,6 +36,8 @@ SERVICE_GROUP_NOTICE = (
     "# Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。\n"
     "# Schwab：嘉信独立分流，可单独选择 DIRECT 或代理。\n"
     "# 上述三组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。\n"
+    "# AppleCN / GoogleCN：命中独立大陆服务名单时优先 DIRECT，其他服务仍按原策略组分流。\n"
+    "# CN IP：Loyalsoldier IPv4+IPv6 直连兜底，位于精细规则之后、GEOIP / Final 之前。\n"
 )
 EGERN_RULE_FIELDS = {
     "full": "domain_set", "domain": "domain_suffix_set",
@@ -144,7 +146,11 @@ def render_egern_ruleset(ruleset: CompiledRuleset) -> str:
         data["no_resolve"] = True
     for rule in ruleset.rules:
         data.setdefault(EGERN_RULE_FIELDS[rule.kind], []).append(rule.value)
-    return GENERATED_HEADER + _yaml(data)
+    return _ruleset_header(ruleset) + _yaml(data)
+
+
+def _ruleset_header(ruleset: CompiledRuleset) -> str:
+    return GENERATED_HEADER + "".join(f"# {notice}\n" for notice in ruleset.source_notices)
 
 
 def _icon(icons: dict[str, Any], name: str) -> str | None:
@@ -627,7 +633,7 @@ def render_all(
                         skipped_count += 1
                     else:
                         rendered.append(line)
-                content = GENERATED_HEADER + "\n".join(rendered) + "\n"
+                content = _ruleset_header(ruleset) + "\n".join(rendered) + "\n"
             path = dist / target / "rules" / rule_filename(target, ruleset.id)
             expected[target].add(path)
             write_if_changed(path, content)

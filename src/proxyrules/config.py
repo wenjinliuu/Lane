@@ -5,6 +5,8 @@ from typing import Any
 
 import yaml
 
+from .text_sources import text_source_ids
+
 
 class ConfigError(ValueError):
     pass
@@ -61,11 +63,20 @@ def validate_config(config: dict[str, Any]) -> None:
 
     allowed_policies = set(services) | {"DIRECT", "Manual"}
     ids: set[str] = set()
+    sources = config["sources"]["sources"]
     for entry in rulesets:
         rule_id = entry.get("id")
         if not rule_id or rule_id in ids:
             raise ConfigError(f"Invalid or duplicate ruleset id: {rule_id!r}")
         ids.add(rule_id)
+        try:
+            source_ids = text_source_ids(entry)
+        except (TypeError, ValueError) as exc:
+            raise ConfigError(f"Invalid text sources in {rule_id}: {exc}") from exc
+        for source_id in source_ids:
+            source = sources.get(source_id, {})
+            if source.get("kind") != "text" or source.get("role") == "validation-only":
+                raise ConfigError(f"Invalid routing source {source_id!r} in {rule_id}")
         if entry.get("policy") not in allowed_policies:
             raise ConfigError(
                 f"Unknown policy {entry.get('policy')!r} in ruleset {rule_id}"
@@ -93,3 +104,36 @@ def validate_config(config: dict[str, Any]) -> None:
     ai = next((item for item in rulesets if item.get("id") == "ai"), None)
     if not ai or "category-ai-cn" in ai.get("v2fly", []):
         raise ConfigError("Mainland AI must not be captured by the AI policy")
+
+    ordered_ids = [entry["id"] for entry in rulesets]
+    by_id = {entry["id"]: entry for entry in rulesets}
+    for rule_id, source_id, main_id in (("apple-cn", "apple_cn", "apple"),
+                                       ("google-cn", "google_cn", "google")):
+        entry = by_id.get(rule_id, {})
+        if (entry.get("policy") != "DIRECT" or text_source_ids(entry) != [source_id]
+                or sources[source_id].get("format") != "dnsmasq"
+                or entry.get("v2fly") or entry.get("custom")):
+            raise ConfigError(f"{rule_id} must be an independent DIRECT dnsmasq ruleset")
+        if ordered_ids.index(rule_id) >= ordered_ids.index(main_id):
+            raise ConfigError(f"{rule_id} must precede {main_id}")
+    cn_ip = by_id.get("cn-ip", {})
+    if (ordered_ids[-1] != "cn-ip" or cn_ip.get("policy") != "DIRECT"
+            or text_source_ids(cn_ip) != ["cn_ip_primary"]
+            or cn_ip.get("no_resolve") or cn_ip.get("v2fly") or cn_ip.get("custom")):
+        raise ConfigError("cn-ip must be the last ruleset, DIRECT, using the primary CN source")
+    primary_spec = sources["cn_ip_primary"]
+    if primary_spec.get("format") != "cidr" or primary_spec.get("ip_versions") != [4, 6]:
+        raise ConfigError("Primary CN IP source must contain IPv4 and IPv6")
+    for version in (4, 6):
+        spec = sources[f"cn_ipv{version}_reference"]
+        if spec.get("format") != "cidr" or spec.get("ip_version") != version:
+            raise ConfigError(f"CN IPv{version} source must enforce its address family")
+    check = config["sources"].get("cross_validation", {}).get("cn_ip", {})
+    if (check.get("ruleset") != "cn-ip"
+            or check.get("reference_sources") != ["cn_ipv4_reference", "cn_ipv6_reference"]
+            or check.get("independent") is not False
+            or any(sources.get(key, {}).get("role") != "validation-only"
+                   for key in ("cn_ipv4_reference", "cn_ipv6_reference"))):
+        raise ConfigError("gaoyifan must be a validation-only, non-independent CN reference")
+    if text_source_ids(by_id["china"]):
+        raise ConfigError("CN exceptions and CN IP must not be merged into China")

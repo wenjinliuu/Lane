@@ -3,8 +3,11 @@ from __future__ import annotations
 import hashlib
 import subprocess
 import urllib.request
+import warnings
 from pathlib import Path
 from typing import Any
+
+from .text_sources import parse_text_source
 
 
 class UpstreamError(RuntimeError):
@@ -81,12 +84,19 @@ def fetch_text_source(
         except OSError as exc:
             if not target.exists():
                 raise UpstreamError(f"Unable to fetch {source_id}: {exc}") from exc
+            warnings.warn(f"Unable to refresh {source_id}; using its cached source", stacklevel=2)
         else:
+            # Invalid/empty downloads must never overwrite a last-known-good cache.
+            try:
+                parse_text_source(content.decode("utf-8"), source_id, source)
+            except (UnicodeError, ValueError) as exc:
+                raise UpstreamError(f"Invalid source {source_id}: {exc}") from exc
             target.parent.mkdir(parents=True, exist_ok=True)
             if not target.exists() or target.read_bytes() != content:
                 target.write_bytes(content)
     if not target.exists():
         raise UpstreamError(f"No cached copy for {source_id}")
     content = target.read_text(encoding="utf-8")
+    parse_text_source(content, source_id, source)
     digest = hashlib.sha256(content.encode("utf-8")).hexdigest()
     return content, digest

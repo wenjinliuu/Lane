@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import hashlib
+import warnings
 from pathlib import Path
 from typing import Any
 
 from .compiler import compile_rulesets
+from .cn_validation import compare_cn_coverage
 from .config import load_project_config, validate_config
 from .render import render_all, write_json_if_changed
+from .text_sources import parse_text_source, text_source_ids
 from .upstream import (
     UpstreamError,
     fetch_text_source,
@@ -76,6 +79,8 @@ def build_project(
             "url": source["url"],
             "sha256": digest,
         }
+        if "license" in source:
+            text_metadata[source_id]["license"] = source["license"]
 
     repository = DomainListRepository(data_dir)
     rulesets = compile_rulesets(
@@ -83,7 +88,25 @@ def build_project(
         config["rulesets"]["rulesets"],
         repository,
         text_sources,
+        sources,
     )
+    check = config["sources"]["cross_validation"]["cn_ip"]
+    reference_ids = check["reference_sources"]
+    primary = next(ruleset for ruleset in rulesets if ruleset.id == check["ruleset"])
+    reference = [rule for key in reference_ids
+                 for rule in parse_text_source(text_sources[key], key, sources[key])]
+    cn_validation = compare_cn_coverage(primary.rules, reference)
+    primary_entry = next(entry for entry in config["rulesets"]["rulesets"] if entry["id"] == primary.id)
+    cn_validation["primary_ruleset"] = primary.id
+    cn_validation["sources"] = {
+        "primary": {key: text_metadata[key] for key in text_source_ids(primary_entry)},
+        "reference": {key: text_metadata[key] for key in reference_ids},
+    }
+    if cn_validation["status"] == "differs":
+        warnings.warn(
+            "CN IP sources differ; Loyalsoldier remains primary. See dist/cn-ip-validation.json",
+            stacklevel=2,
+        )
     render_report = render_all(
         root,
         config["project"],
@@ -114,7 +137,12 @@ def build_project(
             }
             for ruleset in rulesets
         ],
+        "cross_validation": {
+            "cn-ip": {"report": "cn-ip-validation.json", "status": cn_validation["status"],
+                      "independent": False},
+        },
     }
+    write_json_if_changed(root / "dist" / "cn-ip-validation.json", cn_validation)
     write_json_if_changed(root / "dist" / "metadata.json", metadata)
     write_json_if_changed(root / "dist" / "report.json", render_report)
     validate_generated(root, config)

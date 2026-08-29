@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -102,6 +103,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         *(dist / target / filename for target, filename in CONFIG_FILENAMES.items()),
         dist / "metadata.json",
         dist / "report.json",
+        dist / "cn-ip-validation.json",
     ]
     missing = [str(path.relative_to(root)) for path in required if not path.is_file()]
     if missing:
@@ -122,6 +124,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
 
     rulesets = config["rulesets"]["rulesets"]
     expected_rule_ids = _active_rule_ids(root, rulesets)
+    expected_policies = {entry["id"]: entry["policy"] for entry in rulesets}
     if list(stash.get("rule-providers", {})) != expected_rule_ids:
         raise ValidationError("Stash rule-provider order differs from the manifest")
     if stash.get("rules", [])[-2:] != ["GEOIP,CN,DIRECT", "MATCH,Final"]:
@@ -260,6 +263,37 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                          for rule_id in expected_rule_ids]
         if actual_urls != expected_urls:
             raise ValidationError(f"{target}: remote rule URLs or order differ from the manifest")
+        expected_policy_list = [expected_policies[rule_id] for rule_id in expected_rule_ids]
+        if target == "stash":
+            expected_routes = [f"RULE-SET,{rule_id},{expected_policies[rule_id]}"
+                               for rule_id in expected_rule_ids]
+            if stash["rules"] != expected_routes + ["GEOIP,CN,DIRECT", "MATCH,Final"]:
+                raise ValidationError("Stash routing policies or priority differ from the manifest")
+        elif target == "egern":
+            actual_policies = [entry["rule_set"]["policy"] for entry in egern["rules"] if "rule_set" in entry]
+            if actual_policies != expected_policy_list:
+                raise ValidationError("Egern routing policies differ from the manifest")
+        elif target in {"surge", "shadowrocket"}:
+            actual_policies = [line.split(",")[2].strip() for line in _section(text, "Rule")
+                               if line.startswith("RULE-SET,")]
+            if actual_policies != expected_policy_list:
+                raise ValidationError(f"{target}: routing policies differ from the manifest")
+            if _section(text, "Rule")[-2:] != ["GEOIP,CN,DIRECT", "FINAL,Final"]:
+                raise ValidationError(f"{target}: final routing rules are invalid")
+        else:
+            section = "Remote Rule" if target == "loon" else "filter_remote"
+            key = "policy" if target == "loon" else "force-policy"
+            actual_policies = []
+            for line in _section(text, section):
+                settings = dict(part.strip().split("=", 1) for part in line.split(",")[1:] if "=" in part)
+                settings = {name.strip(): value.strip() for name, value in settings.items()}
+                actual_policies.append(settings.get(key))
+            expected_native = ["direct" if target == "qx" and p == "DIRECT" else p
+                               for p in expected_policy_list]
+            if actual_policies != expected_native:
+                raise ValidationError(f"{target}: routing policies differ from the manifest")
+            if target == "loon" and _section(text, "Rule") != ["GEOIP,CN,DIRECT", "FINAL,Final"]:
+                raise ValidationError("Loon local rules must only contain final routing")
         for rule_id in expected_rule_ids:
             path = dist / target / "rules" / rule_filename(target, rule_id)
             if not path.is_file():
@@ -278,3 +312,19 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     forbidden_ids = {"ads", "adblock", "advertising", "reject", "game-download", "download"}
     if forbidden_ids.intersection(expected_rule_ids):
         raise ValidationError("Ad blocking and special download routing are out of scope")
+
+    metadata = json.loads((dist / "metadata.json").read_text())
+    comparison = json.loads((dist / "cn-ip-validation.json").read_text())
+    if (comparison.get("primary_ruleset") != "cn-ip" or comparison.get("independent") is not False
+            or comparison.get("status") not in {"match", "differs"}):
+        raise ValidationError("Invalid CN IP comparison report")
+    comparison_sources = comparison.get("sources", {})
+    for role, source_ids in (("primary", ["cn_ip_primary"]),
+                             ("reference", ["cn_ipv4_reference", "cn_ipv6_reference"])):
+        if comparison_sources.get(role) != {key: metadata["sources"][key] for key in source_ids}:
+            raise ValidationError("CN IP comparison source digests differ from build metadata")
+    cn_metadata = next(entry for entry in metadata["rulesets"] if entry["id"] == "cn-ip")
+    for version, kind in ((4, "ipcidr"), (6, "ipcidr6")):
+        family = comparison.get("families", {}).get(f"ipv{version}", {})
+        if not family.get("primary_rule_count") or family["primary_rule_count"] != cn_metadata["kinds"].get(kind):
+            raise ValidationError(f"CN IPv{version} rules differ from the comparison report")

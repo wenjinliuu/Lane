@@ -17,6 +17,16 @@ rulesets:
     custom: rules/custom/proxy.list
     omit_if_empty: true
 
+  - id: apple-cn
+    title: AppleCN
+    policy: DIRECT
+    text_source: apple_cn
+
+  - id: google-cn
+    title: GoogleCN
+    policy: DIRECT
+    text_source: google_cn
+
   - id: ai
     title: AI
     policy: AI
@@ -112,3 +122,8 @@ rulesets:
     title: China
     policy: DIRECT
     v2fly: [cn]
+
+  - id: cn-ip
+    title: CN IP
+    policy: DIRECT
+    text_source: cn_ip_primary

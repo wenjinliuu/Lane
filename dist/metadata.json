@@ -9,6 +9,31 @@
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
       "sha256": "3ecd072cedf72eceee6961b18a51e37f905d5ce4a656a5d24cf5fea63e6ec651"
+    },
+    "cn_ipv4_reference": {
+      "url": "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt",
+      "sha256": "3e077ee8d9e9536eddae110ec317c02b86bdeaf5797042bfef7e9af95fd05c32",
+      "license": "MIT"
+    },
+    "cn_ipv6_reference": {
+      "url": "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt",
+      "sha256": "ad2b6a72b8a587ce3be5b498842286b584c67686e226f95d338369dcd8533584",
+      "license": "MIT"
+    },
+    "cn_ip_primary": {
+      "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt",
+      "sha256": "9640bcbdfbd4023d1f136e6613a1e38ad4ee5ff9a60bead76fd97107fe494bb5",
+      "license": "CC-BY-SA-4.0"
+    },
+    "apple_cn": {
+      "url": "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf",
+      "sha256": "5b85e3febd8067233d86483299f257806428b5d520c65e3da3c0ce9465568f64",
+      "license": "WTFPL-2.0"
+    },
+    "google_cn": {
+      "url": "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf",
+      "sha256": "ac6d5a7f6c034694bcb81dde0350bbed940e47d03a87da0a318afc99780bb7c6",
+      "license": "WTFPL-2.0"
     }
   },
   "rulesets": [
@@ -20,6 +45,22 @@
         "domain": 118,
         "full": 12,
         "regexp": 1
+      }
+    },
+    {
+      "id": "apple-cn",
+      "policy": "DIRECT",
+      "rules": 165,
+      "kinds": {
+        "domain": 165
+      }
+    },
+    {
+      "id": "google-cn",
+      "policy": "DIRECT",
+      "rules": 112,
+      "kinds": {
+        "domain": 112
       }
     },
     {
@@ -189,6 +230,22 @@
         "full": 67,
         "regexp": 3
       }
+    },
+    {
+      "id": "cn-ip",
+      "policy": "DIRECT",
+      "rules": 9651,
+      "kinds": {
+        "ipcidr": 6223,
+        "ipcidr6": 3428
+      }
     }
-  ]
+  ],
+  "cross_validation": {
+    "cn-ip": {
+      "report": "cn-ip-validation.json",
+      "status": "differs",
+      "independent": false
+    }
+  }
 }

@@ -145,11 +145,30 @@ lane build --upstream-dir /path/to/domain-list-community
 
 GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 
-1. 拉取最新 v2fly 域名库与 Telegram 官方 CIDR。
-2. 编译六端规则并运行测试、结构校验。
-3. 仅在 `dist/` 真实变化时创建自动更新提交。
+1. 拉取 v2fly、Telegram 官方 CIDR、Loyalsoldier CN IP、gaoyifan 对照数据和 felixonmars 的 Apple/Google 国内域名名单。
+2. 检查文本格式与非空内容；CN 主源必须同时包含 IPv4 和 IPv6。无效下载不会覆盖已缓存的有效文件。
+3. 对 CN IP 做双栈地址覆盖交叉验证，编译六端规则并运行测试、结构校验。
+4. 仅在 `dist/` 真实变化时创建自动更新提交。
 
 `dist/metadata.json` 记录上游 commit、文本源 SHA-256 与规则集数量；`dist/report.json` 记录客户端转换差异。每日构建也检查主配置，但只有主配置实际内容变化才更新它及其北京时间；规则集更新不强制用户升级本地主配置。主配置里的时间不是设备上规则资源最近一次下载时间。
+
+### 国内服务例外与 CN IP 兜底
+
+| 规则集 | 来源 | 默认策略与位置 |
+| --- | --- | --- |
+| `apple-cn`（AppleCN） | felixonmars `apple.china.conf` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Apple 主规则 |
+| `google-cn`（GoogleCN） | felixonmars `google.china.conf` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Google 主规则 |
+| `cn-ip`（CN IP） | Loyalsoldier/geoip `release/text/cn.txt` | `DIRECT`，包含 IPv4 + IPv6，位于所有精细规则和 China 域名规则之后、原有 GEOIP 与最终兜底之前 |
+
+三者均为独立远程规则集，不并入 `china`，也不新增策略组。AppleCN / GoogleCN 只提取上游的域名后缀，不复制 dnsmasq 的 DNS 服务器或其他指令。它们不是整个 Apple / Google 直连开关；未命中例外名单的连接仍由原有服务组处理。上游说明 Google 国内解析结果并非始终稳定，Apple 国内 CDN 在部分运营商网络下也可能不可用，请按实际网络情况调整对应规则引用。
+
+CN IP 的唯一发布主源是 **Loyalsoldier/geoip**。gaoyifan 的 `china.txt` / `china6.txt` **只参与交叉验证**，不会合并、取交集或自动替代主源。保留已有 `GEOIP,CN,DIRECT` 作为后备；`Final` 及其他服务组的默认选择不变。规则文件包含 IPv6 不等于打开 IPv6：本次不改变各模板原有的 IPv6 开关，实际使用 IPv6 需客户端及网络支持并启用。
+
+[`dist/cn-ip-validation.json`](dist/cn-ip-validation.json) 分别记录 IPv4/IPv6 地址覆盖、两侧独有网段和各源 SHA-256。比较按地址范围进行，等价的 CIDR 拆分不会误报差异；IPv6 地址数量用十进制字符串保存，避免精度丢失。两源覆盖不同会产生构建提示并保留差异报告，不会静默混合来源或中止正常版本差异的发布。空名单、缺失地址族、默认路由或格式错误则中止构建。网络下载失败但存在有效缓存时，会明确提示使用缓存；首次下载失败且无缓存则中止。
+
+注意：Loyalsoldier 自身的 CN 数据也取自 gaoyifan，因此这里校验的是**发布内容和处理结果的一致性**，不是独立地理归属的双重证明；上游更新周期不同，出现版本差异是可能的。
+
+已有用户需要手动升级一次完整配置，才能新增这三个规则集的引用；升级时请保留或重新填入自己的节点订阅及个人修改。之后这些远程规则可独立更新。
 
 项目已从 `ProxyRules` 更名为 `Lane`，旧主配置文件名不再发布；请改用上面的新地址。已下载的本地副本不会随仓库重命名自动迁移，应升级一次以使用新规则 URL。历史文件可从 Git 提交记录取回。
 
@@ -159,6 +178,9 @@ Python 内部包名 `proxyrules` 和旧命令保留兼容，公开项目与新�
 
 - [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)（MIT）
 - [Telegram 官方 CIDR](https://core.telegram.org/resources/cidr.txt)
+- [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip)（CN IP 主源；CC BY-SA 4.0，转换后的 `cn-ip` 文件及其数据报告保留该许可）
+- [gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)（MIT；双栈对照源，也是 Loyalsoldier CN 数据的上游）
+- [felixonmars/dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)（WTFPL 2.0；独立 AppleCN / GoogleCN）
 - [Koolson/Qure](https://github.com/Koolson/Qure)（仅引用图标 URL）
 
-本项目自身以 MIT License 发布。第三方来源与借鉴边界见 [`NOTICE.md`](NOTICE.md)。
+本项目自身代码以 MIT License 发布，第三方规则数据遵循各自许可。第三方来源、转换说明与借鉴边界见 [`NOTICE.md`](NOTICE.md) 和 [`licenses/`](licenses/)。
