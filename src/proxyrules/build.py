@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .cn_window import canonical_cidr_text
-from .compiler import compile_rulesets
+from .compiler import CompiledRuleset, compile_rulesets, profile_residual_rulesets
 from .cn_validation import compare_cn_coverage
 from .config import load_project_config, validate_config
 from .model import Rule
@@ -51,8 +51,19 @@ def _previous_cn_window_rules(root: Path) -> tuple[Rule, ...] | None:
     """Read the checked-in last-known-good output used by fresh CI runners."""
 
     report_path = root / "dist" / "cn-ip-window.json"
-    rules_path = root / "dist" / "stash" / "rules" / "cn-ip.list"
-    if not rules_path.is_file():
+    rules_path = next(
+        (
+            path
+            for path in (
+                root / "dist" / "stash" / "rules-full" / "cn-ip.list",
+                root / "dist" / "stash" / "rules-profile" / "cn-ip.list",
+                root / "dist" / "stash" / "rules" / "cn-ip.list",
+            )
+            if path.is_file()
+        ),
+        None,
+    )
+    if rules_path is None:
         return None
     try:
         values = []
@@ -139,16 +150,27 @@ def build_project(
             prepared_history_sources.append(prepared)
 
     repository = DomainListRepository(data_dir)
-    rulesets = compile_rulesets(
+    full_rulesets = compile_rulesets(
         root,
         config["rulesets"]["rulesets"],
         repository,
         text_sources,
         sources,
     )
+    profile_rulesets = profile_residual_rulesets(full_rulesets)
+    full_only_rulesets = compile_rulesets(
+        root,
+        config["rulesets"].get("full_only_rulesets", []),
+        repository,
+        text_sources,
+        sources,
+        allow_full_only_sources=True,
+    )
     check = config["sources"]["cross_validation"]["cn_ip"]
     reference_ids = check["reference_sources"]
-    primary = next(ruleset for ruleset in rulesets if ruleset.id == check["ruleset"])
+    primary = next(
+        ruleset for ruleset in full_rulesets if ruleset.id == check["ruleset"]
+    )
     reference = [rule for key in reference_ids
                  for rule in parse_text_source(text_sources[key], key, sources[key])]
     reference_versions = tuple(
@@ -195,12 +217,26 @@ def build_project(
         config["project"],
         config["policies"],
         config["icons"],
-        rulesets,
+        [*full_rulesets, *full_only_rulesets],
+        profile_rulesets,
     )
 
+    def kinds(ruleset: CompiledRuleset) -> dict[str, int]:
+        return {
+            kind: sum(1 for rule in ruleset.rules if rule.kind == kind)
+            for kind in sorted({rule.kind for rule in ruleset.rules})
+        }
+
+    profile_by_id = {ruleset.id: ruleset for ruleset in profile_rulesets}
+
     metadata = {
-        "schema": 1,
+        "schema": 2,
         "project": config["project"]["project"]["repository"],
+        "artifacts": {
+            "full": "rules-full",
+            "profile": "rules-profile",
+            "default_profiles_use": "rules-profile",
+        },
         "sources": {
             "v2fly": {
                 "repository": sources["v2fly"]["repository"],
@@ -213,13 +249,42 @@ def build_project(
                 "id": ruleset.id,
                 "policy": ruleset.policy,
                 "rules": len(ruleset.rules),
-                "kinds": {
-                    kind: sum(1 for rule in ruleset.rules if rule.kind == kind)
-                    for kind in sorted({rule.kind for rule in ruleset.rules})
+                "kinds": kinds(ruleset),
+                "profile_rules": len(profile_by_id[ruleset.id].rules),
+                "profile_kinds": kinds(profile_by_id[ruleset.id]),
+                "profile_removed": {
+                    "within_ruleset": profile_by_id[ruleset.id].profile_removed_within,
+                    "previous_rulesets": profile_by_id[ruleset.id].profile_removed_prior,
+                    "total": (
+                        profile_by_id[ruleset.id].profile_removed_within
+                        + profile_by_id[ruleset.id].profile_removed_prior
+                    ),
                 },
             }
-            for ruleset in rulesets
+            for ruleset in full_rulesets
         ],
+        "full_only_rulesets": [
+            {
+                "id": ruleset.id,
+                "policy": ruleset.policy,
+                "rules": len(ruleset.rules),
+                "kinds": kinds(ruleset),
+            }
+            for ruleset in full_only_rulesets
+        ],
+        "profile_residual": {
+            "within_rulesets": sum(
+                ruleset.profile_removed_within for ruleset in profile_rulesets
+            ),
+            "previous_rulesets": sum(
+                ruleset.profile_removed_prior for ruleset in profile_rulesets
+            ),
+            "total": sum(
+                ruleset.profile_removed_within + ruleset.profile_removed_prior
+                for ruleset in profile_rulesets
+            ),
+            "guarantee": "first-match routing is unchanged",
+        },
         "cross_validation": {
             "cn-ip": {"report": "cn-ip-validation.json", "status": cn_validation["status"],
                       "independent": bool(check["independent"])},

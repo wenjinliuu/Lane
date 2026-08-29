@@ -18,30 +18,30 @@
   "breaker": {
     "comparison": "symmetric address-space difference, not textual CIDR equality",
     "threshold_percent": 1.0,
-    "exceeded": true,
+    "exceeded": false,
     "families": {
       "ipv4": {
         "baseline_available": true,
-        "previous_addresses": "344332800",
+        "previous_addresses": "327329022",
         "current_addresses": "327329022",
         "added_addresses": "0",
-        "removed_addresses": "17003778",
-        "changed_addresses": "17003778",
-        "changed_percent": 4.938181,
-        "exceeded": true
+        "removed_addresses": "0",
+        "changed_addresses": "0",
+        "changed_percent": 0.0,
+        "exceeded": false
       },
       "ipv6": {
         "baseline_available": true,
-        "previous_addresses": "5429385406094841609859456770768896",
+        "previous_addresses": "5429385402468064151015569246650368",
         "current_addresses": "5429385402468064151015569246650368",
         "added_addresses": "0",
-        "removed_addresses": "3626777458843887524118528",
-        "changed_addresses": "3626777458843887524118528",
+        "removed_addresses": "0",
+        "changed_addresses": "0",
         "changed_percent": 0.0,
         "exceeded": false
       }
     },
-    "accepted": true
+    "accepted": false
   },
   "snapshots": [
     {

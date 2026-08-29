@@ -15,7 +15,9 @@ import yaml
 from proxyrules.cn_validation import _subtract, compare_cn_coverage
 from proxyrules.compiler import compile_rulesets
 from proxyrules.config import ConfigError, load_project_config, validate_config
-from proxyrules.render import CONFIG_FILENAMES, TARGETS
+from proxyrules.render import (
+    CONFIG_FILENAMES, RULES_FULL_DIR, RULES_PROFILE_DIR, TARGETS,
+)
 from proxyrules.text_sources import parse_dnsmasq_domains, parse_text_source
 from proxyrules.upstream import UpstreamError, fetch_text_source
 from proxyrules.validate import ValidationError, validate_generated
@@ -138,7 +140,7 @@ def test_network_failure_uses_visible_cached_fallback(tmp_path, monkeypatch):
 @pytest.mark.parametrize(
     "change",
     ["cn-first", "cn-no-resolve", "apple-policy", "apple-late", "china-merged",
-     "reference-routed", "google-cn-restored", "lan-late", "lan-resolves",
+     "reference-routed", "google-cn-profiled", "lan-late", "lan-resolves",
      "window-days", "presence-days", "breaker", "reference-shared"],
 )
 def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
@@ -156,15 +158,10 @@ def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
         entries.insert(-1, by_id["apple-cn"])
     elif change == "china-merged":
         by_id["china"]["text_source"] = "apple_cn"
-    elif change == "google-cn-restored":
-        config["sources"]["sources"]["google_cn"] = {
-            "kind": "text", "format": "dnsmasq",
-            "url": "https://example.invalid/google.china.conf", "license": "WTFPL-2.0",
-        }
+    elif change == "google-cn-profiled":
         entries.insert(
             entries.index(by_id["ai"]),
-            {"id": "google-cn", "title": "GoogleCN", "policy": "DIRECT",
-             "text_source": "google_cn"},
+            deepcopy(config["rulesets"]["full_only_rulesets"][0]),
         )
     elif change == "lan-late":
         entries.remove(by_id["lan"])
@@ -186,9 +183,10 @@ def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
 
 
 @pytest.mark.parametrize("target", TARGETS)
-def test_generated_cn_rules_are_dual_stack_and_direct(target):
+@pytest.mark.parametrize("directory", [RULES_FULL_DIR, RULES_PROFILE_DIR])
+def test_generated_cn_rules_are_dual_stack_and_direct(target, directory):
     suffix = "yaml" if target == "egern" else "list"
-    path = ROOT / "dist" / target / "rules" / f"cn-ip.{suffix}"
+    path = ROOT / "dist" / target / directory / f"cn-ip.{suffix}"
     text = path.read_text()
     assert "gaoyifan/china-operator-ip/tree/ip-lists" in text
     assert "License: MIT" in text
@@ -211,7 +209,9 @@ def _domain_policy(domain):
         if not ref.startswith("RULE-SET,"):
             continue
         _, rule_id, policy = ref.split(",")
-        for line in (ROOT / "dist/stash/rules" / f"{rule_id}.list").read_text().splitlines():
+        for line in (
+            ROOT / "dist/stash" / RULES_PROFILE_DIR / f"{rule_id}.list"
+        ).read_text().splitlines():
             if not line or line.startswith("#"):
                 continue
             # Regex quantifiers can contain commas, e.g. {1,3}.
@@ -253,7 +253,9 @@ def test_private_prefixes_are_direct_and_do_not_force_resolution(prefix):
     and is proxied by FINAL. lan is the first ruleset, so the prefixes must carry
     no-resolve or every domain request would pay for a lookup at rule one."""
 
-    lines = (ROOT / "dist/surge/rules/lan.list").read_text().splitlines()
+    lines = (
+        ROOT / "dist/surge" / RULES_PROFILE_DIR / "lan.list"
+    ).read_text().splitlines()
     assert f"IP-CIDR,{prefix},no-resolve" in lines
 
 
@@ -261,7 +263,9 @@ def test_lan_omits_the_client_fake_ip_range():
     """Every supported client uses 198.18.0.0/15 for fake IP; claiming it as LAN
     would collide with that machinery."""
 
-    assert "198.18." not in (ROOT / "dist/surge/rules/lan.list").read_text()
+    assert "198.18." not in (
+        ROOT / "dist/surge" / RULES_PROFILE_DIR / "lan.list"
+    ).read_text()
 
 
 def test_cn_ip_does_not_override_brokerage_ip():
@@ -271,7 +275,9 @@ def test_cn_ip_does_not_override_brokerage_ip():
         if not ref.startswith("RULE-SET,"):
             continue
         _, rule_id, policy = ref.split(",")
-        for line in (ROOT / "dist/stash/rules" / f"{rule_id}.list").read_text().splitlines():
+        for line in (
+            ROOT / "dist/stash" / RULES_PROFILE_DIR / f"{rule_id}.list"
+        ).read_text().splitlines():
             if line.startswith("IP-CIDR,") and address in ipaddress.ip_network(line.split(",")[1]):
                 assert policy == "Brokerage"
                 return
@@ -323,9 +329,9 @@ def test_validator_rejects_cn_ip_before_service_rules(target, tmp_path):
     text = path.read_text()
     # Swap only the resource URLs; both rules use DIRECT, so policy checking
     # alone cannot detect the priority regression.
-    text = (text.replace("/rules/apple-cn.", "/rules/priority-test.")
-            .replace("/rules/cn-ip.", "/rules/apple-cn.")
-            .replace("/rules/priority-test.", "/rules/cn-ip."))
+    text = (text.replace("/rules-profile/apple-cn.", "/rules-profile/priority-test.")
+            .replace("/rules-profile/cn-ip.", "/rules-profile/apple-cn.")
+            .replace("/rules-profile/priority-test.", "/rules-profile/cn-ip."))
     path.write_text(text)
     with pytest.raises(ValidationError, match="URLs or order"):
         validate_generated(tmp_path, load_project_config(ROOT))
@@ -345,7 +351,7 @@ def test_validator_rejects_mismatched_comparison_digest(tmp_path):
 def test_validator_binds_window_digest_to_published_cn_ip(tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
-    path = tmp_path / "dist/stash/rules/cn-ip.list"
+    path = tmp_path / "dist/stash" / RULES_FULL_DIR / "cn-ip.list"
     text = path.read_text()
     assert "IP-CIDR,1.12.0.0/14" in text
     path.write_text(text.replace("IP-CIDR,1.12.0.0/14", "IP-CIDR,1.12.0.0/15", 1))

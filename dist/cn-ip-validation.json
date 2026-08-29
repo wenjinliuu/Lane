@@ -263,7 +263,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "0ba834e66d7934413a739e65dd17b8d1f21eb6c498cce2380598a93d449baaa7",
+        "sha256": "c886a417ff47117426723713a69609612bf5271c7347cf7016c91dc91157efee",
         "license": "CC-BY-SA-4.0"
       }
     }

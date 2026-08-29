@@ -48,26 +48,35 @@ def test_no_adblock_or_download_policy() -> None:
     )
 
 
-def test_broker_rules_are_split_between_brokerage_and_schwab() -> None:
+def test_broker_rules_are_split_by_service_and_match_phase() -> None:
     config = load_project_config(ROOT)
     rulesets = {entry["id"]: entry for entry in config["rulesets"]["rulesets"]}
 
     brokerage = rulesets["brokerage"]
     assert brokerage["policy"] == "Brokerage"
-    assert brokerage["no_resolve"] is True
+    assert "no_resolve" not in brokerage
     brokerage_path = ROOT / brokerage["custom"]
     brokerage_custom = brokerage_path.read_text(encoding="utf-8")
     assert "domain:skytigris.cn" in brokerage_custom
     assert "full:geotest.lbkrs.com" in brokerage_custom
     assert "domain:moomoo.com" in brokerage_custom
-    assert "ipcidr:1.14.242.0/23" in brokerage_custom
     brokerage_rules = parse_custom_file(brokerage_path)
-    assert len(brokerage_rules) == 118
+    assert len(brokerage_rules) == 55
     assert Counter(rule.kind for rule in brokerage_rules) == {
         "domain": 44,
         "full": 11,
-        "ipcidr": 63,
     }
+
+    brokerage_ip = rulesets["brokerage-ip"]
+    assert brokerage_ip["policy"] == "Brokerage"
+    assert brokerage_ip["no_resolve"] is True
+    brokerage_ip_rules = parse_custom_file(ROOT / brokerage_ip["custom"])
+    assert len(brokerage_ip_rules) == 63
+    assert Counter(rule.kind for rule in brokerage_ip_rules) == {"ipcidr": 63}
+    ordered = list(rulesets)
+    assert ordered[ordered.index("china") + 1:] == [
+        "brokerage-ip", "telegram-ip", "cn-ip"
+    ]
 
     schwab = rulesets["schwab"]
     assert schwab["policy"] == "Schwab"

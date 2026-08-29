@@ -36,7 +36,7 @@ def _first_match(input_type: str, value: str) -> dict[str, str]:
         if not route.startswith("RULE-SET,"):
             continue
         _, ruleset, policy = route.split(",")
-        rule_path = ROOT / "dist" / "stash" / "rules" / f"{ruleset}.list"
+        rule_path = ROOT / "dist" / "stash" / "rules-profile" / f"{ruleset}.list"
         for line in rule_path.read_text().splitlines():
             if not line or line.startswith("#"):
                 continue

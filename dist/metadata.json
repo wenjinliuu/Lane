@@ -1,6 +1,11 @@
 {
-  "schema": 1,
+  "schema": 2,
   "project": "wenjinliuu/Lane",
+  "artifacts": {
+    "full": "rules-full",
+    "profile": "rules-profile",
+    "default_profiles_use": "rules-profile"
+  },
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
@@ -32,12 +37,17 @@
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "0ba834e66d7934413a739e65dd17b8d1f21eb6c498cce2380598a93d449baaa7",
+      "sha256": "c886a417ff47117426723713a69609612bf5271c7347cf7016c91dc91157efee",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
       "url": "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf",
       "sha256": "5b85e3febd8067233d86483299f257806428b5d520c65e3da3c0ce9465568f64",
+      "license": "WTFPL-2.0"
+    },
+    "google_cn": {
+      "url": "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf",
+      "sha256": "ac6d5a7f6c034694bcb81dde0350bbed940e47d03a87da0a318afc99780bb7c6",
       "license": "WTFPL-2.0"
     }
   },
@@ -52,6 +62,19 @@
         "ipcidr": 14,
         "ipcidr6": 4,
         "regexp": 1
+      },
+      "profile_rules": 149,
+      "profile_kinds": {
+        "domain": 118,
+        "full": 12,
+        "ipcidr": 14,
+        "ipcidr6": 4,
+        "regexp": 1
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 0,
+        "total": 0
       }
     },
     {
@@ -60,6 +83,15 @@
       "rules": 165,
       "kinds": {
         "domain": 165
+      },
+      "profile_rules": 162,
+      "profile_kinds": {
+        "domain": 162
+      },
+      "profile_removed": {
+        "within_ruleset": 3,
+        "previous_rulesets": 0,
+        "total": 3
       }
     },
     {
@@ -70,6 +102,17 @@
         "domain": 151,
         "full": 28,
         "regexp": 1
+      },
+      "profile_rules": 180,
+      "profile_kinds": {
+        "domain": 151,
+        "full": 28,
+        "regexp": 1
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 0,
+        "total": 0
       }
     },
     {
@@ -78,16 +121,34 @@
       "rules": 9,
       "kinds": {
         "domain": 9
+      },
+      "profile_rules": 9,
+      "profile_kinds": {
+        "domain": 9
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 0,
+        "total": 0
       }
     },
     {
       "id": "brokerage",
       "policy": "Brokerage",
-      "rules": 140,
+      "rules": 77,
       "kinds": {
         "domain": 66,
-        "full": 11,
-        "ipcidr": 63
+        "full": 11
+      },
+      "profile_rules": 67,
+      "profile_kinds": {
+        "domain": 66,
+        "full": 1
+      },
+      "profile_removed": {
+        "within_ruleset": 10,
+        "previous_rulesets": 0,
+        "total": 10
       }
     },
     {
@@ -97,6 +158,16 @@
       "kinds": {
         "domain": 68,
         "full": 4
+      },
+      "profile_rules": 72,
+      "profile_kinds": {
+        "domain": 68,
+        "full": 4
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 0,
+        "total": 0
       }
     },
     {
@@ -106,6 +177,16 @@
       "kinds": {
         "domain": 177,
         "full": 1
+      },
+      "profile_rules": 177,
+      "profile_kinds": {
+        "domain": 176,
+        "full": 1
+      },
+      "profile_removed": {
+        "within_ruleset": 1,
+        "previous_rulesets": 0,
+        "total": 1
       }
     },
     {
@@ -115,6 +196,16 @@
       "kinds": {
         "domain": 31,
         "full": 5
+      },
+      "profile_rules": 35,
+      "profile_kinds": {
+        "domain": 30,
+        "full": 5
+      },
+      "profile_removed": {
+        "within_ruleset": 1,
+        "previous_rulesets": 0,
+        "total": 1
       }
     },
     {
@@ -124,6 +215,16 @@
       "kinds": {
         "domain": 30,
         "full": 52
+      },
+      "profile_rules": 81,
+      "profile_kinds": {
+        "domain": 29,
+        "full": 52
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 1,
+        "total": 1
       }
     },
     {
@@ -134,6 +235,17 @@
         "domain": 360,
         "full": 68,
         "regexp": 5
+      },
+      "profile_rules": 410,
+      "profile_kinds": {
+        "domain": 355,
+        "full": 50,
+        "regexp": 5
+      },
+      "profile_removed": {
+        "within_ruleset": 17,
+        "previous_rulesets": 6,
+        "total": 23
       }
     },
     {
@@ -144,6 +256,17 @@
         "domain": 767,
         "full": 95,
         "regexp": 3
+      },
+      "profile_rules": 857,
+      "profile_kinds": {
+        "domain": 762,
+        "full": 92,
+        "regexp": 3
+      },
+      "profile_removed": {
+        "within_ruleset": 8,
+        "previous_rulesets": 0,
+        "total": 8
       }
     },
     {
@@ -152,15 +275,15 @@
       "rules": 21,
       "kinds": {
         "domain": 21
-      }
-    },
-    {
-      "id": "telegram-ip",
-      "policy": "Telegram",
-      "rules": 14,
-      "kinds": {
-        "ipcidr": 9,
-        "ipcidr6": 5
+      },
+      "profile_rules": 21,
+      "profile_kinds": {
+        "domain": 21
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 0,
+        "total": 0
       }
     },
     {
@@ -170,6 +293,16 @@
       "kinds": {
         "domain": 714,
         "full": 17
+      },
+      "profile_rules": 709,
+      "profile_kinds": {
+        "domain": 703,
+        "full": 6
+      },
+      "profile_removed": {
+        "within_ruleset": 22,
+        "previous_rulesets": 0,
+        "total": 22
       }
     },
     {
@@ -180,6 +313,17 @@
         "domain": 576,
         "full": 88,
         "regexp": 1
+      },
+      "profile_rules": 625,
+      "profile_kinds": {
+        "domain": 557,
+        "full": 67,
+        "regexp": 1
+      },
+      "profile_removed": {
+        "within_ruleset": 33,
+        "previous_rulesets": 7,
+        "total": 40
       }
     },
     {
@@ -190,6 +334,17 @@
         "domain": 879,
         "full": 233,
         "regexp": 2
+      },
+      "profile_rules": 646,
+      "profile_kinds": {
+        "domain": 625,
+        "full": 19,
+        "regexp": 2
+      },
+      "profile_removed": {
+        "within_ruleset": 266,
+        "previous_rulesets": 202,
+        "total": 468
       }
     },
     {
@@ -199,6 +354,16 @@
       "kinds": {
         "domain": 640,
         "full": 113
+      },
+      "profile_rules": 497,
+      "profile_kinds": {
+        "domain": 490,
+        "full": 7
+      },
+      "profile_removed": {
+        "within_ruleset": 113,
+        "previous_rulesets": 143,
+        "total": 256
       }
     },
     {
@@ -208,6 +373,16 @@
       "kinds": {
         "domain": 1576,
         "full": 249
+      },
+      "profile_rules": 1509,
+      "profile_kinds": {
+        "domain": 1500,
+        "full": 9
+      },
+      "profile_removed": {
+        "within_ruleset": 240,
+        "previous_rulesets": 76,
+        "total": 316
       }
     },
     {
@@ -218,6 +393,17 @@
         "domain": 24333,
         "full": 1411,
         "regexp": 158
+      },
+      "profile_rules": 18785,
+      "profile_kinds": {
+        "domain": 18548,
+        "full": 91,
+        "regexp": 146
+      },
+      "profile_removed": {
+        "within_ruleset": 1645,
+        "previous_rulesets": 5472,
+        "total": 7117
       }
     },
     {
@@ -228,6 +414,53 @@
         "domain": 8129,
         "full": 67,
         "regexp": 3
+      },
+      "profile_rules": 5995,
+      "profile_kinds": {
+        "domain": 5990,
+        "full": 4,
+        "regexp": 1
+      },
+      "profile_removed": {
+        "within_ruleset": 2164,
+        "previous_rulesets": 40,
+        "total": 2204
+      }
+    },
+    {
+      "id": "brokerage-ip",
+      "policy": "Brokerage",
+      "rules": 63,
+      "kinds": {
+        "ipcidr": 63
+      },
+      "profile_rules": 63,
+      "profile_kinds": {
+        "ipcidr": 63
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 0,
+        "total": 0
+      }
+    },
+    {
+      "id": "telegram-ip",
+      "policy": "Telegram",
+      "rules": 14,
+      "kinds": {
+        "ipcidr": 9,
+        "ipcidr6": 5
+      },
+      "profile_rules": 14,
+      "profile_kinds": {
+        "ipcidr": 9,
+        "ipcidr6": 5
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 0,
+        "total": 0
       }
     },
     {
@@ -237,9 +470,35 @@
       "kinds": {
         "ipcidr": 5947,
         "ipcidr6": 3427
+      },
+      "profile_rules": 9374,
+      "profile_kinds": {
+        "ipcidr": 5947,
+        "ipcidr6": 3427
+      },
+      "profile_removed": {
+        "within_ruleset": 0,
+        "previous_rulesets": 0,
+        "total": 0
       }
     }
   ],
+  "full_only_rulesets": [
+    {
+      "id": "google-cn",
+      "policy": "DIRECT",
+      "rules": 112,
+      "kinds": {
+        "domain": 112
+      }
+    }
+  ],
+  "profile_residual": {
+    "within_rulesets": 4523,
+    "previous_rulesets": 5947,
+    "total": 10470,
+    "guarantee": "first-match routing is unchanged"
+  },
   "cross_validation": {
     "cn-ip": {
       "report": "cn-ip-validation.json",

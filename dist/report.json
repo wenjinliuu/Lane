@@ -1,48 +1,94 @@
 {
-  "schema": 1,
+  "schema": 2,
   "unsupported_rules": {
-    "stash": {},
-    "loon": {
-      "lan": 1,
-      "ai": 1,
-      "streaming": 5,
-      "gaming": 3,
-      "developer": 1,
-      "google": 2,
-      "proxy": 158,
-      "china": 3
+    "full": {
+      "stash": {},
+      "loon": {
+        "lan": 1,
+        "ai": 1,
+        "streaming": 5,
+        "gaming": 3,
+        "developer": 1,
+        "google": 2,
+        "proxy": 158,
+        "china": 3
+      },
+      "shadowrocket": {
+        "lan": 1,
+        "ai": 1,
+        "streaming": 5,
+        "gaming": 3,
+        "developer": 1,
+        "google": 2,
+        "proxy": 158,
+        "china": 3
+      },
+      "surge": {
+        "lan": 1,
+        "ai": 1,
+        "streaming": 5,
+        "gaming": 3,
+        "developer": 1,
+        "google": 2,
+        "proxy": 158,
+        "china": 3
+      },
+      "qx": {
+        "lan": 1,
+        "ai": 1,
+        "streaming": 5,
+        "gaming": 3,
+        "developer": 1,
+        "google": 2,
+        "proxy": 158,
+        "china": 3
+      },
+      "egern": {}
     },
-    "shadowrocket": {
-      "lan": 1,
-      "ai": 1,
-      "streaming": 5,
-      "gaming": 3,
-      "developer": 1,
-      "google": 2,
-      "proxy": 158,
-      "china": 3
-    },
-    "surge": {
-      "lan": 1,
-      "ai": 1,
-      "streaming": 5,
-      "gaming": 3,
-      "developer": 1,
-      "google": 2,
-      "proxy": 158,
-      "china": 3
-    },
-    "qx": {
-      "lan": 1,
-      "ai": 1,
-      "streaming": 5,
-      "gaming": 3,
-      "developer": 1,
-      "google": 2,
-      "proxy": 158,
-      "china": 3
-    },
-    "egern": {}
+    "profile": {
+      "stash": {},
+      "loon": {
+        "lan": 1,
+        "ai": 1,
+        "streaming": 5,
+        "gaming": 3,
+        "developer": 1,
+        "google": 2,
+        "proxy": 146,
+        "china": 1
+      },
+      "shadowrocket": {
+        "lan": 1,
+        "ai": 1,
+        "streaming": 5,
+        "gaming": 3,
+        "developer": 1,
+        "google": 2,
+        "proxy": 146,
+        "china": 1
+      },
+      "surge": {
+        "lan": 1,
+        "ai": 1,
+        "streaming": 5,
+        "gaming": 3,
+        "developer": 1,
+        "google": 2,
+        "proxy": 146,
+        "china": 1
+      },
+      "qx": {
+        "lan": 1,
+        "ai": 1,
+        "streaming": 5,
+        "gaming": 3,
+        "developer": 1,
+        "google": 2,
+        "proxy": 146,
+        "china": 1
+      },
+      "egern": {}
+    }
   },
   "notes": {
     "stash": "DOMAIN-REGEX is retained.",
