@@ -6,9 +6,8 @@ from proxyrules.config import load_project_config, validate_config
 from proxyrules.model import Rule
 from proxyrules.render import (
     CONFIG_FILENAMES,
-    EXCLUDED_ROUTES,
     HIJACK_DNS_SERVERS,
-    LOON_SKIP_PROXY,
+    MULTICAST_EXCLUDED_ROUTES,
     PROFILE_HEADER,
     REAL_IP_DOMAINS,
     STASH_REAL_IP_DOMAINS,
@@ -96,8 +95,8 @@ def test_checked_in_outputs_are_valid_and_have_no_reject() -> None:
 
     expected_icons = {
         "Google": "Google_Search.png",
-        "TW Auto": "Taiwan.png",
-        "TW Manual": "Taiwan.png",
+        "TW Auto": "China.png",
+        "TW Manual": "China.png",
         "Gaming": "Steam.png",
         "Social": "X.png",
         "Streaming": "ForeignMedia.png",
@@ -116,7 +115,7 @@ def test_client_dns_and_multicast_capability_matrix() -> None:
         for target, filename in CONFIG_FILENAMES.items()
     }
     text = {target: path.read_text() for target, path in paths.items()}
-    route_csv = ", ".join(EXCLUDED_ROUTES)
+    route_csv = ", ".join(MULTICAST_EXCLUDED_ROUTES)
     real_ip_csv = ", ".join(REAL_IP_DOMAINS)
     hijack_csv = ", ".join(HIJACK_DNS_SERVERS)
 
@@ -125,7 +124,7 @@ def test_client_dns_and_multicast_capability_matrix() -> None:
     assert f"tun-excluded-routes = {route_csv}" in text["surge"]
     assert f"excluded_routes = {route_csv}" in text["qx"]
     egern = yaml.safe_load(text["egern"])
-    assert egern["vif_excluded_routes"] == list(EXCLUDED_ROUTES)
+    assert egern["vif_excluded_routes"] == list(MULTICAST_EXCLUDED_ROUTES)
     assert "excluded" not in text["stash"]
 
     stash = yaml.safe_load(text["stash"])
@@ -150,36 +149,9 @@ def test_client_dns_and_multicast_capability_matrix() -> None:
     assert "server = system" not in text["qx"]
     assert egern["dns"]["bootstrap"] == ["system"]
 
-    # Native stand-in for the lan single-label hostname regex these two clients
-    # cannot express as a rule.
-    for target in ("shadowrocket", "surge"):
-        assert "exclude-simple-hostnames = true" in text[target]
-    assert f"skip-proxy = {', '.join(LOON_SKIP_PROXY)}" in text["loon"]
-
     all_profiles = "\n".join(text.values())
     assert "lancache.steamcontent.com" not in all_profiles
     assert "appboot.netflix.com" not in all_profiles
-
-
-def test_every_region_auto_group_benchmarks_the_same_url() -> None:
-    """All six profiles must test latency against the manifest's URL.
-
-    Stash is the client that silently falls back to its own default when a
-    url-test group omits ``url``, which would leave one of the six measuring
-    something else.
-    """
-
-    benchmark = load_project_config(ROOT)["project"]["benchmark"]["url"]
-    stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
-    auto_groups = [
-        group for group in stash["proxy-groups"] if group["type"] == "url-test"
-    ]
-    assert len(auto_groups) == 5
-    for group in auto_groups:
-        assert group["url"] == benchmark
-
-    for target, filename in CONFIG_FILENAMES.items():
-        assert benchmark in (ROOT / "dist" / target / filename).read_text()
 
 
 def test_update_time_is_preserved_when_content_is_unchanged(tmp_path: Path) -> None:

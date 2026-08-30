@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-08-30 11:57:34 (Asia/Shanghai)
+# Last updated: 2026-08-30 00:09:18 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -311,7 +311,6 @@ proxy-groups:
   type: url-test
   include-all: true
   filter: (?i)^.*(?:(?:🇺🇸|美|United\s*States|洛杉矶|圣何塞|西雅图|芝加哥|纽约|达拉斯|凤凰城|硅谷|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  url: http://cp.cloudflare.com/generate_204
   interval: 600
   tolerance: 50
   lazy: true
@@ -325,7 +324,6 @@ proxy-groups:
   type: url-test
   include-all: true
   filter: (?i)^.*(?:(?:🇯🇵|日|Japan|Tokyo|Osaka|东京|大阪|埼玉|名古屋|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  url: http://cp.cloudflare.com/generate_204
   interval: 600
   tolerance: 50
   lazy: true
@@ -339,7 +337,6 @@ proxy-groups:
   type: url-test
   include-all: true
   filter: (?i)^.*(?:(?:🇭🇰|港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  url: http://cp.cloudflare.com/generate_204
   interval: 600
   tolerance: 50
   lazy: true
@@ -353,21 +350,19 @@ proxy-groups:
   type: url-test
   include-all: true
   filter: (?i)^.*(?:(?:🇹🇼|台|臺|Taiwan|Taipei|新北|彰化|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  url: http://cp.cloudflare.com/generate_204
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
 - name: TW Manual
   type: select
   include-all: true
   filter: (?i)^.*(?:(?:🇹🇼|台|臺|Taiwan|Taipei|新北|彰化|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
 - name: SG Auto
   type: url-test
   include-all: true
   filter: (?i)^.*(?:(?:🇸🇬|新加坡|狮城|獅城|Singapore|沪新|京新|深新|杭新|广新|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  url: http://cp.cloudflare.com/generate_204
   interval: 600
   tolerance: 50
   lazy: true

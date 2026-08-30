@@ -92,10 +92,10 @@
   },
   "notes": {
     "stash": "DOMAIN-REGEX is retained.",
-    "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters name their subscription sources explicitly. Single-label hostnames have no native switch; skip-proxy covers the local suffixes only.",
-    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility. The lan single-label hostname regex is replaced by the native exclude-simple-hostnames.",
-    "surge": "DOMAIN-REGEX is unsupported and omitted; the lan single-label hostname regex is replaced by the native exclude-simple-hostnames. Native url-test groups allow temporary manual override; icons are omitted for iOS compatibility.",
-    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. Single-label hostnames have no native switch.",
+    "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters intentionally leave their sources unpinned so local nodes and multiple subscriptions can be considered.",
+    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility.",
+    "surge": "DOMAIN-REGEX is unsupported and omitted. Native url-test groups allow temporary manual override; icons are omitted for iOS compatibility.",
+    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted.",
     "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support."
   }
 }
