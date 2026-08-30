@@ -142,7 +142,11 @@ def test_client_dns_and_multicast_capability_matrix() -> None:
     assert "hijack-dns" not in text["qx"]
     assert "*:53" not in "\n".join(text.values())
     assert "dns-server = system" in text["surge"]
-    assert "server = system" in text["qx"]
+    # QX's [dns] server takes resolver addresses only; the system resolvers are
+    # the default and are disabled with no-system, so `server = system` is not a
+    # value it accepts.
+    assert "\n[dns]\nno-ipv6\n" in text["qx"]
+    assert "server = system" not in text["qx"]
     assert egern["dns"]["bootstrap"] == ["system"]
 
     all_profiles = "\n".join(text.values())

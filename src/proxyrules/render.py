@@ -85,6 +85,29 @@ EGERN_RULE_FIELDS = {
     "keyword": "domain_keyword_set", "regexp": "domain_regex_set",
     "ipcidr": "ip_cidr_set", "ipcidr6": "ip_cidr6_set",
 }
+CLIENT_NOTES = {
+    "stash": "DOMAIN-REGEX is retained.",
+    "loon": (
+        "DOMAIN-REGEX is omitted because Loon remote rules do not support it. "
+        "Remote filters intentionally leave their sources unpinned so local "
+        "nodes and multiple subscriptions can be considered."
+    ),
+    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility.",
+    "surge": (
+        "DOMAIN-REGEX is unsupported and omitted. Native url-test groups allow "
+        "temporary manual override; icons are omitted for iOS compatibility."
+    ),
+    "qx": (
+        "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; "
+        "Surge-style no-resolve is not emitted. QX uses native domain/IP "
+        "matching priorities. System DNS is used by default, so no "
+        "server = system entry is emitted."
+    ),
+    "egern": (
+        "Native YAML rule sets preserve domain regex and no_resolve. Requires a "
+        "current Egern release with urls and flatten support."
+    ),
+}
 UPDATE_TIME_PREFIX = "# Last updated: "
 UPDATE_TIME_PATTERN = re.compile(r"^# Last updated: .*\n?", re.MULTILINE)
 UPDATE_TIMEZONE = ZoneInfo("Asia/Shanghai")
@@ -583,7 +606,10 @@ def _qx_config(
         f"server_check_timeout = {min(5000, benchmark['timeout'] * 1000)}",
         f"dns_exclusion_list = {', '.join(REAL_IP_DOMAINS)}",
         f"excluded_routes = {', '.join(MULTICAST_EXCLUDED_ROUTES)}",
-        "", "[dns]", "no-ipv6", "server = system", "",
+        # QX's [dns] server takes resolver addresses only. The system resolvers
+        # are used by default and are turned off with no-system, so there is no
+        # `server = system` to write here.
+        "", "[dns]", "no-ipv6", "",
         "[policy]", f"static = Manual, server-tag-regex=.+{icon('Manual')}",
     ]
     options = ", ".join(_qx_policy(option) for option in policies["service_options"])
@@ -750,12 +776,5 @@ def render_all(
     return {
         "schema": 2,
         "unsupported_rules": skipped,
-        "notes": {
-            "stash": "DOMAIN-REGEX is retained.",
-            "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it.",
-            "shadowrocket": "DOMAIN-REGEX is omitted for compatibility.",
-            "surge": "DOMAIN-REGEX is unsupported and omitted. Native url-test groups allow temporary manual override; icons are omitted for iOS compatibility.",
-            "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities.",
-            "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support.",
-        },
+        "notes": dict(CLIENT_NOTES),
     }
