@@ -66,9 +66,27 @@ def test_stash_optional_block_can_be_enabled_and_copied_with_valid_indentation()
         assert group["include-all"] is True
 
 
-def test_loon_additional_subscriptions_do_not_require_filter_changes():
+def test_loon_filters_name_the_subscription_they_read():
+    """Loon filters take their sources positionally, as its own example shows.
+
+    ``HK = NameRegex,Subs,FilterKey = *HK`` -- dropping the alias list leaves
+    every filter, and so every strategy group, with nothing to select from.
+    """
+
     text = _profile("loon")
     assert _section(text, "Remote Proxy") == [f"Subscription1 = {SUBSCRIPTION_PLACEHOLDER}"]
+    filters = _section(text, "Remote Filter")
+    assert [line.split(" = ", 1)[0] for line in filters] == [
+        "Manual Nodes", "US Nodes", "JP Nodes", "HK Nodes", "TW Nodes", "SG Nodes"
+    ]
+    for line in filters:
+        assert line.split(" = ", 1)[1].startswith("NameRegex,Subscription1,FilterKey")
+
+
+def test_loon_additional_subscriptions_extend_every_filter():
+    """A second subscription is two edits: enable it, then name it in each filter."""
+
+    text = _profile("loon")
     edited = text.replace(f"Subscription1 = {SUBSCRIPTION_PLACEHOLDER}", f"Subscription1 = {URLS[0]}")
     edited = edited.replace(
         f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}",
@@ -77,8 +95,18 @@ def test_loon_additional_subscriptions_do_not_require_filter_changes():
     assert _section(edited, "Remote Proxy") == [
         f"Subscription{index} = {url}" for index, url in enumerate(URLS, 1)
     ]
-    for section in ("Remote Filter", "Proxy Group"):
-        assert _section(edited, section) == _section(text, section)
+    # The profile documents this edit; it is not optional, and the guidance in
+    # [Remote Proxy] has to keep saying so.
+    assert "补进下方每一条 Remote Filter" in text
+    edited = edited.replace(
+        "NameRegex,Subscription1,FilterKey",
+        "NameRegex,Subscription1,Subscription2,Subscription3,FilterKey",
+    )
+    filters = _section(edited, "Remote Filter")
+    assert len(filters) == 6
+    for line in filters:
+        assert ",Subscription1,Subscription2,Subscription3,FilterKey = " in line
+    assert _section(edited, "Proxy Group") == _section(text, "Proxy Group")
 
 
 def test_qx_optional_subscriptions_keep_unique_tags_and_section_order():

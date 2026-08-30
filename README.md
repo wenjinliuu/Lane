@@ -73,11 +73,13 @@ Loon 用户若选择重新导入远程配置，请选择保留现有节点/订�
 | 客户端 | 第二份订阅 | 第三份及更多订阅 |
 | --- | --- | --- |
 | Stash | 取消 `Subscription2` 整块注释并填写 `url`，包括该块的更新与测速参数 | 复制整块，名称依次改为 `Subscription3` 等；现有 `include-all` 会纳入全部代理集，无需逐个改策略组 |
-| Loon | 取消 `Subscription2 =` 行的注释并填写 | 复制该行，使用不同别名；现有节点筛选会处理所有订阅 |
+| Loon | 取消 `Subscription2 =` 行的注释并填写，再把该别名补进 `[Remote Filter]` 的每一行 | 复制订阅行、别名递增，并逐一加入全部六条筛选的别名列表 |
 | Surge | 取消隐藏组 `Subscription2` 的注释并填写，再把 Manual 的参数改为 `include-other-group="Subscription1,Subscription2"` | 新增 `Subscription3` 等隐藏组，并逐一加入 Manual 的引用列表 |
 | Quantumult X | 取消 `tag=Subscription2` 那一行的注释并填写 | 复制该行，使用不同的 `tag`；现有策略组会按节点名称筛选 |
 | Egern | 取消 Manual 的 `urls` 下第二个列表项的注释并填写 | 在同一 `urls` 列表下逐行追加地址，无需新增策略组 |
 | Shadowrocket | 在应用内添加 | 在应用内继续添加，Lane 不放订阅模板 |
+
+Loon 的 `[Remote Filter]` 把订阅别名当作位置参数，官方示例写作 `HK = NameRegex,Subs,FilterKey = *HK`；别名列表不是可选项，省略后筛选没有来源，`Manual` 与十个地区组都会是空的。因此 Lane 生成的六条筛选都写成 `NameRegex,Subscription1,FilterKey = "…"`，新增订阅时必须把新别名追加进每一条，例如 `NameRegex,Subscription1,Subscription2,FilterKey = "…"`。[Loon 官方示例](https://github.com/Loon0x00/LoonExampleConfig/blob/master/example.conf)。
 
 Surge 的订阅由隐藏组加载，`Manual` 通过 `include-other-group` 展开这些组的全部节点，地区组再从 Manual 中筛选，并非只取得隐藏组当前选中的一个节点。因此可见策略组仍按 Manual、服务组、地区组排列；不能只启用第二份订阅却漏改 Manual 的引用。[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)、[隐藏组参数](https://manual.nssurge.com/policy-groups/parameters.html)。
 
@@ -185,6 +187,10 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 `lan` 规则集位于所有规则之前，除 v2fly `private` 的本地域名外，还包含 RFC 1918 / 5735 / 5737 / 6598 / 4193 / 4291 的私有与特殊用途网段（见 [`rules/custom/lan.list`](rules/custom/lan.list)）。这些前缀不随上游变化，因此直接固定在仓库内。
 
 该规则集设置 `no_resolve`，只作用于 IP 规则：`lan` 是配置中的第一条规则，不带 `no-resolve` 的话，任何域名请求在第一步就会被迫做一次本地解析。`198.18.0.0/15` 被有意排除——六个客户端都用它作为 fake-IP 段。Quantumult X 的原生 IP 匹配语义不接受 Surge 式修饰符，因此其产物不含 `no-resolve`，这与既有的 Brokerage / Telegram IP 处理一致。
+
+同一批私有与特殊用途网段还会写进各端的 TUN 旁路参数（Loon `bypass-tun`、Shadowrocket / Surge `tun-excluded-routes`、QX `excluded_routes`、Egern `vif_excluded_routes`），与 Loon 官方示例一致。两层作用点不同：旁路让这些目标根本不进隧道，`lan` 规则集负责接住确实进来的连接。`198.18.0.0/15` 在旁路里同样排除，否则 fake-IP 流量到不了规则引擎。
+
+没有点的单标签主机名（`nas`、`router`）由 `lan` 里唯一那条域名正则覆盖，而该正则只有 Stash 与 Egern 支持。Surge 和 Shadowrocket 改用官方的 `exclude-simple-hostnames = true` 达到同样效果；Loon 用 `skip-proxy` 覆盖 `localhost` 与本地后缀，Quantumult X 没有对应开关，这两端的裸主机名仍会落到 `Final`。逐端差异记录在 `dist/report.json` 的 `notes`。
 
 CN IP 的唯一发布主源是 **gaoyifan/china-operator-ip**，但不直接采用最新一天。构建从 git 历史选择最近七个不同 UTC 日期的快照，在合并过等价 CIDR 覆盖后，只发布至少五份快照均出现的地址空间。这样单日的异常增减不会立刻进入规则。保留已有 `GEOIP,CN,DIRECT` 作为第二层故障保险；`Final` 及其他服务组的默认选择不变。`cn-ip` 仍然不加 `no-resolve`。
 
