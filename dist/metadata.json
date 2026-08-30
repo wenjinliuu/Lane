@@ -80,18 +80,20 @@
     {
       "id": "apple-cn",
       "policy": "DIRECT",
-      "rules": 165,
+      "rules": 461,
       "kinds": {
-        "domain": 165
+        "domain": 227,
+        "full": 234
       },
-      "profile_rules": 162,
+      "profile_rules": 245,
       "profile_kinds": {
-        "domain": 162
+        "domain": 224,
+        "full": 21
       },
       "profile_removed": {
-        "within_ruleset": 3,
+        "within_ruleset": 216,
         "previous_rulesets": 0,
-        "total": 3
+        "total": 216
       }
     },
     {
@@ -135,14 +137,14 @@
     {
       "id": "brokerage",
       "policy": "Brokerage",
-      "rules": 77,
+      "rules": 80,
       "kinds": {
-        "domain": 66,
+        "domain": 69,
         "full": 11
       },
-      "profile_rules": 67,
+      "profile_rules": 70,
       "profile_kinds": {
-        "domain": 66,
+        "domain": 69,
         "full": 1
       },
       "profile_removed": {
@@ -314,16 +316,16 @@
         "full": 88,
         "regexp": 1
       },
-      "profile_rules": 625,
+      "profile_rules": 621,
       "profile_kinds": {
-        "domain": 557,
+        "domain": 553,
         "full": 67,
         "regexp": 1
       },
       "profile_removed": {
         "within_ruleset": 33,
-        "previous_rulesets": 7,
-        "total": 40
+        "previous_rulesets": 11,
+        "total": 44
       }
     },
     {
@@ -374,36 +376,15 @@
         "domain": 1576,
         "full": 249
       },
-      "profile_rules": 1509,
+      "profile_rules": 1447,
       "profile_kinds": {
-        "domain": 1500,
-        "full": 9
+        "domain": 1442,
+        "full": 5
       },
       "profile_removed": {
         "within_ruleset": 240,
-        "previous_rulesets": 76,
-        "total": 316
-      }
-    },
-    {
-      "id": "proxy",
-      "policy": "Final",
-      "rules": 25902,
-      "kinds": {
-        "domain": 24333,
-        "full": 1411,
-        "regexp": 158
-      },
-      "profile_rules": 18785,
-      "profile_kinds": {
-        "domain": 18548,
-        "full": 91,
-        "regexp": 146
-      },
-      "profile_removed": {
-        "within_ruleset": 1645,
-        "previous_rulesets": 5472,
-        "total": 7117
+        "previous_rulesets": 138,
+        "total": 378
       }
     },
     {
@@ -415,16 +396,37 @@
         "full": 67,
         "regexp": 3
       },
-      "profile_rules": 5995,
+      "profile_rules": 6033,
       "profile_kinds": {
-        "domain": 5990,
-        "full": 4,
-        "regexp": 1
+        "domain": 6018,
+        "full": 12,
+        "regexp": 3
       },
       "profile_removed": {
         "within_ruleset": 2164,
-        "previous_rulesets": 40,
-        "total": 2204
+        "previous_rulesets": 2,
+        "total": 2166
+      }
+    },
+    {
+      "id": "proxy",
+      "policy": "Final",
+      "rules": 25902,
+      "kinds": {
+        "domain": 24333,
+        "full": 1411,
+        "regexp": 158
+      },
+      "profile_rules": 18436,
+      "profile_kinds": {
+        "domain": 18215,
+        "full": 77,
+        "regexp": 144
+      },
+      "profile_removed": {
+        "within_ruleset": 1645,
+        "previous_rulesets": 5821,
+        "total": 7466
       }
     },
     {
@@ -494,9 +496,9 @@
     }
   ],
   "profile_residual": {
-    "within_rulesets": 4523,
-    "previous_rulesets": 5947,
-    "total": 10470,
+    "within_rulesets": 4736,
+    "previous_rulesets": 6324,
+    "total": 11060,
     "guarantee": "first-match routing is unchanged"
   },
   "cross_validation": {

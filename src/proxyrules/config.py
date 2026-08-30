@@ -83,6 +83,12 @@ def validate_config(config: dict[str, Any]) -> None:
                     or source.get("role") == "validation-only"
                     or (source.get("role") == "full-only" and not full_only)):
                 raise ConfigError(f"Invalid routing source {source_id!r} in {rule_id}")
+        required_attributes = entry.get("v2fly_require", [])
+        if (not isinstance(required_attributes, list)
+                or any(not isinstance(value, str) or not value or value.startswith("@")
+                       for value in required_attributes)
+                or (required_attributes and not entry.get("v2fly"))):
+            raise ConfigError(f"Invalid v2fly attribute filter in {rule_id}")
         if entry.get("policy") not in allowed_policies:
             raise ConfigError(
                 f"Unknown policy {entry.get('policy')!r} in ruleset {rule_id}"
@@ -117,8 +123,12 @@ def validate_config(config: dict[str, Any]) -> None:
         entry = by_id.get(rule_id, {})
         if (entry.get("policy") != "DIRECT" or text_source_ids(entry) != [source_id]
                 or sources[source_id].get("format") != "dnsmasq"
-                or entry.get("v2fly") or entry.get("custom")):
-            raise ConfigError(f"{rule_id} must be an independent DIRECT dnsmasq ruleset")
+                or entry.get("v2fly") != ["apple"]
+                or entry.get("v2fly_require") != ["cn"]
+                or entry.get("custom")):
+            raise ConfigError(
+                f"{rule_id} must combine the DIRECT dnsmasq source with v2fly apple@cn"
+            )
         if ordered_ids.index(rule_id) >= ordered_ids.index(main_id):
             raise ConfigError(f"{rule_id} must precede {main_id}")
     # google.china.conf remains available as an independently reusable full
@@ -153,10 +163,12 @@ def validate_config(config: dict[str, Any]) -> None:
             or brokerage_ip.get("no_resolve") is not True
             or brokerage_ip.get("v2fly") or text_source_ids(brokerage_ip)):
         raise ConfigError("Brokerage domain and IP rulesets must stay separate")
-    if ordered_ids[ordered_ids.index("china") + 1:] != [
-        "brokerage-ip", "telegram-ip", "cn-ip"
+    if ordered_ids[-5:] != [
+        "china", "proxy", "brokerage-ip", "telegram-ip", "cn-ip"
     ]:
-        raise ConfigError("All service/domain rules must precede service and CN IP rules")
+        raise ConfigError(
+            "China must precede Proxy, followed only by service and CN IP rules"
+        )
     cn_ip = by_id.get("cn-ip", {})
     if (ordered_ids[-1] != "cn-ip" or cn_ip.get("policy") != "DIRECT"
             or text_source_ids(cn_ip) != ["cn_ip_primary"]

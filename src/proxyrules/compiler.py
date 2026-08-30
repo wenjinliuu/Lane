@@ -117,8 +117,16 @@ def compile_rulesets(
     for entry in entries:
         rules: list[Rule] = []
         notices: list[str] = []
+        required_attributes = frozenset(entry.get("v2fly_require", []))
         for name in entry.get("v2fly", []):
-            rules.extend(repository.resolve(name))
+            resolved = repository.resolve(name)
+            if required_attributes:
+                resolved = tuple(
+                    rule
+                    for rule in resolved
+                    if required_attributes.issubset(rule.attributes)
+                )
+            rules.extend(resolved)
         if custom := entry.get("custom"):
             rules.extend(parse_custom_file(root / custom))
         for source_id in text_source_ids(entry):

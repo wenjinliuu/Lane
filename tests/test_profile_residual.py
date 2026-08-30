@@ -104,7 +104,7 @@ def test_every_real_profile_removal_has_a_first_match_cover() -> None:
         prior_lines.update(full)
         prior_suffixes.update(own_suffixes)
 
-    assert removed_total == metadata["profile_residual"]["total"] == 10470
+    assert removed_total == metadata["profile_residual"]["total"] == 11060
 
 
 def test_google_cn_is_complete_full_only_output() -> None:

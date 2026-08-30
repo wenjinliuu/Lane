@@ -1,11 +1,12 @@
 # Lane 路由与客户端语法决策记录
 
 - 日期：2026-08-30
-- 状态：已确认，待统一实施
+- 状态：已确认并实施
 - 基线：`main` @ `b278ec9`
+- 实施分支：`codex/routing-decisions-2026-08-30`
 - 依据：分支 `claude/codex-project-audit-b2es64` 中 `docs/AUDIT-2026-08-30.md` 的审计问题，以及后续逐项复核
 
-本文只固定已经确认的产品语义和实施边界。本次记录不修改生成器、测试或 `dist/`；后续实现必须以本文为验收标准。
+本文固定已经确认的产品语义和实施边界；生成器、测试与 `dist/` 均以本文为验收标准完成同步更新。
 
 ## D1. `China` 调整到 `Proxy` 前面
 
@@ -111,6 +112,8 @@ rules:
 - `brokerage-ip`、`telegram-ip` 的 `RULE-SET` 引用继续带 `no-resolve`；
 - `cn-ip` 不得带 `no-resolve`，否则域名请求会跳过 Lane 的 CN-IP 快照，退回客户端自身 GeoIP 判断。
 
+为兼容独立审计和既有复用方式，Stash 同时保留每个逻辑规则集原来的带类型规范文件；Lane 主配置只引用按 behavior 生成的专用载荷。规范文件与专用载荷由校验器逐行绑定，防止二者语义漂移。
+
 ## D4. Loon 使用现行 IPv4-only 语法
 
 ### 决策
@@ -146,7 +149,19 @@ Stash 与 Egern 暂不新增等价全局项，保持客户端默认行为。
 
 这只在“规则选中的节点不支持 UDP 转发”时拒绝该 UDP 流量，避免静默 DIRECT 泄漏，并让支持回退的应用尽快改走 TCP/TLS；它不是全局封锁 UDP 或 QUIC。首版不增加 `block-quic`、`udp_drop_list = QUIC`、Loon `disable-udp-ports = 443` 或 Stash 全局 QUIC 脚本。
 
-## 后续实施的最低验收项
+## D6. 补齐 Futu 三个域名，证券 IP 保持不动
+
+### 决策
+
+在 `brokerage` 域名规则中补充当前 Futu 来源已有而 Lane 缺少的三个后缀：
+
+- `futubos.com`
+- `futuie.com`
+- `futuhainan.com`
+
+`brokerage-ip` 继续独立拆分，保留原来的 63 个 CIDR、当前位置与 `no_resolve: true`；不扩大网段，也不把证券 IP 提前到域名规则阶段。这样先修复确认的域名缺口，同时避免共用云 IP 误伤和新的 DNS 强制解析。
+
+## 实施验收项
 
 1. 路由 golden cases 至少覆盖：
    - `ntp.aliyun.com -> China/DIRECT`

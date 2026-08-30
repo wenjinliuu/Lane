@@ -60,10 +60,12 @@ def test_broker_rules_are_split_by_service_and_match_phase() -> None:
     assert "domain:skytigris.cn" in brokerage_custom
     assert "full:geotest.lbkrs.com" in brokerage_custom
     assert "domain:moomoo.com" in brokerage_custom
+    for domain in ("futubos.com", "futuie.com", "futuhainan.com"):
+        assert f"domain:{domain}" in brokerage_custom
     brokerage_rules = parse_custom_file(brokerage_path)
-    assert len(brokerage_rules) == 55
+    assert len(brokerage_rules) == 58
     assert Counter(rule.kind for rule in brokerage_rules) == {
-        "domain": 44,
+        "domain": 47,
         "full": 11,
     }
 
@@ -74,8 +76,8 @@ def test_broker_rules_are_split_by_service_and_match_phase() -> None:
     assert len(brokerage_ip_rules) == 63
     assert Counter(rule.kind for rule in brokerage_ip_rules) == {"ipcidr": 63}
     ordered = list(rulesets)
-    assert ordered[ordered.index("china") + 1:] == [
-        "brokerage-ip", "telegram-ip", "cn-ip"
+    assert ordered[-5:] == [
+        "china", "proxy", "brokerage-ip", "telegram-ip", "cn-ip"
     ]
 
     schwab = rulesets["schwab"]

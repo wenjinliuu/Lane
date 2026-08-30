@@ -25,6 +25,22 @@ cases:
       ruleset: apple-cn
       policy: DIRECT
 
+  - id: apple-cn-v2fly-attribute
+    input:
+      type: domain
+      value: apple.com.cn
+    expected:
+      ruleset: apple-cn
+      policy: DIRECT
+
+  - id: icloud-cn-v2fly-include-attribute
+    input:
+      type: domain
+      value: icloud.com.cn
+    expected:
+      ruleset: apple-cn
+      policy: DIRECT
+
   - id: google-cn-removed-from-default
     input:
       type: domain
@@ -57,6 +73,14 @@ cases:
       ruleset: brokerage
       policy: Brokerage
 
+  - id: brokerage-futu-new-domain
+    input:
+      type: domain
+      value: api.futubos.com
+    expected:
+      ruleset: brokerage
+      policy: Brokerage
+
   - id: brokerage-ip-before-cn-ip
     input:
       type: ip
@@ -72,6 +96,54 @@ cases:
     expected:
       ruleset: proxy
       policy: Final
+
+  - id: china-before-proxy-aliyun-ntp
+    input:
+      type: domain
+      value: ntp.aliyun.com
+    expected:
+      ruleset: china
+      policy: DIRECT
+
+  - id: china-before-proxy-synology
+    input:
+      type: domain
+      value: quickconnect.cn
+    expected:
+      ruleset: china
+      policy: DIRECT
+
+  - id: china-before-proxy-aws
+    input:
+      type: domain
+      value: amazonaws.cn
+    expected:
+      ruleset: china
+      policy: DIRECT
+
+  - id: china-before-proxy-tesla
+    input:
+      type: domain
+      value: gigalife-api.tesla.cn
+    expected:
+      ruleset: china
+      policy: DIRECT
+
+  - id: google-service-before-china
+    input:
+      type: domain
+      value: google.cn
+    expected:
+      ruleset: google
+      policy: Google
+
+  - id: microsoft-service-before-china
+    input:
+      type: domain
+      value: azure.cn
+    expected:
+      ruleset: microsoft
+      policy: Microsoft
 
   - id: china-domain
     input:

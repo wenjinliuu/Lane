@@ -13,10 +13,10 @@
 - 策略组按 `Manual`、服务组、地区组排列，十个地区 Auto / Manual 组统一放在列表末尾。
 - 地区筛选只做正向匹配，不使用排除词：国旗、中文地区名（含繁体）、英文全称、带词边界的两字母代码，以及常见城市名与中转简称（如 `沪日`、`深港`、`洛杉矶`）。机场代码（LAX 等）不参与匹配。
 - 服务组可切换到 `DIRECT`，或五个地区各自的 Auto / Manual 策略。
-- `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段；生成时把域名与 IP 拆成两个规则集，但仍使用同一策略组。
+- `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段；生成时把域名与 IP 拆成两个规则集，但仍使用同一策略组。2026-08-30 补齐 `futubos.com`、`futuie.com`、`futuhainan.com`，既有 Futu IP 段不移动、不扩张。
 - `Crypto` 只匹配 Binance、OKX、Bybit 与 Bitget。其他交易所不单独分类，按后续规则或 `Final` 处理。
 - 中国大陆 AI 不设专门规则，自然落入 `cn` / `GEOIP,CN` 直连。
-- 不设置游戏大文件下载特例，不内置广告拦截，也不生成默认 `REJECT` 规则。
+- 不设置游戏大文件下载特例，也不内置广告拦截或业务 `REJECT` 规则。Surge、Shadowrocket、Loon、QX 仅在已选节点不支持 UDP 时显式拒绝回落，避免静默直连泄漏；不全局封锁 UDP / QUIC。
 - 未命中流量进入 `Final`，而 `Final` 默认跟随 `Manual`。
 
 完整策略声明见 [`config/policies.yaml`](config/policies.yaml)，规则顺序见 [`config/rulesets.yaml`](config/rulesets.yaml)。
@@ -95,10 +95,10 @@ Surge 的订阅由隐藏组加载，`Manual` 通过 `include-other-group` 展开
 
 每个客户端现在发布两组用途不同的规则文件：
 
-- `rules-full/` 保存各规则集经格式归一化和精确去重后的完整内容，可独立复用。2026-08-29 审计基线中的 22 个启用规则集合计 50,907 条；仅供审计/复用、不被 Lane 主配置引用的 `google-cn` 也只在这里发布，共 112 条。
-- `rules-profile/` 是按 Lane 当前规则顺序生成的配置残余，只供仓库生成的主配置引用。它会移除已被同一规则集父级域名后缀覆盖的条目，以及此前规则集已经优先命中的条目；同一审计基线保留 40,437 条，共删去 10,470 条，且首匹配路由结果不变。
+- `rules-full/` 保存各规则集经格式归一化和精确去重后的完整内容，可独立复用。2026-08-30 实施基线中的 22 个启用规则集合计 51,206 条；仅供审计/复用、不被 Lane 主配置引用的 `google-cn` 也只在这里发布，共 112 条。
+- `rules-profile/` 是按 Lane 当前规则顺序生成的配置残余，只供仓库生成的主配置引用。它会移除已被同一规则集父级域名后缀覆盖的条目，以及此前规则集已经优先命中的条目；当前保留 40,146 条，共删去 11,060 条，且首匹配路由结果不变。
 
-不要把单个 `rules-profile/` 文件脱离 Lane 的顺序单独复用；需要完整语义时使用同客户端的 `rules-full/`。六份主配置各自只引用本客户端的 22 个 profile 文件，不会同时下载 full 文件。精确计数、删减来源和客户端转换差异分别记录在 `dist/metadata.json` 与 `dist/report.json`。
+不要把单个 `rules-profile/` 文件脱离 Lane 的顺序单独复用；需要完整语义时使用同客户端的 `rules-full/`。除 Stash 外，主配置各自引用本客户端的 22 个逻辑 profile 文件。Stash 会把逻辑文件进一步生成 `-domain`、`-ipcidr`、`-classical` 专用载荷并连续引用；原始带类型的同名文件仍保留作审计与兼容复用。精确计数、删减来源和客户端转换差异分别记录在 `dist/metadata.json` 与 `dist/report.json`。
 
 旧的 `dist/*/rules/` 路径不再发布。已经保存 Lane 配置的用户必须升级一次完整主配置，重新填入节点订阅并迁移个人修改，之后规则资源仍可独立自动更新。
 
@@ -106,13 +106,15 @@ Surge 的订阅由隐藏组加载，`Manual` 通过 `include-other-group` 展开
 
 ### 客户端兼容性
 
-- Stash 与 Egern 保留域名正则；Loon、Shadowrocket、Surge、QX 中不支持或未确认兼容的域名正则会省略，逐规则集计数见 `dist/report.json`，不会误转换为 URL 重写。
+- Stash 将精确域名与后缀放入 `behavior: domain`（后缀使用同时覆盖根域和子域的 `+.` 形式），CIDR 放入 `behavior: ipcidr`，正则/关键词保留在 `behavior: classical`；三类仍是远程更新的文本 provider。Egern 继续用原生 YAML 保留域名正则。
+- Loon、Shadowrocket、Surge、QX 中不支持或未确认兼容的域名正则会省略，逐规则集计数见 `dist/report.json`，不会误转换为 URL 重写。Loon 使用现行 `ip-mode = ipv4-only`，最低支持版本为 3.2.3 (754)。
+- Surge、Shadowrocket、Loon、QX 在节点不支持 UDP 时分别使用客户端原生的拒绝回落项；Stash/Egern 保持默认行为。配置不包含 `block-quic`、`udp_drop_list = QUIC` 或 `disable-udp-ports = 443`。
 - Egern 使用原生 YAML 规则集，保留 `no_resolve`，地区组通过 `flatten` 展开订阅节点；请使用支持 `urls` / `flatten` 的当前版本。
 - QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
 - Auto 使用各客户端原生自动测速类型，Manual 使用手动类型；Surge 自身允许临时手动覆盖自动组，Lane 不把自动组改成手动组，也不能禁用客户端的这项 UI 功能。
 - 六端均通过静态结构与生成测试；测试不等于在六款付费客户端上完成真机导入、联网验证。订阅协议和空地区组行为仍需在实际客户端确认。
 
-格式依据：[Stash 代理集](https://stash.wiki/proxy-protocols/proxy-providers)、[Loon 官方示例](https://github.com/Loon0x00/LoonExampleConfig/blob/master/example.conf)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)、[QX 官方示例](https://github.com/crossutility/Quantumult-X/blob/master/sample.conf)、[Egern 策略组](https://egernapp.com/docs/configuration/policy_groups/)、[Egern 规则](https://egernapp.com/docs/configuration/rules/)。
+格式依据：[Stash 规则集](https://stash.wiki/en/rules/rule-set)、[Stash 代理集](https://stash.wiki/proxy-protocols/proxy-providers)、[Loon General](https://nsloon.app/en/docs/General/)、[Loon 官方示例](https://github.com/Loon0x00/LoonExampleConfig/blob/master/example.conf)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)、[QX 官方示例](https://github.com/crossutility/Quantumult-X/blob/master/sample.conf)、[Egern 策略组](https://egernapp.com/docs/configuration/policy_groups/)、[Egern 规则](https://egernapp.com/docs/configuration/rules/)。
 
 ## 目录结构
 
@@ -173,10 +175,10 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 
 | 规则集 | 来源 | 默认策略与位置 |
 | --- | --- | --- |
-| `apple-cn`（AppleCN） | felixonmars `apple.china.conf` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Apple 主规则 |
-| `cn-ip`（CN IP） | gaoyifan `ip-lists` 的 5-of-7 七日稳定窗 | `DIRECT`，包含 IPv4 + IPv6，位于所有精细规则和 China 域名规则之后、原有 GEOIP 与最终兜底之前 |
+| `apple-cn`（AppleCN） | felixonmars `apple.china.conf` + v2fly `apple@cn` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Apple 主规则 |
+| `cn-ip`（CN IP） | gaoyifan `ip-lists` 的 5-of-7 七日稳定窗 | `DIRECT`，包含 IPv4 + IPv6，位于 China、Proxy 与业务 IP 规则之后、原有 GEOIP 与最终兜底之前 |
 
-两者均为独立远程规则集，不并入 `china`，也不新增策略组。AppleCN 只提取上游的域名后缀，不复制 dnsmasq 的 DNS 服务器或其他指令。它不是整个 Apple 直连开关；未命中例外名单的连接仍由 Apple 策略组处理。上游说明 Apple 国内 CDN 在部分运营商网络下可能不可用，出现问题时可停止引用该规则集。
+两者均为独立远程规则集，不并入 `china`，也不新增策略组。AppleCN 从 felixonmars 提取域名后缀，不复制 dnsmasq 的 DNS 服务器或其他指令；同时只合并 v2fly `apple` include 链中明确带 `@cn` 的条目，不把普通 Apple 域名扩大为直连。它不是整个 Apple 直连开关；未命中例外名单的连接仍由 Apple 策略组处理。上游说明 Apple 国内 CDN 在部分运营商网络下可能不可用，出现问题时可停止引用该规则集。
 
 **GoogleCN 已从默认分流中移除。** felixonmars/dnsmasq-china-list 是 DNS 加速项目，`google.china.conf` 的语义是"用国内 DNS 解析这些域名会得到 Google 的中国前端地址"，上游对该文件标注 *not considered stable, use at your own risk*。解析得到不等于直连可达：该列表 112 条中有 91 条是 Google 全球域名，其中 `dl.google.com`、`clientservices.googleapis.com`、`app-measurement.com` 均有直连失败的公开记录。Lane 主配置不引用它，Google 域名统一走 Google 策略组；为保留完整规则审计与独立复用能力，转换后的 112 条仍发布在各客户端的 `rules-full/google-cn` 文件中。Apple 的情况不同——其条目确实解析到可直连的大陆 CDN 节点，因此 AppleCN 保留在默认分流。
 

@@ -22,6 +22,7 @@ from proxyrules.text_sources import parse_dnsmasq_domains, parse_text_source
 from proxyrules.upstream import UpstreamError, fetch_text_source
 from proxyrules.validate import ValidationError, validate_generated
 from proxyrules.v2fly import DomainListError, parse_cidr_text
+from proxyrules.v2fly import DomainListRepository
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -70,6 +71,32 @@ def test_compiler_parses_independent_sources_without_reference_leakage(tmp_path)
     specs["apple_cn"]["role"] = "validation-only"
     with pytest.raises(ValueError, match="Validation-only"):
         compile_rulesets(tmp_path, entries, None, texts, specs)
+
+
+def test_compiler_filters_v2fly_rules_by_required_attribute(tmp_path):
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    (data_dir / "apple").write_text(
+        "apple.com\napple.com.cn @cn\ninclude:icloud\n",
+        encoding="utf-8",
+    )
+    (data_dir / "icloud").write_text(
+        "icloud.com\nicloud.com.cn @cn\n",
+        encoding="utf-8",
+    )
+    entries = [{
+        "id": "apple-cn",
+        "title": "AppleCN",
+        "policy": "DIRECT",
+        "v2fly": ["apple"],
+        "v2fly_require": ["cn"],
+    }]
+    result = compile_rulesets(
+        tmp_path, entries, DomainListRepository(data_dir), {}, {}
+    )
+    assert [rule.value for rule in result[0].rules] == [
+        "apple.com.cn", "icloud.com.cn"
+    ]
 
 
 def test_coverage_compares_addresses_not_prefix_spelling():
@@ -139,7 +166,8 @@ def test_network_failure_uses_visible_cached_fallback(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize(
     "change",
-    ["cn-first", "cn-no-resolve", "apple-policy", "apple-late", "china-merged",
+    ["cn-first", "cn-no-resolve", "apple-policy", "apple-late",
+     "apple-filter-missing", "china-merged",
      "reference-routed", "google-cn-profiled", "lan-late", "lan-resolves",
      "window-days", "presence-days", "breaker", "reference-shared"],
 )
@@ -156,6 +184,8 @@ def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
     elif change == "apple-late":
         entries.remove(by_id["apple-cn"])
         entries.insert(-1, by_id["apple-cn"])
+    elif change == "apple-filter-missing":
+        by_id["apple-cn"].pop("v2fly_require")
     elif change == "china-merged":
         by_id["china"]["text_source"] = "apple_cn"
     elif change == "google-cn-profiled":
@@ -208,17 +238,33 @@ def _domain_policy(domain):
     for ref in config["rules"]:
         if not ref.startswith("RULE-SET,"):
             continue
-        _, rule_id, policy = ref.split(",")
+        _, provider_id, policy, *_ = ref.split(",")
+        provider = config["rule-providers"][provider_id]
+        if provider["behavior"] == "ipcidr":
+            continue
         for line in (
-            ROOT / "dist/stash" / RULES_PROFILE_DIR / f"{rule_id}.list"
+            ROOT / "dist/stash" / RULES_PROFILE_DIR
+            / provider["url"].rsplit("/", 1)[-1]
         ).read_text().splitlines():
             if not line or line.startswith("#"):
                 continue
-            # Regex quantifiers can contain commas, e.g. {1,3}.
-            kind, value = line.split(",", 1)
-            if ((kind == "DOMAIN" and domain == value)
-                    or (kind == "DOMAIN-SUFFIX" and (domain == value or domain.endswith("." + value)))
-                    or (kind == "DOMAIN-REGEX" and re.search(value, domain))):
+            if provider["behavior"] == "domain":
+                if line.startswith("+."):
+                    value = line[2:]
+                    matches = domain == value or domain.endswith("." + value)
+                else:
+                    matches = domain == line
+            else:
+                # Regex quantifiers can contain commas, e.g. {1,3}.
+                kind, value = line.split(",", 1)
+                matches = (
+                    (kind == "DOMAIN" and domain == value)
+                    or (kind == "DOMAIN-SUFFIX" and (
+                        domain == value or domain.endswith("." + value)
+                    ))
+                    or (kind == "DOMAIN-REGEX" and re.search(value, domain))
+                )
+            if matches:
                 return policy
     return "Final"
 
@@ -274,12 +320,18 @@ def test_cn_ip_does_not_override_brokerage_ip():
     for ref in config["rules"]:
         if not ref.startswith("RULE-SET,"):
             continue
-        _, rule_id, policy = ref.split(",")
+        _, provider_id, policy, *_ = ref.split(",")
+        provider = config["rule-providers"][provider_id]
+        if provider["behavior"] != "ipcidr":
+            continue
         for line in (
-            ROOT / "dist/stash" / RULES_PROFILE_DIR / f"{rule_id}.list"
+            ROOT / "dist/stash" / RULES_PROFILE_DIR
+            / provider["url"].rsplit("/", 1)[-1]
         ).read_text().splitlines():
-            if line.startswith("IP-CIDR,") and address in ipaddress.ip_network(line.split(",")[1]):
+            if (line and not line.startswith("#")
+                    and address in ipaddress.ip_network(line)):
                 assert policy == "Brokerage"
+                assert ref.endswith(",no-resolve")
                 return
     pytest.fail("Brokerage IP rule not found")
 
@@ -291,7 +343,10 @@ def test_validator_rejects_wrong_cn_policy(target, tmp_path):
     path = tmp_path / "dist" / target / CONFIG_FILENAMES[target]
     text = path.read_text()
     if target == "stash":
-        text = text.replace("RULE-SET,apple-cn,DIRECT", "RULE-SET,apple-cn,Manual")
+        text = text.replace(
+            "RULE-SET,apple-cn-domain,DIRECT",
+            "RULE-SET,apple-cn-domain,Manual",
+        )
     elif target == "egern":
         # Preserve the required header/notice strings when mutating just the rule.
         original = next(rule for rule in text.splitlines() if "apple-cn.yaml" in rule)
@@ -329,11 +384,28 @@ def test_validator_rejects_cn_ip_before_service_rules(target, tmp_path):
     text = path.read_text()
     # Swap only the resource URLs; both rules use DIRECT, so policy checking
     # alone cannot detect the priority regression.
-    text = (text.replace("/rules-profile/apple-cn.", "/rules-profile/priority-test.")
-            .replace("/rules-profile/cn-ip.", "/rules-profile/apple-cn.")
-            .replace("/rules-profile/priority-test.", "/rules-profile/cn-ip."))
+    if target == "stash":
+        text = (
+            text.replace(
+                "/rules-profile/apple-cn-domain.list",
+                "/rules-profile/priority-test.list",
+            )
+            .replace(
+                "/rules-profile/cn-ip-ipcidr.list",
+                "/rules-profile/apple-cn-domain.list",
+            )
+            .replace(
+                "/rules-profile/priority-test.list",
+                "/rules-profile/cn-ip-ipcidr.list",
+            )
+        )
+    else:
+        text = (text.replace("/rules-profile/apple-cn.", "/rules-profile/priority-test.")
+                .replace("/rules-profile/cn-ip.", "/rules-profile/apple-cn.")
+                .replace("/rules-profile/priority-test.", "/rules-profile/cn-ip."))
     path.write_text(text)
-    with pytest.raises(ValidationError, match="URLs or order"):
+    expected_error = "rule-provider settings|URLs or order" if target == "stash" else "URLs or order"
+    with pytest.raises(ValidationError, match=expected_error):
         validate_generated(tmp_path, load_project_config(ROOT))
 
 
@@ -351,10 +423,18 @@ def test_validator_rejects_mismatched_comparison_digest(tmp_path):
 def test_validator_binds_window_digest_to_published_cn_ip(tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
-    path = tmp_path / "dist/stash" / RULES_FULL_DIR / "cn-ip.list"
-    text = path.read_text()
+    canonical = tmp_path / "dist/stash" / RULES_FULL_DIR / "cn-ip.list"
+    text = canonical.read_text()
     assert "IP-CIDR,1.12.0.0/14" in text
-    path.write_text(text.replace("IP-CIDR,1.12.0.0/14", "IP-CIDR,1.12.0.0/15", 1))
+    canonical.write_text(
+        text.replace("IP-CIDR,1.12.0.0/14", "IP-CIDR,1.12.0.0/15", 1)
+    )
+    specialized = (
+        tmp_path / "dist/stash" / RULES_FULL_DIR / "cn-ip-ipcidr.list"
+    )
+    payload = specialized.read_text()
+    assert "1.12.0.0/14" in payload
+    specialized.write_text(payload.replace("1.12.0.0/14", "1.12.0.0/15", 1))
     with pytest.raises(ValidationError, match="stable-window"):
         validate_generated(tmp_path, load_project_config(ROOT))
 
