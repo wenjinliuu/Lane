@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-08-30 16:40:01 (Asia/Shanghai)
+# Last updated: 2026-08-30 22:20:50 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -397,91 +397,91 @@ policy_groups:
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png
 rules:
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/lan.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/lan.yaml
     policy: DIRECT
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/apple-cn.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/apple-cn.yaml
     policy: DIRECT
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/ai.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/ai.yaml
     policy: AI
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/schwab.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/schwab.yaml
     policy: Schwab
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/brokerage.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/brokerage.yaml
     policy: Brokerage
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/crypto.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/crypto.yaml
     policy: Crypto
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/youtube.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/youtube.yaml
     policy: YouTube
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/tiktok.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/tiktok.yaml
     policy: TikTok
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/emby.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/emby.yaml
     policy: Emby
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/streaming.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/streaming.yaml
     policy: Streaming
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/gaming.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/gaming.yaml
     policy: Gaming
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/telegram.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/telegram.yaml
     policy: Telegram
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/social.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/social.yaml
     policy: Social
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/developer.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/developer.yaml
     policy: Developer
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/google.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/google.yaml
     policy: Google
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/microsoft.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/microsoft.yaml
     policy: Microsoft
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/apple.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/apple.yaml
     policy: Apple
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/china.yaml
-    policy: DIRECT
-    update_interval: 86400
-- rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/proxy.yaml
-    policy: Final
-    update_interval: 86400
-- rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/brokerage-ip.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/brokerage-ip.yaml
     policy: Brokerage
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/telegram-ip.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/china.yaml
+    policy: DIRECT
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/proxy.yaml
+    policy: Final
+    update_interval: 86400
+- rule_set:
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/telegram-ip.yaml
     policy: Telegram
     update_interval: 86400
 - rule_set:
-    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules-profile/cn-ip.yaml
+    match: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/rules/cn-ip.yaml
     policy: DIRECT
     update_interval: 86400
 - geoip:

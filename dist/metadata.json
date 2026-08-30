@@ -1,10 +1,10 @@
 {
-  "schema": 2,
+  "schema": 3,
   "project": "wenjinliuu/Lane",
   "artifacts": {
-    "full": "rules-full",
-    "profile": "rules-profile",
-    "default_profiles_use": "rules-profile"
+    "rules": "rules",
+    "default_profiles_use": "rules",
+    "deduplication": "exact-only"
   },
   "sources": {
     "v2fly": {
@@ -44,11 +44,6 @@
       "url": "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf",
       "sha256": "5b85e3febd8067233d86483299f257806428b5d520c65e3da3c0ce9465568f64",
       "license": "WTFPL-2.0"
-    },
-    "google_cn": {
-      "url": "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf",
-      "sha256": "ac6d5a7f6c034694bcb81dde0350bbed940e47d03a87da0a318afc99780bb7c6",
-      "license": "WTFPL-2.0"
     }
   },
   "rulesets": [
@@ -63,18 +58,12 @@
         "ipcidr6": 4,
         "regexp": 1
       },
-      "profile_rules": 149,
-      "profile_kinds": {
-        "domain": 118,
-        "full": 12,
-        "ipcidr": 14,
-        "ipcidr6": 4,
-        "regexp": 1
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 0,
-        "total": 0
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 0
       }
     },
     {
@@ -85,15 +74,12 @@
         "domain": 227,
         "full": 234
       },
-      "profile_rules": 245,
-      "profile_kinds": {
-        "domain": 224,
-        "full": 21
-      },
-      "profile_removed": {
-        "within_ruleset": 216,
-        "previous_rulesets": 0,
-        "total": 216
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 216,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 216
       }
     },
     {
@@ -105,16 +91,12 @@
         "full": 28,
         "regexp": 1
       },
-      "profile_rules": 180,
-      "profile_kinds": {
-        "domain": 151,
-        "full": 28,
-        "regexp": 1
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 0,
-        "total": 0
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 0
       }
     },
     {
@@ -124,14 +106,12 @@
       "kinds": {
         "domain": 9
       },
-      "profile_rules": 9,
-      "profile_kinds": {
-        "domain": 9
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 0,
-        "total": 0
+      "exact_duplicates_removed": 3,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 0
       }
     },
     {
@@ -142,15 +122,12 @@
         "domain": 69,
         "full": 11
       },
-      "profile_rules": 70,
-      "profile_kinds": {
-        "domain": 69,
-        "full": 1
-      },
-      "profile_removed": {
-        "within_ruleset": 10,
-        "previous_rulesets": 0,
-        "total": 10
+      "exact_duplicates_removed": 20,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 10,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 10
       }
     },
     {
@@ -161,15 +138,12 @@
         "domain": 68,
         "full": 4
       },
-      "profile_rules": 72,
-      "profile_kinds": {
-        "domain": 68,
-        "full": 4
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 0,
-        "total": 0
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 0
       }
     },
     {
@@ -180,15 +154,12 @@
         "domain": 177,
         "full": 1
       },
-      "profile_rules": 177,
-      "profile_kinds": {
-        "domain": 176,
-        "full": 1
-      },
-      "profile_removed": {
-        "within_ruleset": 1,
-        "previous_rulesets": 0,
-        "total": 1
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 1,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 1
       }
     },
     {
@@ -199,15 +170,12 @@
         "domain": 31,
         "full": 5
       },
-      "profile_rules": 35,
-      "profile_kinds": {
-        "domain": 30,
-        "full": 5
-      },
-      "profile_removed": {
-        "within_ruleset": 1,
-        "previous_rulesets": 0,
-        "total": 1
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 1,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 1
       }
     },
     {
@@ -218,15 +186,12 @@
         "domain": 30,
         "full": 52
       },
-      "profile_rules": 81,
-      "profile_kinds": {
-        "domain": 29,
-        "full": 52
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 1,
-        "total": 1
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 1,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 1
       }
     },
     {
@@ -238,16 +203,12 @@
         "full": 68,
         "regexp": 5
       },
-      "profile_rules": 410,
-      "profile_kinds": {
-        "domain": 355,
-        "full": 50,
-        "regexp": 5
-      },
-      "profile_removed": {
-        "within_ruleset": 17,
-        "previous_rulesets": 6,
-        "total": 23
+      "exact_duplicates_removed": 48,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 17,
+        "previous_ruleset_exact_candidates": 1,
+        "previous_ruleset_parent_suffix_candidates": 5,
+        "total_candidates": 23
       }
     },
     {
@@ -259,16 +220,12 @@
         "full": 95,
         "regexp": 3
       },
-      "profile_rules": 857,
-      "profile_kinds": {
-        "domain": 762,
-        "full": 92,
-        "regexp": 3
-      },
-      "profile_removed": {
-        "within_ruleset": 8,
-        "previous_rulesets": 0,
-        "total": 8
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 8,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 8
       }
     },
     {
@@ -278,14 +235,12 @@
       "kinds": {
         "domain": 21
       },
-      "profile_rules": 21,
-      "profile_kinds": {
-        "domain": 21
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 0,
-        "total": 0
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 0
       }
     },
     {
@@ -296,15 +251,12 @@
         "domain": 714,
         "full": 17
       },
-      "profile_rules": 709,
-      "profile_kinds": {
-        "domain": 703,
-        "full": 6
-      },
-      "profile_removed": {
-        "within_ruleset": 22,
-        "previous_rulesets": 0,
-        "total": 22
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 22,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 22
       }
     },
     {
@@ -316,16 +268,12 @@
         "full": 88,
         "regexp": 1
       },
-      "profile_rules": 621,
-      "profile_kinds": {
-        "domain": 553,
-        "full": 67,
-        "regexp": 1
-      },
-      "profile_removed": {
-        "within_ruleset": 33,
-        "previous_rulesets": 11,
-        "total": 44
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 33,
+        "previous_ruleset_exact_candidates": 10,
+        "previous_ruleset_parent_suffix_candidates": 1,
+        "total_candidates": 44
       }
     },
     {
@@ -337,16 +285,12 @@
         "full": 233,
         "regexp": 2
       },
-      "profile_rules": 646,
-      "profile_kinds": {
-        "domain": 625,
-        "full": 19,
-        "regexp": 2
-      },
-      "profile_removed": {
-        "within_ruleset": 266,
-        "previous_rulesets": 202,
-        "total": 468
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 266,
+        "previous_ruleset_exact_candidates": 202,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 468
       }
     },
     {
@@ -357,15 +301,12 @@
         "domain": 640,
         "full": 113
       },
-      "profile_rules": 497,
-      "profile_kinds": {
-        "domain": 490,
-        "full": 7
-      },
-      "profile_removed": {
-        "within_ruleset": 113,
-        "previous_rulesets": 143,
-        "total": 256
+      "exact_duplicates_removed": 1,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 113,
+        "previous_ruleset_exact_candidates": 143,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 256
       }
     },
     {
@@ -376,15 +317,27 @@
         "domain": 1576,
         "full": 249
       },
-      "profile_rules": 1447,
-      "profile_kinds": {
-        "domain": 1442,
-        "full": 5
+      "exact_duplicates_removed": 2,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 240,
+        "previous_ruleset_exact_candidates": 104,
+        "previous_ruleset_parent_suffix_candidates": 34,
+        "total_candidates": 378
+      }
+    },
+    {
+      "id": "brokerage-ip",
+      "policy": "Brokerage",
+      "rules": 63,
+      "kinds": {
+        "ipcidr": 63
       },
-      "profile_removed": {
-        "within_ruleset": 240,
-        "previous_rulesets": 138,
-        "total": 378
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 0
       }
     },
     {
@@ -396,16 +349,12 @@
         "full": 67,
         "regexp": 3
       },
-      "profile_rules": 6033,
-      "profile_kinds": {
-        "domain": 6018,
-        "full": 12,
-        "regexp": 3
-      },
-      "profile_removed": {
-        "within_ruleset": 2164,
-        "previous_rulesets": 2,
-        "total": 2166
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 2164,
+        "previous_ruleset_exact_candidates": 1,
+        "previous_ruleset_parent_suffix_candidates": 1,
+        "total_candidates": 2166
       }
     },
     {
@@ -417,33 +366,12 @@
         "full": 1411,
         "regexp": 158
       },
-      "profile_rules": 18436,
-      "profile_kinds": {
-        "domain": 18215,
-        "full": 77,
-        "regexp": 144
-      },
-      "profile_removed": {
-        "within_ruleset": 1645,
-        "previous_rulesets": 5821,
-        "total": 7466
-      }
-    },
-    {
-      "id": "brokerage-ip",
-      "policy": "Brokerage",
-      "rules": 63,
-      "kinds": {
-        "ipcidr": 63
-      },
-      "profile_rules": 63,
-      "profile_kinds": {
-        "ipcidr": 63
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 0,
-        "total": 0
+      "exact_duplicates_removed": 3,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 1645,
+        "previous_ruleset_exact_candidates": 5500,
+        "previous_ruleset_parent_suffix_candidates": 321,
+        "total_candidates": 7466
       }
     },
     {
@@ -454,15 +382,12 @@
         "ipcidr": 9,
         "ipcidr6": 5
       },
-      "profile_rules": 14,
-      "profile_kinds": {
-        "ipcidr": 9,
-        "ipcidr6": 5
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 0,
-        "total": 0
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 0
       }
     },
     {
@@ -473,33 +398,30 @@
         "ipcidr": 5947,
         "ipcidr6": 3427
       },
-      "profile_rules": 9374,
-      "profile_kinds": {
-        "ipcidr": 5947,
-        "ipcidr6": 3427
-      },
-      "profile_removed": {
-        "within_ruleset": 0,
-        "previous_rulesets": 0,
-        "total": 0
+      "exact_duplicates_removed": 0,
+      "redundancy_audit": {
+        "within_parent_suffix_candidates": 0,
+        "previous_ruleset_exact_candidates": 0,
+        "previous_ruleset_parent_suffix_candidates": 0,
+        "total_candidates": 0
       }
     }
   ],
-  "full_only_rulesets": [
-    {
-      "id": "google-cn",
-      "policy": "DIRECT",
-      "rules": 112,
-      "kinds": {
-        "domain": 112
-      }
-    }
-  ],
-  "profile_residual": {
-    "within_rulesets": 4736,
-    "previous_rulesets": 6324,
-    "total": 11060,
-    "guarantee": "first-match routing is unchanged"
+  "rule_optimization": {
+    "exact_duplicate_removal": {
+      "enabled": true,
+      "removed": 77
+    },
+    "parent_suffix_removal": false,
+    "cross_ruleset_residual_removal": false
+  },
+  "redundancy_audit": {
+    "mode": "report-only",
+    "within_parent_suffix_candidates": 4736,
+    "previous_ruleset_exact_candidates": 5962,
+    "previous_ruleset_parent_suffix_candidates": 362,
+    "total_candidates": 11060,
+    "note": "Candidates are retained in every published ruleset; this audit does not change routing payloads."
   },
   "cross_validation": {
     "cn-ip": {

@@ -1,94 +1,48 @@
 {
-  "schema": 2,
+  "schema": 3,
   "unsupported_rules": {
-    "full": {
-      "stash": {},
-      "loon": {
-        "lan": 1,
-        "ai": 1,
-        "streaming": 5,
-        "gaming": 3,
-        "developer": 1,
-        "google": 2,
-        "china": 3,
-        "proxy": 158
-      },
-      "shadowrocket": {
-        "lan": 1,
-        "ai": 1,
-        "streaming": 5,
-        "gaming": 3,
-        "developer": 1,
-        "google": 2,
-        "china": 3,
-        "proxy": 158
-      },
-      "surge": {
-        "lan": 1,
-        "ai": 1,
-        "streaming": 5,
-        "gaming": 3,
-        "developer": 1,
-        "google": 2,
-        "china": 3,
-        "proxy": 158
-      },
-      "qx": {
-        "lan": 1,
-        "ai": 1,
-        "streaming": 5,
-        "gaming": 3,
-        "developer": 1,
-        "google": 2,
-        "china": 3,
-        "proxy": 158
-      },
-      "egern": {}
+    "stash": {},
+    "loon": {
+      "lan": 1,
+      "ai": 1,
+      "streaming": 5,
+      "gaming": 3,
+      "developer": 1,
+      "google": 2,
+      "china": 3,
+      "proxy": 158
     },
-    "profile": {
-      "stash": {},
-      "loon": {
-        "lan": 1,
-        "ai": 1,
-        "streaming": 5,
-        "gaming": 3,
-        "developer": 1,
-        "google": 2,
-        "china": 3,
-        "proxy": 144
-      },
-      "shadowrocket": {
-        "lan": 1,
-        "ai": 1,
-        "streaming": 5,
-        "gaming": 3,
-        "developer": 1,
-        "google": 2,
-        "china": 3,
-        "proxy": 144
-      },
-      "surge": {
-        "lan": 1,
-        "ai": 1,
-        "streaming": 5,
-        "gaming": 3,
-        "developer": 1,
-        "google": 2,
-        "china": 3,
-        "proxy": 144
-      },
-      "qx": {
-        "lan": 1,
-        "ai": 1,
-        "streaming": 5,
-        "gaming": 3,
-        "developer": 1,
-        "google": 2,
-        "china": 3,
-        "proxy": 144
-      },
-      "egern": {}
-    }
+    "shadowrocket": {
+      "lan": 1,
+      "ai": 1,
+      "streaming": 5,
+      "gaming": 3,
+      "developer": 1,
+      "google": 2,
+      "china": 3,
+      "proxy": 158
+    },
+    "surge": {
+      "lan": 1,
+      "ai": 1,
+      "streaming": 5,
+      "gaming": 3,
+      "developer": 1,
+      "google": 2,
+      "china": 3,
+      "proxy": 158
+    },
+    "qx": {
+      "lan": 1,
+      "ai": 1,
+      "streaming": 5,
+      "gaming": 3,
+      "developer": 1,
+      "google": 2,
+      "china": 3,
+      "proxy": 158
+    },
+    "egern": {}
   },
   "notes": {
     "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical.",

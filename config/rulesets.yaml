@@ -30,9 +30,6 @@ rulesets:
     v2fly_require: [cn]
     text_source: apple_cn
 
-  # GoogleCN stays out of this profile list. A complete, independently reusable
-  # copy is generated through full_only_rulesets below, but no default profile is
-  # allowed to reference it. Google traffic therefore follows the Google group.
   - id: ai
     title: AI
     policy: AI
@@ -112,6 +109,16 @@ rulesets:
     policy: Apple
     v2fly: [apple]
 
+  # Brokerage IP must precede China and CN-IP. Real-device Futu trading tests
+  # showed that overlapping mainland ranges are otherwise claimed by a DIRECT
+  # rule before the Brokerage policy can see them. no_resolve keeps this IP-only
+  # exception from forcing DNS resolution for ordinary domain requests.
+  - id: brokerage-ip
+    title: Brokerage IP
+    policy: Brokerage
+    custom: rules/custom/brokerage-ip.list
+    no_resolve: true
+
   # China deliberately precedes General Proxy. v2fly's cn list includes tld-cn,
   # so known mainland domains and Chinese entry points take the DIRECT path even
   # when they overlap geolocation-!cn. Narrow proxy exceptions belong in an
@@ -130,14 +137,6 @@ rulesets:
     policy: Final
     v2fly: [geolocation-!cn]
 
-  # Domain rules above must get first refusal before any service IP rules can
-  # trigger or skip resolution. LAN is the deliberate exception at position one.
-  - id: brokerage-ip
-    title: Brokerage IP
-    policy: Brokerage
-    custom: rules/custom/brokerage-ip.list
-    no_resolve: true
-
   - id: telegram-ip
     title: Telegram IP
     policy: Telegram
@@ -153,14 +152,3 @@ rulesets:
     title: CN IP
     policy: DIRECT
     text_source: cn_ip_primary
-
-# These complete rulesets are published only under rules-full/. They are never
-# referenced by Lane profiles and are excluded from profile residual ordering.
-full_only_rulesets:
-  # google.china.conf is a DNS acceleration list, not a reachability guarantee.
-  # It remains available for explicit expert use, while default Google traffic
-  # stays on the Google policy group.
-  - id: google-cn
-    title: GoogleCN (full only)
-    policy: DIRECT
-    text_source: google_cn

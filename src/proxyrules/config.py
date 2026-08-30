@@ -36,7 +36,6 @@ def load_project_config(root: Path) -> dict[str, Any]:
 def validate_config(config: dict[str, Any]) -> None:
     policies = config["policies"]
     rulesets = config["rulesets"].get("rulesets", [])
-    full_only_rulesets = config["rulesets"].get("full_only_rulesets", [])
     services = policies.get("service_groups", [])
     options = policies.get("service_options", [])
     regions = policies.get("regions", [])
@@ -65,10 +64,7 @@ def validate_config(config: dict[str, Any]) -> None:
     allowed_policies = set(services) | {"DIRECT", "Manual"}
     ids: set[str] = set()
     sources = config["sources"]["sources"]
-    for entry, full_only in [
-        *((entry, False) for entry in rulesets),
-        *((entry, True) for entry in full_only_rulesets),
-    ]:
+    for entry in rulesets:
         rule_id = entry.get("id")
         if not rule_id or rule_id in ids:
             raise ConfigError(f"Invalid or duplicate ruleset id: {rule_id!r}")
@@ -80,8 +76,7 @@ def validate_config(config: dict[str, Any]) -> None:
         for source_id in source_ids:
             source = sources.get(source_id, {})
             if (source.get("kind") not in {"text", "git-history-cidr"}
-                    or source.get("role") == "validation-only"
-                    or (source.get("role") == "full-only" and not full_only)):
+                    or source.get("role") in {"validation-only", "full-only"}):
                 raise ConfigError(f"Invalid routing source {source_id!r} in {rule_id}")
         required_attributes = entry.get("v2fly_require", [])
         if (not isinstance(required_attributes, list)
@@ -131,22 +126,13 @@ def validate_config(config: dict[str, Any]) -> None:
             )
         if ordered_ids.index(rule_id) >= ordered_ids.index(main_id):
             raise ConfigError(f"{rule_id} must precede {main_id}")
-    # google.china.conf remains available as an independently reusable full
-    # ruleset, but it must never be referenced by a Lane profile. Resolving a
-    # domain through a Chinese resolver is not a reachability guarantee.
-    google_source = sources.get("google_cn", {})
-    google_full = full_only_rulesets[0] if len(full_only_rulesets) == 1 else {}
+    # Resolving a Google domain through a Chinese DNS server is not a direct-
+    # reachability guarantee. GoogleCN is therefore neither routed nor emitted.
     if ("google-cn" in by_id
-            or any("google_cn" in text_source_ids(entry) for entry in rulesets)
-            or google_full.get("id") != "google-cn"
-            or google_full.get("policy") != "DIRECT"
-            or text_source_ids(google_full) != ["google_cn"]
-            or google_full.get("v2fly") or google_full.get("custom")
-            or google_source.get("kind") != "text"
-            or google_source.get("format") != "dnsmasq"
-            or google_source.get("role") != "full-only"
-            or "google.china.conf" not in google_source.get("url", "")):
-        raise ConfigError("GoogleCN must exist only as the full-only dnsmasq ruleset")
+            or "google_cn" in sources
+            or "full_only_rulesets" in config["rulesets"]
+            or any("google_cn" in text_source_ids(entry) for entry in rulesets)):
+        raise ConfigError("GoogleCN and full-only rule artifacts must not be published")
 
     lan = by_id.get("lan", {})
     if ordered_ids[0] != "lan" or lan.get("policy") != "DIRECT" or not lan.get("no_resolve"):
@@ -164,10 +150,10 @@ def validate_config(config: dict[str, Any]) -> None:
             or brokerage_ip.get("v2fly") or text_source_ids(brokerage_ip)):
         raise ConfigError("Brokerage domain and IP rulesets must stay separate")
     if ordered_ids[-5:] != [
-        "china", "proxy", "brokerage-ip", "telegram-ip", "cn-ip"
+        "brokerage-ip", "china", "proxy", "telegram-ip", "cn-ip"
     ]:
         raise ConfigError(
-            "China must precede Proxy, followed only by service and CN IP rules"
+            "Brokerage IP must precede China and Proxy, followed only by Telegram and CN IP"
         )
     cn_ip = by_id.get("cn-ip", {})
     if (ordered_ids[-1] != "cn-ip" or cn_ip.get("policy") != "DIRECT"
