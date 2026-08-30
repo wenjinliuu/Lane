@@ -32,30 +32,16 @@ domain_set:
 - muse.jhu.edu
 - nbbb1bb7.pmhcjk.com
 - ntp-c.colorado.edu
-- ntp.aliyun.com
-- ntp.tencent.com
 - ntp.time.nl
 - ntp0.ntp-servers.net
-- ntp1.aliyun.com
 - ntp1.ntp-servers.net
-- ntp1.tencent.com
 - ntp1.time.nl
-- ntp2.aliyun.com
 - ntp2.ntp-servers.net
-- ntp2.tencent.com
 - ntp2.time.nl
-- ntp3.aliyun.com
 - ntp3.ntp-servers.net
-- ntp3.tencent.com
-- ntp4.aliyun.com
 - ntp4.ntp-servers.net
-- ntp4.tencent.com
-- ntp5.aliyun.com
 - ntp5.ntp-servers.net
-- ntp5.tencent.com
-- ntp6.aliyun.com
 - ntp6.ntp-servers.net
-- ntp7.aliyun.com
 - ntp7.ntp-servers.net
 - ntppool1.time.nl
 - ntppool2.time.nl
@@ -339,7 +325,6 @@ domain_suffix_set:
 - 3xplanet.net
 - 3xplanetimg.com
 - 3xxx.pro
-- 4008-517-517.cn
 - 40momporntube.com
 - 40somethingmag.com
 - 41maonn.com
@@ -578,7 +563,6 @@ domain_suffix_set:
 - a-teenz.com
 - a1av.xyz
 - a2z.com
-- a2z.org.cn
 - a7sex.com
 - aa77kk.com
 - aaapp.cyou
@@ -604,7 +588,6 @@ domain_suffix_set:
 - abigass.com
 - ablmm.com
 - aboluowang.com
-- aboutamazon.cn
 - aboutamazon.co.uk
 - aboutamazon.com
 - aboutamazon.com.au
@@ -632,7 +615,6 @@ domain_suffix_set:
 - acaric.co.jp
 - acasadasbrasileirinhas.com.br
 - accbusiness.com
-- accdn.com.cn
 - acces-vod.com
 - accesspoint.uz
 - accomable.com
@@ -647,7 +629,6 @@ domain_suffix_set:
 - acdocs.com
 - acer-group.com
 - acer.com
-- acer.com.cn
 - acgcf.com
 - acgdg.com
 - acgdv.com
@@ -679,7 +660,6 @@ domain_suffix_set:
 - adbkm.com
 - adblockcdn.com
 - adblockplus.org
-- adcommerce.cn
 - adcommerce.tv
 - addison-wesley.ch
 - addthis.com
@@ -713,7 +693,6 @@ domain_suffix_set:
 - adidas.ca
 - adidas.ch
 - adidas.cl
-- adidas.cn
 - adidas.co
 - adidas.co.id
 - adidas.co.in
@@ -726,7 +705,6 @@ domain_suffix_set:
 - adidas.com.ar
 - adidas.com.au
 - adidas.com.br
-- adidas.com.cn
 - adidas.com.co
 - adidas.com.eg
 - adidas.com.hk
@@ -771,7 +749,6 @@ domain_suffix_set:
 - adidassailing.com
 - adidasspecialtysports.at
 - adidasspecialtysports.be
-- adidasspecialtysports.cn
 - adidasspecialtysports.co.uk
 - adidasspecialtysports.cz
 - adidasspecialtysports.de
@@ -804,7 +781,6 @@ domain_suffix_set:
 - adobeccstatic.com
 - adobecontent.io
 - adobecreativityawards.com
-- adobedc.cn
 - adobedc.net
 - adobedemo.com
 - adobedtm.com
@@ -912,7 +888,6 @@ domain_suffix_set:
 - aebn.com
 - aecexcellence.com
 - aerogard.com.au
-- aerogard.com.cn
 - aerogardcn.com
 - aerospace-cadcam.com
 - aerospace-design.com
@@ -987,7 +962,6 @@ domain_suffix_set:
 - airbnb.cat
 - airbnb.ch
 - airbnb.cl
-- airbnb.cn
 - airbnb.co.cr
 - airbnb.co.id
 - airbnb.co.il
@@ -1076,7 +1050,6 @@ domain_suffix_set:
 - airwick.com
 - airwick.com.au
 - airwick.com.br
-- airwick.com.cn
 - airwick.com.mx
 - airwick.com.tr
 - airwick.cz
@@ -1179,7 +1152,6 @@ domain_suffix_set:
 - akastream.net
 - akatns.net
 - akbars.ru
-- akcdn.com.cn
 - akiba-online.com
 - akiba-souken.com
 - akita-bank.co.jp
@@ -1189,8 +1161,6 @@ domain_suffix_set:
 - albastudio.co
 - alefbank.com
 - alexa.com
-- alexafund.cn
-- alexafund.com.cn
 - alexanderstreet.com
 - alfa.me
 - alfabank.ru
@@ -1303,7 +1273,6 @@ domain_suffix_set:
 - alphabet.co.uk
 - alphabet.co.za
 - alphabet.com
-- alphabet.com.cn
 - alphabet.com.es
 - alphabet.com.lv
 - alphabet.com.mx
@@ -1320,7 +1289,6 @@ domain_suffix_set:
 - alphabet.lu
 - alphabet.lv
 - alphabet.mx
-- alphabet.net.cn
 - alphabet.no
 - alphabet.org.uk
 - alphabet.pl
@@ -1429,7 +1397,6 @@ domain_suffix_set:
 - amazon.ae
 - amazon.ca
 - amazon.cl
-- amazon.cn
 - amazon.co.jp
 - amazon.co.uk
 - amazon.co.za
@@ -1462,37 +1429,22 @@ domain_suffix_set:
 - amazonauthorinsights.com
 - amazonaws-china.com
 - amazonaws.biz
-- amazonaws.cn
 - amazonaws.co.uk
 - amazonaws.com
-- amazonaws.com.cn
 - amazonaws.info
 - amazonaws.net
 - amazonaws.org
 - amazonaws.tv
-- amazonbusiness.cn
-- amazonbusiness.com.cn
 - amazonbusiness.org
 - amazonbusinessblog.com
-- amazonchoice.cn
-- amazonchoice.com.cn
-- amazonchoices.cn
-- amazonchoices.com.cn
 - amazoncognito.com
 - amazondevicesupport.com
 - amazonfctours.com
 - amazonianblog.com
 - amazonimages.com
-- amazoninspire.cn
-- amazoninspire.com.cn
-- amazonlaunchpad.cn
 - amazonlaunchpad.com
-- amazonlaunchpad.com.cn
-- amazonlending.com.cn
 - amazonliterarypartnership.com
 - amazonlumberyard.wang
-- amazonnow.cn
-- amazonnow.com.cn
 - amazonpay.com
 - amazonpay.in
 - amazonsdi.com
@@ -1500,18 +1452,13 @@ domain_suffix_set:
 - amazonstudiosguilds.com
 - amazontrust.com
 - amazonvideodirect.com
-- amazonwebservices.cn
 - amazonwebservices.com
-- amazonwebservices.com.cn
-- amazonworkdocs.cn
 - amazonworkdocs.com
-- amazonworkdocs.com.cn
 - amc.com
 - amcn.com
 - amcnetworks.com
 - amcplus.com
 - amd.com
-- amd.com.cn
 - amdfanstore.com
 - amdgaming.com
 - amdigital.co.uk
@@ -1532,7 +1479,6 @@ domain_suffix_set:
 - amodoll.com
 - amourangels.com
 - amplifi.com
-- amplifi.com.cn
 - amplifyapp.com
 - amplifyframework.com
 - ams.org
@@ -1543,10 +1489,6 @@ domain_suffix_set:
 - amzn.asia
 - amzn.com
 - amzn.to
-- amzndns-cn.biz
-- amzndns-cn.cn
-- amzndns-cn.com
-- amzndns-cn.net
 - amzndns.co.uk
 - amzndns.com
 - amzndns.net
@@ -1585,9 +1527,7 @@ domain_suffix_set:
 - anexia-it.com
 - anexia.at
 - anexia.com
-- anfutong.cn
 - anfutong.com
-- anfutong.com.cn
 - angel-gto.com
 - angelbeats.jp
 - angelweb.jp
@@ -1653,7 +1593,6 @@ domain_suffix_set:
 - aolcdn.com
 - aomedia.org
 - aorus.com
-- aoruszone.cn
 - aoxx69.net
 - aozorabank.co.jp
 - ap.org
@@ -1686,7 +1625,6 @@ domain_suffix_set:
 - appdynamics.jp
 - appdynamics.org
 - appexchange.com
-- appforebay.cn
 - appget.com
 - applecensorship.com
 - appledaily.com
@@ -1744,7 +1682,6 @@ domain_suffix_set:
 - armovs.com
 - arnoldrenderer.com
 - arphic.com
-- arphic.com.cn
 - arphic.com.tw
 - art1lib.com
 - artcam.com
@@ -1769,7 +1706,6 @@ domain_suffix_set:
 - asebay.com
 - asexdoll.com
 - asextube.net
-- asfiovnxocqpcry.com.cn
 - asha.org
 - ashemaletube.com
 - ashemaletv.com
@@ -1823,12 +1759,10 @@ domain_suffix_set:
 - assetsadobe.com
 - assistirhentai.com
 - assoass.com
-- assoc-amazon.cn
 - associates-amazon.com
 - assylum.com
 - astm.org
 - asus.com
-- asus.com.cn
 - asuscloud.com
 - asuswebstorage.com
 - at.ua
@@ -1854,7 +1788,6 @@ domain_suffix_set:
 - att-mail.com
 - att-promotions.com
 - att-rsvp.com
-- att.cn
 - att.com
 - att.jobs
 - att.net
@@ -1867,7 +1800,6 @@ domain_suffix_set:
 - attbusiness.net
 - attcenter.com
 - attcollaborate.com
-- attcorp.cn
 - attdns.com
 - attdns.net
 - attestation.app
@@ -2157,15 +2089,11 @@ domain_suffix_set:
 - awflapp.top
 - awjq.cc
 - aws
-- aws-border.cn
-- aws-icp-domain-manager.cn
 - aws-iot-hackathon.com
 - aws.com
 - aws.dev
 - awsapprunner.com
-- awsapps.cn
 - awsapps.com
-- awsapps.com.cn
 - awsautopilot.com
 - awsautoscaling.com
 - awsbraket.com
@@ -2178,7 +2106,6 @@ domain_suffix_set:
 - awsloft-johannesburg.com
 - awsloft-stockholm.com
 - awssecworkshops.com
-- awsstatic.cn
 - awsstatic.com
 - awsthinkbox.com
 - awstrack.me
@@ -2390,9 +2317,7 @@ domain_suffix_set:
 - beget.ru
 - behance.net
 - behindthescreenz.com
-- beibao.cn
 - beibao.com
-- beibao.com.cn
 - beijingnike.com
 - beiyongzhan1.com
 - bejav.net
@@ -2421,9 +2346,7 @@ domain_suffix_set:
 - bestbuy-int.com
 - bestbuy-jobs.com
 - bestbuy.ca
-- bestbuy.cn
 - bestbuy.com
-- bestbuy.com.cn
 - bestbuy.com.mx
 - bestbuy.info
 - bestbuy24x7solutions.com
@@ -2659,7 +2582,6 @@ domain_suffix_set:
 - bloggrowup.com
 - blogterest.net
 - bloomberg
-- bloomberg.cn
 - bloomberg.co.jp
 - bloomberg.co.kr
 - bloomberg.com
@@ -2950,7 +2872,6 @@ domain_suffix_set:
 - bmw.com.bn
 - bmw.com.bo
 - bmw.com.br
-- bmw.com.cn
 - bmw.com.co
 - bmw.com.cy
 - bmw.com.do
@@ -3158,7 +3079,6 @@ domain_suffix_set:
 - bookclubgirl.com
 - bookfi.net
 - booking-tec.ru
-- booking.cn
 - booking.com
 - bookmark.xxx
 - bookmybridgestonetyre.com
@@ -3268,7 +3188,6 @@ domain_suffix_set:
 - bridgestone-plt-eng.com
 - bridgestone-tac-oman.com
 - bridgestone.cl
-- bridgestone.cn
 - bridgestone.co.cr
 - bridgestone.co.id
 - bridgestone.co.in
@@ -3277,7 +3196,6 @@ domain_suffix_set:
 - bridgestone.com
 - bridgestone.com.ar
 - bridgestone.com.br
-- bridgestone.com.cn
 - bridgestone.com.co
 - bridgestone.com.mx
 - bridgestone.com.sg
@@ -3466,7 +3384,6 @@ domain_suffix_set:
 - calgon.at
 - calgon.be
 - calgon.ch
-- calgon.cn
 - calgon.co.uk
 - calgon.com
 - calgon.com.tr
@@ -3550,7 +3467,6 @@ domain_suffix_set:
 - canon.bg
 - canon.ca
 - canon.ch
-- canon.cn
 - canon.co.il
 - canon.co.uk
 - canon.co.za
@@ -3558,7 +3474,6 @@ domain_suffix_set:
 - canon.com.al
 - canon.com.au
 - canon.com.by
-- canon.com.cn
 - canon.com.cy
 - canon.com.hk
 - canon.com.mk
@@ -3753,12 +3668,7 @@ domain_suffix_set:
 - certum.pl
 - ceskeporno.cz
 - cex.io
-- cf-china.info
 - cf-ipfs.com
-- cf-ns.com
-- cf-ns.net
-- cf-ns.site
-- cf-ns.tech
 - cf-vanguard.com
 - cfake.com
 - cfargotunnel.com
@@ -3768,10 +3678,6 @@ domain_suffix_set:
 - cfdesign.com
 - cfl.re
 - cfna.com
-- cftest5.cn
-- cftest6.cn
-- cftest7.com
-- cftest8.com
 - cfwives.com
 - chainid.network
 - change.org
@@ -3876,9 +3782,7 @@ domain_suffix_set:
 - cisco
 - cisco-returns.com
 - cisco-warrantyfinder.com
-- cisco.cn
 - cisco.com
-- cisco.com.cn
 - cisco.mobi
 - ciscoccservice.com
 - ciscoconnectcloud.com
@@ -3950,8 +3854,6 @@ domain_suffix_set:
 - classymomsex.com
 - clck.ru
 - clco.cc
-- clearasil.cn
-- clearasil.com.cn
 - clearasil.us
 - clearpool.finance
 - click-sec.com
@@ -3979,7 +3881,6 @@ domain_suffix_set:
 - cloudcraze.com
 - cloudcredibility.com
 - cloudec.jp
-- cloudflare-cn.com
 - cloudflare-dns.com
 - cloudflare-ech.com
 - cloudflare-esni.com
@@ -3994,40 +3895,28 @@ domain_suffix_set:
 - cloudflare.pay
 - cloudflare.tv
 - cloudflareaccess.com
-- cloudflareanycast.net
 - cloudflareapps.com
 - cloudflarebolt.com
 - cloudflarebrowser.com
 - cloudflarechallenge.com
-- cloudflarechina.cn
 - cloudflareclient.com
-- cloudflarecn.net
 - cloudflarecp.com
-- cloudflareglobal.net
-- cloudflareinsights-cn.com
 - cloudflareinsights.com
 - cloudflareok.com
 - cloudflarepartners.com
-- cloudflareperf.com
 - cloudflareportal.com
 - cloudflarepreview.com
-- cloudflareprod.com
 - cloudflareregistrar.com
 - cloudflareresearch.com
 - cloudflareresolve.com
 - cloudflaressl.com
-- cloudflarestaging.com
 - cloudflarestatus.com
 - cloudflarestorage.com
-- cloudflarestoragegw.com
 - cloudflarestream.com
 - cloudflaresupport.com
 - cloudflaretest.com
 - cloudflarewarp.com
 - cloudflareworkers.com
-- cloudfront-cn.net
-- cloudfront-test.cn
-- cloudfront.cn
 - cloudfront.com
 - cloudfront.net
 - cloudhealthtech.com
@@ -4040,7 +3929,6 @@ domain_suffix_set:
 - cloudlive.com
 - cloudlock.com
 - cloudn.me
-- cloudru.cn
 - cloudvolumes.com
 - cloudyzgirl.com
 - cloupia.com
@@ -4167,13 +4055,10 @@ domain_suffix_set:
 - conan.xxx
 - connaissancesfinancierespratiques.ca
 - connect-in-canada.com
-- connectcommerce.cn
-- connectcommerce.com.cn
 - connectcommerce.hk
 - connectcommerce.info
 - connectcommerce.tv
 - connected-drive.com
-- connectedcommerce.cn
 - connectedcommerce.com
 - connectedcommerce.tv
 - connectionsacademy.com
@@ -4362,8 +4247,6 @@ domain_suffix_set:
 - cxacg.com
 - cxhub.ru
 - cy22.tv
-- cyber-bay.cn
-- cyber-bay.com.cn
 - cyber-bay.info
 - cyber-bay.org
 - cybercrimecon.com
@@ -4472,7 +4355,6 @@ domain_suffix_set:
 - dcard.io
 - dcard.link
 - dcard.tw
-- dcocsp.cn
 - ddd-smart.net
 - ddff66.com
 - ddff77.com
@@ -4567,7 +4449,6 @@ domain_suffix_set:
 - dell.com.br
 - dell.com.bs
 - dell.com.bz
-- dell.com.cn
 - dell.com.co
 - dell.com.cy
 - dell.com.dm
@@ -4676,9 +4557,7 @@ domain_suffix_set:
 - delldesignsystem.com
 - delldrivers.com
 - dellemc.com
-- dellemc.com.cn
 - dellemcevents.com
-- dellmobile.cn
 - delloutlet.com
 - dellpoweredge.com
 - dellpowersolutions.com
@@ -4687,7 +4566,6 @@ domain_suffix_set:
 - dellsupportcenter.com
 - delltechcenter.com
 - delltechnologies.com
-- delltechnologies.com.cn
 - delltechnologiescapital.com
 - delltechnologiesworld.com
 - deltacredit.ru
@@ -4741,7 +4619,6 @@ domain_suffix_set:
 - dettol.com.au
 - dettol.com.bd
 - dettol.com.br
-- dettol.com.cn
 - dettol.com.eg
 - dettol.com.hk
 - dettol.com.my
@@ -4802,7 +4679,6 @@ domain_suffix_set:
 - dierectv.com
 - digicert-cn.com
 - digicert-validation.com
-- digicert.cn
 - digicert.co.jp
 - digicert.com
 - digicert.eu
@@ -4892,7 +4768,6 @@ domain_suffix_set:
 - discovershiretoko.org
 - discoveryplus.com
 - discreet.com
-- dishwashingexpert.com.cn
 - dishworld.com
 - diskstation.me
 - disneyhentai.com
@@ -5071,7 +4946,6 @@ domain_suffix_set:
 - drweb-av.it
 - drweb-av.pl
 - drweb.by
-- drweb.cn
 - drweb.co.jp
 - drweb.com
 - drweb.fr
@@ -5127,7 +5001,6 @@ domain_suffix_set:
 - dumpxxx.net
 - duolaapian126.xyz
 - duolaapian127.xyz
-- duolingo.cn
 - duolingo.com
 - duoweiweek.com
 - durex-shop.ch
@@ -5145,7 +5018,6 @@ domain_suffix_set:
 - durex.com
 - durex.com.au
 - durex.com.bd
-- durex.com.cn
 - durex.com.co
 - durex.com.hr
 - durex.com.my
@@ -5179,7 +5051,6 @@ domain_suffix_set:
 - durexcam.com
 - durexcanada.com
 - durexchina.com
-- durexchina.com.cn
 - durexindia.com
 - durexloveclub.com
 - durexukraine.com
@@ -5201,7 +5072,6 @@ domain_suffix_set:
 - dykycl.com
 - dynacw.co.jp
 - dynacw.com
-- dynacw.com.cn
 - dynacw.com.hk
 - dynacw.com.tw
 - dynafleetonline.com
@@ -5268,7 +5138,6 @@ domain_suffix_set:
 - ebay.be
 - ebay.ca
 - ebay.ch
-- ebay.cn
 - ebay.co.nz
 - ebay.co.uk
 - ebay.co.ve
@@ -5276,7 +5145,6 @@ domain_suffix_set:
 - ebay.com
 - ebay.com.ar
 - ebay.com.au
-- ebay.com.cn
 - ebay.com.ec
 - ebay.com.hk
 - ebay.com.mt
@@ -5292,29 +5160,23 @@ domain_suffix_set:
 - ebay.jp
 - ebay.lt
 - ebay.mn
-- ebay.net.cn
 - ebay.nl
 - ebay.org
-- ebay.org.cn
 - ebay.ph
 - ebay.pk
 - ebay.pl
 - ebay.sg
 - ebay.us
 - ebay.vn
-- ebay.yn.cn
-- ebay.zj.cn
 - ebay25.com
 - ebay68.com
 - ebaya.com
 - ebayads.com
 - ebayads.net
-- ebayadvertising.cn
 - ebayadvertising.com
 - ebayanunsios.net
 - ebayauction.com
 - ebayaustralia.com
-- ebayauthenticate.com.cn
 - ebaybags.com
 - ebaybank.com
 - ebaybenefits.com
@@ -5327,9 +5189,7 @@ domain_suffix_set:
 - ebaycbt.co.kr
 - ebaycdn.net
 - ebaychina.net
-- ebayclassifieds.cn
 - ebayclassifieds.com
-- ebayclassifieds.com.cn
 - ebayclassifieds.info
 - ebayclassifieds.org
 - ebayclassifieds.tv
@@ -5344,16 +5204,11 @@ domain_suffix_set:
 - ebaycourse.com
 - ebayd.com
 - ebayde.com
-- ebaydesc.cn
-- ebaydesc.com.cn
 - ebaydlassifieds.com
-- ebaydns.cn
 - ebaydts.com
 - ebayedu.com
 - ebayeletro.com
-- ebayenterprise.cn
 - ebayenterprise.com
-- ebayenterprise.com.cn
 - ebayenterprise.info
 - ebayenterprise.net
 - ebayenterprise.tv
@@ -5388,9 +5243,7 @@ domain_suffix_set:
 - ebaymall.com
 - ebaymarketplace.net
 - ebaymotors.ca
-- ebaymotors.cn
 - ebaymotors.com
-- ebaymotors.com.cn
 - ebaymotors.org
 - ebaymotorsblog.com
 - ebaynow.com
@@ -5404,8 +5257,6 @@ domain_suffix_set:
 - ebaypakistan.net
 - ebaypark.com
 - ebayparts.com
-- ebaypedia.cn
-- ebaypedia.com.cn
 - ebayprivacycenter.com
 - ebayqq.com
 - ebayradio.com
@@ -5414,18 +5265,14 @@ domain_suffix_set:
 - ebayshoesstore.com
 - ebayshop.com
 - ebayshop111.com
-- ebayshopping.cn
-- ebayshopping.com.cn
 - ebayshopping.org
 - ebaysocial.com
 - ebaysocial.ru
 - ebaysoho.com
 - ebaysohos.com
-- ebaystatic.cn
 - ebaystatic.com
 - ebaystore.com
 - ebaystore77.com
-- ebaystores.cn
 - ebaystyle.com
 - ebaysweden.com
 - ebayt.com
@@ -5602,7 +5449,6 @@ domain_suffix_set:
 - enfamil.pl
 - enfamil.pt
 - enfasmart.com
-- enfinitas.com.cn
 - engadget.com
 - engineeringvillage.com
 - enjoyasianporn.com
@@ -5618,7 +5464,6 @@ domain_suffix_set:
 - entermediadb.org
 - enterprisepaging.com
 - enterprisessl.com
-- entrust.cn
 - entrust.com
 - entrust.net
 - entrustdatacard.com
@@ -5802,9 +5647,7 @@ domain_suffix_set:
 - ethereum.org
 - etherscan.io
 - etna.ai
-- etnet.com.cn
 - etnet.com.hk
-- etnetchina.com.cn
 - etpress.com.hk
 - etradebook.ru
 - ettoday.net
@@ -5922,7 +5765,6 @@ domain_suffix_set:
 - familyds.com
 - familyds.net
 - familyds.org
-- familymart.com.cn
 - familymart.com.my
 - familymart.com.ph
 - familypies.net
@@ -5998,11 +5840,8 @@ domain_suffix_set:
 - fareastpornhub.com
 - farfetch-apps.com
 - farfetch-contents.com
-- farfetch.cn
 - farfetch.com
-- farfetch.com.cn
 - farfetch.net
-- farfetch.net.cn
 - faronics.ca
 - faronics.co.uk
 - faronics.com
@@ -6104,7 +5943,6 @@ domain_suffix_set:
 - finambank.ru
 - financialadvisoriq.com
 - financialsoccer.ca
-- financialsoccer.com.cn
 - fincode.jp
 - find-a.jp
 - findacard.com
@@ -6125,7 +5963,6 @@ domain_suffix_set:
 - finish.co.nz
 - finish.co.uk
 - finish.co.za
-- finish.com.cn
 - finish.com.hr
 - finish.com.tr
 - finish.de
@@ -6539,7 +6376,6 @@ domain_suffix_set:
 - fritchy.com
 - frontiersin.org
 - frontrow.com
-- frontrow.com.cn
 - frprn.com
 - fruitycams.com
 - fsdn.com
@@ -6782,7 +6618,6 @@ domain_suffix_set:
 - geeksquadservices.org
 - geeksquadwebroot.org
 - geelongadvertiser.com.au
-- geforce.cn
 - geforce.co.kr
 - geforce.co.uk
 - geforce.com
@@ -6906,7 +6741,6 @@ domain_suffix_set:
 - giffgaff.design
 - gifnuki.com
 - giga.chat
-- gigabyte.cn
 - gigabyte.com
 - gigantits.com
 - gigaporn.org
@@ -6962,7 +6796,6 @@ domain_suffix_set:
 - globalsign.be
 - globalsign.ch
 - globalsign.cloud
-- globalsign.cn
 - globalsign.co.uk
 - globalsign.com
 - globalsign.com.au
@@ -7105,7 +6938,6 @@ domain_suffix_set:
 - gpb.ru
 - gpsonextra.net
 - gpstheseries.com
-- gputechconf.cn
 - gputechconf.co.kr
 - gputechconf.com
 - gputechconf.com.au
@@ -7192,7 +7024,6 @@ domain_suffix_set:
 - guardianapps.co.uk
 - guardianproject.info
 - gucci
-- gucci.cn
 - gucci.com
 - guccimuseo.com
 - guccitimeless.com
@@ -7254,7 +7085,6 @@ domain_suffix_set:
 - haiwaikan.com
 - hakaru.ai
 - half.com
-- half.com.cn
 - half.tv
 - halfcanada.com
 - halfjapan.com
@@ -7358,7 +7188,6 @@ domain_suffix_set:
 - heartbreakers.info
 - heaven-burns-red.com
 - heavenlyhentai.com
-- heavenlywind.cc
 - heavy-r.com
 - heavyfetish.com
 - hegre.com
@@ -7516,7 +7345,6 @@ domain_suffix_set:
 - hentaizilla.com
 - hentaizz.net
 - henti-night.com
-- heptio.cn
 - heptio.com
 - heraldsun.com.au
 - hereistheporn.com
@@ -7545,7 +7373,6 @@ domain_suffix_set:
 - hewlett-packard.co
 - hewlett-packard.co.il
 - hewlett-packard.co.uk
-- hewlett-packard.com.cn
 - hewlett-packard.com.mx
 - hewlett-packard.com.sg
 - hewlett-packard.jp
@@ -7629,7 +7456,6 @@ domain_suffix_set:
 - hlbelygl.com
 - hlsp1.pw
 - hm.com
-- hm.com.cn
 - hmd.site
 - hmfby.com
 - hmfun.top
@@ -7876,7 +7702,6 @@ domain_suffix_set:
 - hpsso.com
 - hpstore-china.com
 - hpstore-emea.com
-- hpstore.cn
 - hpstore.com
 - hpstorethailand.com
 - hpsupport.com
@@ -7928,7 +7753,6 @@ domain_suffix_set:
 - hsbc.com.bd
 - hsbc.com.bh
 - hsbc.com.br
-- hsbc.com.cn
 - hsbc.com.eg
 - hsbc.com.hk
 - hsbc.com.mo
@@ -7948,10 +7772,8 @@ domain_suffix_set:
 - hsbc.uk
 - hsbcamanah.com.my
 - hsbcinnovationbanking.com
-- hsbcinsurance.com.cn
 - hsbcnet.com
 - hsbcprivatebank.com
-- hsbcqh.com.cn
 - hsbctrinkaus.de
 - hsex.icu
 - hsex.men
@@ -8186,7 +8008,6 @@ domain_suffix_set:
 - ifastgp.com
 - ifastgp.com.hk
 - ifastnetwork.com
-- ifastps.com.cn
 - ifasttv.com
 - ifontcloud.com
 - iframejav.com
@@ -8224,7 +8045,6 @@ domain_suffix_set:
 - ikea.ca
 - ikea.ch
 - ikea.cl
-- ikea.cn
 - ikea.co.at
 - ikea.co.ca
 - ikea.co.de
@@ -8417,9 +8237,6 @@ domain_suffix_set:
 - infrapedia.com
 - infraworks.com
 - infura.io
-- ingka-dt.cn
-- ingka-internal.cn
-- ingka-system.cn
 - ingka.com
 - ingka.dev
 - ingkacentres.com
@@ -8482,7 +8299,6 @@ domain_suffix_set:
 - intel.ch
 - intel.cl
 - intel.cm
-- intel.cn
 - intel.co
 - intel.co.ae
 - intel.co.cr
@@ -8497,7 +8313,6 @@ domain_suffix_set:
 - intel.com.au
 - intel.com.bo
 - intel.com.br
-- intel.com.cn
 - intel.com.co
 - intel.com.ec
 - intel.com.hk
@@ -8631,7 +8446,6 @@ domain_suffix_set:
 - intelnervana.com
 - intelplay.com
 - intelquark.com
-- intelrealsense.cn
 - intelrealsense.com
 - intelrealsense.net
 - intelreimbursement.com
@@ -9015,7 +8829,6 @@ domain_suffix_set:
 - jijiji.ca
 - jilhub.com
 - jimeng22.com
-- jinrieluosi.cn
 - jira-tcsbank.ru
 - jira.com
 - jitsi.org
@@ -9159,7 +8972,6 @@ domain_suffix_set:
 - jump.taxi
 - jumpwork.ru
 - juroku.co.jp
-- just-do-it.cn
 - just.xxx
 - justav.net
 - justdoit.us
@@ -9261,7 +9073,6 @@ domain_suffix_set:
 - kaspersky.com
 - kaspersky.com.au
 - kaspersky.com.br
-- kaspersky.com.cn
 - kaspersky.com.hk
 - kaspersky.com.pl
 - kaspersky.com.tr
@@ -9336,8 +9147,6 @@ domain_suffix_set:
 - kijiji.ca
 - kijijiauto.ca
 - kijijiautos.ca
-- kijijidns.cn
-- kijijidns.com.cn
 - kijijiforbusiness.ca
 - kijijii.ca
 - kijijiraps.ca
@@ -9352,7 +9161,6 @@ domain_suffix_set:
 - kindgirls.com
 - kindindianporn.com
 - kindle
-- kindle.cn
 - kindle.co.jp
 - kindle.co.uk
 - kindle.com
@@ -9363,9 +9171,7 @@ domain_suffix_set:
 - kindle.it
 - kindle.jp
 - kindle4rss.com
-- kindleoasis.cn
 - kindleoasis.com
-- kindleoasis.com.cn
 - kindleoasis.info
 - kindleoasis.jp
 - kindleoasis.org
@@ -9530,7 +9336,6 @@ domain_suffix_set:
 - lbfmaddiction.com
 - lbtube.com
 - lcgirls.com
-- ldmnq.com
 - ldoceonline.com
 - ldstatic.com
 - le-direct.tv
@@ -9737,13 +9542,10 @@ domain_suffix_set:
 - login-paypal.info
 - logitech.biz
 - logitech.com
-- logitech.com.cn
 - logitech.fr
 - logitech.io
 - logitechg.com
-- logitechg.com.cn
 - logitechg.fr
-- logitechio.com.cn
 - logosfilm.co.kr
 - loholidayhk.com
 - lokinet.org
@@ -9768,7 +9570,6 @@ domain_suffix_set:
 - looti.net
 - lostbetsgames.com
 - lotcrap.com
-- louisvuitton.cn
 - louisvuitton.com
 - love-sextoys.co.uk
 - love4porn.com
@@ -9788,7 +9589,6 @@ domain_suffix_set:
 - loveparents.org
 - lovepartners.life
 - lovesexbody.com
-- lovesexdurex.cn
 - lovesexdurex.com
 - lovethiscity.com
 - lovex.life
@@ -9805,7 +9605,6 @@ domain_suffix_set:
 - lsj40.xyz
 - lsjfuli308.xyz
 - lspimg.com
-- lsplayer.com
 - lss55.com
 - lthgav.buzz
 - ltn.com.tw
@@ -9845,10 +9644,8 @@ domain_suffix_set:
 - lxxlxx.com
 - lysol.ca
 - lysol.cl
-- lysol.cn
 - lysol.co.cr
 - lysol.com
-- lysol.com.cn
 - lysol.com.mx
 - lysol.net
 - m-power.com
@@ -9897,7 +9694,6 @@ domain_suffix_set:
 - magestic.com
 - magicalmirai.com
 - magicmovies.com
-- magnoliaav.com.cn
 - mahajantech.com
 - maidonanews.jp
 - mail-carrotquest.io
@@ -9973,7 +9769,6 @@ domain_suffix_set:
 - maomiav.one
 - maomiav.top
 - map-software.com
-- mapbox.cn
 - mapbox.com
 - mapguide.com
 - maple.finance
@@ -10012,7 +9807,6 @@ domain_suffix_set:
 - mastercard.ca
 - mastercard.ch
 - mastercard.cl
-- mastercard.cn
 - mastercard.co.id
 - mastercard.co.il
 - mastercard.co.in
@@ -10030,7 +9824,6 @@ domain_suffix_set:
 - mastercard.com.bh
 - mastercard.com.br
 - mastercard.com.bz
-- mastercard.com.cn
 - mastercard.com.co
 - mastercard.com.cy
 - mastercard.com.eg
@@ -10157,9 +9950,7 @@ domain_suffix_set:
 - mcafee.com
 - mcb.com.mm
 - mcd-holdings.co.jp
-- mcd.cn
 - mcd.com
-- mcdchina.net
 - mcdelivery.co.id
 - mcdelivery.co.in
 - mcdelivery.co.kr
@@ -10180,7 +9971,6 @@ domain_suffix_set:
 - mcdonalds.co.uk
 - mcdonalds.com
 - mcdonalds.com.au
-- mcdonalds.com.cn
 - mcdonalds.com.hk
 - mcdonalds.com.lb
 - mcdonalds.com.my
@@ -10212,7 +10002,6 @@ domain_suffix_set:
 - mdyy.de
 - me-gay.com
 - meadjohnson.com
-- meadjohnson.com.cn
 - meadjohnson.com.hk
 - meadjohnson.com.tw
 - meadjohnson.net
@@ -10592,7 +10381,6 @@ domain_suffix_set:
 - miniso-nz.com
 - miniso.by
 - miniso.ca
-- miniso.cn
 - miniso.co
 - miniso.co.id
 - miniso.co.tz
@@ -10612,7 +10400,6 @@ domain_suffix_set:
 - miniso.pk
 - miniso.ua
 - miniso.uz
-- minisohome.cn
 - minisoindia.com
 - minisojordan.com
 - minisokorea.com
@@ -10648,7 +10435,6 @@ domain_suffix_set:
 - minne.com
 - minneapolisbmw.com
 - minneapolisbmw.net
-- minsio.cn
 - minuporno.com
 - miohentai.com
 - mirabilis.com
@@ -10704,7 +10490,6 @@ domain_suffix_set:
 - mobile01.com
 - mobileicq.com
 - mobileinternational.com
-- mobileinternational.com.cn
 - mobilemarketo.com
 - mobileporngames.com
 - mobilepornmovies.com
@@ -10779,7 +10564,6 @@ domain_suffix_set:
 - morganclaypool.com
 - morisawa.co.jp
 - mornporn.com
-- mortein.cn
 - mortein.co.in
 - mortein.co.nz
 - mortein.co.za
@@ -10824,7 +10608,6 @@ domain_suffix_set:
 - move-free.net
 - move.com
 - moveaws.com
-- movefree.cn
 - movefreeoffers.com
 - movefreerewards.com
 - movefrees.com
@@ -10894,7 +10677,6 @@ domain_suffix_set:
 - mrskin.com
 - mrssiren.com
 - mrvideosdesexo.xxx
-- msi.cn
 - msi.com
 - msnbc.com
 - msoopent.com
@@ -10913,10 +10695,8 @@ domain_suffix_set:
 - muchohentai.com
 - muchomasporno.com
 - mucinex.ca
-- mucinex.cn
 - mucinex.co.nz
 - mucinex.com
-- mucinex.com.cn
 - mucinex.net
 - mucinex.tv
 - mucinexprofessional.com
@@ -10924,7 +10704,6 @@ domain_suffix_set:
 - mudfish.net
 - mudvod.tv
 - muji.com
-- muji.com.cn
 - muji.com.hk
 - muji.eu
 - muji.net
@@ -11096,7 +10875,6 @@ domain_suffix_set:
 - mypornwap.fun
 - myproseries.com
 - myq2.com
-- myqnapcloud.cn
 - myqnapcloud.com
 - myradio.com.hk
 - myradio.hk
@@ -11271,7 +11049,6 @@ domain_suffix_set:
 - nettyinternet.com
 - netvideogirls.com
 - netvigator.com
-- network-auth.cn
 - netxh.blog
 - netzerobuildings.com
 - netzerobuildingstudio.com
@@ -11420,12 +11197,10 @@ domain_suffix_set:
 - nike-dunksb.com
 - nike-fr.com
 - nike-org.com
-- nike-shox.cn
 - nike-uk.com
 - nike-us.com
 - nike-usa.com
 - nike.ci
-- nike.cn
 - nike.com
 - nike.com.br
 - nike.com.hk
@@ -11434,7 +11209,6 @@ domain_suffix_set:
 - nike.host
 - nike.shop
 - nike.us
-- nike.xn--hxt814e
 - nike0594.com
 - nike23.com
 - nikeadidas.com
@@ -11449,9 +11223,7 @@ domain_suffix_set:
 - nikeb.com
 - nikebbn.com
 - nikebetrue.com
-- nikebetterworld.cn
 - nikebetterworld.com
-- nikebetterworld.com.cn
 - nikebetterworld.info
 - nikebetterworld.net
 - nikebetterworld.org
@@ -11459,7 +11231,6 @@ domain_suffix_set:
 - nikebuy.com
 - nikeby.com
 - nikecdn.com
-- nikechina.cn
 - nikechosen.com
 - nikecloud.com
 - nikeclub.com
@@ -11487,16 +11258,12 @@ domain_suffix_set:
 - nikegadgets.com
 - nikegenealogy.com
 - nikegolf.ca
-- nikegolf.cn
 - nikegrid.com
 - nikehelp.com
 - nikehightops.com
 - nikehyperdunk.com
-- nikeid.cn
-- nikeid.com.cn
 - nikeidshoes.com
 - nikeinc.com
-- nikeinc.com.cn
 - nikeincchemistry.com
 - nikeinstock.com
 - nikeit.com
@@ -11504,16 +11271,10 @@ domain_suffix_set:
 - nikeitaly.com
 - nikekd.com
 - nikekid.com
-- nikelab.cn
-- nikelab.com.cn
 - nikelink.com
-- nikeliuxiang.cn
 - nikeliuxiang.com
-- nikeliuxiang.com.cn
 - nikelives.com
 - nikelunarglide.com
-- nikemall.cn
-- nikemall.com.cn
 - nikemarketing.com
 - niken7.com
 - nikenews.com
@@ -11529,10 +11290,7 @@ domain_suffix_set:
 - nikepromax.com
 - nikeresponsibility.com
 - nikereuseashoe.com
-- nikerunclub.cn
-- nikerunclub.com.cn
 - nikerunner.com
-- nikerunning.com.cn
 - nikerunningshoes.com
 - nikesb.com
 - nikesbdunks.net
@@ -11556,7 +11314,6 @@ domain_suffix_set:
 - nikesoccercleats.com
 - nikesportswear.com
 - nikestares.com
-- nikestore.cn
 - nikestore.com
 - nikestore.com.au
 - nikestyles.com
@@ -11614,7 +11371,6 @@ domain_suffix_set:
 - nodereal.io
 - nodeseek.com
 - noisullifb.com
-- nokiantyres.cn
 - nokiantyres.com
 - nomachine.com
 - nomyne.com
@@ -11696,11 +11452,8 @@ domain_suffix_set:
 - ntp.jst.mfeed.ad.jp
 - ntp.nat.ms
 - ntp.nc.u-tokyo.ac.jp
-- ntp.neu.edu.cn
 - ntp.nic.cz
 - ntp.nict.jp
-- ntp.ntsc.ac.cn
-- ntp.org.cn
 - ntp.ring.gr.jp
 - ntp.ripe.net
 - ntp.se
@@ -11785,14 +11538,12 @@ domain_suffix_set:
 - nuro.jp
 - nurofen.at
 - nurofen.bg
-- nurofen.cn
 - nurofen.co.il
 - nurofen.co.nz
 - nurofen.co.uk
 - nurofen.co.za
 - nurofen.com
 - nurofen.com.au
-- nurofen.com.cn
 - nurofen.com.sg
 - nurofen.cz
 - nurofen.de
@@ -11823,7 +11574,6 @@ domain_suffix_set:
 - nvidia.at
 - nvidia.be
 - nvidia.ch
-- nvidia.cn
 - nvidia.co.at
 - nvidia.co.in
 - nvidia.co.jp
@@ -11860,10 +11610,6 @@ domain_suffix_set:
 - nvidia.tw
 - nvidiaforhp.com
 - nvidiagrid.net
-- nwcdcloud.cn
-- nwcdcloud.com.cn
-- nwcddns.cn
-- nwcdinfosec.cn
 - nwxs8.com
 - nxtdig.com.hk
 - nxtdig.com.tw
@@ -11921,7 +11667,6 @@ domain_suffix_set:
 - odysee.com
 - oecd-ilibrary.org
 - oed.com
-- oemssl.cn
 - offresspecialesbmw.ca
 - ofiii.com
 - ogakikyoritsu.co.jp
@@ -12080,7 +11825,6 @@ domain_suffix_set:
 - oranum.com
 - oreil.ly
 - oreilly.com
-- oreilly.com.cn
 - oreilly.review
 - oreillystatic.com
 - oreno3d.com
@@ -12222,7 +11966,6 @@ domain_suffix_set:
 - palestineremix.com
 - pali.ltd
 - panasonic
-- panasonic.cn
 - panasonic.com
 - panasonic.jp
 - pancolle-movie.jp
@@ -12375,21 +12118,17 @@ domain_suffix_set:
 - paypal-viewpoints.net
 - paypal.ca
 - paypal.com
-- paypal.com.cn
 - paypal.com.hk
 - paypal.com.sg
 - paypal.hk
 - paypal.info
 - paypal.jp
 - paypal.me
-- paypal.net.cn
-- paypal.org.cn
 - paypal.so
 - paypal.us
 - paypalbeacon.com
 - paypalbenefits.com
 - paypalbrasil.com
-- paypalcommunity.cn
 - paypalcommunity.com
 - paypalcommunity.net
 - paypalcommunity.org
@@ -12397,9 +12136,7 @@ domain_suffix_set:
 - paypalcredit.com
 - paypalcreditcard.com
 - paypalgivingfund.org
-- paypalhere.cn
 - paypalhere.com
-- paypalhere.com.cn
 - paypalhere.info
 - paypalhere.net
 - paypalhere.org
@@ -12470,7 +12207,6 @@ domain_suffix_set:
 - pearson.com
 - pearson.com.ar
 - pearson.com.au
-- pearson.com.cn
 - pearson.com.hk
 - pearson.com.uy
 - pearson.es
@@ -13105,8 +12841,6 @@ domain_suffix_set:
 - ppy.sh
 - practicalbusinessskills.com
 - practicalmoneyskills.ca
-- practicalmoneyskills.cn
-- practicalmoneyskills.com.cn
 - practicalmoneyskills.jp
 - prastitutki.ru
 - prcm.jp
@@ -13128,14 +12862,11 @@ domain_suffix_set:
 - prettynubiles.com
 - prettyvirgin.com
 - priceless.com
-- priceless.com.cn
 - priceless.org
 - pricelessafrica.com
 - pricelessarabia.com
 - pricelessaruba.com
-- pricelessbeijing.cn
 - pricelessbeijing.com
-- pricelessbeijing.com.cn
 - pricelesshongkong.com
 - pricelesshonolulu.com
 - pricelessmarketingengine.com
@@ -13149,8 +12880,6 @@ domain_suffix_set:
 - pridetube.com
 - primbank.ru
 - primecurves.com
-- primeday.cn
-- primeday.com.cn
 - primeday.info
 - primeindianporn.com
 - primematures.com
@@ -13202,9 +12931,7 @@ domain_suffix_set:
 - pros.ee
 - proseries.com
 - prostoporno.net
-- prostores.cn
 - prostores.com
-- prostores.com.cn
 - prothots.com
 - proton.me
 - protonmail.ch
@@ -13297,7 +13024,6 @@ domain_suffix_set:
 - qattdh2.cc
 - qattdh6.top
 - qbmengmei6.mom
-- qceventscenter.com.cn
 - qcmod.xyz
 - qcomgeo2.com
 - qctconnect.com
@@ -13306,14 +13032,12 @@ domain_suffix_set:
 - qingse.one
 - qise100.com
 - qlink.to
-- qlinkto.cn
 - qmap.pub
 - qmb.ir
 - qmov.com
 - qmov.net
 - qmttqg3k.me
 - qnap.com
-- qnap.com.cn
 - qnapsupport.net
 - qobuz.com
 - qombol.com
@@ -13329,7 +13053,6 @@ domain_suffix_set:
 - qr.ae
 - qualcomm-email.com
 - qualcomm-inc.com
-- qualcomm.cn
 - qualcomm.co.id
 - qualcomm.co.in
 - qualcomm.co.jp
@@ -13344,7 +13067,6 @@ domain_suffix_set:
 - qualcommlabs.com
 - qualcommmea.com
 - qualcommretail.com
-- qualcommventures.cn
 - qualcommventures.com
 - qualphone.com
 - quanben-xiaoshuo.com
@@ -13364,7 +13086,6 @@ domain_suffix_set:
 - quickbooksenligne.ca
 - quickbooksgetconnected.co.za
 - quickbooksonline.com
-- quickconnect.cn
 - quickconnect.to
 - quickiepage.com
 - quicksrv.de
@@ -13501,7 +13222,6 @@ domain_suffix_set:
 - rea.global
 - rea.io
 - rea.tech
-- reabble.cn
 - reabble.com
 - reachporn.com
 - readerswivesonline.com
@@ -13562,9 +13282,7 @@ domain_suffix_set:
 - rebrandly.com
 - recelebrity.com
 - reckitt.net
-- reckittbenckiser.cn
 - reckittbenckiser.com
-- reckittbenckiser.com.cn
 - reckittbenckiser.net
 - reckittbenckiser.tv
 - reckittprofessional.com
@@ -13639,7 +13357,6 @@ domain_suffix_set:
 - reut.rs
 - reuters.com
 - reuters.tv
-- reutersagency.cn
 - reutersmedia.net
 - revenue-performance-management.com
 - revistaepoca.com
@@ -13716,13 +13433,11 @@ domain_suffix_set:
 - roudaosp.cc
 - roughebonysex.com
 - roughman.net
-- route53.cn
 - routerboard.com
 - routledgehandbooks.com
 - roxired.com
 - royalcams.com
 - royalsocietypublishing.org
-- rpglogs.cn
 - rpglogs.com
 - rplay.live
 - rprimelab.com
@@ -13794,7 +13509,6 @@ domain_suffix_set:
 - rttv.com
 - rttv.ru
 - rtxv.ru
-- ru.ccb.com
 - rude.com
 - ruhub.tv
 - rukoebxx.com
@@ -13879,7 +13593,6 @@ domain_suffix_set:
 - saffrontech.com
 - sagabank.co.jp
 - sage-observability.tech
-- sagemaker.com.cn
 - sagepub.com
 - sagernet.org
 - sahabatsetiasmartone.com
@@ -13898,7 +13611,6 @@ domain_suffix_set:
 - samokat.ru
 - samsung
 - samsung.com
-- samsung.com.cn
 - samsungadhub.com
 - samsungads.com
 - samsungapps.com
@@ -13906,7 +13618,6 @@ domain_suffix_set:
 - samsungcloudcn.com
 - samsungconsent.com
 - samsungdm.com
-- samsungeshop.com.cn
 - samsunggalaxyfriends.com
 - samsunghealth.com
 - samsunghealthcn.com
@@ -13917,7 +13628,6 @@ domain_suffix_set:
 - samsungqbe.com
 - samsungrs.com
 - sandisk.ae
-- sandisk.cn
 - sandisk.co.jp
 - sandisk.co.kr
 - sandisk.co.uk
@@ -14460,7 +14170,6 @@ domain_suffix_set:
 - shopbmwusa.com
 - shopdurex.com
 - shopee.cl
-- shopee.cn
 - shopee.co.id
 - shopee.co.th
 - shopee.com
@@ -14615,7 +14324,6 @@ domain_suffix_set:
 - sky
 - sky.com
 - skyassets.com
-- skycdn.com.cn
 - skymansion.net
 - skymatter.com
 - skyoceanrescue.com
@@ -14704,7 +14412,6 @@ domain_suffix_set:
 - snap.com
 - snapads.com
 - snapchat.com
-- snapdragon.cn
 - snapdragonbooth.com
 - snapkit.co
 - snapvolumes.com
@@ -14879,7 +14586,6 @@ domain_suffix_set:
 - sourcecraft.dev
 - sourceforge.com
 - sourceforge.net
-- sourcingforebay.com.cn
 - sourcingforebay.net
 - sourcingforebay.tv
 - south-plus.net
@@ -14966,7 +14672,6 @@ domain_suffix_set:
 - ssl-certificate.ch
 - ssl-images-amazon.com
 - ssl.com
-- sslcom.cn
 - sslpaypal.org
 - sspanel.net
 - ssplive.pw
@@ -14999,7 +14704,6 @@ domain_suffix_set:
 - starbucks.com
 - starbucks.com.ar
 - starbucks.com.bn
-- starbucks.com.cn
 - starbucks.com.co
 - starbucks.com.cy
 - starbucks.com.gr
@@ -15077,7 +14781,6 @@ domain_suffix_set:
 - stc-server.com
 - stealthex.io
 - steamofporn.com
-- steampp.net
 - steamygamer.com
 - steelbrick.com
 - steemit.com
@@ -15094,7 +14797,6 @@ domain_suffix_set:
 - stin31.ru
 - stingrayengine.com
 - stlouisbmw.net
-- stmicroelectronics.com.cn
 - stocking-tease.com
 - stockingfetishvideo.com
 - stonefoxlingerie.com
@@ -15119,14 +14821,12 @@ domain_suffix_set:
 - streetmeatasia.com
 - strepsils.at
 - strepsils.ch
-- strepsils.cn
 - strepsils.co.kr
 - strepsils.co.nz
 - strepsils.co.za
 - strepsils.com.ar
 - strepsils.com.au
 - strepsils.com.br
-- strepsils.com.cn
 - strepsils.com.co
 - strepsils.com.hk
 - strepsils.com.ph
@@ -15278,7 +14978,6 @@ domain_suffix_set:
 - symcb.com
 - symcd.com
 - synaptic.net
-- synology.cn
 - synology.com
 - synology.me
 - synologydownload.com
@@ -15389,7 +15088,6 @@ domain_suffix_set:
 - teamskeet.com
 - teamspeak-services.com
 - teamspeak.com
-- teamviewer.cn
 - teamviewer.com
 - teamviewer.us
 - tearapeak.com
@@ -15470,7 +15168,6 @@ domain_suffix_set:
 - teraboxcdn.com
 - terapeack.com
 - terapeak.ca
-- terapeak.cn
 - terapeak.com
 - terapeak.com.hk
 - terapeak.hk
@@ -15479,14 +15176,10 @@ domain_suffix_set:
 - terk.nl
 - termly.io
 - terrapeak.com
-- tesla.cn
 - tesla.com
-- tesla.com.cn
 - tesla.services
 - teslaenergy.services
-- teslamotors.cn
 - teslamotors.com
-- teslamotors.com.cn
 - teslazta.net
 - test-ipv6.alpinedc.ch
 - test-ipv6.arauc.br
@@ -15510,7 +15203,6 @@ domain_suffix_set:
 - test-ipv6.se
 - test-ipv6.sin.vr.org
 - test-ipv6.ttk.ru
-- testipv6.cn
 - testipv6.de
 - testonfox.com
 - tetrika-school.ru
@@ -15658,7 +15350,6 @@ domain_suffix_set:
 - thisvid.com
 - thisvidscat.net
 - thomsonreuters.ca
-- thomsonreuters.cn
 - thomsonreuters.co.jp
 - thomsonreuters.co.kr
 - thomsonreuters.co.nz
@@ -15879,7 +15570,6 @@ domain_suffix_set:
 - travelex.co.uk
 - travelex.com
 - travelex.com.au
-- travelex.com.cn
 - travelex.com.hk
 - travelex.com.my
 - travelex.com.om
@@ -15918,7 +15608,6 @@ domain_suffix_set:
 - truefi.io
 - truenas.com
 - trunest.com
-- trust-provider.cn
 - trust-provider.com
 - trustarc.com
 - trustcor.ca
@@ -16045,7 +15734,6 @@ domain_suffix_set:
 - tvb.com.au
 - tvbanywhere.com
 - tvbanywhere.com.sg
-- tvbc.com.cn
 - tvbeventpower.com.hk
 - tvbs.com.tw
 - tvbusa.com
@@ -16118,7 +15806,6 @@ domain_suffix_set:
 - ubereats.com
 - ubncloud.com
 - ubnt.com
-- ubnt.com.cn
 - ubs.com
 - uchi.ru
 - uchicago.edu
@@ -16167,7 +15854,6 @@ domain_suffix_set:
 - uhub.com
 - ui-portal.de
 - ui.com
-- ui.com.cn
 - uicdn.com
 - uimserv.net
 - uiporn.com
@@ -16254,7 +15940,6 @@ domain_suffix_set:
 - uug26.com
 - uug27.com
 - uuk28.com
-- uum.com.cn
 - uun78.com
 - uun79.com
 - uun82.com
@@ -16310,7 +15995,6 @@ domain_suffix_set:
 - vanish.be
 - vanish.ch
 - vanish.cl
-- vanish.cn
 - vanish.co.id
 - vanish.co.il
 - vanish.co.in
@@ -16372,7 +16056,6 @@ domain_suffix_set:
 - veet.ca
 - veet.ch
 - veet.cl
-- veet.cn
 - veet.co.id
 - veet.co.in
 - veet.co.kr
@@ -16384,7 +16067,6 @@ domain_suffix_set:
 - veet.com.au
 - veet.com.bd
 - veet.com.br
-- veet.com.cn
 - veet.com.co
 - veet.com.hk
 - veet.com.mx
@@ -16452,7 +16134,6 @@ domain_suffix_set:
 - verisign.com
 - verisign.com.au
 - verisign.com.br
-- verisign.com.cn
 - verisign.com.es
 - verisign.com.hk
 - verisign.com.sg
@@ -16503,7 +16184,6 @@ domain_suffix_set:
 - vfsco.com
 - vfsco.com.au
 - vfsco.com.br
-- vfsco.com.cn
 - vfsco.com.tr
 - vfsco.cz
 - vfsco.de
@@ -16631,7 +16311,6 @@ domain_suffix_set:
 - visa.be
 - visa.ca
 - visa.cl
-- visa.cn
 - visa.co.ao
 - visa.co.cr
 - visa.co.id
@@ -16655,7 +16334,6 @@ domain_suffix_set:
 - visa.com.br
 - visa.com.bs
 - visa.com.bz
-- visa.com.cn
 - visa.com.co
 - visa.com.cy
 - visa.com.dm
@@ -16745,7 +16423,6 @@ domain_suffix_set:
 - visaglobalfinance.com
 - visaicsdirect.com
 - visainfinite.ca
-- visainfinite.cn
 - visainfiniteluxuryhotels.ca
 - visaitalia.com
 - visakorea.com
@@ -16756,10 +16433,7 @@ domain_suffix_set:
 - visaluxuryhotels.com.ar
 - visamiddleeast.com
 - visanet.net
-- visapay.cn
 - visapcsdirect.com
-- visaplatinum.cn
-- visaplatinum.com.cn
 - visaplus.com
 - visasavingsedge.ca
 - visasignature.co.kr
@@ -16884,9 +16558,7 @@ domain_suffix_set:
 - volvo
 - volvo-truck.nl
 - volvo.ca
-- volvo.cn
 - volvo.com
-- volvo.com.cn
 - volvo.se
 - volvobrandshop.com
 - volvobuses.at
@@ -16931,10 +16603,8 @@ domain_suffix_set:
 - volvoce.com
 - volvodefense.com
 - volvogroup.be
-- volvogroup.cn
 - volvogroup.com
 - volvogroup.com.br
-- volvogroup.com.cn
 - volvogroup.de
 - volvogroup.fr
 - volvogroup.jp
@@ -16995,7 +16665,6 @@ domain_suffix_set:
 - volvotrucks.com.au
 - volvotrucks.com.bn
 - volvotrucks.com.br
-- volvotrucks.com.cn
 - volvotrucks.com.co
 - volvotrucks.com.kw
 - volvotrucks.com.pt
@@ -17134,7 +16803,6 @@ domain_suffix_set:
 - wallhaven.cc
 - walmart
 - walmart-content.com
-- walmart.cn
 - walmart.com
 - walmart.pharmacy
 - walmartimages.com
@@ -17241,7 +16909,6 @@ domain_suffix_set:
 - webex.com
 - webex.com.au
 - webex.com.br
-- webex.com.cn
 - webex.com.hk
 - webex.com.mx
 - webex.de
@@ -17480,9 +17147,7 @@ domain_suffix_set:
 - wonporn.net
 - woodmancastingx.com
 - woolite.ca
-- woolite.cn
 - woolite.com
-- woolite.com.cn
 - woolite.pl
 - woolite.us
 - woolitecarpet.com
@@ -17705,11 +17370,9 @@ domain_suffix_set:
 - xn--4vq477m.com
 - xn--6eup7j.com
 - xn--6eup7j.net
-- xn--74q035i.xn--hxt814e
 - xn--74q434dwff.com
 - xn--74q434dwff.net
 - xn--7hv594h.com
-- xn--7hvy28f.cn
 - xn--80a9a4b.xn--p1ai
 - xn--80aaafbpzn5blfby1p.xn--p1ai
 - xn--80aaeib8abrryx4k.xn--p1ai
@@ -17728,7 +17391,6 @@ domain_suffix_set:
 - xn--90wwvt03e.com
 - xn--av-o44ep1d.com
 - xn--b1aechhj6bof8g5a.site
-- xn--bnq297cix3a.cn
 - xn--c1acbl2abdlkab1og.xn--p1ai
 - xn--cck4d8b3009a.com
 - xn--cckwcxetd
@@ -17789,7 +17451,6 @@ domain_suffix_set:
 - xn--xsq959n.com
 - xn--yf1at58a.com
 - xn--yt8h.la
-- xn--ztsq84g.cn
 - xnalgas.com
 - xnertv.shop
 - xnostars.com
@@ -17836,7 +17497,6 @@ domain_suffix_set:
 - xoom-experience.com
 - xoom.com
 - xoom.io
-- xoom.net.cn
 - xoom.us
 - xoomcom.com
 - xoteens.com
@@ -17872,7 +17532,6 @@ domain_suffix_set:
 - xtom.sg
 - xtom.social
 - xtom.us
-- xtracloud.cn
 - xtracloud.net
 - xtube.com
 - xtubebdsm.com
@@ -18092,7 +17751,6 @@ domain_suffix_set:
 - yahoo.ch
 - yahoo.cl
 - yahoo.cm
-- yahoo.cn
 - yahoo.co.ao
 - yahoo.co.bw
 - yahoo.co.ck
@@ -18121,7 +17779,6 @@ domain_suffix_set:
 - yahoo.com.bo
 - yahoo.com.br
 - yahoo.com.bz
-- yahoo.com.cn
 - yahoo.com.co
 - yahoo.com.do
 - yahoo.com.ec
@@ -18236,7 +17893,6 @@ domain_suffix_set:
 - yamaguchibank.co.jp
 - yamanashibank.co.jp
 - yamaxun
-- yamaxun.cn
 - yamaxun.com
 - yamoon.club
 - yande.re
@@ -18327,7 +17983,6 @@ domain_suffix_set:
 - yepporn.com
 - yes.xxx
 - yes123.com.tw
-- yeshen.com
 - yespornfree.com
 - yespornplease.com
 - yespornpleasexxx.com
@@ -18472,7 +18127,6 @@ domain_suffix_set:
 - z-lib.org
 - z-library.se
 - z-library.sk
-- z.cn
 - z.com
 - z00.world
 - z18r.co
@@ -18587,7 +18241,6 @@ domain_suffix_set:
 - zoofilianet.com
 - zoohun.com
 - zoom.com
-- zoom.com.cn
 - zoom.us
 - zoomingin.tv
 - zoomobileporn.com
@@ -18781,8 +18434,6 @@ domain_regex_set:
 - (^|\.)zztt[1-6][0-9]\.com$
 - (^|\.)zzz[1-9][0-9]\.top$
 - .+\.awsdns-[0-9][0-9]\.(co\.uk|com|net|org)$
-- .+\.awsdns-cn-[0-9][0-9]\.(biz|com|net|top)$
-- .+\.awsdns-cn-[0-9][a-e0-9]\.cn$
 - ^(.+\.)*zh\.okaapps\.com$
 - ^[0-9]+vod-adaptive\.akamaized\.net$
 - ^ewcdn[0-9]+\.nowe\.com$

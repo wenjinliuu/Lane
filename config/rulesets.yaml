@@ -26,6 +26,8 @@ rulesets:
   - id: apple-cn
     title: AppleCN
     policy: DIRECT
+    v2fly: [apple]
+    v2fly_require: [cn]
     text_source: apple_cn
 
   # GoogleCN stays out of this profile list. A complete, independently reusable
@@ -110,22 +112,23 @@ rulesets:
     policy: Apple
     v2fly: [apple]
 
-  # Its policy is Final, the same destination as the profile's MATCH rule, so this
-  # set never sends traffic to a different exit. Its job is placement: it claims
-  # known non-CN domains before china, cn-ip and GEOIP,CN can direct-connect them
-  # by mistake. v2fly's cn list includes tld-cn, so foreign companies' .cn domains
-  # appear in both lists; whichever comes first wins. Deleting this set would flip
-  # 567 domains from Final to DIRECT, and would also leave GEOIP,CN's known
-  # mainland-IP misjudgements unguarded. Keep it and cn-ip; drop at most one.
-  - id: proxy
-    title: General Proxy
-    policy: Final
-    v2fly: [geolocation-!cn]
-
+  # China deliberately precedes General Proxy. v2fly's cn list includes tld-cn,
+  # so known mainland domains and Chinese entry points take the DIRECT path even
+  # when they overlap geolocation-!cn. Narrow proxy exceptions belong in an
+  # earlier service rule or custom-proxy, not in a reversed global order.
   - id: china
     title: China
     policy: DIRECT
     v2fly: [cn]
+
+  # Its policy is Final, the same destination as the profile's MATCH rule, so this
+  # set never sends traffic to a different exit. Its job is placement: after China
+  # has claimed known mainland domains, it protects known non-CN domains from
+  # later service IP, CN-IP and GEOIP,CN classifications. Keep the complete set.
+  - id: proxy
+    title: General Proxy
+    policy: Final
+    v2fly: [geolocation-!cn]
 
   # Domain rules above must get first refusal before any service IP rules can
   # trigger or skip resolution. LAN is the deliberate exception at position one.

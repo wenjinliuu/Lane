@@ -64,6 +64,59 @@ def test_egern_all_rule_kinds_and_no_resolve():
         assert result[EGERN_RULE_FIELDS[rule.kind]] == [rule.value]
 
 
+def test_stash_uses_specialized_payloads_without_changing_rule_semantics(tmp_path):
+    config = load_project_config(ROOT)
+    ruleset = CompiledRuleset(
+        "sample",
+        "Sample",
+        "Manual",
+        (
+            Rule("full", "api.example.com"),
+            Rule("domain", "example.com"),
+            Rule("regexp", r"^edge\d{1,3}\.example\.net$"),
+            Rule("ipcidr", "192.0.2.0/24"),
+            Rule("ipcidr6", "2001:db8::/32"),
+        ),
+        True,
+    )
+    render_all(
+        tmp_path,
+        config["project"],
+        config["policies"],
+        config["icons"],
+        [ruleset],
+    )
+    profile = yaml.safe_load(
+        (tmp_path / "dist/stash/Lane_stash.yaml").read_text()
+    )
+    assert list(profile["rule-providers"]) == [
+        "sample-domain", "sample-ipcidr", "sample-classical"
+    ]
+    assert [
+        profile["rule-providers"][provider]["behavior"]
+        for provider in profile["rule-providers"]
+    ] == ["domain", "ipcidr", "classical"]
+    assert profile["rules"][:3] == [
+        "RULE-SET,sample-domain,Manual",
+        "RULE-SET,sample-ipcidr,Manual,no-resolve",
+        "RULE-SET,sample-classical,Manual",
+    ]
+
+    def payload(name):
+        return [
+            line for line in (
+                tmp_path / "dist/stash/rules-profile" / f"{name}.list"
+            ).read_text().splitlines()
+            if line and not line.startswith("#")
+        ]
+
+    assert payload("sample-domain") == ["api.example.com", "+.example.com"]
+    assert payload("sample-ipcidr") == ["192.0.2.0/24", "2001:db8::/32"]
+    assert payload("sample-classical") == [
+        r"DOMAIN-REGEX,^edge\d{1,3}\.example\.net$"
+    ]
+
+
 def test_generated_rule_counts_agree_with_capability_report():
     metadata = json.loads((ROOT / "dist/metadata.json").read_text())
     report = json.loads((ROOT / "dist/report.json").read_text())

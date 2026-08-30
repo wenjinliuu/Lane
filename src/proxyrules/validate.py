@@ -13,8 +13,10 @@ from .render import (
     CONFIG_FILENAMES,
     RULES_FULL_DIR,
     RULES_PROFILE_DIR,
+    STASH_BEHAVIOR_ORDER,
     SUBSCRIPTION_PLACEHOLDER,
     rule_filename,
+    stash_provider_id,
 )
 from .v2fly import DomainListError, parse_cidr_text, parse_custom_file
 
@@ -104,6 +106,75 @@ def _active_rule_ids(root: Path, entries: list[dict[str, Any]]) -> list[str]:
     return output
 
 
+def _active_generated_lines(path: Path) -> list[str]:
+    return [
+        line
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line and not line.startswith("#")
+    ]
+
+
+def _stash_payloads_from_classical(path: Path) -> dict[str, list[str]]:
+    payloads: dict[str, list[str]] = {
+        behavior: [] for behavior in STASH_BEHAVIOR_ORDER
+    }
+    for line in _active_generated_lines(path):
+        kind, separator, remainder = line.partition(",")
+        if not separator:
+            raise ValidationError(f"Malformed canonical Stash rule: {path}: {line}")
+        if kind == "DOMAIN":
+            payloads["domain"].append(remainder)
+        elif kind == "DOMAIN-SUFFIX":
+            payloads["domain"].append(f"+.{remainder}")
+        elif kind in {"IP-CIDR", "IP-CIDR6"}:
+            payloads["ipcidr"].append(remainder.split(",", 1)[0])
+        else:
+            payloads["classical"].append(line)
+    return payloads
+
+
+def _validate_stash_specialized_files(
+    dist: Path,
+    directory: str,
+    rule_ids: list[str],
+) -> list[tuple[str, str, str]]:
+    rules_dir = dist / "stash" / directory
+    expected_names: set[str] = set()
+    parts: list[tuple[str, str, str]] = []
+    for rule_id in rule_ids:
+        canonical = rules_dir / f"{rule_id}.list"
+        if not canonical.is_file():
+            raise ValidationError(f"Missing canonical Stash rule file: {canonical}")
+        expected_names.add(canonical.name)
+        payloads = _stash_payloads_from_classical(canonical)
+        for behavior in STASH_BEHAVIOR_ORDER:
+            expected_payload = payloads[behavior]
+            if not expected_payload:
+                continue
+            provider_id = stash_provider_id(rule_id, behavior)
+            specialized = rules_dir / f"{provider_id}.list"
+            expected_names.add(specialized.name)
+            if not specialized.is_file():
+                raise ValidationError(
+                    f"Missing specialized Stash rule file: {specialized}"
+                )
+            if _active_generated_lines(specialized) != expected_payload:
+                raise ValidationError(
+                    f"Stash {provider_id} payload differs from canonical semantics"
+                )
+            parts.append((rule_id, behavior, provider_id))
+
+    actual_names = {
+        path.name for path in rules_dir.iterdir()
+        if path.is_file() and path.suffix == ".list"
+    }
+    if actual_names != expected_names:
+        raise ValidationError(
+            f"Stash {directory} contains missing or stale generated rule files"
+        )
+    return parts
+
+
 def validate_generated(root: Path, config: dict[str, Any]) -> None:
     _validate_policy_graph(config["policies"])
     dist = root / "dist"
@@ -139,7 +210,14 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         *_active_rule_ids(root, full_only_rulesets),
     ]
     expected_policies = {entry["id"]: entry["policy"] for entry in rulesets}
-    if list(stash.get("rule-providers", {})) != expected_rule_ids:
+    stash_profile_parts = _validate_stash_specialized_files(
+        dist, RULES_PROFILE_DIR, expected_rule_ids
+    )
+    _validate_stash_specialized_files(
+        dist, RULES_FULL_DIR, expected_full_rule_ids
+    )
+    expected_stash_provider_ids = [part[2] for part in stash_profile_parts]
+    if list(stash.get("rule-providers", {})) != expected_stash_provider_ids:
         raise ValidationError("Stash rule-provider order differs from the manifest")
     if stash.get("rules", [])[-2:] != ["GEOIP,CN,DIRECT", "MATCH,Final"]:
         raise ValidationError("Stash final routing rules are invalid")
@@ -259,6 +337,32 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("QX final routing rules are invalid")
 
     raw_base = config["project"]["project"]["raw_base"].rstrip("/")
+    rule_interval = config["project"]["updates"]["rule_interval"]
+    entries_by_id = {entry["id"]: entry for entry in rulesets}
+    expected_stash_providers: dict[str, dict[str, Any]] = {}
+    expected_stash_routes: list[str] = []
+    for rule_id, behavior, provider_id in stash_profile_parts:
+        expected_stash_providers[provider_id] = {
+            "type": "http",
+            "behavior": behavior,
+            "format": "text",
+            "url": (
+                f"{raw_base}/dist/stash/{RULES_PROFILE_DIR}/{provider_id}.list"
+            ),
+            "path": f"./rulesets/{provider_id}.list",
+            "interval": rule_interval,
+        }
+        entry = entries_by_id[rule_id]
+        no_resolve = (
+            ",no-resolve"
+            if behavior == "ipcidr" and entry.get("no_resolve") is True
+            else ""
+        )
+        expected_stash_routes.append(
+            f"RULE-SET,{provider_id},{entry['policy']}{no_resolve}"
+        )
+    if stash.get("rule-providers") != expected_stash_providers:
+        raise ValidationError("Stash rule-provider settings differ from generated payloads")
     for target, text in texts.items():
         _validate_subscription_template(target, text)
         if "# Last updated: " not in text:
@@ -273,15 +377,24 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             actual_urls = [line.split(",", 1)[0] for line in _section(text, "Remote Rule")]
         else:
             actual_urls = [line.split(",")[1] for line in _section(text, "Rule") if line.startswith("RULE-SET,")]
-        expected_urls = [f"{raw_base}/dist/{target}/{RULES_PROFILE_DIR}/{rule_filename(target, rule_id)}"
-                         for rule_id in expected_rule_ids]
+        if target == "stash":
+            expected_urls = [
+                expected_stash_providers[provider_id]["url"]
+                for provider_id in expected_stash_provider_ids
+            ]
+        else:
+            expected_urls = [
+                f"{raw_base}/dist/{target}/{RULES_PROFILE_DIR}/"
+                f"{rule_filename(target, rule_id)}"
+                for rule_id in expected_rule_ids
+            ]
         if actual_urls != expected_urls:
             raise ValidationError(f"{target}: remote rule URLs or order differ from the manifest")
         expected_policy_list = [expected_policies[rule_id] for rule_id in expected_rule_ids]
         if target == "stash":
-            expected_routes = [f"RULE-SET,{rule_id},{expected_policies[rule_id]}"
-                               for rule_id in expected_rule_ids]
-            if stash["rules"] != expected_routes + ["GEOIP,CN,DIRECT", "MATCH,Final"]:
+            if stash["rules"] != expected_stash_routes + [
+                "GEOIP,CN,DIRECT", "MATCH,Final"
+            ]:
                 raise ValidationError("Stash routing policies or priority differ from the manifest")
         elif target == "egern":
             actual_policies = [entry["rule_set"]["policy"] for entry in egern["rules"] if "rule_set" in entry]
@@ -329,13 +442,40 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             if profile_path.exists():
                 raise ValidationError(f"{target}: full-only ruleset leaked into profile output")
 
-    generated_text = "\n".join(
-        path.read_text(encoding="utf-8")
-        for path in dist.rglob("*")
-        if path.is_file() and path.suffix in {".yaml", ".conf", ".list"}
+    udp_fallback = {
+        "loon": "udp-fallback-mode = REJECT",
+        "shadowrocket": "udp-policy-not-supported-behaviour = REJECT",
+        "surge": "udp-policy-not-supported-behaviour = REJECT",
+        "qx": "fallback_udp_policy = reject",
+    }
+    for target, setting in udp_fallback.items():
+        if texts[target].count(setting) != 1:
+            raise ValidationError(f"{target}: invalid UDP unsupported-policy fallback")
+    loon_general = _section(texts["loon"], "General")
+    if ("ip-mode = ipv4-only" not in loon_general
+            or any(line.startswith("ipv6 =") for line in loon_general)):
+        raise ValidationError("Loon must use the current IPv4-only syntax")
+    forbidden_udp_controls = (
+        "block-quic", "udp_drop_list", "disable-udp-ports"
     )
-    if "REJECT" in generated_text.upper():
-        raise ValidationError("Generated routing must not contain a REJECT policy")
+    if any(
+        value in text.lower()
+        for text in texts.values()
+        for value in forbidden_udp_controls
+    ):
+        raise ValidationError("Global QUIC blocking is outside Lane's UDP fallback scope")
+    allowed_reject_lines = {setting.upper() for setting in udp_fallback.values()}
+    for path in dist.rglob("*"):
+        if not path.is_file() or path.suffix not in {".yaml", ".conf", ".list"}:
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            stripped = line.strip()
+            if (stripped and not stripped.startswith(("#", ";", "//"))
+                    and "REJECT" in stripped.upper()
+                    and stripped.upper() not in allowed_reject_lines):
+                raise ValidationError(
+                    f"Generated routing contains an unexpected REJECT policy: {path}"
+                )
 
     forbidden_ids = {"ads", "adblock", "advertising", "reject", "game-download", "download"}
     if forbidden_ids.intersection(expected_rule_ids):

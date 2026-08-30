@@ -10,8 +10,8 @@
         "gaming": 3,
         "developer": 1,
         "google": 2,
-        "proxy": 158,
-        "china": 3
+        "china": 3,
+        "proxy": 158
       },
       "shadowrocket": {
         "lan": 1,
@@ -20,8 +20,8 @@
         "gaming": 3,
         "developer": 1,
         "google": 2,
-        "proxy": 158,
-        "china": 3
+        "china": 3,
+        "proxy": 158
       },
       "surge": {
         "lan": 1,
@@ -30,8 +30,8 @@
         "gaming": 3,
         "developer": 1,
         "google": 2,
-        "proxy": 158,
-        "china": 3
+        "china": 3,
+        "proxy": 158
       },
       "qx": {
         "lan": 1,
@@ -40,8 +40,8 @@
         "gaming": 3,
         "developer": 1,
         "google": 2,
-        "proxy": 158,
-        "china": 3
+        "china": 3,
+        "proxy": 158
       },
       "egern": {}
     },
@@ -54,8 +54,8 @@
         "gaming": 3,
         "developer": 1,
         "google": 2,
-        "proxy": 146,
-        "china": 1
+        "china": 3,
+        "proxy": 144
       },
       "shadowrocket": {
         "lan": 1,
@@ -64,8 +64,8 @@
         "gaming": 3,
         "developer": 1,
         "google": 2,
-        "proxy": 146,
-        "china": 1
+        "china": 3,
+        "proxy": 144
       },
       "surge": {
         "lan": 1,
@@ -74,8 +74,8 @@
         "gaming": 3,
         "developer": 1,
         "google": 2,
-        "proxy": 146,
-        "china": 1
+        "china": 3,
+        "proxy": 144
       },
       "qx": {
         "lan": 1,
@@ -84,14 +84,14 @@
         "gaming": 3,
         "developer": 1,
         "google": 2,
-        "proxy": 146,
-        "china": 1
+        "china": 3,
+        "proxy": 144
       },
       "egern": {}
     }
   },
   "notes": {
-    "stash": "DOMAIN-REGEX is retained.",
+    "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical.",
     "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters intentionally leave their sources unpinned so local nodes and multiple subscriptions can be considered.",
     "shadowrocket": "DOMAIN-REGEX is omitted for compatibility.",
     "surge": "DOMAIN-REGEX is unsupported and omitted. Native url-test groups allow temporary manual override; icons are omitted for iOS compatibility.",

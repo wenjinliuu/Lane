@@ -14,6 +14,7 @@ from proxyrules.render import (
     SUBSCRIPTION_PLACEHOLDER,
     _with_stable_update_time,
     render_rule,
+    render_stash_payload_rule,
 )
 from proxyrules.validate import validate_generated
 
@@ -28,18 +29,22 @@ def test_rule_rendering_capabilities() -> None:
     assert render_rule(regex, "shadowrocket") is None
     cidr = Rule("ipcidr", "149.154.160.0/20")
     assert render_rule(cidr, "loon", no_resolve=True).endswith(",no-resolve")
+    assert render_stash_payload_rule(Rule("full", "api.example.com"), "domain") == (
+        "api.example.com"
+    )
+    assert render_stash_payload_rule(Rule("domain", "example.com"), "domain") == (
+        "+.example.com"
+    )
+    assert render_stash_payload_rule(cidr, "ipcidr") == "149.154.160.0/20"
+    assert render_stash_payload_rule(Rule("keyword", "example"), "classical") == (
+        "DOMAIN-KEYWORD,example"
+    )
 
 
-def test_checked_in_outputs_are_valid_and_have_no_reject() -> None:
+def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
     config = load_project_config(ROOT)
     validate_config(config)
     validate_generated(ROOT, config)
-    generated = "\n".join(
-        path.read_text(encoding="utf-8")
-        for path in (ROOT / "dist").rglob("*")
-        if path.is_file() and path.suffix in {".yaml", ".conf", ".list"}
-    )
-    assert "REJECT" not in generated.upper()
 
     main_configs = [ROOT / "dist" / target / filename
                     for target, filename in CONFIG_FILENAMES.items()]
@@ -57,7 +62,32 @@ def test_checked_in_outputs_are_valid_and_have_no_reject() -> None:
     stash_text = main_configs[0].read_text(encoding="utf-8")
     loon_text = main_configs[1].read_text(encoding="utf-8")
     shadow_text = main_configs[2].read_text(encoding="utf-8")
+    main_by_target = {
+        target: (ROOT / "dist" / target / filename).read_text(encoding="utf-8")
+        for target, filename in CONFIG_FILENAMES.items()
+    }
+    udp_fallback = {
+        "loon": "udp-fallback-mode = REJECT",
+        "shadowrocket": "udp-policy-not-supported-behaviour = REJECT",
+        "surge": "udp-policy-not-supported-behaviour = REJECT",
+        "qx": "fallback_udp_policy = reject",
+    }
+    for target, setting in udp_fallback.items():
+        assert main_by_target[target].count(setting) == 1
+    assert "ip-mode = ipv4-only" in loon_text
+    assert "ipv6 = false" not in loon_text
+    assert all(
+        value not in main_by_target[target].lower()
+        for target in CONFIG_FILENAMES
+        for value in ("block-quic", "udp_drop_list", "disable-udp-ports")
+    )
+    assert "REJECT" not in main_by_target["stash"].upper()
+    assert "REJECT" not in main_by_target["egern"].upper()
+
     stash = yaml.safe_load(stash_text)
+    assert {provider["behavior"] for provider in stash["rule-providers"].values()} == {
+        "domain", "ipcidr", "classical"
+    }
     assert stash["proxy-providers"]["Subscription1"]["url"] == SUBSCRIPTION_PLACEHOLDER
     assert "Stash / Clash" in stash_text
     assert "Loon 格式" in loon_text
