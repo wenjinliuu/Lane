@@ -81,7 +81,7 @@ cases:
       ruleset: brokerage
       policy: Brokerage
 
-  - id: brokerage-ip-before-cn-ip
+  - id: brokerage-ip-before-china
     input:
       type: ip
       value: 1.14.242.1

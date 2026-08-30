@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .cn_window import canonical_cidr_text
-from .compiler import CompiledRuleset, compile_rulesets, profile_residual_rulesets
+from .compiler import CompiledRuleset, audit_rule_redundancy, compile_rulesets
 from .cn_validation import compare_cn_coverage
 from .config import load_project_config, validate_config
 from .model import Rule
@@ -55,9 +55,9 @@ def _previous_cn_window_rules(root: Path) -> tuple[Rule, ...] | None:
         (
             path
             for path in (
+                root / "dist" / "stash" / "rules" / "cn-ip.list",
                 root / "dist" / "stash" / "rules-full" / "cn-ip.list",
                 root / "dist" / "stash" / "rules-profile" / "cn-ip.list",
-                root / "dist" / "stash" / "rules" / "cn-ip.list",
             )
             if path.is_file()
         ),
@@ -150,26 +150,18 @@ def build_project(
             prepared_history_sources.append(prepared)
 
     repository = DomainListRepository(data_dir)
-    full_rulesets = compile_rulesets(
+    rulesets = compile_rulesets(
         root,
         config["rulesets"]["rulesets"],
         repository,
         text_sources,
         sources,
     )
-    profile_rulesets = profile_residual_rulesets(full_rulesets)
-    full_only_rulesets = compile_rulesets(
-        root,
-        config["rulesets"].get("full_only_rulesets", []),
-        repository,
-        text_sources,
-        sources,
-        allow_full_only_sources=True,
-    )
+    redundancy_audit = audit_rule_redundancy(rulesets)
     check = config["sources"]["cross_validation"]["cn_ip"]
     reference_ids = check["reference_sources"]
     primary = next(
-        ruleset for ruleset in full_rulesets if ruleset.id == check["ruleset"]
+        ruleset for ruleset in rulesets if ruleset.id == check["ruleset"]
     )
     reference = [rule for key in reference_ids
                  for rule in parse_text_source(text_sources[key], key, sources[key])]
@@ -217,8 +209,7 @@ def build_project(
         config["project"],
         config["policies"],
         config["icons"],
-        [*full_rulesets, *full_only_rulesets],
-        profile_rulesets,
+        rulesets,
     )
 
     def kinds(ruleset: CompiledRuleset) -> dict[str, int]:
@@ -227,15 +218,13 @@ def build_project(
             for kind in sorted({rule.kind for rule in ruleset.rules})
         }
 
-    profile_by_id = {ruleset.id: ruleset for ruleset in profile_rulesets}
-
     metadata = {
-        "schema": 2,
+        "schema": 3,
         "project": config["project"]["project"]["repository"],
         "artifacts": {
-            "full": "rules-full",
-            "profile": "rules-profile",
-            "default_profiles_use": "rules-profile",
+            "rules": "rules",
+            "default_profiles_use": "rules",
+            "deduplication": "exact-only",
         },
         "sources": {
             "v2fly": {
@@ -250,40 +239,50 @@ def build_project(
                 "policy": ruleset.policy,
                 "rules": len(ruleset.rules),
                 "kinds": kinds(ruleset),
-                "profile_rules": len(profile_by_id[ruleset.id].rules),
-                "profile_kinds": kinds(profile_by_id[ruleset.id]),
-                "profile_removed": {
-                    "within_ruleset": profile_by_id[ruleset.id].profile_removed_within,
-                    "previous_rulesets": profile_by_id[ruleset.id].profile_removed_prior,
-                    "total": (
-                        profile_by_id[ruleset.id].profile_removed_within
-                        + profile_by_id[ruleset.id].profile_removed_prior
+                "exact_duplicates_removed": ruleset.exact_duplicates_removed,
+                "redundancy_audit": {
+                    "within_parent_suffix_candidates": (
+                        redundancy_audit[ruleset.id].within_parent_suffix
                     ),
+                    "previous_ruleset_exact_candidates": (
+                        redundancy_audit[ruleset.id].previous_exact
+                    ),
+                    "previous_ruleset_parent_suffix_candidates": (
+                        redundancy_audit[ruleset.id].previous_parent_suffix
+                    ),
+                    "total_candidates": redundancy_audit[ruleset.id].total,
                 },
             }
-            for ruleset in full_rulesets
+            for ruleset in rulesets
         ],
-        "full_only_rulesets": [
-            {
-                "id": ruleset.id,
-                "policy": ruleset.policy,
-                "rules": len(ruleset.rules),
-                "kinds": kinds(ruleset),
-            }
-            for ruleset in full_only_rulesets
-        ],
-        "profile_residual": {
-            "within_rulesets": sum(
-                ruleset.profile_removed_within for ruleset in profile_rulesets
+        "rule_optimization": {
+            "exact_duplicate_removal": {
+                "enabled": True,
+                "removed": sum(
+                    ruleset.exact_duplicates_removed for ruleset in rulesets
+                ),
+            },
+            "parent_suffix_removal": False,
+            "cross_ruleset_residual_removal": False,
+        },
+        "redundancy_audit": {
+            "mode": "report-only",
+            "within_parent_suffix_candidates": sum(
+                audit.within_parent_suffix for audit in redundancy_audit.values()
             ),
-            "previous_rulesets": sum(
-                ruleset.profile_removed_prior for ruleset in profile_rulesets
+            "previous_ruleset_exact_candidates": sum(
+                audit.previous_exact for audit in redundancy_audit.values()
             ),
-            "total": sum(
-                ruleset.profile_removed_within + ruleset.profile_removed_prior
-                for ruleset in profile_rulesets
+            "previous_ruleset_parent_suffix_candidates": sum(
+                audit.previous_parent_suffix for audit in redundancy_audit.values()
             ),
-            "guarantee": "first-match routing is unchanged",
+            "total_candidates": sum(
+                audit.total for audit in redundancy_audit.values()
+            ),
+            "note": (
+                "Candidates are retained in every published ruleset; this audit "
+                "does not change routing payloads."
+            ),
         },
         "cross_validation": {
             "cn-ip": {"report": "cn-ip-validation.json", "status": cn_validation["status"],

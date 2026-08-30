@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-08-30 16:40:01 (Asia/Shanghai)
+# Last updated: 2026-08-30 22:20:50 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -378,217 +378,217 @@ rule-providers:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/lan-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/lan-domain.list
     path: ./rulesets/lan-domain.list
     interval: 86400
   lan-ipcidr:
     type: http
     behavior: ipcidr
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/lan-ipcidr.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/lan-ipcidr.list
     path: ./rulesets/lan-ipcidr.list
     interval: 86400
   lan-classical:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/lan-classical.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/lan-classical.list
     path: ./rulesets/lan-classical.list
     interval: 86400
   apple-cn-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/apple-cn-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/apple-cn-domain.list
     path: ./rulesets/apple-cn-domain.list
     interval: 86400
   ai-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/ai-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/ai-domain.list
     path: ./rulesets/ai-domain.list
     interval: 86400
   ai-classical:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/ai-classical.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/ai-classical.list
     path: ./rulesets/ai-classical.list
     interval: 86400
   schwab-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/schwab-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/schwab-domain.list
     path: ./rulesets/schwab-domain.list
     interval: 86400
   brokerage-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/brokerage-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/brokerage-domain.list
     path: ./rulesets/brokerage-domain.list
     interval: 86400
   crypto-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/crypto-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/crypto-domain.list
     path: ./rulesets/crypto-domain.list
     interval: 86400
   youtube-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/youtube-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/youtube-domain.list
     path: ./rulesets/youtube-domain.list
     interval: 86400
   tiktok-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/tiktok-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/tiktok-domain.list
     path: ./rulesets/tiktok-domain.list
     interval: 86400
   emby-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/emby-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/emby-domain.list
     path: ./rulesets/emby-domain.list
     interval: 86400
   streaming-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/streaming-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/streaming-domain.list
     path: ./rulesets/streaming-domain.list
     interval: 86400
   streaming-classical:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/streaming-classical.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/streaming-classical.list
     path: ./rulesets/streaming-classical.list
     interval: 86400
   gaming-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/gaming-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/gaming-domain.list
     path: ./rulesets/gaming-domain.list
     interval: 86400
   gaming-classical:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/gaming-classical.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/gaming-classical.list
     path: ./rulesets/gaming-classical.list
     interval: 86400
   telegram-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/telegram-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/telegram-domain.list
     path: ./rulesets/telegram-domain.list
     interval: 86400
   social-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/social-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/social-domain.list
     path: ./rulesets/social-domain.list
     interval: 86400
   developer-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/developer-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/developer-domain.list
     path: ./rulesets/developer-domain.list
     interval: 86400
   developer-classical:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/developer-classical.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/developer-classical.list
     path: ./rulesets/developer-classical.list
     interval: 86400
   google-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/google-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/google-domain.list
     path: ./rulesets/google-domain.list
     interval: 86400
   google-classical:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/google-classical.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/google-classical.list
     path: ./rulesets/google-classical.list
     interval: 86400
   microsoft-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/microsoft-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/microsoft-domain.list
     path: ./rulesets/microsoft-domain.list
     interval: 86400
   apple-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/apple-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/apple-domain.list
     path: ./rulesets/apple-domain.list
+    interval: 86400
+  brokerage-ip-ipcidr:
+    type: http
+    behavior: ipcidr
+    format: text
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/brokerage-ip-ipcidr.list
+    path: ./rulesets/brokerage-ip-ipcidr.list
     interval: 86400
   china-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/china-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/china-domain.list
     path: ./rulesets/china-domain.list
     interval: 86400
   china-classical:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/china-classical.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/china-classical.list
     path: ./rulesets/china-classical.list
     interval: 86400
   proxy-domain:
     type: http
     behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/proxy-domain.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/proxy-domain.list
     path: ./rulesets/proxy-domain.list
     interval: 86400
   proxy-classical:
     type: http
     behavior: classical
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/proxy-classical.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/proxy-classical.list
     path: ./rulesets/proxy-classical.list
-    interval: 86400
-  brokerage-ip-ipcidr:
-    type: http
-    behavior: ipcidr
-    format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/brokerage-ip-ipcidr.list
-    path: ./rulesets/brokerage-ip-ipcidr.list
     interval: 86400
   telegram-ip-ipcidr:
     type: http
     behavior: ipcidr
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/telegram-ip-ipcidr.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/telegram-ip-ipcidr.list
     path: ./rulesets/telegram-ip-ipcidr.list
     interval: 86400
   cn-ip-ipcidr:
     type: http
     behavior: ipcidr
     format: text
-    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules-profile/cn-ip-ipcidr.list
+    url: https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/rules/cn-ip-ipcidr.list
     path: ./rulesets/cn-ip-ipcidr.list
     interval: 86400
 # Rules are evaluated from top to bottom.
@@ -617,11 +617,11 @@ rules:
 - RULE-SET,google-classical,Google
 - RULE-SET,microsoft-domain,Microsoft
 - RULE-SET,apple-domain,Apple
+- RULE-SET,brokerage-ip-ipcidr,Brokerage,no-resolve
 - RULE-SET,china-domain,DIRECT
 - RULE-SET,china-classical,DIRECT
 - RULE-SET,proxy-domain,Final
 - RULE-SET,proxy-classical,Final
-- RULE-SET,brokerage-ip-ipcidr,Brokerage,no-resolve
 - RULE-SET,telegram-ip-ipcidr,Telegram,no-resolve
 - RULE-SET,cn-ip-ipcidr,DIRECT
 - GEOIP,CN,DIRECT

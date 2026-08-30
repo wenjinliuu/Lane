@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -17,8 +17,24 @@ class CompiledRuleset:
     rules: tuple[Rule, ...]
     no_resolve: bool = False
     source_notices: tuple[str, ...] = ()
-    profile_removed_within: int = 0
-    profile_removed_prior: int = 0
+    exact_duplicates_removed: int = 0
+
+
+@dataclass(frozen=True)
+class RedundancyAudit:
+    """Potential routing redundancies reported without changing rule payloads."""
+
+    within_parent_suffix: int = 0
+    previous_exact: int = 0
+    previous_parent_suffix: int = 0
+
+    @property
+    def total(self) -> int:
+        return (
+            self.within_parent_suffix
+            + self.previous_exact
+            + self.previous_parent_suffix
+        )
 
 
 def _deduplicate(rules: list[Rule]) -> tuple[Rule, ...]:
@@ -51,20 +67,19 @@ def _covered_by_suffix(rule: Rule, suffixes: set[str], *, same_ruleset: bool) ->
     return any(candidate in suffixes for candidate in candidates)
 
 
-def profile_residual_rulesets(
+def audit_rule_redundancy(
     rulesets: list[CompiledRuleset],
-) -> list[CompiledRuleset]:
-    """Build profile-only residuals without changing first-match routing.
+) -> dict[str, RedundancyAudit]:
+    """Report potential redundancies while preserving every compiled rule.
 
-    Full rulesets deliberately retain their complete independently reusable
-    content. Profile rules first drop exact-domain/suffix entries covered by a
-    parent suffix in the same ruleset, then drop entries already fully covered
-    by an earlier ruleset. Keyword, regular-expression and IP containment are
-    not inferred: proving those relationships across six client engines would
-    be unsafe, especially when ``no_resolve`` differs between IP rulesets.
+    The audit mirrors the relationships that the former profile-residual pass
+    attempted to remove, but never mutates a ruleset. Parent-suffix coverage is
+    deliberately labelled as a candidate because apex and single-label suffix
+    semantics are not documented equally across all six clients. Keyword,
+    regular-expression and IP containment are not inferred.
     """
 
-    output: list[CompiledRuleset] = []
+    output: dict[str, RedundancyAudit] = {}
     prior_exact: set[tuple[str, str]] = set()
     prior_suffixes: set[str] = set()
     for ruleset in rulesets:
@@ -78,23 +93,26 @@ def profile_residual_rulesets(
             for rule in ruleset.rules
             if not _covered_by_suffix(rule, own_suffixes, same_ruleset=True)
         )
-        residual = tuple(
-            rule
+        previous_exact = sum(
+            1
             for rule in semantic
-            if ((rule.kind in {"ipcidr", "ipcidr6"}
-                 or _semantic_key(rule) not in prior_exact)
-                and not _covered_by_suffix(rule, prior_suffixes, same_ruleset=False))
+            if rule.kind not in {"ipcidr", "ipcidr6"}
+            and _semantic_key(rule) in prior_exact
         )
-        output.append(
-            replace(
-                ruleset,
-                rules=residual,
-                profile_removed_within=len(ruleset.rules) - len(semantic),
-                profile_removed_prior=len(semantic) - len(residual),
-            )
+        previous_parent_suffix = sum(
+            1
+            for rule in semantic
+            if rule.kind not in {"ipcidr", "ipcidr6"}
+            and _semantic_key(rule) not in prior_exact
+            and _covered_by_suffix(rule, prior_suffixes, same_ruleset=False)
         )
-        # Use the semantically cleaned complete earlier ruleset as coverage.
-        # Rules removed from it are themselves covered by another rule here.
+        output[ruleset.id] = RedundancyAudit(
+            within_parent_suffix=len(ruleset.rules) - len(semantic),
+            previous_exact=previous_exact,
+            previous_parent_suffix=previous_parent_suffix,
+        )
+        # For audit classification only, a child covered within an earlier set
+        # does not need to become an additional cross-set coverage source.
         prior_exact.update(_semantic_key(rule) for rule in semantic)
         prior_suffixes.update(
             rule.value.lower().rstrip(".")
@@ -110,8 +128,6 @@ def compile_rulesets(
     repository: DomainListRepository,
     text_sources: dict[str, str],
     source_specs: dict[str, dict[str, Any]] | None = None,
-    *,
-    allow_full_only_sources: bool = False,
 ) -> list[CompiledRuleset]:
     output: list[CompiledRuleset] = []
     for entry in entries:
@@ -135,8 +151,8 @@ def compile_rulesets(
             spec = (source_specs or {}).get(source_id, {})
             if spec.get("role") == "validation-only":
                 raise ValueError(f"Validation-only source {source_id} cannot be routed")
-            if spec.get("role") == "full-only" and not allow_full_only_sources:
-                raise ValueError(f"Full-only source {source_id} cannot be used by a profile")
+            if spec.get("role") == "full-only":
+                raise ValueError(f"Full-only source {source_id} is not publishable")
             rules.extend(parse_text_source(text_sources[source_id], source_id, spec))
             if license_name := spec.get("license"):
                 notices.extend([f"Source: {spec['url']}", f"License: {license_name}"])
@@ -153,6 +169,7 @@ def compile_rulesets(
                 rules=compiled_rules,
                 no_resolve=bool(entry.get("no_resolve")),
                 source_notices=tuple(notices),
+                exact_duplicates_removed=len(rules) - len(compiled_rules),
             )
         )
     return output

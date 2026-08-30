@@ -10,8 +10,7 @@ from proxyrules.compiler import CompiledRuleset
 from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
-    CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER, RULES_FULL_DIR,
-    RULES_PROFILE_DIR,
+    CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER, RULES_DIR,
     SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule,
 )
@@ -105,7 +104,7 @@ def test_stash_uses_specialized_payloads_without_changing_rule_semantics(tmp_pat
     def payload(name):
         return [
             line for line in (
-                tmp_path / "dist/stash/rules-profile" / f"{name}.list"
+                tmp_path / "dist/stash/rules" / f"{name}.list"
             ).read_text().splitlines()
             if line and not line.startswith("#")
         ]
@@ -115,39 +114,37 @@ def test_stash_uses_specialized_payloads_without_changing_rule_semantics(tmp_pat
     assert payload("sample-classical") == [
         r"DOMAIN-REGEX,^edge\d{1,3}\.example\.net$"
     ]
+    assert payload("sample") == [
+        "DOMAIN,api.example.com",
+        "DOMAIN-SUFFIX,example.com",
+        "DOMAIN-REGEX,^edge\\d{1,3}\\.example\\.net$",
+        "IP-CIDR,192.0.2.0/24,no-resolve",
+        "IP-CIDR6,2001:db8::/32,no-resolve",
+    ]
 
 
 def test_generated_rule_counts_agree_with_capability_report():
     metadata = json.loads((ROOT / "dist/metadata.json").read_text())
     report = json.loads((ROOT / "dist/report.json").read_text())
-    collections = {
-        "full": (
-            RULES_FULL_DIR,
-            [*metadata["rulesets"], *metadata["full_only_rulesets"]],
-            "rules",
-        ),
-        "profile": (RULES_PROFILE_DIR, metadata["rulesets"], "profile_rules"),
-    }
-    for mode, (directory, entries, count_key) in collections.items():
-        for target in TARGETS:
-            for entry in entries:
-                suffix = "yaml" if target == "egern" else "list"
-                path = ROOT / "dist" / target / directory / f"{entry['id']}.{suffix}"
-                if target == "egern":
-                    parsed = yaml.safe_load(path.read_text())
-                    count = sum(
-                        len(values) for values in parsed.values() if isinstance(values, list)
-                    )
-                else:
-                    count = sum(
-                        1 for line in path.read_text().splitlines()
-                        if line and not line.startswith("#")
-                    )
-                assert (
-                    count
-                    + report["unsupported_rules"][mode][target].get(entry["id"], 0)
-                    == entry[count_key]
+    for target in TARGETS:
+        for entry in metadata["rulesets"]:
+            suffix = "yaml" if target == "egern" else "list"
+            path = ROOT / "dist" / target / RULES_DIR / f"{entry['id']}.{suffix}"
+            if target == "egern":
+                parsed = yaml.safe_load(path.read_text())
+                count = sum(
+                    len(values) for values in parsed.values() if isinstance(values, list)
                 )
+            else:
+                count = sum(
+                    1 for line in path.read_text().splitlines()
+                    if line and not line.startswith("#")
+                )
+            assert (
+                count
+                + report["unsupported_rules"][target].get(entry["id"], 0)
+                == entry["rules"]
+            )
 
 
 def test_all_templates_have_one_active_subscription_and_local_update_guidance():
@@ -220,10 +217,10 @@ def test_egern_stale_generated_rule_files_are_removed(tmp_path):
     render_all(*args, [old])
     render_all(*args, [])
     for target in TARGETS:
-        for directory in (RULES_FULL_DIR, RULES_PROFILE_DIR):
-            path = tmp_path / "dist" / target / directory
-            assert path.is_dir() and not list(path.iterdir())
-        assert not (tmp_path / "dist" / target / "rules").exists()
+        path = tmp_path / "dist" / target / RULES_DIR
+        assert path.is_dir() and not list(path.iterdir())
+        assert not (tmp_path / "dist" / target / "rules-full").exists()
+        assert not (tmp_path / "dist" / target / "rules-profile").exists()
 
 
 def test_legacy_migration_preserves_unrecognized_rule_files(tmp_path):
@@ -231,20 +228,22 @@ def test_legacy_migration_preserves_unrecognized_rule_files(tmp_path):
     args = (tmp_path, config["project"], config["policies"], config["icons"])
     for target in TARGETS:
         suffix = "yaml" if target == "egern" else "list"
-        legacy = tmp_path / "dist" / target / "rules"
-        legacy.mkdir(parents=True)
-        (legacy / f"generated.{suffix}").write_text(
-            GENERATED_HEADER + "DOMAIN-SUFFIX,example.com\n"
-        )
-        (legacy / f"personal.{suffix}").write_text("personal content\n")
+        for directory in ("rules-full", "rules-profile"):
+            legacy = tmp_path / "dist" / target / directory
+            legacy.mkdir(parents=True)
+            (legacy / f"generated.{suffix}").write_text(
+                GENERATED_HEADER + "DOMAIN-SUFFIX,example.com\n"
+            )
+            (legacy / f"personal.{suffix}").write_text("personal content\n")
 
     render_all(*args, [])
 
     for target in TARGETS:
         suffix = "yaml" if target == "egern" else "list"
-        legacy = tmp_path / "dist" / target / "rules"
-        assert not (legacy / f"generated.{suffix}").exists()
-        assert (legacy / f"personal.{suffix}").read_text() == "personal content\n"
+        for directory in ("rules-full", "rules-profile"):
+            legacy = tmp_path / "dist" / target / directory
+            assert not (legacy / f"generated.{suffix}").exists()
+            assert (legacy / f"personal.{suffix}").read_text() == "personal content\n"
 
 
 def test_validator_rejects_broken_remote_rule_reference(tmp_path):
@@ -253,7 +252,7 @@ def test_validator_rejects_broken_remote_rule_reference(tmp_path):
     path = tmp_path / "dist/qx/Lane_qx.conf"
     path.write_text(
         path.read_text().replace(
-            "/qx/rules-profile/ai.list", "/qx/rules-profile/missing.list"
+            "/qx/rules/ai.list", "/qx/rules/missing.list"
         )
     )
     with pytest.raises(ValidationError, match="remote rule URLs"):

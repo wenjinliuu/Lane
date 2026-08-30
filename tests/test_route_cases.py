@@ -68,7 +68,7 @@ def _first_match(input_type: str, value: str) -> dict[str, str]:
         _, provider_id, policy, *_ = route.split(",")
         provider = profile["rule-providers"][provider_id]
         rule_path = (
-            ROOT / "dist" / "stash" / "rules-profile"
+            ROOT / "dist" / "stash" / "rules"
             / provider["url"].rsplit("/", 1)[-1]
         )
         for line in rule_path.read_text().splitlines():

@@ -77,7 +77,7 @@ def test_broker_rules_are_split_by_service_and_match_phase() -> None:
     assert Counter(rule.kind for rule in brokerage_ip_rules) == {"ipcidr": 63}
     ordered = list(rulesets)
     assert ordered[-5:] == [
-        "china", "proxy", "brokerage-ip", "telegram-ip", "cn-ip"
+        "brokerage-ip", "china", "proxy", "telegram-ip", "cn-ip"
     ]
 
     schwab = rulesets["schwab"]

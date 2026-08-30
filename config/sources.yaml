@@ -31,22 +31,15 @@ sources:
     role: validation-only
     url: https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt
     license: CC-BY-SA-4.0
-  # Upstream ships apple.china.conf and google.china.conf as DNS acceleration
-  # lists, not routing lists. Apple's entries resolve to mainland CDN nodes that
-  # are directly reachable, so reusing them as DIRECT rules holds. Google's do
-  # not, so google_cn is full-only and can never enter a generated profile.
+  # apple.china.conf is a DNS acceleration list whose entries resolve to mainland
+  # CDN nodes that are directly reachable, so reusing them as DIRECT rules holds.
+  # GoogleCN is intentionally neither fetched nor published: DNS acceleration is
+  # not a reachability guarantee and Google traffic follows the Google group.
   apple_cn:
     kind: text
     format: dnsmasq
     url: https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf
     license: WTFPL-2.0
-  google_cn:
-    kind: text
-    format: dnsmasq
-    role: full-only
-    url: https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf
-    license: WTFPL-2.0
-
 cross_validation:
   cn_ip:
     ruleset: cn-ip

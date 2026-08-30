@@ -13,7 +13,7 @@
 - 策略组按 `Manual`、服务组、地区组排列，十个地区 Auto / Manual 组统一放在列表末尾。
 - 地区筛选只做正向匹配，不使用排除词：国旗、中文地区名（含繁体）、英文全称、带词边界的两字母代码，以及常见城市名与中转简称（如 `沪日`、`深港`、`洛杉矶`）。机场代码（LAX 等）不参与匹配。
 - 服务组可切换到 `DIRECT`，或五个地区各自的 Auto / Manual 策略。
-- `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段；生成时把域名与 IP 拆成两个规则集，但仍使用同一策略组。2026-08-30 补齐 `futubos.com`、`futuie.com`、`futuhainan.com`，既有 Futu IP 段不移动、不扩张。
+- `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段；生成时把域名与 IP 拆成两个规则集，但仍使用同一策略组。2026-08-30 补齐 `futubos.com`、`futuie.com`、`futuhainan.com`；既有 63 个 Futu CIDR 不扩张，并按真机交易结果置于 `China` 之前。
 - `Crypto` 只匹配 Binance、OKX、Bybit 与 Bitget。其他交易所不单独分类，按后续规则或 `Final` 处理。
 - 中国大陆 AI 不设专门规则，自然落入 `cn` / `GEOIP,CN` 直连。
 - 不设置游戏大文件下载特例，也不内置广告拦截或业务 `REJECT` 规则。Surge、Shadowrocket、Loon、QX 仅在已选节点不支持 UDP 时显式拒绝回落，避免静默直连泄漏；不全局封锁 UDP / QUIC。
@@ -31,7 +31,7 @@
 | `Crypto` | 币安 Binance、OKX、Bybit、Bitget，仅这四家 | 当前网络可以正常访问时，建议手动选择 `DIRECT`；无法正常访问时可按实际情况选择代理。其他交易所按后续规则或 `Final` 处理。 |
 | `Schwab` | 嘉信 Charles Schwab | 与 `Brokerage` 分开控制网络路径；当前网络可以正常访问时，可手动选择 `DIRECT`，也保留代理选项。 |
 
-`Brokerage` 在上游规则外，保留了实际使用中补充的域名与 Futu IP 段，包括老虎的 `skytigris.cn` 和长桥的 `geotest.lbkrs.com`。产物中的 `brokerage` 只含域名，`brokerage-ip` 只含 IP；所有服务域名规则先匹配，IP 阶段随后开始，两者仍指向同一个 `Brokerage` 策略。这些规则不是对整个应用的识别；入金流程涉及的外部银行、支付页面仍按各自命中的规则处理。
+`Brokerage` 在上游规则外，保留了实际使用中补充的域名与 Futu IP 段，包括老虎的 `skytigris.cn` 和长桥的 `geotest.lbkrs.com`。产物中的 `brokerage` 只含域名，`brokerage-ip` 只含 IP，两者仍指向同一个 `Brokerage` 策略。`brokerage-ip` 带 `no-resolve` 并位于 `China` 之前：直接访问或解析到重叠中国网段时先走 Brokerage，同时不会为了普通域名强制解析。这些规则不是对整个应用的识别；入金流程涉及的外部银行、支付页面仍按各自命中的规则处理。
 
 Lane 只控制网络路径，不保证入金或交易成功，也不改变账户权限、银行处理或平台限制。三个组彼此独立，但选择 `Manual` 时都会跟随同一个手动节点。
 
@@ -91,16 +91,15 @@ Surge 的订阅由隐藏组加载，`Manual` 通过 `include-other-group` 展开
 | 已引用规则集中的域名、IP | Lane 的远程规则文件 | 不需要 |
 | 策略组、DNS、规则引用及顺序、兼容性修复 | 新版 Lane 主配置 | 需要按升级说明迁移 |
 
-### 完整规则与配置残余
+### 单一、可独立复用的规则产物
 
-每个客户端现在发布两组用途不同的规则文件：
+每个客户端只发布一组 `rules/` 文件，Lane 主配置也直接引用这一组。2026-08-30 实施基线中的 22 个启用规则集合计 51,206 条；编译只按“规则类型 + 规范值”删除 77 条精确重复，不做父级后缀折叠，也不按当前配置顺序删除已被前面规则覆盖的条目。因此任意单个规则文件都不依赖 Lane 的整体顺序，可以独立审计和复用。
 
-- `rules-full/` 保存各规则集经格式归一化和精确去重后的完整内容，可独立复用。2026-08-30 实施基线中的 22 个启用规则集合计 51,206 条；仅供审计/复用、不被 Lane 主配置引用的 `google-cn` 也只在这里发布，共 112 条。
-- `rules-profile/` 是按 Lane 当前规则顺序生成的配置残余，只供仓库生成的主配置引用。它会移除已被同一规则集父级域名后缀覆盖的条目，以及此前规则集已经优先命中的条目；当前保留 40,146 条，共删去 11,060 条，且首匹配路由结果不变。
+`dist/metadata.json` 仍会以只读方式报告潜在冗余关系：当前有 4,736 条同组父后缀候选、合计 11,060 条同组或跨组覆盖候选，但这些条目全部保留，不参与优化。这样避免把六个客户端没有一致明文保证的根域、单标签后缀和跨组优先级假设固化成数据删除。
 
-不要把单个 `rules-profile/` 文件脱离 Lane 的顺序单独复用；需要完整语义时使用同客户端的 `rules-full/`。除 Stash 外，主配置各自引用本客户端的 22 个逻辑 profile 文件。Stash 会把逻辑文件进一步生成 `-domain`、`-ipcidr`、`-classical` 专用载荷并连续引用；原始带类型的同名文件仍保留作审计与兼容复用。精确计数、删减来源和客户端转换差异分别记录在 `dist/metadata.json` 与 `dist/report.json`。
+Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类型规范文件，同时生成 `-domain`、`-ipcidr`、`-classical` 专用载荷；主配置只引用专用载荷，规范文件用于审计、回退和语义校验。其他五端各发布一个对应客户端语法的逻辑规则文件。客户端不支持的转换仍逐项记录在 `dist/report.json`；当前 Loon、Shadowrocket、Surge 与 QX 各省略 174 条 `DOMAIN-REGEX`，详细转换审计另行处理，不在本次产物收敛中猜测改写。
 
-旧的 `dist/*/rules/` 路径不再发布。已经保存 Lane 配置的用户必须升级一次完整主配置，重新填入节点订阅并迁移个人修改，之后规则资源仍可独立自动更新。
+旧的 `rules-full/`、`rules-profile/` 已统一回 `rules/`，GoogleCN 也不再抓取或发布。已经保存旧版 Lane 配置的用户必须升级一次完整主配置，重新填入节点订阅并迁移个人修改；之后规则资源仍可独立自动更新。
 
 图标通过 Qure 的公开 URL 引用：Stash/Egern 使用 `icon`，Loon/QX 使用 `img-url`。Shadowrocket 不强制自定义图标；Surge 的官方 `icon-url` 当前标注为 Mac 功能，本配置以 iOS 兼容为先，不设置它。
 
@@ -128,8 +127,7 @@ dist/shadowrocket/      Shadowrocket 配置与规则
 dist/surge/             Surge 配置与规则
 dist/qx/                Quantumult X 配置与规则
 dist/egern/             Egern 配置与 YAML 规则集
-dist/*/rules-full/      对应客户端的完整、可独立复用规则
-dist/*/rules-profile/   Lane 主配置按顺序引用的残余规则
+dist/*/rules/           唯一的完整、可独立复用规则；主配置直接引用
 tests/                  单元测试
 ```
 
@@ -164,7 +162,7 @@ lane build --upstream-dir /path/to/domain-list-community
 
 GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 
-1. 拉取 v2fly、Telegram 官方 CIDR、gaoyifan `ip-lists` git 历史、misakaio 独立 IPv4 对照数据，以及 felixonmars 的 AppleCN 与仅完整发布的 GoogleCN 名单。
+1. 拉取 v2fly、Telegram 官方 CIDR、gaoyifan `ip-lists` git 历史、misakaio 独立 IPv4 对照数据，以及 felixonmars 的 AppleCN 名单。
 2. 从 gaoyifan 最近七个不同 UTC 日期的提交中读取 `china.txt` / `china6.txt`，按地址空间统计，只保留至少五份快照都出现的范围。
 3. 对窗口结果执行 1% 地址空间变化熔断，并与 misakaio 做独立 IPv4 交叉验证；所有快照和地址族验证通过后才原子替换缓存。
 4. 编译六端规则、运行测试和结构校验；仅在 `dist/` 真实变化时创建自动更新提交。
@@ -176,11 +174,11 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 | 规则集 | 来源 | 默认策略与位置 |
 | --- | --- | --- |
 | `apple-cn`（AppleCN） | felixonmars `apple.china.conf` + v2fly `apple@cn` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Apple 主规则 |
-| `cn-ip`（CN IP） | gaoyifan `ip-lists` 的 5-of-7 七日稳定窗 | `DIRECT`，包含 IPv4 + IPv6，位于 China、Proxy 与业务 IP 规则之后、原有 GEOIP 与最终兜底之前 |
+| `cn-ip`（CN IP） | gaoyifan `ip-lists` 的 5-of-7 七日稳定窗 | `DIRECT`，包含 IPv4 + IPv6，位于 Brokerage IP、China、Proxy 与 Telegram IP 之后、原有 GEOIP 与最终兜底之前 |
 
 两者均为独立远程规则集，不并入 `china`，也不新增策略组。AppleCN 从 felixonmars 提取域名后缀，不复制 dnsmasq 的 DNS 服务器或其他指令；同时只合并 v2fly `apple` include 链中明确带 `@cn` 的条目，不把普通 Apple 域名扩大为直连。它不是整个 Apple 直连开关；未命中例外名单的连接仍由 Apple 策略组处理。上游说明 Apple 国内 CDN 在部分运营商网络下可能不可用，出现问题时可停止引用该规则集。
 
-**GoogleCN 已从默认分流中移除。** felixonmars/dnsmasq-china-list 是 DNS 加速项目，`google.china.conf` 的语义是"用国内 DNS 解析这些域名会得到 Google 的中国前端地址"，上游对该文件标注 *not considered stable, use at your own risk*。解析得到不等于直连可达：该列表 112 条中有 91 条是 Google 全球域名，其中 `dl.google.com`、`clientservices.googleapis.com`、`app-measurement.com` 均有直连失败的公开记录。Lane 主配置不引用它，Google 域名统一走 Google 策略组；为保留完整规则审计与独立复用能力，转换后的 112 条仍发布在各客户端的 `rules-full/google-cn` 文件中。Apple 的情况不同——其条目确实解析到可直连的大陆 CDN 节点，因此 AppleCN 保留在默认分流。
+**GoogleCN 已完全移除。** felixonmars/dnsmasq-china-list 是 DNS 加速项目，`google.china.conf` 的语义是“用国内 DNS 解析这些域名会得到 Google 的中国前端地址”；解析得到不等于直连可达。Lane 不再抓取、转换或发布这份名单，Google 域名统一走 Google 策略组。Apple 的情况不同——其条目解析到可直连的大陆 CDN 节点，因此 AppleCN 仍保留在默认分流。
 
 ### 局域网
 
@@ -196,7 +194,7 @@ CN IP 的唯一发布主源是 **gaoyifan/china-operator-ip**，但不直接采�
 
 候选 git 仓库先克隆到 staging，七份快照、双栈、窗口与熔断全部通过后，才用单一缓存工件做原子替换。网络失败且有有效缓存时会明确回退；首次拉取失败则中止。Loyalsoldier 三个仓库只保留作人工差分审计，不再作为 Lane 主上游。
 
-`rules-full/` / `rules-profile/` 拆分改变了所有远程规则 URL。已有用户需要手动升级一次完整配置；升级时请保留或重新填入自己的节点订阅及个人修改。之后这些远程规则可继续独立更新。
+单一 `rules/` 产物恢复后，旧 `rules-full/` / `rules-profile/` URL 停止发布。已有用户需要手动升级一次完整配置；升级时请保留或重新填入自己的节点订阅及个人修改。之后这些远程规则可继续独立更新。
 
 项目已从 `ProxyRules` 更名为 `Lane`，旧主配置文件名不再发布；请改用上面的新地址。已下载的本地副本不会随仓库重命名自动迁移，应升级一次以使用新规则 URL。历史文件可从 Git 提交记录取回。
 
@@ -209,7 +207,7 @@ Python 内部包名 `proxyrules` 和旧命令保留兼容，公开项目与新�
 - [gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)（MIT；CN IP 双栈七日稳定窗主源）
 - [misakaio/chnroutes2](https://github.com/misakaio/chnroutes2)（CC BY-SA 4.0；独立 IPv4 交叉验证，不并入路由）
 - [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip)（仅用于人工差分审计，不参与构建）
-- [felixonmars/dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)（WTFPL 2.0；默认启用 AppleCN，GoogleCN 仅发布完整规则）
+- [felixonmars/dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)（WTFPL 2.0；仅使用 AppleCN）
 - [Koolson/Qure](https://github.com/Koolson/Qure)（仅引用图标 URL）
 
 本项目自身代码以 MIT License 发布，第三方规则数据遵循各自许可。第三方来源、转换说明与借鉴边界见 [`NOTICE.md`](NOTICE.md) 和 [`licenses/`](licenses/)。
