@@ -414,6 +414,7 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
 
 @pytest.mark.parametrize("target,old,new,error", [
     ("surge", ",icon-url=", ",icon-uri=", "Surge Manual"),
+    ("surge", "policy-regex-filter=(?i)", 'policy-regex-filter="(?i)', "must not be quoted"),
     ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
     ("shadowrocket", "Final = select,PROXY,",
      "Final = select,Manual,", "must default to PROXY"),

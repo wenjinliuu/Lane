@@ -83,6 +83,8 @@ Quantumult X 的两条 `[server_remote]` 模板默认都是注释状态。QX 会
 | Egern | 取消隐藏 `Node Pool` 的 `urls` 下第二个列表项的注释并填写 | 在同一 `urls` 列表下逐行追加地址；YAML 锚点会让 `Manual` 同步使用该列表，无需重复填写 |
 | Shadowrocket | 在应用内添加 | 在应用内继续添加，Lane 不放订阅模板 |
 
+Surge 的 `policy-regex-filter` 不加引号：Surge 会把引号当作模式的一部分，被引号包住的正则匹配不到任何节点，地区组因此为空，路由到空组的连接会被 Surge 立即关闭。当前五个地区正则都不含逗号，无需引号保护。
+
 Surge 的订阅先进入隐藏 `Node Pool`，五个 `US/JP/HK/TW/SG Auto Smart` 与地区 Manual 组都从中展开真实节点。顶层 `Manual` 同时列出五个 Smart 组和全部单节点，因此服务组直接选择某个 Smart，与服务组选择 Manual、再由 Manual 选择同一个 Smart，最终使用的是同一策略对象。该结构也避免了 Manual 与地区组互相引用的循环。[Surge Smart](https://manual.nssurge.com/policy-groups/smart.html)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)。
 
 Stash、Loon、Quantumult X 与 Egern 的 `Manual` 同样列出五个原生 `地区 Auto`，同时保留全部单节点。Stash 的 `Manual` 用 `use: [Subscription1]` 引入节点而不是 `include-all`：同时设置 `include-all` 时，Stash 会丢掉该组显式列出的 `proxies`，五个地区 Auto 就不会出现在 `Manual` 里。Shadowrocket 由内置 `PROXY` 承担这一角色，五个 `地区 Auto` 仍在每个服务组中可选。Egern 额外使用隐藏 `Node Pool` 作为地区组的节点来源，并以 YAML 锚点让 `Manual` 共享同一份订阅地址；这样地区组不反向引用 `Manual`，不会形成循环，用户也只需填写一次订阅。

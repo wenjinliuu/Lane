@@ -363,6 +363,10 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         "select,include-other-group=Subscription1,include-all-proxies=true,hidden=true"
     ):
         raise ValidationError("Surge Node Pool must expand raw proxies and remain hidden")
+    # A quoted filter keeps its quotes as part of the pattern, so it matches no node
+    # and Surge closes every connection routed to the resulting empty group.
+    if 'policy-regex-filter="' in texts["surge"]:
+        raise ValidationError("Surge policy-regex-filter must not be quoted")
     # Surge reads icon-url on every visible policy group; hidden groups carry none.
     def surge_icon(name: str) -> str:
         return f",icon-url={icon_urls[name]}"
@@ -385,9 +389,11 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             if (group["type"] != group_type or not group.get("include-all")
                     or group.get("filter") != filters["regions"][region["name"]]):
                 raise ValidationError(f"Invalid Stash region group: {name}")
+        # Unquoted: Surge treats surrounding quotes as part of the pattern, which
+        # would leave the group empty and make Surge close routed connections.
         suffix = (
-            f'include-other-group=Node Pool,policy-regex-filter="'
-            f'{filters["regions"][region["name"]]}"'
+            "include-other-group=Node Pool,"
+            f"policy-regex-filter={filters['regions'][region['name']]}"
         )
         # The Smart group reuses the region Auto icon so icons.yaml stays client neutral.
         if surge_groups[region["surge_smart_name"]] != (

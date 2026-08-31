@@ -676,7 +676,14 @@ def _surge_config(
         )
     lines.append("# 地区组从隐藏 Node Pool 展开真实节点并正向筛选；不会与 Manual 形成循环。")
     for region in policies["regions"]:
-        suffix = f'include-other-group=Node Pool,policy-regex-filter="{filters["regions"][region["name"]]}"'
+        # policy-regex-filter must stay unquoted. Surge keeps the quotes as part of
+        # the pattern, so a quoted filter matches no node and the group ends up
+        # empty; Surge then closes anything routed to it immediately. The region
+        # patterns contain no comma, so no quoting is needed to protect them.
+        suffix = (
+            "include-other-group=Node Pool,"
+            f"policy-regex-filter={filters['regions'][region['name']]}"
+        )
         # The Smart group reuses the region Auto icon; icons.yaml keys stay client neutral.
         lines.append(
             f"{region['surge_smart_name']} = smart,{suffix}"
