@@ -119,6 +119,7 @@ def validate_config(config: dict[str, Any]) -> None:
         "Major Crypto Exchanges",
         "Other Crypto Exchanges",
         "Reject",
+        "Schwab",
     }
     configured_groups = set(services) | set(base_names) | set(options)
     if forbidden_groups.intersection(configured_groups):
@@ -129,6 +130,13 @@ def validate_config(config: dict[str, Any]) -> None:
         raise ConfigError("Crypto ruleset is required")
     if crypto.get("v2fly") != ["binance", "okx", "bybit"]:
         raise ConfigError("Crypto must contain only Binance, OKX, Bybit plus Bitget custom rules")
+
+    schwab = next((item for item in rulesets if item.get("id") == "schwab"), None)
+    if (not schwab
+            or schwab.get("policy") != "Brokerage"
+            or schwab.get("v2fly") != ["schwab"]
+            or schwab.get("custom") != "rules/custom/schwab.list"):
+        raise ConfigError("Schwab rules must remain intact and use the Brokerage policy")
 
     ai = next((item for item in rulesets if item.get("id") == "ai"), None)
     if not ai or "category-ai-cn" in ai.get("v2fly", []):

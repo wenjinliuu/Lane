@@ -131,18 +131,17 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
         )
 
     expected_icons = {
-        "AI": "lane/AI.png",
-        "Schwab": "lane/Schwab.png",
-        "Brokerage": "lane/Brokerage.png",
-        "Crypto": "lane/Crypto.png",
+        "AI": "third-party/qure/AI.png",
+        "Brokerage": "third-party/qure/Magic.png",
+        "Crypto": "third-party/qure/Cryptocurrency_3.png",
         "Apple": "third-party/qure/Apple_1.png",
         "Streaming": "third-party/qure/Netflix.png",
         "Final": "third-party/qure/Global.png",
-        "US Auto": "third-party/qure-derived/US_Auto.png",
-        "JP Auto": "third-party/qure-derived/JP_Auto.png",
-        "HK Auto": "third-party/qure-derived/HK_Auto.png",
-        "TW Auto": "third-party/qure-derived/TW_Auto.png",
-        "SG Auto": "third-party/qure-derived/SG_Auto.png",
+        "US Auto": "third-party/qure/United_States.png",
+        "JP Auto": "third-party/qure/Japan.png",
+        "HK Auto": "third-party/qure/Hong_Kong.png",
+        "TW Auto": "third-party/qure/China.png",
+        "SG Auto": "third-party/qure/Singapore.png",
         "US Manual": "third-party/qure/United_States.png",
         "JP Manual": "third-party/qure/Japan.png",
         "HK Manual": "third-party/qure/Hong_Kong.png",
@@ -166,6 +165,10 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
             for relative in icon_config["icons"].values()
         )
         assert "raw.githubusercontent.com/Koolson/Qure" not in text
+
+    assert not (ROOT / "assets/icons/lane").exists()
+    assert not (ROOT / "assets/icons/third-party/qure-derived").exists()
+    assert not (ROOT / "assets/icons/preview.png").exists()
 
 
 def test_client_dns_and_multicast_capability_matrix() -> None:

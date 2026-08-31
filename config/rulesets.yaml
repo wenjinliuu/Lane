@@ -41,7 +41,7 @@ rulesets:
 
   - id: schwab
     title: Schwab
-    policy: Schwab
+    policy: Brokerage
     v2fly: [schwab]
     custom: rules/custom/schwab.list
 
