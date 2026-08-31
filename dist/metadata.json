@@ -18,24 +18,24 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "1affbed23a6b068970037a2a80917b9debf78461",
-      "sha256": "8455f1251c3f97e34d7c10777b2f64039ab3c6b36bcf9e5c4d26a6dfb168f5a9",
+      "revision": "9de4ffffb6f9665877d96f4e7909d98ee6ab460a",
+      "sha256": "398ec06b515fa97cda7a9d2da33cb7d88ded41a126f3a8a9d647a1ced05c3a1f",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
       "breaker_percent": 1.0,
       "snapshot_dates": [
+        "2026-08-31",
         "2026-08-30",
         "2026-08-29",
         "2026-08-28",
-        "2026-08-27",
-        "2026-08-26"
+        "2026-08-27"
       ],
       "window_report": "cn-ip-window.json"
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "92b95eb64b666379fc4aa9b53a4ed61a396612c4a2c79e192de16bf550c56b41",
+      "sha256": "b90a77e7c22e9dff01b17f4f760c8e618905b5e381bb124906e16a7b3943ce62",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -115,17 +115,17 @@
     {
       "id": "brokerage",
       "policy": "Brokerage",
-      "rules": 80,
+      "rules": 60,
       "kinds": {
-        "domain": 69,
+        "domain": 49,
         "full": 11
       },
-      "exact_duplicates_removed": 20,
+      "exact_duplicates_removed": 19,
       "redundancy_audit": {
-        "within_parent_suffix_candidates": 10,
+        "within_parent_suffix_candidates": 9,
         "previous_ruleset_exact_candidates": 0,
         "previous_ruleset_parent_suffix_candidates": 0,
-        "total_candidates": 10
+        "total_candidates": 9
       }
     },
     {
@@ -367,9 +367,9 @@
       "exact_duplicates_removed": 3,
       "redundancy_audit": {
         "within_parent_suffix_candidates": 1645,
-        "previous_ruleset_exact_candidates": 5499,
-        "previous_ruleset_parent_suffix_candidates": 321,
-        "total_candidates": 7465
+        "previous_ruleset_exact_candidates": 5479,
+        "previous_ruleset_parent_suffix_candidates": 323,
+        "total_candidates": 7447
       }
     },
     {
@@ -391,9 +391,9 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9629,
+      "rules": 9632,
       "kinds": {
-        "ipcidr": 6223,
+        "ipcidr": 6226,
         "ipcidr6": 3406
       },
       "exact_duplicates_removed": 0,
@@ -408,17 +408,17 @@
   "rule_optimization": {
     "exact_duplicate_removal": {
       "enabled": true,
-      "removed": 77
+      "removed": 76
     },
     "parent_suffix_removal": false,
     "cross_ruleset_residual_removal": false
   },
   "redundancy_audit": {
     "mode": "report-only",
-    "within_parent_suffix_candidates": 4736,
-    "previous_ruleset_exact_candidates": 5961,
-    "previous_ruleset_parent_suffix_candidates": 362,
-    "total_candidates": 11059,
+    "within_parent_suffix_candidates": 4735,
+    "previous_ruleset_exact_candidates": 5941,
+    "previous_ruleset_parent_suffix_candidates": 364,
+    "total_candidates": 11040,
     "note": "Candidates are retained in every published ruleset; this audit does not change routing payloads."
   },
   "cross_validation": {

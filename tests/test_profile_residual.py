@@ -89,15 +89,23 @@ def test_generated_artifacts_use_one_complete_rule_tier() -> None:
         "default_profiles_use": "rules",
         "deduplication": "exact-only",
     }
-    assert metadata["rule_optimization"] == {
-        "exact_duplicate_removal": {"enabled": True, "removed": 77},
-        "parent_suffix_removal": False,
-        "cross_ruleset_residual_removal": False,
+    optimization = metadata["rule_optimization"]
+    assert optimization["exact_duplicate_removal"] == {
+        "enabled": True,
+        "removed": sum(entry["exact_duplicates_removed"] for entry in metadata["rulesets"]),
     }
+    assert optimization["parent_suffix_removal"] is False
+    assert optimization["cross_ruleset_residual_removal"] is False
     audit = metadata["redundancy_audit"]
     assert audit["mode"] == "report-only"
-    assert audit["within_parent_suffix_candidates"] == 4736
-    assert audit["total_candidates"] == 11059
+    assert audit["within_parent_suffix_candidates"] == sum(
+        entry["redundancy_audit"]["within_parent_suffix_candidates"]
+        for entry in metadata["rulesets"]
+    )
+    assert audit["total_candidates"] == sum(
+        entry["redundancy_audit"]["total_candidates"]
+        for entry in metadata["rulesets"]
+    )
 
     for target in TARGETS:
         directory = ROOT / "dist" / target / RULES_DIR

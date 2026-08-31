@@ -169,6 +169,7 @@ def test_network_failure_uses_visible_cached_fallback(tmp_path, monkeypatch):
     ["cn-first", "cn-no-resolve", "apple-policy", "apple-late",
      "apple-filter-missing", "china-merged",
      "reference-routed", "google-cn-source", "brokerage-ip-late",
+     "brokerage-broad-upstreams",
      "lan-late", "lan-resolves",
      "window-days", "presence-days", "breaker", "reference-shared"],
 )
@@ -199,6 +200,8 @@ def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
     elif change == "brokerage-ip-late":
         entries.remove(by_id["brokerage-ip"])
         entries.insert(entries.index(by_id["telegram-ip"]), by_id["brokerage-ip"])
+    elif change == "brokerage-broad-upstreams":
+        by_id["brokerage"]["v2fly"] = ["futu", "itiger", "longbridge"]
     elif change == "lan-late":
         entries.remove(by_id["lan"])
         entries.insert(2, by_id["lan"])
@@ -451,10 +454,12 @@ def test_validator_requires_explicit_breaker_acceptance(tmp_path):
     data = json.loads(path.read_text())
     data["breaker"]["exceeded"] = True
     data["breaker"]["accepted"] = False
+    data["breaker"]["approval_sha256"] = None
     path.write_text(json.dumps(data))
     with pytest.raises(ValidationError, match="stable-window"):
         validate_generated(tmp_path, load_project_config(ROOT))
 
     data["breaker"]["accepted"] = True
+    data["breaker"]["approval_sha256"] = data["output"]["sha256"]
     path.write_text(json.dumps(data))
     validate_generated(tmp_path, load_project_config(ROOT))

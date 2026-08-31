@@ -57,11 +57,17 @@ def test_broker_rules_are_split_by_service_and_match_phase() -> None:
 
     brokerage = rulesets["brokerage"]
     assert brokerage["policy"] == "Brokerage"
+    assert brokerage["v2fly"] == ["futu"]
     assert "no_resolve" not in brokerage
     brokerage_path = ROOT / brokerage["custom"]
     brokerage_custom = brokerage_path.read_text(encoding="utf-8")
     assert "domain:skytigris.cn" in brokerage_custom
     assert "full:geotest.lbkrs.com" in brokerage_custom
+    for broad_domain in (
+        "itiger.com", "itigerup.com", "laohu8.com", "tigerbbs.com",
+        "lbkrs.com", "longbridge.com", "longbridge.hk", "wbrks.com",
+    ):
+        assert f"domain:{broad_domain}" not in brokerage_custom
     assert "domain:moomoo.com" in brokerage_custom
     for domain in ("futubos.com", "futuie.com", "futuhainan.com"):
         assert f"domain:{domain}" in brokerage_custom

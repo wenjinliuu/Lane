@@ -1,9 +1,9 @@
 # Lane | Local profile template
-# Last updated: 2026-08-31 15:03:33 (Asia/Shanghai)
+# Last updated: 2026-08-31 18:24:52 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
-# Brokerage：富途/Moomoo、老虎、长桥，统一分流登录、行情及入金/交易相关连接。
+# Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名。
 # Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。
 # Schwab：嘉信独立分流，可单独选择 DIRECT 或代理。
 # 上述三组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。
@@ -44,14 +44,25 @@ dns:
   - wildcard:
       match: '*'
       value: bootstrap
-# 在 Manual 的 urls 中填写 Egern 支持的节点订阅；第一份默认启用。
+# 在隐藏 Node Pool 的 urls 中填写 Egern 节点订阅；Manual 与地区组共享该来源。
 policy_groups:
 - select:
-    name: Manual
-    urls:
+    name: Node Pool
+    urls: &id001
     - 你的订阅地址
     # 多订阅：取消下一行注释并填写；更多地址在 urls 中逐行追加，保留缩进。
     # - 你的订阅地址
+    update_interval: 86400
+    hidden: true
+- select:
+    name: Manual
+    policies:
+    - US Auto
+    - JP Auto
+    - HK Auto
+    - TW Auto
+    - SG Auto
+    urls: *id001
     update_interval: 86400
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png
 - select:
@@ -313,7 +324,7 @@ policy_groups:
 - auto_test:
     name: US Auto
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -323,14 +334,14 @@ policy_groups:
 - select:
     name: US Manual
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png
 - auto_test:
     name: JP Auto
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -340,14 +351,14 @@ policy_groups:
 - select:
     name: JP Manual
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png
 - auto_test:
     name: HK Auto
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -357,14 +368,14 @@ policy_groups:
 - select:
     name: HK Manual
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png
 - auto_test:
     name: TW Auto
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇹🇼|台湾|臺灣|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -374,14 +385,14 @@ policy_groups:
 - select:
     name: TW Manual
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇹🇼|台湾|臺灣|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
 - auto_test:
     name: SG Auto
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇸🇬|新加坡|狮|獅|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -391,7 +402,7 @@ policy_groups:
 - select:
     name: SG Manual
     policies:
-    - Manual
+    - Node Pool
     flatten: true
     filter: (?i)^.*(?:(?:🇸🇬|新加坡|狮|獅|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png

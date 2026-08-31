@@ -23,7 +23,7 @@ def _profile(target):
 def test_plain_placeholder_and_service_guidance_at_top(target):
     text = _profile(target)
     heading = text.split("\n\n", 1)[0]
-    assert "Brokerage：富途/Moomoo、老虎、长桥" in heading
+    assert "Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名" in heading
     assert "Crypto：仅 Binance、OKX、Bybit、Bitget" in heading
     assert "Schwab：嘉信" in heading
     assert "默认均为 Manual" in heading
@@ -142,14 +142,17 @@ def test_egern_urls_accept_additional_items_without_changing_region_groups():
     text = _profile("egern")
     original = yaml.safe_load(text)
     assert original["policy_groups"][0]["select"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
+    assert original["policy_groups"][1]["select"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
     edited = text.replace(f"    - {SUBSCRIPTION_PLACEHOLDER}\n", f"    - {URLS[0]}\n", 1)
     edited = edited.replace(
         f"    # - {SUBSCRIPTION_PLACEHOLDER}\n", f"    - {URLS[1]}\n    - {URLS[2]}\n", 1
     )
     parsed = yaml.safe_load(edited)
     assert parsed["policy_groups"][0]["select"]["urls"] == URLS
+    assert parsed["policy_groups"][1]["select"]["urls"] == URLS
     assert parsed["policy_groups"][0]["select"]["update_interval"] == NODE_INTERVAL
-    assert parsed["policy_groups"][1:] == original["policy_groups"][1:]
+    assert parsed["policy_groups"][1]["select"]["update_interval"] == NODE_INTERVAL
+    assert parsed["policy_groups"][2:] == original["policy_groups"][2:]
 
 
 @pytest.mark.parametrize("target,old,new,error", [

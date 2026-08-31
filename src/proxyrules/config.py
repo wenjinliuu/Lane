@@ -146,7 +146,7 @@ def validate_config(config: dict[str, Any]) -> None:
     brokerage = by_id.get("brokerage", {})
     brokerage_ip = by_id.get("brokerage-ip", {})
     if (brokerage.get("policy") != "Brokerage"
-            or brokerage.get("v2fly") != ["futu", "itiger", "longbridge"]
+            or brokerage.get("v2fly") != ["futu"]
             or brokerage.get("custom") != "rules/custom/brokerage-domain.list"
             or brokerage.get("no_resolve")
             or text_source_ids(brokerage)
@@ -154,7 +154,10 @@ def validate_config(config: dict[str, Any]) -> None:
             or brokerage_ip.get("custom") != "rules/custom/brokerage-ip.list"
             or brokerage_ip.get("no_resolve") is not True
             or brokerage_ip.get("v2fly") or text_source_ids(brokerage_ip)):
-        raise ConfigError("Brokerage domain and IP rulesets must stay separate")
+        raise ConfigError(
+            "Brokerage must keep Futu upstream domains separate from its IP rules; "
+            "Tiger and Longbridge stay on tested custom domains only"
+        )
     if ordered_ids[-5:] != [
         "brokerage-ip", "china", "proxy", "telegram-ip", "cn-ip"
     ]:

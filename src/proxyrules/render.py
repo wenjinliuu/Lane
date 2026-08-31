@@ -69,7 +69,7 @@ LOCAL_PROFILE_NOTICE = (
     "# 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。\n"
 )
 SERVICE_GROUP_NOTICE = (
-    "# Brokerage：富途/Moomoo、老虎、长桥，统一分流登录、行情及入金/交易相关连接。\n"
+    "# Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名。\n"
     "# Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。\n"
     "# Schwab：嘉信独立分流，可单独选择 DIRECT 或代理。\n"
     "# 上述三组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。\n"
@@ -283,6 +283,10 @@ def _with_icon(group: dict[str, Any], icons: dict[str, Any], name: str) -> dict[
     return group
 
 
+def _region_auto_names(policies: dict[str, Any]) -> list[str]:
+    return [region["auto_name"] for region in policies["regions"]]
+
+
 def _stash_config(
     project: dict[str, Any], policies: dict[str, Any], icons: dict[str, Any]
 ) -> str:
@@ -298,6 +302,7 @@ def _stash_config(
             {
                 "name": "Manual",
                 "type": "select",
+                "proxies": _region_auto_names(policies),
                 "include-all": True,
             },
             icons,
@@ -496,7 +501,7 @@ def _loon_config(
         _loon_group(
             "Manual",
             "select",
-            ["Manual Nodes"],
+            [*_region_auto_names(policies), "Manual Nodes"],
             benchmark,
             _icon(icons, "Manual"),
         )
@@ -570,7 +575,7 @@ def _shadowrocket_config(
         "# Base, service, and region strategy groups.",
         "[Proxy Group]",
         (
-            "Manual = select,"
+            f"Manual = select,{','.join(_region_auto_names(policies))},"
             f"url={benchmark['url']},interval={benchmark['interval']},"
             f"timeout={benchmark['timeout']},select=0,"
             f"policy-regex-filter={filters['manual']}"
@@ -679,7 +684,10 @@ def _qx_config(
         # are used by default and are turned off with no-system, so there is no
         # `server = system` to write here.
         "", "[dns]", "no-ipv6", "",
-        "[policy]", f"static = Manual, server-tag-regex=.+{icon('Manual')}",
+        "[policy]", (
+            f"static = Manual, {', '.join(_region_auto_names(policies))}, "
+            f"server-tag-regex=.+{icon('Manual')}"
+        ),
     ]
     options = ", ".join(_qx_policy(option) for option in policies["service_options"])
     for service in policies["service_groups"]:
@@ -717,10 +725,16 @@ def _egern_config(
     benchmark = project["benchmark"]
     updates = project["updates"]
     filters = build_filters(policies)
-    groups = [{"select": _with_icon({
-        "name": "Manual", "urls": [SUBSCRIPTION_PLACEHOLDER],
+    subscription_urls = [SUBSCRIPTION_PLACEHOLDER]
+    groups = [{"select": {
+        "name": "Node Pool", "urls": subscription_urls,
+        "update_interval": updates["node_interval"], "hidden": True,
+    }}]
+    groups.append({"select": _with_icon({
+        "name": "Manual", "policies": _region_auto_names(policies),
+        "urls": subscription_urls,
         "update_interval": updates["node_interval"],
-    }, icons, "Manual")}]
+    }, icons, "Manual")})
     for service in policies["service_groups"]:
         groups.append({"select": _with_icon({
             "name": service, "policies": list(policies["service_options"]),
@@ -728,7 +742,7 @@ def _egern_config(
     for region in policies["regions"]:
         for kind, name in (("auto_test", region["auto_name"]), ("select", region["manual_name"])):
             group = {
-                "name": name, "policies": ["Manual"], "flatten": True,
+                "name": name, "policies": ["Node Pool"], "flatten": True,
                 "filter": filters["regions"][region["name"]],
             }
             if kind == "auto_test":
@@ -752,7 +766,10 @@ def _egern_config(
         "policy_groups": groups, "rules": rules,
     }
     body = _yaml(data).replace(
-        "policy_groups:\n", "# 在 Manual 的 urls 中填写 Egern 支持的节点订阅；第一份默认启用。\npolicy_groups:\n", 1
+        "policy_groups:\n",
+        "# 在隐藏 Node Pool 的 urls 中填写 Egern 节点订阅；Manual 与地区组共享该来源。\n"
+        "policy_groups:\n",
+        1,
     )
     body = body.replace(
         f"    - {SUBSCRIPTION_PLACEHOLDER}\n",

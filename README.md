@@ -8,12 +8,12 @@
 
 - 所有策略组名称均使用简洁英文。
 - `AI`、`Google`、`Developer`、`Telegram`、`Social`、券商、交易所、视频、游戏平台等服务组均默认选择 `Manual`。
-- `Manual` 包含用户导入的全部节点，不排除流量、到期、高倍率或维护信息项。
+- 六端的 `Manual` 都先列出五个地区自动组，再保留用户导入的全部单节点；不排除流量、到期、高倍率或维护信息项。Surge 的五项名称为 `地区 Auto Smart`，其余五端为 `地区 Auto`。
 - 地区仅保留美国、日本、香港、台湾与新加坡；每个地区分别提供 `XX Auto` 自动优选和 `XX Manual` 手动选点。
 - 策略组按 `Manual`、服务组、地区组排列，十个地区 Auto / Manual 组统一放在列表末尾。
 - 地区筛选只做正向匹配，不使用排除词：国旗、完整中文地区名（含繁体）、英文全称、带词边界的地区代码。城市名和单字简称均不参与匹配；新加坡额外接受 `狮` / `獅`。
 - 服务组可切换到 `DIRECT`，或五个地区各自的 Auto / Manual 策略。
-- `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段；生成时把域名与 IP 拆成两个规则集，但仍使用同一策略组。2026-08-30 补齐 `futubos.com`、`futuie.com`、`futuhainan.com`；既有 63 个 Futu CIDR 不扩张，并按真机交易结果置于 `China` 之前。
+- `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。Futu 使用 v2fly 上游、实测补充域名和既有 63 个 CIDR；Tiger 只保留 `skytigris.cn`，Longbridge 只保留 `geotest.lbkrs.com`。生成时把域名与 IP 拆成两个规则集，但仍使用同一策略组；Futu IP 按真机交易结果置于 `China` 之前。
 - `Crypto` 只匹配 Binance、OKX、Bybit 与 Bitget。其他交易所不单独分类，按后续规则或 `Final` 处理。
 - 中国大陆 AI 不设专门规则，自然落入 `cn` / `GEOIP,CN` 直连。
 - 不设置游戏大文件下载特例，也不内置广告拦截或业务 `REJECT` 规则。Surge、Shadowrocket、Loon、QX 仅在已选节点不支持 UDP 时显式拒绝回落，避免静默直连泄漏；不全局封锁 UDP / QUIC。
@@ -27,11 +27,13 @@
 
 | 策略组 | 覆盖范围 | 用途与选择建议 |
 | --- | --- | --- |
-| `Brokerage` | 富途 / Moomoo、老虎 Tiger、长桥 Longbridge | 统一处理相关域名与 IP 的网络分流，用于登录、行情及入金、交易相关连接；可按实际连通性选择代理或直连。 |
+| `Brokerage` | 富途 / Moomoo 完整覆盖；老虎 `skytigris.cn`；长桥 `geotest.lbkrs.com` | 富途保留域名与 IP 分流；老虎、长桥只代理已经实测需要的关键域名，避免把官网等无关连接一并装入证券策略组。 |
 | `Crypto` | 币安 Binance、OKX、Bybit、Bitget，仅这四家 | 当前网络可以正常访问时，建议手动选择 `DIRECT`；无法正常访问时可按实际情况选择代理。其他交易所按后续规则或 `Final` 处理。 |
 | `Schwab` | 嘉信 Charles Schwab | 与 `Brokerage` 分开控制网络路径；当前网络可以正常访问时，可手动选择 `DIRECT`，也保留代理选项。 |
 
-`Brokerage` 在上游规则外，保留了实际使用中补充的域名与 Futu IP 段，包括老虎的 `skytigris.cn` 和长桥的 `geotest.lbkrs.com`。产物中的 `brokerage` 只含域名，`brokerage-ip` 只含 IP，两者仍指向同一个 `Brokerage` 策略。`brokerage-ip` 带 `no-resolve` 并位于 `China` 之前：直接访问或解析到重叠中国网段时先走 Brokerage，同时不会为了普通域名强制解析。这些规则不是对整个应用的识别；入金流程涉及的外部银行、支付页面仍按各自命中的规则处理。
+`Brokerage` 只从 v2fly 引入 `futu`，并保留实际使用中补充的 Futu 域名与 IP 段；老虎与长桥不再引入 v2fly 的整组品牌域名，只保留 `skytigris.cn` 和精确域名 `geotest.lbkrs.com`。被移出的 `itiger` / `longbridge` 普通品牌域名仍会因 v2fly `geolocation-!cn → category-finance` 命中后面的 `General Proxy`，最终跟随 `Final`，只是不能再单独切换到 `Brokerage`。产物中的 `brokerage` 只含域名，`brokerage-ip` 只含 IP，两者仍指向同一个 `Brokerage` 策略。`brokerage-ip` 带 `no-resolve` 并位于 `China` 之前：直接访问或解析到重叠中国网段时先走 Brokerage，同时不会为了普通域名强制解析。这些规则不是对整个应用的识别；入金流程涉及的外部银行、支付页面仍按各自命中的规则处理。
+
+其他香港券商与社区上游的逐项结论见 [`docs/BROKERAGE-UPSTREAM-AUDIT-2026-08-31.md`](docs/BROKERAGE-UPSTREAM-AUDIT-2026-08-31.md)。目前没有把华盛、uSMART、Webull 或 IBKR 直接加入生产规则：公开域名清单可以提供候选，但不能替代“直连失败、代理恢复”的交易动作实测。
 
 Lane 只控制网络路径，不保证入金或交易成功，也不改变账户权限、银行处理或平台限制。三个组彼此独立，但选择 `Manual` 时都会跟随同一个手动节点。
 
@@ -59,7 +61,7 @@ Lane 只控制网络路径，不保证入金或交易成功，也不改变账户
 | Loon | `[Remote Proxy]` 的 `Subscription1 =` 后面，使用 Loon 支持的格式 |
 | Surge | `[Proxy Group]` 的隐藏组 `Subscription1`，替换 `policy-path=` 后面的占位符；使用 Surge 节点列表或包含 `[Proxy]` 的配置 |
 | Quantumult X | `[server_remote]` 中 `tag=Subscription1` 那一行的占位符，使用 QX 原生节点订阅；该段保持在 `[policy]` 之后 |
-| Egern | `policy_groups → Manual → urls` 的第一个占位符，使用 Egern 支持的节点订阅 |
+| Egern | `policy_groups → Node Pool → urls` 的第一个占位符，使用 Egern 支持的节点订阅；该隐藏组与 `Manual` 共享同一列表 |
 | Shadowrocket | 无模板，直接使用应用内已有节点订阅 |
 
 订阅格式必须兼容目标客户端：不能保证同一条链接在六个软件里通用。本项目不代用户转换或收集私人订阅；不要把填好的配置上传到公开仓库。
@@ -76,10 +78,12 @@ Loon 用户若选择重新导入远程配置，请选择保留现有节点/订�
 | Loon | 取消 `Subscription2 =` 行的注释并填写 | 复制该行，使用不同别名；现有节点筛选会处理所有订阅 |
 | Surge | 取消隐藏组 `Subscription2` 的注释并填写，再把隐藏 `Node Pool` 的参数改为 `include-other-group="Subscription1,Subscription2"` | 新增 `Subscription3` 等隐藏组，并逐一加入 `Node Pool` 的引用列表 |
 | Quantumult X | 取消 `tag=Subscription2` 那一行的注释并填写 | 复制该行，使用不同的 `tag`；现有策略组会按节点名称筛选 |
-| Egern | 取消 Manual 的 `urls` 下第二个列表项的注释并填写 | 在同一 `urls` 列表下逐行追加地址，无需新增策略组 |
+| Egern | 取消隐藏 `Node Pool` 的 `urls` 下第二个列表项的注释并填写 | 在同一 `urls` 列表下逐行追加地址；YAML 锚点会让 `Manual` 同步使用该列表，无需重复填写 |
 | Shadowrocket | 在应用内添加 | 在应用内继续添加，Lane 不放订阅模板 |
 
 Surge 的订阅先进入隐藏 `Node Pool`，五个 `US/JP/HK/TW/SG Auto Smart` 与地区 Manual 组都从中展开真实节点。顶层 `Manual` 同时列出五个 Smart 组和全部单节点，因此服务组直接选择某个 Smart，与服务组选择 Manual、再由 Manual 选择同一个 Smart，最终使用的是同一策略对象。该结构也避免了 Manual 与地区组互相引用的循环。[Surge Smart](https://manual.nssurge.com/policy-groups/smart.html)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)。
+
+Stash、Loon、Shadowrocket、Quantumult X 与 Egern 的 `Manual` 同样列出五个原生 `地区 Auto`，同时保留全部单节点。Egern 额外使用隐藏 `Node Pool` 作为地区组的节点来源，并以 YAML 锚点让 `Manual` 共享同一份订阅地址；这样地区组不反向引用 `Manual`，不会形成循环，用户也只需填写一次订阅。
 
 订阅别名不同不代表节点名称不会重复。多个订阅尽量避免同名节点：Surge 和 Egern 都有按名称去重的行为；Surge 如需区分，可在各订阅组分别添加 `external-policy-name-prefix=S1-`、`external-policy-name-prefix=S2-`。这不是默认配置，不影响地区正向匹配。[Surge 节点命名](https://manual.nssurge.com/policy-groups/policy-including.html)、[Egern 多订阅](https://egernapp.com/docs/configuration/policy_groups/)。
 
@@ -93,9 +97,9 @@ Surge 的订阅先进入隐藏 `Node Pool`，五个 `US/JP/HK/TW/SG Auto Smart` 
 
 ### 单一、可独立复用的规则产物
 
-每个客户端只发布一组 `rules/` 文件，Lane 主配置也直接引用这一组。2026-08-30 实施基线中的 22 个启用规则集合计 51,206 条；编译只按“规则类型 + 规范值”删除 77 条精确重复，不做父级后缀折叠，也不按当前配置顺序删除已被前面规则覆盖的条目。因此任意单个规则文件都不依赖 Lane 的整体顺序，可以独立审计和复用。
+每个客户端只发布一组 `rules/` 文件，Lane 主配置也直接引用这一组。编译只按“规则类型 + 规范值”删除精确重复，不做父级后缀折叠，也不按当前配置顺序删除已被前面规则覆盖的条目；当前规则总数和精确去重数由每次构建写入 `dist/metadata.json`。因此任意单个规则文件都不依赖 Lane 的整体顺序，可以独立审计和复用。
 
-`dist/metadata.json` 仍会以只读方式报告潜在冗余关系：当前有 4,736 条同组父后缀候选、合计 11,060 条同组或跨组覆盖候选，但这些条目全部保留，不参与优化。这样避免把六个客户端没有一致明文保证的根域、单标签后缀和跨组优先级假设固化成数据删除。
+`dist/metadata.json` 仍会以只读方式报告同组父后缀、跨组精确重复和跨组父后缀等潜在冗余关系，但这些条目全部保留，不参与优化；统计值随上游变化自动更新，不作为固定测试常量。这样避免把六个客户端没有一致明文保证的根域、单标签后缀和跨组优先级假设固化成数据删除。
 
 Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类型规范文件，同时生成 `-domain`、`-ipcidr`、`-classical` 专用载荷；主配置只引用专用载荷，规范文件用于审计、回退和语义校验。其他五端各发布一个对应客户端语法的逻辑规则文件。客户端不支持的转换仍逐项记录在 `dist/report.json`；当前 Loon、Shadowrocket、Surge 与 QX 各省略 174 条 `DOMAIN-REGEX`，详细转换审计另行处理，不在本次产物收敛中猜测改写。
 
@@ -108,9 +112,9 @@ Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类�
 - Stash 将精确域名与后缀放入 `behavior: domain`（后缀使用同时覆盖根域和子域的 `+.` 形式），CIDR 放入 `behavior: ipcidr`，正则/关键词保留在 `behavior: classical`；三类仍是远程更新的文本 provider。Egern 继续用原生 YAML 保留域名正则。
 - Loon、Shadowrocket、Surge、QX 中不支持或未确认兼容的域名正则会省略，逐规则集计数见 `dist/report.json`，不会误转换为 URL 重写。Loon 使用现行 `ip-mode = ipv4-only`，最低支持版本为 3.2.3 (754)。
 - Surge、Shadowrocket、Loon、QX 在节点不支持 UDP 时分别使用客户端原生的拒绝回落项；Stash/Egern 保持默认行为。配置不包含 `block-quic`、`udp_drop_list = QUIC` 或 `disable-udp-ports = 443`。
-- Egern 使用原生 YAML 规则集，保留 `no_resolve`，地区组通过 `flatten` 展开订阅节点；请使用支持 `urls` / `flatten` 的当前版本。
+- Egern 使用原生 YAML 规则集，保留 `no_resolve`；隐藏 `Node Pool` 加载订阅，地区组通过 `flatten` 展开其中节点，`Manual` 共享订阅并列出地区 Auto；请使用支持 `urls` / `flatten` 的当前版本。
 - QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
-- Stash、Loon、Shadowrocket、QX 与 Egern 的 Auto 使用各自原生自动测速类型；Surge 使用原生 Smart 算法并命名为 `地区 Auto Smart`。Manual 组保持手动选择。
+- Stash、Loon、Shadowrocket、QX 与 Egern 的 Auto 使用各自原生自动测速类型；Surge 使用原生 Smart 算法并命名为 `地区 Auto Smart`。六端 Manual 组保持手动选择，并可直接选择对应地区自动组。
 - 六端均通过静态结构与生成测试；测试不等于在六款付费客户端上完成真机导入、联网验证。订阅协议和空地区组行为仍需在实际客户端确认。
 
 格式依据：[Stash 规则集](https://stash.wiki/en/rules/rule-set)、[Stash 代理集](https://stash.wiki/proxy-protocols/proxy-providers)、[Loon General](https://nsloon.app/en/docs/General/)、[Loon 官方示例](https://github.com/Loon0x00/LoonExampleConfig/blob/master/example.conf)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)、[QX 官方示例](https://github.com/crossutility/Quantumult-X/blob/master/sample.conf)、[Egern 策略组](https://egernapp.com/docs/configuration/policy_groups/)、[Egern 规则](https://egernapp.com/docs/configuration/rules/)。

@@ -48,7 +48,7 @@ rulesets:
   - id: brokerage
     title: Brokerage
     policy: Brokerage
-    v2fly: [futu, itiger, longbridge]
+    v2fly: [futu]
     custom: rules/custom/brokerage-domain.list
 
   - id: crypto

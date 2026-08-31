@@ -235,14 +235,16 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     ]]
     filters = build_filters(policies)
     options = list(policies["service_options"])
+    auto_names = [region["auto_name"] for region in policies["regions"]]
     stash_by_name = {group["name"]: group for group in stash["proxy-groups"]}
     if list(stash_by_name) != expected_order:
         raise ValidationError("Stash groups must be base, services, then regions")
     if (list(stash.get("proxy-providers", {})) != ["Subscription1"]
             or stash["proxy-providers"]["Subscription1"]["url"] != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")
-    if not stash_by_name["Manual"].get("include-all"):
-        raise ValidationError("Stash Manual must include subscription nodes")
+    if (not stash_by_name["Manual"].get("include-all")
+            or stash_by_name["Manual"].get("proxies") != auto_names):
+        raise ValidationError("Stash Manual must expose regional Auto groups and nodes")
     for service in policies["service_groups"]:
         if stash_by_name[service].get("proxies") != options:
             raise ValidationError(f"Stash {service} options differ from the manifest")
@@ -252,6 +254,13 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                   for line in _section(texts[target], "Proxy Group")}
         if list(groups) != expected_order:
             raise ValidationError(f"{target}: invalid group order or missing groups")
+        manual_prefix = (
+            f"select,{','.join(auto_names)},Manual Nodes,"
+            if target == "loon"
+            else f"select,{','.join(auto_names)},url="
+        )
+        if not groups["Manual"].startswith(manual_prefix):
+            raise ValidationError(f"{target}: Manual must expose regional Auto groups and nodes")
         for service in policies["service_groups"]:
             if not groups[service].startswith(f"select,{','.join(options)}"):
                 raise ValidationError(f"{target}: {service} must default to Manual")
@@ -304,19 +313,25 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
 
     egern = yaml.safe_load(texts["egern"])
     egern_groups = {next(iter(group.values()))["name"]: group for group in egern["policy_groups"]}
-    if list(egern_groups) != expected_order:
+    if list(egern_groups) != ["Node Pool", *expected_order]:
         raise ValidationError("Egern group order differs from the manifest")
-    if egern_groups["Manual"]["select"]["urls"] != [SUBSCRIPTION_PLACEHOLDER]:
-        raise ValidationError("Egern subscription template must be enabled")
+    egern_pool = egern_groups["Node Pool"]["select"]
+    egern_manual = egern_groups["Manual"]["select"]
+    if (egern_pool.get("urls") != [SUBSCRIPTION_PLACEHOLDER]
+            or egern_pool.get("hidden") is not True):
+        raise ValidationError("Egern Node Pool must load the hidden subscription source")
+    if (egern_manual.get("urls") != [SUBSCRIPTION_PLACEHOLDER]
+            or egern_manual.get("policies") != auto_names):
+        raise ValidationError("Egern Manual must expose regional Auto groups and nodes")
     for service in policies["service_groups"]:
         if egern_groups[service]["select"]["policies"] != options:
             raise ValidationError(f"Egern {service} options differ from the manifest")
     for region in policies["regions"]:
         for name, kind in ((region["auto_name"], "auto_test"), (region["manual_name"], "select")):
             group = egern_groups[name][kind]
-            if (group.get("policies") != ["Manual"] or not group.get("flatten")
+            if (group.get("policies") != ["Node Pool"] or not group.get("flatten")
                     or group.get("filter") != filters["regions"][region["name"]]):
-                raise ValidationError(f"Egern {name} must flatten and filter nodes")
+                raise ValidationError(f"Egern {name} must flatten and filter Node Pool")
     if egern["rules"][-2:] != [{"geoip": {"match": "CN", "policy": "DIRECT"}},
                                {"default": {"policy": "Final"}}]:
         raise ValidationError("Egern final routing rules are invalid")
@@ -330,6 +345,10 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         qx_groups[name] = (kind.strip(), value.strip())
     if list(qx_groups) != expected_order:
         raise ValidationError("QX group order differs from the manifest")
+    qx_manual_kind, qx_manual_value = qx_groups["Manual"]
+    qx_manual_prefix = f"Manual, {', '.join(auto_names)}, server-tag-regex=.+"
+    if qx_manual_kind != "static" or not qx_manual_value.startswith(qx_manual_prefix):
+        raise ValidationError("QX Manual must expose regional Auto groups and nodes")
     qx_options = ", ".join("direct" if option == "DIRECT" else option for option in options)
     for service in policies["service_groups"]:
         kind, value = qx_groups[service]

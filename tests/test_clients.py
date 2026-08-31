@@ -165,6 +165,65 @@ def test_all_templates_have_one_active_subscription_and_local_update_guidance():
     assert provider["benchmark-url"] == load_project_config(ROOT)["project"]["benchmark"]["url"]
 
 
+def test_manual_exposes_regional_auto_groups_on_all_clients():
+    auto_names = ["US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto"]
+
+    stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
+    stash_manual = next(group for group in stash["proxy-groups"] if group["name"] == "Manual")
+    assert stash_manual["proxies"] == auto_names
+    assert stash_manual["include-all"] is True
+
+    for target, filename in (
+        ("loon", "Lane_loon.conf"),
+        ("shadowrocket", "Lane_shadowrocket.conf"),
+    ):
+        groups = {
+            line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+            for line in _section((ROOT / "dist" / target / filename).read_text(), "Proxy Group")
+        }
+        assert groups["Manual"].split(",")[1:6] == auto_names
+
+    surge_groups = {
+        line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+        for line in _section((ROOT / "dist/surge/Lane_surge.conf").read_text(), "Proxy Group")
+    }
+    assert surge_groups["Manual"].split(",")[1:6] == [
+        "US Auto Smart", "JP Auto Smart", "HK Auto Smart", "TW Auto Smart", "SG Auto Smart"
+    ]
+
+    qx_manual = next(
+        line for line in _section((ROOT / "dist/qx/Lane_qx.conf").read_text(), "policy")
+        if line.startswith("static = Manual,")
+    )
+    assert [part.strip() for part in qx_manual.split("=", 1)[1].split(",")][1:6] == auto_names
+
+    egern = yaml.safe_load((ROOT / "dist/egern/Lane_egern.yaml").read_text())
+    egern_groups = {
+        next(iter(group.values()))["name"]: next(iter(group.values()))
+        for group in egern["policy_groups"]
+    }
+    assert egern_groups["Manual"]["policies"] == auto_names
+    assert egern_groups["Manual"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
+    assert egern_groups["Node Pool"]["hidden"] is True
+
+
+def test_brokerage_keeps_tiger_and_longbridge_to_tested_minimums():
+    rules = {
+        line for line in (ROOT / "dist/surge/rules/brokerage.list").read_text().splitlines()
+        if line and not line.startswith("#")
+    }
+    assert "DOMAIN-SUFFIX,skytigris.cn" in rules
+    assert "DOMAIN,geotest.lbkrs.com" in rules
+    for broad_domain in (
+        "itiger.com", "itigergrowth.com", "itigergrowtha.com", "itigerup.com",
+        "laohu8.com", "tigerbbs.cn", "tigerbbs.com", "xiaohu8.com",
+        "lbctrl.com", "lbkrs.com", "longbridge.cloud", "longbridge.cn",
+        "longbridge.com", "longbridge.global", "longbridge.hk", "longbridge.sg",
+        "longbridgeapp.com", "longbridgehk.com", "longportapp.com", "wbrks.com",
+    ):
+        assert f"DOMAIN-SUFFIX,{broad_domain}" not in rules
+
+
 def test_region_groups_match_only_positive_terms_even_with_high_multiplier():
     text = (ROOT / "dist/egern/Lane_egern.yaml").read_text()
     groups = yaml.safe_load(text)["policy_groups"]
