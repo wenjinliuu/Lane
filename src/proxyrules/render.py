@@ -69,10 +69,9 @@ LOCAL_PROFILE_NOTICE = (
     "# 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。\n"
 )
 SERVICE_GROUP_NOTICE = (
-    "# Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名。\n"
+    "# Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名；嘉信规则并入本组。\n"
     "# Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。\n"
-    "# Schwab：嘉信独立分流，可单独选择 DIRECT 或代理。\n"
-    "# 上述三组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。\n"
+    "# 上述两组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。\n"
     "# AppleCN：命中苹果大陆服务名单时优先 DIRECT，其他 Apple 服务仍走 Apple 策略组。\n"
     "# Google 不再有大陆直连例外名单，全部域名统一走 Google 策略组。\n"
     "# LAN：私有网段与本地域名直连，位于全部规则之前，带 no-resolve。\n"

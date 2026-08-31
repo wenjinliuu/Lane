@@ -99,7 +99,7 @@
     },
     {
       "id": "schwab",
-      "policy": "Schwab",
+      "policy": "Brokerage",
       "rules": 9,
       "kinds": {
         "domain": 9

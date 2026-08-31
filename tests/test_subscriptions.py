@@ -23,9 +23,9 @@ def _profile(target):
 def test_plain_placeholder_and_service_guidance_at_top(target):
     text = _profile(target)
     heading = text.split("\n\n", 1)[0]
-    assert "Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名" in heading
+    assert "Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名；嘉信规则并入本组" in heading
     assert "Crypto：仅 Binance、OKX、Bybit、Bitget" in heading
-    assert "Schwab：嘉信" in heading
+    assert "嘉信独立分流" not in heading
     assert "默认均为 Manual" in heading
     assert "不保证入金或交易结果" in heading
     assert "勿上传私人订阅" not in text

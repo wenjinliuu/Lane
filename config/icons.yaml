@@ -2,10 +2,9 @@ base: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons
 
 icons:
   Manual: third-party/qure/Proxy.png
-  AI: lane/AI.png
-  Schwab: lane/Schwab.png
-  Brokerage: lane/Brokerage.png
-  Crypto: lane/Crypto.png
+  AI: third-party/qure/AI.png
+  Brokerage: third-party/qure/Magic.png
+  Crypto: third-party/qure/Cryptocurrency_3.png
   YouTube: third-party/qure/YouTube.png
   TikTok: third-party/qure/TikTok.png
   Emby: third-party/qure/Emby.png
@@ -18,13 +17,13 @@ icons:
   Microsoft: third-party/qure/Microsoft.png
   Apple: third-party/qure/Apple_1.png
   Final: third-party/qure/Global.png
-  US Auto: third-party/qure-derived/US_Auto.png
+  US Auto: third-party/qure/United_States.png
   US Manual: third-party/qure/United_States.png
-  JP Auto: third-party/qure-derived/JP_Auto.png
+  JP Auto: third-party/qure/Japan.png
   JP Manual: third-party/qure/Japan.png
-  HK Auto: third-party/qure-derived/HK_Auto.png
+  HK Auto: third-party/qure/Hong_Kong.png
   HK Manual: third-party/qure/Hong_Kong.png
-  TW Auto: third-party/qure-derived/TW_Auto.png
+  TW Auto: third-party/qure/China.png
   TW Manual: third-party/qure/China.png
-  SG Auto: third-party/qure-derived/SG_Auto.png
+  SG Auto: third-party/qure/Singapore.png
   SG Manual: third-party/qure/Singapore.png

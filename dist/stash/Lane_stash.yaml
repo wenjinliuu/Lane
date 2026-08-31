@@ -1,12 +1,11 @@
 # Lane | Local profile template
-# Last updated: 2026-08-31 19:31:29 (Asia/Shanghai)
+# Last updated: 2026-08-31 23:50:33 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
-# Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名。
+# Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名；嘉信规则并入本组。
 # Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。
-# Schwab：嘉信独立分流，可单独选择 DIRECT 或代理。
-# 上述三组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。
+# 上述两组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。
 # AppleCN：命中苹果大陆服务名单时优先 DIRECT，其他 Apple 服务仍走 Apple 策略组。
 # Google 不再有大陆直连例外名单，全部域名统一走 Google 策略组。
 # LAN：私有网段与本地域名直连，位于全部规则之前，带 no-resolve。
@@ -72,23 +71,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/lane/AI.png
-- name: Schwab
-  type: select
-  proxies:
-  - Manual
-  - DIRECT
-  - US Auto
-  - US Manual
-  - JP Auto
-  - JP Manual
-  - HK Auto
-  - HK Manual
-  - TW Auto
-  - TW Manual
-  - SG Auto
-  - SG Manual
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/lane/Schwab.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/AI.png
 - name: Brokerage
   type: select
   proxies:
@@ -104,7 +87,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/lane/Brokerage.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Magic.png
 - name: Crypto
   type: select
   proxies:
@@ -120,7 +103,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/lane/Crypto.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Cryptocurrency_3.png
 - name: YouTube
   type: select
   proxies:
@@ -320,7 +303,7 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/US_Auto.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/United_States.png
 - name: US Manual
   type: select
   include-all: true
@@ -333,7 +316,7 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/JP_Auto.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Japan.png
 - name: JP Manual
   type: select
   include-all: true
@@ -346,7 +329,7 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/HK_Auto.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Hong_Kong.png
 - name: HK Manual
   type: select
   include-all: true
@@ -359,7 +342,7 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/TW_Auto.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/China.png
 - name: TW Manual
   type: select
   include-all: true
@@ -372,7 +355,7 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/SG_Auto.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Singapore.png
 - name: SG Manual
   type: select
   include-all: true
@@ -605,7 +588,7 @@ rules:
 - RULE-SET,apple-cn-domain,DIRECT
 - RULE-SET,ai-domain,AI
 - RULE-SET,ai-classical,AI
-- RULE-SET,schwab-domain,Schwab
+- RULE-SET,schwab-domain,Brokerage
 - RULE-SET,brokerage-domain,Brokerage
 - RULE-SET,crypto-domain,Crypto
 - RULE-SET,youtube-domain,YouTube

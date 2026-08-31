@@ -39,7 +39,6 @@ regions:
 
 service_groups:
   - AI
-  - Schwab
   - Brokerage
   - Crypto
   - YouTube

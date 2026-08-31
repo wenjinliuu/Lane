@@ -121,6 +121,14 @@ cases:
       ruleset: brokerage
       policy: Brokerage
 
+  - id: schwab-rules-use-brokerage-policy
+    input:
+      type: domain
+      value: www.schwab.com
+    expected:
+      ruleset: schwab
+      policy: Brokerage
+
   - id: tiger-broad-brand-falls-through
     input:
       type: domain

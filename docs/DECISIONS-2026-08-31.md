@@ -74,8 +74,13 @@ Egern 新增隐藏 `Node Pool`：
 ## D4. 策略组图标自托管
 
 - 策略组图标统一存放在仓库的 `assets/icons/`，生成配置仅引用 Lane 自己的 GitHub Raw 地址，避免运行时依赖第三方图标仓库。
-- Apple、影视和 Final 分别采用 Qure 的 `Apple_1`、`Netflix` 和 `Global` 图标；使用到的 Qure 文件独立放在 `assets/icons/third-party/qure/`，保留来源、版本与授权提示，不纳入 Lane 的 MIT 授权声明。
-- AI 使用中性灰阶自绘图标，以兼顾浅色和深色界面；嘉信使用专属识别图标。
-- 证券组使用通用行情图标，不绑定富途；Crypto 使用通用数字资产图标，不绑定币安。这样不会让覆盖多个服务商的策略组产生单一品牌归属误导。
-- 地区 Auto 组使用带自动角标的国旗图标，Manual 组继续使用无角标国旗，便于快速区分。
+- 不再维护 Lane 自绘或二次加工图标。全部运行时 PNG 均从 Qure 指定提交原样复制到 `assets/icons/third-party/qure/`，保留来源、版本与授权提示，不纳入 Lane 的 MIT 授权声明。
+- 恢复自绘改动前的映射：AI 使用 `AI`、证券使用 `Magic`、Crypto 使用 `Cryptocurrency_3`；同一地区的 Auto 与 Manual 共用普通地区图标，不添加 Auto 角标。台湾继续使用已经确定的 `China`。
+- 仅保留三项替换：Apple、影视和 Final 分别使用 `Apple_1`、`Netflix` 和 `Global`。
 - Stash、Loon、Quantumult X、Egern 输出图标；Surge 与 Shadowrocket 维持现有无自定义图标输出，以符合当前客户端兼容策略。
+
+## D5. 嘉信规则并入 Brokerage
+
+- 删除六端可见的 `Schwab` 策略组，不再单独占用策略选择项。
+- `schwab` 逻辑规则集、v2fly `schwab` 来源与 `rules/custom/schwab.list` 全部保留，生成的独立规则文件也继续发布。
+- 嘉信规则命中后统一交给 `Brokerage`，与其他证券规则共用同一策略选择；不把嘉信域名删除或改为硬编码 DIRECT。

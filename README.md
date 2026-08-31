@@ -13,7 +13,7 @@
 - 策略组按 `Manual`、服务组、地区组排列，十个地区 Auto / Manual 组统一放在列表末尾。
 - 地区筛选只做正向匹配，不使用排除词：国旗、完整中文地区名（含繁体）、英文全称、带词边界的地区代码。城市名和单字简称均不参与匹配；新加坡额外接受 `狮` / `獅`。
 - 服务组可切换到 `DIRECT`，或五个地区各自的 Auto / Manual 策略。
-- `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。Futu 使用 v2fly 上游、实测补充域名和既有 63 个 CIDR；Tiger 只保留 `skytigris.cn`，Longbridge 只保留 `geotest.lbkrs.com`。生成时把域名与 IP 拆成两个规则集，但仍使用同一策略组；Futu IP 按真机交易结果置于 `China` 之前。
+- `Brokerage` 合并 Futu、Moomoo、Tiger、Longbridge 与 Charles Schwab。Futu 使用 v2fly 上游、实测补充域名和既有 63 个 CIDR；Tiger 只保留 `skytigris.cn`，Longbridge 只保留 `geotest.lbkrs.com`；Schwab 保留独立规则文件但不再设置独立策略组。Futu IP 按真机交易结果置于 `China` 之前。
 - `Crypto` 只匹配 Binance、OKX、Bybit 与 Bitget。其他交易所不单独分类，按后续规则或 `Final` 处理。
 - 中国大陆 AI 不设专门规则，自然落入 `cn` / `GEOIP,CN` 直连。
 - 不设置游戏大文件下载特例，也不内置广告拦截或业务 `REJECT` 规则。Surge、Shadowrocket、Loon、QX 仅在已选节点不支持 UDP 时显式拒绝回落，避免静默直连泄漏；不全局封锁 UDP / QUIC。
@@ -21,21 +21,20 @@
 
 完整策略声明见 [`config/policies.yaml`](config/policies.yaml)，规则顺序见 [`config/rulesets.yaml`](config/rulesets.yaml)。
 
-### Brokerage、Crypto 与 Schwab
+### Brokerage 与 Crypto
 
-这三个组都默认选择 `Manual`，也可独立切换为 `DIRECT` 或某个地区的 Auto / Manual。下面的直连建议不会改变配置的默认值；六端配置顶部也保留了简短说明。
+这两个组都默认选择 `Manual`，也可独立切换为 `DIRECT` 或某个地区的 Auto / Manual。下面的直连建议不会改变配置的默认值；六端配置顶部也保留了简短说明。
 
 | 策略组 | 覆盖范围 | 用途与选择建议 |
 | --- | --- | --- |
-| `Brokerage` | 富途 / Moomoo 完整覆盖；老虎 `skytigris.cn`；长桥 `geotest.lbkrs.com` | 富途保留域名与 IP 分流；老虎、长桥只代理已经实测需要的关键域名，避免把官网等无关连接一并装入证券策略组。 |
+| `Brokerage` | 富途 / Moomoo 完整覆盖；老虎 `skytigris.cn`；长桥 `geotest.lbkrs.com`；嘉信 Charles Schwab | 富途保留域名与 IP 分流；老虎、长桥只代理已经实测需要的关键域名；嘉信继续使用独立规则集，但命中后统一交给本策略组。 |
 | `Crypto` | 币安 Binance、OKX、Bybit、Bitget，仅这四家 | 当前网络可以正常访问时，建议手动选择 `DIRECT`；无法正常访问时可按实际情况选择代理。其他交易所按后续规则或 `Final` 处理。 |
-| `Schwab` | 嘉信 Charles Schwab | 与 `Brokerage` 分开控制网络路径；当前网络可以正常访问时，可手动选择 `DIRECT`，也保留代理选项。 |
 
-`Brokerage` 只从 v2fly 引入 `futu`，并保留实际使用中补充的 Futu 域名与 IP 段；老虎与长桥不再引入 v2fly 的整组品牌域名，只保留 `skytigris.cn` 和精确域名 `geotest.lbkrs.com`。被移出的 `itiger` / `longbridge` 普通品牌域名仍会因 v2fly `geolocation-!cn → category-finance` 命中后面的 `General Proxy`，最终跟随 `Final`，只是不能再单独切换到 `Brokerage`。产物中的 `brokerage` 只含域名，`brokerage-ip` 只含 IP，两者仍指向同一个 `Brokerage` 策略。`brokerage-ip` 带 `no-resolve` 并位于 `China` 之前：直接访问或解析到重叠中国网段时先走 Brokerage，同时不会为了普通域名强制解析。这些规则不是对整个应用的识别；入金流程涉及的外部银行、支付页面仍按各自命中的规则处理。
+`Brokerage` 的 Futu 部分只从 v2fly 引入 `futu`，并保留实际使用中补充的 Futu 域名与 IP 段；老虎与长桥不再引入 v2fly 的整组品牌域名，只保留 `skytigris.cn` 和精确域名 `geotest.lbkrs.com`。被移出的 `itiger` / `longbridge` 普通品牌域名仍会因 v2fly `geolocation-!cn → category-finance` 命中后面的 `General Proxy`，最终跟随 `Final`，只是不能再单独切换到 `Brokerage`。嘉信继续由独立的 `schwab` 规则文件覆盖，规则内容没有删除，但其策略改为 `Brokerage`。产物中的 `brokerage` 只含域名，`brokerage-ip` 只含 IP，两者和 `schwab` 都指向同一个 `Brokerage` 策略。`brokerage-ip` 带 `no-resolve` 并位于 `China` 之前：直接访问或解析到重叠中国网段时先走 Brokerage，同时不会为了普通域名强制解析。这些规则不是对整个应用的识别；入金流程涉及的外部银行、支付页面仍按各自命中的规则处理。
 
 其他香港券商与社区上游的逐项结论见 [`docs/BROKERAGE-UPSTREAM-AUDIT-2026-08-31.md`](docs/BROKERAGE-UPSTREAM-AUDIT-2026-08-31.md)。目前没有把华盛、uSMART、Webull 或 IBKR 直接加入生产规则：公开域名清单可以提供候选，但不能替代“直连失败、代理恢复”的交易动作实测。
 
-Lane 只控制网络路径，不保证入金或交易成功，也不改变账户权限、银行处理或平台限制。三个组彼此独立，但选择 `Manual` 时都会跟随同一个手动节点。
+Lane 只控制网络路径，不保证入金或交易成功，也不改变账户权限、银行处理或平台限制。两个可见组彼此独立，但选择 `Manual` 时都会跟随同一个手动节点。
 
 ## 使用配置
 
@@ -105,7 +104,7 @@ Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类�
 
 旧的 `rules-full/`、`rules-profile/` 已统一回 `rules/`，GoogleCN 也不再抓取或发布。已经保存旧版 Lane 配置的用户必须升级一次完整主配置，重新填入节点订阅并迁移个人修改；之后规则资源仍可独立自动更新。
 
-全部策略图标都保存在本仓库的 [`assets/icons/`](assets/icons/) 并通过 Lane 自己的 Raw URL 发布，不再在运行时依赖外部图标仓库。Apple 使用 `Apple_1`，Streaming 使用 Netflix，Final 使用 Global；AI、Brokerage、Schwab 与 Crypto 使用 Lane 自绘图标。五个地区 Auto 在地区图标右下角增加蓝色循环箭头角标，Manual 保留普通地区图标。Stash/Egern 使用 `icon`，Loon/QX 使用 `img-url`；Shadowrocket 不强制自定义图标，Surge 的官方 `icon-url` 当前标注为 Mac 功能，本配置以 iOS 兼容为先，不设置它。
+全部策略图标都从 Qure 指定提交原样复制到本仓库的 [`assets/icons/third-party/qure/`](assets/icons/third-party/qure/) 并通过 Lane 自己的 Raw URL 发布，运行时不再依赖外部图标仓库。仅保留三项替换：Apple 使用 `Apple_1`，Streaming 使用 `Netflix`，Final 使用 `Global`；其他策略恢复此前的 Qure 图标，同一地区的 Auto 与 Manual 共用普通地区图标，不再使用 Lane 自绘图标或 Auto 角标。Stash/Egern 使用 `icon`，Loon/QX 使用 `img-url`；Shadowrocket 不强制自定义图标，Surge 的官方 `icon-url` 当前标注为 Mac 功能，本配置以 iOS 兼容为先，不设置它。
 
 ### 客户端兼容性
 
