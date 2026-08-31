@@ -155,7 +155,9 @@ def test_all_templates_have_one_active_subscription_and_local_update_guidance():
             continue
         occurrences = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
                        and not line.lstrip().startswith(("#", ";", "//"))]
-        assert len(occurrences) == 1
+        # QX validates [server_remote] entries as resource addresses, so both of its
+        # templates ship commented out and an unedited profile still imports.
+        assert len(occurrences) == (0 if target == "qx" else 1)
         assert "本地配置" in text and "重新填入" in text
         assert "#!MANAGED-CONFIG" not in text
         assert "auto_update:" not in text
@@ -171,17 +173,30 @@ def test_manual_exposes_regional_auto_groups_on_all_clients():
     stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
     stash_manual = next(group for group in stash["proxy-groups"] if group["name"] == "Manual")
     assert stash_manual["proxies"] == auto_names
-    assert stash_manual["include-all"] is True
+    # Stash drops the explicit proxies of a group that also sets include-all, which
+    # hid the region Auto groups; naming the provider with use keeps both visible.
+    assert "include-all" not in stash_manual
+    assert stash_manual["use"] == ["Subscription1"]
 
-    for target, filename in (
-        ("loon", "Lane_loon.conf"),
-        ("shadowrocket", "Lane_shadowrocket.conf"),
-    ):
-        groups = {
-            line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
-            for line in _section((ROOT / "dist" / target / filename).read_text(), "Proxy Group")
-        }
-        assert groups["Manual"].split(",")[1:6] == auto_names
+    loon_groups = {
+        line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+        for line in _section((ROOT / "dist/loon/Lane_loon.conf").read_text(), "Proxy Group")
+    }
+    assert loon_groups["Manual"].split(",")[1:6] == auto_names
+
+    # Shadowrocket has no Manual group: its built-in PROXY policy is the node picked
+    # on the home screen, and every service group offers the region Auto groups.
+    shadow_groups = {
+        line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+        for line in _section(
+            (ROOT / "dist/shadowrocket/Lane_shadowrocket.conf").read_text(), "Proxy Group"
+        )
+    }
+    assert "Manual" not in shadow_groups
+    assert shadow_groups["Final"].split(",")[1] == "PROXY"
+    for name in auto_names:
+        assert name in shadow_groups["Final"].split(",")
+        assert shadow_groups[name].startswith("url-test,")
 
     surge_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
@@ -249,14 +264,19 @@ def test_surge_expands_subscription_members_instead_of_selected_node():
         "Node Pool = select,include-other-group=Subscription1,"
         "include-all-proxies=true,hidden=true"
     )
-    assert groups[2] == (
+    assert groups[2].startswith(
         "Manual = select,US Auto Smart,JP Auto Smart,HK Auto Smart,"
-        "TW Auto Smart,SG Auto Smart,include-other-group=Node Pool"
+        "TW Auto Smart,SG Auto Smart,include-other-group=Node Pool,icon-url="
     )
     for line in groups[-10:]:
         assert "include-other-group=Node Pool" in line
         assert "policy-regex-filter=" in line
         assert ",Manual," not in line
+    # Hidden source groups carry no icon; every visible group does.
+    for line in groups[:2]:
+        assert "icon-url=" not in line
+    for line in groups[2:]:
+        assert "icon-url=" in line
 
 
 def test_changed_rules_do_not_change_profile_timestamps(tmp_path):
@@ -338,3 +358,76 @@ def test_canonical_names_and_new_repository_urls():
         assert "/ProxyRules/" not in text
         assert not (ROOT / "dist" / target / f"{target}.conf").exists()
         assert not (ROOT / "dist" / target / f"{target}.yaml").exists()
+
+
+def test_surge_carries_policy_group_icons_and_shadowrocket_does_not():
+    """Surge iOS and Mac both read icon-url; Shadowrocket has no such parameter."""
+
+    config = load_project_config(ROOT)
+    icon_config = config["icons"]
+    icon_base = icon_config["base"].rstrip("/")
+    surge_groups = {
+        line.split(" = ", 1)[0]: line.split(" = ", 1)[1]
+        for line in _section((ROOT / "dist/surge/Lane_surge.conf").read_text(), "Proxy Group")
+    }
+    policies = config["policies"]
+    for name in ["Manual", *policies["service_groups"]]:
+        expected = f"{icon_base}/{icon_config['icons'][name]}"
+        assert surge_groups[name].endswith(f",icon-url={expected}")
+    for region in policies["regions"]:
+        # icons.yaml stays client neutral, so the Smart group reuses the Auto icon.
+        smart = f"{icon_base}/{icon_config['icons'][region['auto_name']]}"
+        manual = f"{icon_base}/{icon_config['icons'][region['manual_name']]}"
+        assert surge_groups[region["surge_smart_name"]].endswith(f",icon-url={smart}")
+        assert surge_groups[region["manual_name"]].endswith(f",icon-url={manual}")
+    for hidden in ("Subscription1", "Node Pool"):
+        assert "icon-url=" not in surge_groups[hidden]
+    assert icon_base not in (ROOT / "dist/shadowrocket/Lane_shadowrocket.conf").read_text()
+
+
+def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
+    """Shadowrocket's PROXY policy is the node picked on the home screen."""
+
+    config = load_project_config(ROOT)
+    policies = config["policies"]
+    text = (ROOT / "dist/shadowrocket/Lane_shadowrocket.conf").read_text()
+    groups = {
+        line.split(" = ", 1)[0]: line.split(" = ", 1)[1]
+        for line in _section(text, "Proxy Group")
+    }
+    assert "Manual" not in groups
+    assert "Manual" not in [line.split(",")[-1] for line in _section(text, "Rule")]
+    expected_options = [
+        "PROXY" if option == "Manual" else option
+        for option in policies["service_options"]
+    ]
+    for service in policies["service_groups"]:
+        assert groups[service] == (
+            f"select,{','.join(expected_options)},policy-select-name=PROXY"
+        )
+    for region in policies["regions"]:
+        # url-test is Shadowrocket's automatic type; no extra switch enables it.
+        assert groups[region["auto_name"]].startswith("url-test,")
+        assert "interval=" in groups[region["auto_name"]]
+        assert groups[region["manual_name"]].startswith("select,")
+
+
+@pytest.mark.parametrize("target,old,new,error", [
+    ("surge", ",icon-url=", ",icon-uri=", "Surge Manual"),
+    ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
+    ("shadowrocket", "Final = select,PROXY,",
+     "Final = select,Manual,", "must default to PROXY"),
+    ("qx", "excluded_routes = 224.0.0.0/4, 239.255.255.250/32",
+     "excluded_routes = 224.0.0.0/4, 239.255.255.250/32, ff02::fb/128",
+     "excluded_routes"),
+])
+def test_validator_rejects_client_capability_regressions(tmp_path, target, old, new, error):
+    shutil.copytree(ROOT / "dist", tmp_path / "dist")
+    shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
+    path = tmp_path / "dist" / target / CONFIG_FILENAMES[target]
+    text = path.read_text(encoding="utf-8")
+    assert old in text
+    path.write_text(text.replace(old, new, 1), encoding="utf-8")
+    with pytest.raises(ValidationError, match=error):
+        validate_generated(tmp_path, load_project_config(ROOT))

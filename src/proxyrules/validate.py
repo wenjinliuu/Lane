@@ -11,10 +11,14 @@ from .cn_window import canonical_cidr_text, coverage_stats
 from .filters import build_filters
 from .render import (
     CONFIG_FILENAMES,
+    QX_EXCLUDED_ROUTES,
     RULES_DIR,
+    SHADOWROCKET_MANUAL_POLICY,
     STASH_BEHAVIOR_ORDER,
+    STASH_PROVIDER_NAME,
     SUBSCRIPTION_PLACEHOLDER,
     rule_filename,
+    shadowrocket_options,
     stash_provider_id,
 )
 from .v2fly import DomainListError, parse_cidr_text, parse_custom_file
@@ -79,10 +83,18 @@ def _validate_subscription_template(target: str, text: str) -> None:
         if SUBSCRIPTION_PLACEHOLDER in text:
             raise ValidationError("Shadowrocket must not contain subscription templates")
         return
-    if len(active) != 1:
-        raise ValidationError(f"{target}: exactly one active subscription placeholder is required")
+    # QX validates every [server_remote] entry as a resource address, so both of its
+    # templates stay commented out and an unedited profile still imports.
+    expected_active = 0 if target == "qx" else 1
+    if len(active) != expected_active:
+        raise ValidationError(
+            f"{target}: exactly {expected_active} active subscription placeholder(s) required"
+        )
     if any(f"{quote}{SUBSCRIPTION_PLACEHOLDER}{quote}" in text for quote in ('"', "'")):
         raise ValidationError(f"{target}: subscription placeholders must not be quoted")
+    first_templates = {
+        "qx": f"# {SUBSCRIPTION_PLACEHOLDER}, tag=Subscription1,",
+    }
     optional_templates = {
         "stash": f"  # Subscription2:\n  #   url: {SUBSCRIPTION_PLACEHOLDER}\n",
         "loon": f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n",
@@ -90,6 +102,8 @@ def _validate_subscription_template(target: str, text: str) -> None:
         "qx": f"# {SUBSCRIPTION_PLACEHOLDER}, tag=Subscription2,",
         "egern": f"    # - {SUBSCRIPTION_PLACEHOLDER}\n",
     }
+    if target in first_templates and first_templates[target] not in text:
+        raise ValidationError(f"{target}: a commented first subscription template is required")
     if optional_templates[target] not in text:
         raise ValidationError(f"{target}: a commented second subscription template is required")
 
@@ -220,13 +234,19 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         line.split("=", 1)[0].strip()
         for line in _section(shadow_text, "Proxy Group")
     }
-    if loon_groups != expected_groups or shadow_groups != expected_groups:
+    # Shadowrocket routes Manual to its built-in PROXY policy, so it defines no
+    # Manual group of its own.
+    shadow_expected_groups = expected_groups - {"Manual"}
+    if loon_groups != expected_groups or shadow_groups != shadow_expected_groups:
         raise ValidationError("Loon or Shadowrocket strategy groups differ from the manifest")
+    if "Manual" in shadow_groups or SHADOWROCKET_MANUAL_POLICY not in shadow_text:
+        raise ValidationError("Shadowrocket must follow the built-in PROXY policy")
 
     for service in config["policies"]["service_groups"]:
-        expected_default = f"{service} = select,Manual,"
-        if expected_default not in loon_text or expected_default not in shadow_text:
+        if f"{service} = select,Manual," not in loon_text:
             raise ValidationError(f"{service} must default to Manual")
+        if f"{service} = select,{SHADOWROCKET_MANUAL_POLICY}," not in shadow_text:
+            raise ValidationError(f"{service} must default to PROXY on Shadowrocket")
 
     policies = config["policies"]
     expected_order = ["Manual", *policies["service_groups"], *[
@@ -254,9 +274,15 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         for name, url in icon_urls.items():
             if url not in texts[target]:
                 raise ValidationError(f"{target}: missing self-hosted icon for {name}")
-    for target in ("surge", "shadowrocket"):
-        if icon_base in texts[target]:
-            raise ValidationError(f"{target}: icons must remain omitted for compatibility")
+    for name, url in icon_urls.items():
+        # Surge names its region autos "XX Auto Smart" and reuses the Auto icon,
+        # so only the client-neutral icon URLs have to appear.
+        if url not in texts["surge"]:
+            raise ValidationError(f"surge: missing self-hosted icon for {name}")
+    if icon_base in texts["shadowrocket"]:
+        raise ValidationError(
+            "shadowrocket: icons must remain omitted; it has no policy-group icon parameter"
+        )
     if any("raw.githubusercontent.com/Koolson/Qure" in text for text in texts.values()):
         raise ValidationError("Generated profiles must not depend on the external Qure URL")
 
@@ -272,28 +298,49 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     if (list(stash.get("proxy-providers", {})) != ["Subscription1"]
             or stash["proxy-providers"]["Subscription1"]["url"] != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")
-    if (not stash_by_name["Manual"].get("include-all")
+    if (stash_by_name["Manual"].get("use") != [STASH_PROVIDER_NAME]
+            or stash_by_name["Manual"].get("include-all")
             or stash_by_name["Manual"].get("proxies") != auto_names):
         raise ValidationError("Stash Manual must expose regional Auto groups and nodes")
     for service in policies["service_groups"]:
         if stash_by_name[service].get("proxies") != options:
             raise ValidationError(f"Stash {service} options differ from the manifest")
 
-    for target in ("loon", "shadowrocket"):
-        groups = {line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
-                  for line in _section(texts[target], "Proxy Group")}
-        if list(groups) != expected_order:
-            raise ValidationError(f"{target}: invalid group order or missing groups")
-        manual_prefix = (
-            f"select,{','.join(auto_names)},Manual Nodes,"
-            if target == "loon"
-            else f"select,{','.join(auto_names)},url="
+    loon_groups_by_name = {
+        line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+        for line in _section(loon_text, "Proxy Group")
+    }
+    if list(loon_groups_by_name) != expected_order:
+        raise ValidationError("loon: invalid group order or missing groups")
+    if not loon_groups_by_name["Manual"].startswith(
+        f"select,{','.join(auto_names)},Manual Nodes,"
+    ):
+        raise ValidationError("loon: Manual must expose regional Auto groups and nodes")
+    for service in policies["service_groups"]:
+        if not loon_groups_by_name[service].startswith(f"select,{','.join(options)}"):
+            raise ValidationError(f"loon: {service} must default to Manual")
+
+    shadow_groups_by_name = {
+        line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+        for line in _section(shadow_text, "Proxy Group")
+    }
+    shadow_order = [name for name in expected_order if name != "Manual"]
+    if list(shadow_groups_by_name) != shadow_order:
+        raise ValidationError("shadowrocket: invalid group order or missing groups")
+    shadow_options = shadowrocket_options(policies)
+    for service in policies["service_groups"]:
+        expected = (
+            f"select,{','.join(shadow_options)},"
+            f"policy-select-name={SHADOWROCKET_MANUAL_POLICY}"
         )
-        if not groups["Manual"].startswith(manual_prefix):
-            raise ValidationError(f"{target}: Manual must expose regional Auto groups and nodes")
-        for service in policies["service_groups"]:
-            if not groups[service].startswith(f"select,{','.join(options)}"):
-                raise ValidationError(f"{target}: {service} must default to Manual")
+        if shadow_groups_by_name[service] != expected:
+            raise ValidationError(f"shadowrocket: {service} options differ from the manifest")
+    for region in policies["regions"]:
+        # url-test is Shadowrocket's own automatic type; nothing else turns it on.
+        if not shadow_groups_by_name[region["auto_name"]].startswith("url-test,"):
+            raise ValidationError(
+                f"shadowrocket: {region['auto_name']} must stay a url-test group"
+            )
     if _section(loon_text, "Remote Proxy") != [f"Subscription1 = {SUBSCRIPTION_PLACEHOLDER}"]:
         raise ValidationError("Loon subscription template must be enabled")
     surge_groups = {
@@ -316,15 +363,21 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         "select,include-other-group=Subscription1,include-all-proxies=true,hidden=true"
     ):
         raise ValidationError("Surge Node Pool must expand raw proxies and remain hidden")
+    # Surge reads icon-url on every visible policy group; hidden groups carry none.
+    def surge_icon(name: str) -> str:
+        return f",icon-url={icon_urls[name]}"
+
     if surge_groups["Manual"] != (
         f"select,{','.join(smart_names)},include-other-group=Node Pool"
+        f"{surge_icon('Manual')}"
     ):
         raise ValidationError("Surge Manual must expose Smart groups and raw nodes")
     surge_options = ["Manual", "DIRECT"]
     for region in policies["regions"]:
         surge_options.extend([region["surge_smart_name"], region["manual_name"]])
     for service in policies["service_groups"]:
-        if surge_groups[service] != f"select,{','.join(surge_options)}":
+        expected = f"select,{','.join(surge_options)}{surge_icon(service)}"
+        if surge_groups[service] != expected:
             raise ValidationError(f"Surge {service} options differ from the Smart manifest")
     for region in policies["regions"]:
         for name, group_type in ((region["auto_name"], "url-test"), (region["manual_name"], "select")):
@@ -336,9 +389,14 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             f'include-other-group=Node Pool,policy-regex-filter="'
             f'{filters["regions"][region["name"]]}"'
         )
-        if surge_groups[region["surge_smart_name"]] != f"smart,{suffix}":
+        # The Smart group reuses the region Auto icon so icons.yaml stays client neutral.
+        if surge_groups[region["surge_smart_name"]] != (
+            f"smart,{suffix}{surge_icon(region['auto_name'])}"
+        ):
             raise ValidationError(f"Surge {region['surge_smart_name']} must be a Smart group")
-        if surge_groups[region["manual_name"]] != f"select,{suffix}":
+        if surge_groups[region["manual_name"]] != (
+            f"select,{suffix}{surge_icon(region['manual_name'])}"
+        ):
             raise ValidationError(f"Surge {region['manual_name']} must expand Node Pool")
 
     egern = yaml.safe_load(texts["egern"])
@@ -389,10 +447,22 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             actual, value = qx_groups[name]
             if actual != kind or f"server-tag-regex={filters['regions'][region['name']]}" not in value:
                 raise ValidationError(f"Invalid QX region group: {name}")
-    if _section(texts["qx"], "server_remote") != [
-        f"{SUBSCRIPTION_PLACEHOLDER}, tag=Subscription1, update-interval={node_interval}, enabled=true"
-    ]:
-        raise ValidationError("QX subscription template must be enabled")
+    # QX documents excluded_routes with IPv4 ranges only, so the IPv6 multicast entry
+    # the other clients carry must not leak into this profile.
+    qx_routes = f"excluded_routes = {', '.join(QX_EXCLUDED_ROUTES)}"
+    if qx_routes not in texts["qx"].splitlines():
+        raise ValidationError("QX excluded_routes must list the IPv4 ranges only")
+    # Both QX templates stay commented: QX rejects a profile whose [server_remote]
+    # entries are not valid resource addresses, and the placeholder is not one.
+    if _section(texts["qx"], "server_remote"):
+        raise ValidationError("QX subscription templates must stay commented out")
+    for tag in ("Subscription1", "Subscription2"):
+        template = (
+            f"# {SUBSCRIPTION_PLACEHOLDER}, tag={tag}, "
+            f"update-interval={node_interval}, enabled=true"
+        )
+        if template not in texts["qx"]:
+            raise ValidationError(f"QX {tag} template is missing")
     if texts["qx"].index("\n[server_remote]\n") < texts["qx"].index("\n[policy]\n"):
         raise ValidationError("QX subscription section must remain after policy groups")
     if _section(texts["qx"], "filter_local")[-2:] != ["geoip,cn,direct", "final,Final"]:

@@ -41,7 +41,9 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         assert "导入启用前" in heading
         active = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
                   and not line.lstrip().startswith(("#", ";", "//"))]
-        assert len(active) == 1
+        # QX validates [server_remote] entries as resource addresses, so its templates
+        # stay commented out and an unedited profile still imports.
+        assert len(active) == (0 if target == "qx" else 1)
 
 
 def test_stash_optional_block_can_be_enabled_and_copied_with_valid_indentation():
@@ -62,7 +64,8 @@ def test_stash_optional_block_can_be_enabled_and_copied_with_valid_indentation()
     for name, url in zip(providers, URLS):
         assert providers[name] == {**original["proxy-providers"]["Subscription1"], "url": url}
     assert parsed["proxy-groups"] == original["proxy-groups"]
-    for group in [parsed["proxy-groups"][0], *parsed["proxy-groups"][-10:]]:
+    assert parsed["proxy-groups"][0]["use"] == ["Subscription1"]
+    for group in parsed["proxy-groups"][-10:]:
         assert group["include-all"] is True
 
 
@@ -83,14 +86,19 @@ def test_loon_additional_subscriptions_do_not_require_filter_changes():
 
 def test_qx_optional_subscriptions_keep_unique_tags_and_section_order():
     text = _profile("qx")
-    first = _section(text, "server_remote")
-    assert len(first) == 1
-    commented = next(line for line in text.splitlines()
-                     if line.startswith(f"# {SUBSCRIPTION_PLACEHOLDER}, tag=Subscription2,"))
-    second = commented.removeprefix("# ").replace(SUBSCRIPTION_PLACEHOLDER, URLS[1])
+    # QX rejects a profile whose [server_remote] entries are not resource addresses,
+    # so both templates ship commented out and the section starts empty.
+    assert _section(text, "server_remote") == []
+    templates = [
+        next(line for line in text.splitlines()
+             if line.startswith(f"# {SUBSCRIPTION_PLACEHOLDER}, tag={tag},"))
+        for tag in ("Subscription1", "Subscription2")
+    ]
+    first = templates[0].removeprefix("# ").replace(SUBSCRIPTION_PLACEHOLDER, URLS[0])
+    second = templates[1].removeprefix("# ").replace(SUBSCRIPTION_PLACEHOLDER, URLS[1])
     third = second.replace(URLS[1], URLS[2]).replace("tag=Subscription2,", "tag=Subscription3,")
-    edited = text.replace(first[0], first[0].replace(SUBSCRIPTION_PLACEHOLDER, URLS[0]), 1)
-    edited = edited.replace(commented, second + "\n" + third)
+    edited = text.replace(templates[0], first, 1)
+    edited = edited.replace(templates[1], second + "\n" + third)
     entries = _section(edited, "server_remote")
     assert len(entries) == 3
     for index, (line, url) in enumerate(zip(entries, URLS), 1):

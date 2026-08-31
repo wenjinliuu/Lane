@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-08-31 23:50:33 (Asia/Shanghai)
+# Last updated: 2026-09-01 01:49:20 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -38,6 +38,7 @@ proxy-providers:
     benchmark-url: http://cp.cloudflare.com/generate_204
     benchmark-timeout: 5
   # 多订阅：取消下方 Subscription2 整块注释并填写；更多订阅复制整块、名称递增，保留缩进。
+  # 新增订阅后，把名称追加到 Manual 的 use 列表；地区组用 include-all 自动纳入，无需改动。
   # Subscription2:
   #   url: 你的订阅地址
   #   interval: 86400
@@ -54,7 +55,8 @@ proxy-groups:
   - HK Auto
   - TW Auto
   - SG Auto
-  include-all: true
+  use:
+  - Subscription1
   icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - name: AI
   type: select

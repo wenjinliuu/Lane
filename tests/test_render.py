@@ -117,11 +117,12 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
     shadow_group_block = shadow_text.split("[Proxy Group]\n", 1)[1].split(
         "\n[Rule]", 1
     )[0]
+    # Shadowrocket has no Manual group: it follows the built-in PROXY policy.
     assert [
         line.split(" = ", 1)[0]
         for line in shadow_group_block.splitlines()
         if " = " in line
-    ] == expected_group_names
+    ] == [name for name in expected_group_names if name != "Manual"]
 
     icon_config = config["icons"]
     icon_base = icon_config["base"].rstrip("/")
@@ -184,7 +185,10 @@ def test_client_dns_and_multicast_capability_matrix() -> None:
     assert f"bypass-tun = {route_csv}" in text["loon"]
     assert f"tun-excluded-routes = {route_csv}" in text["shadowrocket"]
     assert f"tun-excluded-routes = {route_csv}" in text["surge"]
-    assert f"excluded_routes = {route_csv}" in text["qx"]
+    # QX documents excluded_routes with IPv4 ranges only.
+    qx_route_csv = ", ".join(r for r in MULTICAST_EXCLUDED_ROUTES if ":" not in r)
+    assert f"excluded_routes = {qx_route_csv}" in text["qx"]
+    assert "ff02::fb/128" not in text["qx"]
     egern = yaml.safe_load(text["egern"])
     assert egern["vif_excluded_routes"] == list(MULTICAST_EXCLUDED_ROUTES)
     assert "excluded" not in text["stash"]

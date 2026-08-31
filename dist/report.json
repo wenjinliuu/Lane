@@ -47,9 +47,9 @@
   "notes": {
     "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical.",
     "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters intentionally leave their sources unpinned so local nodes and multiple subscriptions can be considered.",
-    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility.",
-    "surge": "DOMAIN-REGEX is unsupported and omitted. Region automation uses native Smart groups over a hidden raw-node pool; icons are omitted for iOS compatibility.",
-    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted.",
+    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility. Service groups follow the built-in PROXY policy (the node picked on the home screen) instead of a generated Manual group; icons are omitted because Shadowrocket has no policy-group icon parameter.",
+    "surge": "DOMAIN-REGEX is unsupported and omitted. Region automation uses native Smart groups over a hidden raw-node pool; visible groups carry icon-url.",
+    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted. excluded_routes stays IPv4-only and the [server_remote] templates ship commented out, because QX rejects a profile whose resource entries are not valid addresses.",
     "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support."
   }
 }
