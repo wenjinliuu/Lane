@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-08-31 18:24:52 (Asia/Shanghai)
+# Last updated: 2026-08-31 19:31:29 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -56,7 +56,7 @@ proxy-groups:
   - TW Auto
   - SG Auto
   include-all: true
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - name: AI
   type: select
   proxies:
@@ -72,7 +72,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/lane/AI.png
 - name: Schwab
   type: select
   proxies:
@@ -88,7 +88,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/SSID_1.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/lane/Schwab.png
 - name: Brokerage
   type: select
   proxies:
@@ -104,7 +104,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Magic.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/lane/Brokerage.png
 - name: Crypto
   type: select
   proxies:
@@ -120,7 +120,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cryptocurrency_3.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/lane/Crypto.png
 - name: YouTube
   type: select
   proxies:
@@ -136,7 +136,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/YouTube.png
 - name: TikTok
   type: select
   proxies:
@@ -152,7 +152,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/TikTok.png
 - name: Emby
   type: select
   proxies:
@@ -168,7 +168,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Emby.png
 - name: Streaming
   type: select
   proxies:
@@ -184,7 +184,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Netflix.png
 - name: Gaming
   type: select
   proxies:
@@ -200,7 +200,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Steam.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Steam.png
 - name: Telegram
   type: select
   proxies:
@@ -216,7 +216,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Telegram.png
 - name: Social
   type: select
   proxies:
@@ -232,7 +232,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/X.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/X.png
 - name: Developer
   type: select
   proxies:
@@ -248,7 +248,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/GitHub.png
 - name: Google
   type: select
   proxies:
@@ -264,7 +264,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Google_Search.png
 - name: Microsoft
   type: select
   proxies:
@@ -280,7 +280,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Microsoft.png
 - name: Apple
   type: select
   proxies:
@@ -296,7 +296,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Apple_1.png
 - name: Final
   type: select
   proxies:
@@ -312,7 +312,7 @@ proxy-groups:
   - TW Manual
   - SG Auto
   - SG Manual
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Global.png
 - name: US Auto
   type: url-test
   include-all: true
@@ -320,12 +320,12 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/US_Auto.png
 - name: US Manual
   type: select
   include-all: true
   filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/United_States.png
 - name: JP Auto
   type: url-test
   include-all: true
@@ -333,12 +333,12 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/JP_Auto.png
 - name: JP Manual
   type: select
   include-all: true
   filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Japan.png
 - name: HK Auto
   type: url-test
   include-all: true
@@ -346,12 +346,12 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/HK_Auto.png
 - name: HK Manual
   type: select
   include-all: true
   filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Hong_Kong.png
 - name: TW Auto
   type: url-test
   include-all: true
@@ -359,12 +359,12 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/TW_Auto.png
 - name: TW Manual
   type: select
   include-all: true
   filter: (?i)^.*(?:(?:🇹🇼|台湾|臺灣|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/China.png
 - name: SG Auto
   type: url-test
   include-all: true
@@ -372,12 +372,12 @@ proxy-groups:
   interval: 600
   tolerance: 50
   lazy: true
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure-derived/SG_Auto.png
 - name: SG Manual
   type: select
   include-all: true
   filter: (?i)^.*(?:(?:🇸🇬|新加坡|狮|獅|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
-  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Singapore.png
 # Remote rule files generated from the shared manifest.
 rule-providers:
   lan-domain:

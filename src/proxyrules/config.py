@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import yaml
@@ -63,6 +63,25 @@ def validate_config(config: dict[str, Any]) -> None:
         expected_options.extend([region.get("auto_name"), region.get("manual_name")])
     if options != expected_options:
         raise ConfigError("Service options must expose each region's Auto and Manual groups")
+
+    icon_config = config["icons"]
+    icon_map = icon_config.get("icons")
+    expected_icon_names = ["Manual", *services]
+    for region in regions:
+        expected_icon_names.extend([region["auto_name"], region["manual_name"]])
+    expected_icon_base = (
+        f"{config['project']['project']['raw_base'].rstrip('/')}/assets/icons"
+    )
+    if icon_config.get("base") != expected_icon_base:
+        raise ConfigError("Policy icons must use the project's self-hosted assets/icons base")
+    if not isinstance(icon_map, dict) or list(icon_map) != expected_icon_names:
+        raise ConfigError("Every visible icon-capable policy group must have one ordered icon")
+    for name, value in icon_map.items():
+        if not isinstance(value, str):
+            raise ConfigError(f"Invalid icon path for {name}")
+        path = PurePosixPath(value)
+        if path.is_absolute() or ".." in path.parts or path.suffix.lower() != ".png":
+            raise ConfigError(f"Invalid icon path for {name}: {value!r}")
 
     allowed_policies = set(services) | {"DIRECT", "Manual"}
     ids: set[str] = set()

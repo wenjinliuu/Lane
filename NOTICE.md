@@ -8,9 +8,16 @@ remain available in the upstream repository.
 Telegram network ranges are retrieved from Telegram's official
 [`cidr.txt`](https://core.telegram.org/resources/cidr.txt) resource.
 
-Policy icons are referenced by URL rather than redistributed. The primary icon
-set is [`Koolson/Qure`](https://github.com/Koolson/Qure). The configuration
-layout and icon approach were informed by
+Policy icons are self-hosted under `assets/icons`. Lane-original SVG/PNG icons
+are separated from a small attributed subset copied from
+[`Koolson/Qure`](https://github.com/Koolson/Qure) commit
+`b16b260625f873266f6a6a9b88710132774997b8`. Qure does not publish a standard
+open-source license: its README requests attribution, restricts commercial use,
+and assigns the underlying marks to their respective owners. Qure and
+Qure-derived files under `assets/icons/third-party/` are therefore excluded from
+Lane's MIT grant; detailed provenance is in `assets/icons/README.md`.
+
+The configuration layout and icon approach were informed by
 [`Repcz/Tool`](https://github.com/Repcz/Tool); no Repcz rule list is vendored.
 
 Generated files record their upstream revision in `dist/metadata.json`.

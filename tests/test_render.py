@@ -123,20 +123,49 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
         if " = " in line
     ] == expected_group_names
 
-    expected_icons = {
-        "Google": "Google_Search.png",
-        "TW Auto": "China.png",
-        "TW Manual": "China.png",
-        "Gaming": "Steam.png",
-        "Social": "X.png",
-        "Streaming": "ForeignMedia.png",
-        "Crypto": "Cryptocurrency_3.png",
-        "Brokerage": "Magic.png",
-        "Schwab": "SSID_1.png",
-    }
+    icon_config = config["icons"]
+    icon_base = icon_config["base"].rstrip("/")
     for group in stash["proxy-groups"]:
-        if filename := expected_icons.get(group["name"]):
-            assert group["icon"].endswith(f"/{filename}")
+        assert group["icon"] == (
+            f"{icon_base}/{icon_config['icons'][group['name']]}"
+        )
+
+    expected_icons = {
+        "AI": "lane/AI.png",
+        "Schwab": "lane/Schwab.png",
+        "Brokerage": "lane/Brokerage.png",
+        "Crypto": "lane/Crypto.png",
+        "Apple": "third-party/qure/Apple_1.png",
+        "Streaming": "third-party/qure/Netflix.png",
+        "Final": "third-party/qure/Global.png",
+        "US Auto": "third-party/qure-derived/US_Auto.png",
+        "JP Auto": "third-party/qure-derived/JP_Auto.png",
+        "HK Auto": "third-party/qure-derived/HK_Auto.png",
+        "TW Auto": "third-party/qure-derived/TW_Auto.png",
+        "SG Auto": "third-party/qure-derived/SG_Auto.png",
+        "US Manual": "third-party/qure/United_States.png",
+        "JP Manual": "third-party/qure/Japan.png",
+        "HK Manual": "third-party/qure/Hong_Kong.png",
+        "TW Manual": "third-party/qure/China.png",
+        "SG Manual": "third-party/qure/Singapore.png",
+    }
+    for name, relative in expected_icons.items():
+        assert icon_config["icons"][name] == relative
+
+    for name, relative in icon_config["icons"].items():
+        path = ROOT / "assets/icons" / relative
+        data = path.read_bytes()
+        assert data[:8] == b"\x89PNG\r\n\x1a\n", name
+        assert (int.from_bytes(data[16:20], "big"),
+                int.from_bytes(data[20:24], "big")) == (144, 144), name
+
+    for target in ("stash", "loon", "qx", "egern"):
+        text = main_by_target[target]
+        assert all(
+            f"{icon_base}/{relative}" in text
+            for relative in icon_config["icons"].values()
+        )
+        assert "raw.githubusercontent.com/Koolson/Qure" not in text
 
 
 def test_client_dns_and_multicast_capability_matrix() -> None:

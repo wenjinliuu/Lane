@@ -337,7 +337,7 @@ def _stash_config(
                     "lazy": benchmark["lazy"],
                 },
                 icons,
-                region["name"],
+                region["auto_name"],
             )
         )
         groups.append(
@@ -349,7 +349,7 @@ def _stash_config(
                     "filter": region_filter,
                 },
                 icons,
-                region["name"],
+                region["manual_name"],
             )
         )
 
@@ -524,7 +524,7 @@ def _loon_config(
                 "url-test",
                 [f"{code} Nodes"],
                 benchmark,
-                _icon(icons, region["name"]),
+                _icon(icons, region["auto_name"]),
                 automated=True,
             )
         )
@@ -534,7 +534,7 @@ def _loon_config(
                 "select",
                 [f"{code} Nodes"],
                 benchmark,
-                _icon(icons, region["name"]),
+                _icon(icons, region["manual_name"]),
             )
         )
 
@@ -697,10 +697,10 @@ def _qx_config(
         lines.append(
             f"url-latency-benchmark = {region['auto_name']}, server-tag-regex={expression}, "
             f"check-interval={benchmark['interval']}, alive-checking=false, "
-            f"tolerance={benchmark['tolerance']}{icon(region['name'])}"
+            f"tolerance={benchmark['tolerance']}{icon(region['auto_name'])}"
         )
         lines.append(f"static = {region['manual_name']}, server-tag-regex={expression}"
-                     f"{icon(region['name'])}")
+                     f"{icon(region['manual_name'])}")
     lines.extend([
         "", "[server_remote]", "# 填写 Quantumult X 格式节点订阅；第一份默认启用。",
         "# 多订阅：取消第二行注释并填写；更多订阅复制该行并使用不同 tag。",
@@ -748,7 +748,7 @@ def _egern_config(
             if kind == "auto_test":
                 group.update(interval=benchmark["interval"], tolerance=benchmark["tolerance"],
                              timeout=benchmark["timeout"])
-            groups.append({kind: _with_icon(group, icons, region["name"])})
+            groups.append({kind: _with_icon(group, icons, name)})
     rules = [{"rule_set": {
         "match": _rule_url(project, "egern", entry.id), "policy": entry.policy,
         "update_interval": updates["rule_interval"],

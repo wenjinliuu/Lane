@@ -348,6 +348,7 @@ def test_cn_ip_does_not_override_brokerage_ip():
 def test_validator_rejects_wrong_cn_policy(target, tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
     path = tmp_path / "dist" / target / CONFIG_FILENAMES[target]
     text = path.read_text()
     if target == "stash":
@@ -388,6 +389,7 @@ def test_comparison_is_independent_ipv4_and_primary_only():
 def test_validator_rejects_cn_ip_before_service_rules(target, tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
     path = tmp_path / "dist" / target / CONFIG_FILENAMES[target]
     text = path.read_text()
     # Swap only the resource URLs; both rules use DIRECT, so policy checking
@@ -420,6 +422,7 @@ def test_validator_rejects_cn_ip_before_service_rules(target, tmp_path):
 def test_validator_rejects_mismatched_comparison_digest(tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
     path = tmp_path / "dist/cn-ip-validation.json"
     data = json.loads(path.read_text())
     data["sources"]["primary"]["cn_ip_primary"]["sha256"] = "0" * 64
@@ -431,6 +434,7 @@ def test_validator_rejects_mismatched_comparison_digest(tmp_path):
 def test_validator_binds_window_digest_to_published_cn_ip(tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
     canonical = tmp_path / "dist/stash" / RULES_DIR / "cn-ip.list"
     text = canonical.read_text()
     assert "IP-CIDR,1.12.0.0/14" in text
@@ -450,6 +454,7 @@ def test_validator_binds_window_digest_to_published_cn_ip(tmp_path):
 def test_validator_requires_explicit_breaker_acceptance(tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
     path = tmp_path / "dist/cn-ip-window.json"
     data = json.loads(path.read_text())
     data["breaker"]["exceeded"] = True

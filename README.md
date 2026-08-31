@@ -105,7 +105,7 @@ Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类�
 
 旧的 `rules-full/`、`rules-profile/` 已统一回 `rules/`，GoogleCN 也不再抓取或发布。已经保存旧版 Lane 配置的用户必须升级一次完整主配置，重新填入节点订阅并迁移个人修改；之后规则资源仍可独立自动更新。
 
-图标通过 Qure 的公开 URL 引用：Stash/Egern 使用 `icon`，Loon/QX 使用 `img-url`。Shadowrocket 不强制自定义图标；Surge 的官方 `icon-url` 当前标注为 Mac 功能，本配置以 iOS 兼容为先，不设置它。
+全部策略图标都保存在本仓库的 [`assets/icons/`](assets/icons/) 并通过 Lane 自己的 Raw URL 发布，不再在运行时依赖外部图标仓库。Apple 使用 `Apple_1`，Streaming 使用 Netflix，Final 使用 Global；AI、Brokerage、Schwab 与 Crypto 使用 Lane 自绘图标。五个地区 Auto 在地区图标右下角增加蓝色循环箭头角标，Manual 保留普通地区图标。Stash/Egern 使用 `icon`，Loon/QX 使用 `img-url`；Shadowrocket 不强制自定义图标，Surge 的官方 `icon-url` 当前标注为 Mac 功能，本配置以 iOS 兼容为先，不设置它。
 
 ### 客户端兼容性
 
@@ -213,6 +213,6 @@ Python 内部包名 `proxyrules` 和旧命令保留兼容，公开项目与新�
 - [misakaio/chnroutes2](https://github.com/misakaio/chnroutes2)（CC BY-SA 4.0；独立 IPv4 交叉验证，不并入路由）
 - [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip)（仅用于人工差分审计，不参与构建）
 - [felixonmars/dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)（WTFPL 2.0；仅使用 AppleCN）
-- [Koolson/Qure](https://github.com/Koolson/Qure)（仅引用图标 URL）
+- [Koolson/Qure](https://github.com/Koolson/Qure)（仓库内保留经注明来源的图标子集；不属于 Lane MIT 授权，详见 [`assets/icons/README.md`](assets/icons/README.md)）
 
 本项目自身代码以 MIT License 发布，第三方规则数据遵循各自许可。第三方来源、转换说明与借鉴边界见 [`NOTICE.md`](NOTICE.md) 和 [`licenses/`](licenses/)。
