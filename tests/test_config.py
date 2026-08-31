@@ -25,6 +25,9 @@ def test_manifest_invariants() -> None:
     assert all(name.isascii() for name in policies["service_groups"])
     assert all(region["name"].isascii() for region in policies["regions"])
     assert all(region["manual_name"].endswith(" Manual") for region in policies["regions"])
+    assert [region["surge_smart_name"] for region in policies["regions"]] == [
+        "US Auto Smart", "JP Auto Smart", "HK Auto Smart", "TW Auto Smart", "SG Auto Smart"
+    ]
     assert not {"Auto", "Fallback", "Global", "South Korea"}.intersection(
         policies["service_options"]
     )

@@ -29,6 +29,10 @@ rulesets:
     v2fly: [apple]
     v2fly_require: [cn]
     text_source: apple_cn
+    # Keep AppleCN here, before Streaming and Developer. Moving it next to the
+    # general Apple rules changes first-match routing for Apple Music/iTunes,
+    # Apple MapKit China CDNs and Apple developer downloads from DIRECT to a
+    # proxy policy. This placement is a routing invariant, not visual grouping.
 
   - id: ai
     title: AI

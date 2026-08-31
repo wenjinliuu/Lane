@@ -231,7 +231,7 @@ def prepare_cidr_history_source(
     refresh: bool,
     offline: bool,
     previous_rules: tuple[Rule, ...] | None = None,
-    accept_breaker: bool = False,
+    accept_breaker_sha256: str | None = None,
 ) -> PreparedHistorySource:
     """Build a stable CIDR source from validated daily git snapshots.
 
@@ -242,6 +242,12 @@ def prepare_cidr_history_source(
     """
 
     target = cache_dir / "history" / f"{source_id}.json"
+    if accept_breaker_sha256 is not None:
+        accept_breaker_sha256 = accept_breaker_sha256.lower()
+        if (len(accept_breaker_sha256) != 64
+                or any(character not in "0123456789abcdef"
+                       for character in accept_breaker_sha256)):
+            raise UpstreamError("CN-IP approval must be an exact SHA256 digest")
     if offline:
         if not target.exists():
             raise UpstreamError(f"No cached history source for {source_id} in offline mode")
@@ -340,19 +346,12 @@ def prepare_cidr_history_source(
                 change = coverage_change(previous_rules, stable, threshold)
             except ValueError as exc:
                 raise UpstreamError(f"Invalid stable window for {source_id}: {exc}") from exc
-            change["accepted"] = bool(change["exceeded"] and accept_breaker)
-            if change["exceeded"] and not accept_breaker:
-                failed = ", ".join(
-                    f"{family}={details['changed_percent']}%"
-                    for family, details in change["families"].items()
-                    if details["exceeded"]
-                )
-                raise UpstreamError(
-                    f"CN-IP breaker exceeded {change['threshold_percent']}% ({failed}); "
-                    "last-known-good output was preserved"
-                )
-
             digest = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            accepted = bool(
+                change["exceeded"] and accept_breaker_sha256 == digest
+            )
+            change["accepted"] = accepted
+            change["approval_sha256"] = digest if accepted else None
             report = {
                 "schema": 1,
                 "source": {
@@ -374,6 +373,52 @@ def prepare_cidr_history_source(
                     "coverage": coverage_stats(stable),
                 },
             }
+            if change["exceeded"] and not accepted:
+                failed = ", ".join(
+                    f"{family}={details['changed_percent']}%"
+                    for family, details in change["families"].items()
+                    if details["exceeded"]
+                )
+                diagnostic = {
+                    "schema": 1,
+                    "status": "blocked",
+                    "reason": "cn-ip-breaker",
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "published_sha256": (
+                        hashlib.sha256(
+                            canonical_cidr_text(previous_rules).encode("utf-8")
+                        ).hexdigest()
+                        if previous_rules is not None else None
+                    ),
+                    "candidate_sha256": digest,
+                    "approval_sha256": accept_breaker_sha256,
+                    "source": {
+                        "id": source_id,
+                        "repository": repository_url,
+                        "ref": ref,
+                        "newest_revision": revisions[0]["revision"],
+                        "oldest_revision": revisions[-1]["revision"],
+                    },
+                    "breaker": change,
+                    "candidate_report": report,
+                }
+                diagnostics = cache_dir / "diagnostics"
+                _atomic_write_bytes(
+                    diagnostics / "lane-update-report.json",
+                    json.dumps(diagnostic, ensure_ascii=False, indent=2).encode("utf-8") + b"\n",
+                )
+                _atomic_write_bytes(
+                    diagnostics / f"cn-ip-candidate-{digest}.json",
+                    json.dumps(
+                        {"report": report, "content": content},
+                        ensure_ascii=False,
+                        indent=2,
+                    ).encode("utf-8") + b"\n",
+                )
+                raise UpstreamError(
+                    f"CN-IP breaker exceeded {change['threshold_percent']}% ({failed}); "
+                    f"candidate SHA256 is {digest}; last-known-good output was preserved"
+                )
             metadata = {
                 "repository": repository_url,
                 "ref": ref,

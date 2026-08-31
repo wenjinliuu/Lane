@@ -78,7 +78,7 @@ SERVICE_GROUP_NOTICE = (
     "# LAN：私有网段与本地域名直连，位于全部规则之前，带 no-resolve。\n"
     "# China：已知中国域名先直连；General Proxy 随后保护已知境外域名，避免被后续 IP 判断误导。\n"
     "# General Proxy 策略同为 Final，不是另一个出口；它仍位于业务 IP / CN IP / GEOIP 之前。\n"
-    "# CN IP：gaoyifan IPv4+IPv6 七日稳定窗直连兜底，位于精细规则之后、GEOIP / Final 之前。\n"
+    "# CN IP：gaoyifan IPv4+IPv6 五次三次共识窗直连兜底，位于精细规则之后、GEOIP / Final 之前。\n"
 )
 EGERN_RULE_FIELDS = {
     "full": "domain_set", "domain": "domain_suffix_set",
@@ -97,8 +97,8 @@ CLIENT_NOTES = {
     ),
     "shadowrocket": "DOMAIN-REGEX is omitted for compatibility.",
     "surge": (
-        "DOMAIN-REGEX is unsupported and omitted. Native url-test groups allow "
-        "temporary manual override; icons are omitted for iOS compatibility."
+        "DOMAIN-REGEX is unsupported and omitted. Region automation uses native "
+        "Smart groups over a hidden raw-node pool; icons are omitted for iOS compatibility."
     ),
     "qx": (
         "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; "
@@ -611,6 +611,10 @@ def _surge_config(
     benchmark = project["benchmark"]
     updates = project["updates"]
     filters = build_filters(policies)
+    smart_names = [region["surge_smart_name"] for region in policies["regions"]]
+    surge_options = ["Manual", "DIRECT"]
+    for region in policies["regions"]:
+        surge_options.extend([region["surge_smart_name"], region["manual_name"]])
     lines = [
         PROFILE_HEADER.rstrip(), LOCAL_PROFILE_NOTICE.rstrip(), SERVICE_GROUP_NOTICE.rstrip(), "",
         "[General]", "loglevel = notify", "ipv6 = false",
@@ -628,19 +632,20 @@ def _surge_config(
         f"# Subscription2 = select,policy-path={SUBSCRIPTION_PLACEHOLDER},"
         f"update-interval={updates['node_interval']},hidden=true",
         "",
-        '# 多订阅：取消 Subscription2 注释并填写，再将下方引用改为 include-other-group="Subscription1,Subscription2"。',
-        "# 更多订阅复制订阅行、名称递增，并逐一加入该引用列表；Manual 展开所有已引用订阅的节点。",
-        "Manual = select,include-other-group=Subscription1,include-all-proxies=true",
+        '# 多订阅：取消 Subscription2 注释并填写，再将 Node Pool 引用改为 include-other-group="Subscription1,Subscription2"。',
+        "# 更多订阅复制订阅行、名称递增，并逐一加入隐藏 Node Pool；它只汇总真实代理节点。",
+        "Node Pool = select,include-other-group=Subscription1,include-all-proxies=true,hidden=true",
+        "# Manual 可直接选择地区 Smart，也保留 Node Pool 展开的全部单节点。",
+        f"Manual = select,{','.join(smart_names)},include-other-group=Node Pool",
     ]
     # icon-url is currently documented as Mac-only; omit it for an iOS-safe profile.
     for service in policies["service_groups"]:
-        lines.append(f"{service} = select,{','.join(policies['service_options'])}")
-    lines.append("# 地区组展开 Manual 中的全部节点，再做正向筛选，不跟随其单个选中节点。")
+        lines.append(f"{service} = select,{','.join(surge_options)}")
+    lines.append("# 地区组从隐藏 Node Pool 展开真实节点并正向筛选；不会与 Manual 形成循环。")
     for region in policies["regions"]:
-        suffix = f'include-other-group=Manual,policy-regex-filter="{filters["regions"][region["name"]]}"'
+        suffix = f'include-other-group=Node Pool,policy-regex-filter="{filters["regions"][region["name"]]}"'
         lines.append(
-            f"{region['auto_name']} = url-test,{suffix},"
-            f"interval={benchmark['interval']},tolerance={benchmark['tolerance']}"
+            f"{region['surge_smart_name']} = smart,{suffix}"
         )
         lines.append(f"{region['manual_name']} = select,{suffix}")
     lines.extend(["", "# Ordered remote routing rules.", "[Rule]"])

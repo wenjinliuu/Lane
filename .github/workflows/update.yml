@@ -2,7 +2,7 @@ name: Update upstream rules
 
 on:
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "23 4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,11 +24,82 @@ jobs:
       - name: Install
         run: python -m pip install -e '.[dev]'
       - name: Build from current upstreams
-        run: lane build --refresh
-      - name: Test and validate
+        shell: bash
         run: |
-          python -m pytest
-          lane check
+          set +e
+          lane build --refresh > lane-build.log 2>&1
+          status=$?
+          cat lane-build.log
+          exit "$status"
+      - name: Test and validate
+        shell: bash
+        run: |
+          set +e
+          { python -m pytest && lane check; } > lane-test.log 2>&1
+          status=$?
+          cat lane-test.log
+          exit "$status"
+      - name: Create compact AI diagnostic
+        if: failure()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import datetime
+          import json
+          from pathlib import Path
+
+          target = Path(".cache/diagnostics/lane-update-report.json")
+          if not target.exists():
+              logs = []
+              for name in ("lane-build.log", "lane-test.log"):
+                  path = Path(name)
+                  if path.exists():
+                      logs.append(f"[{name}]\n{path.read_text(errors='replace')[-8000:]}")
+              target.parent.mkdir(parents=True, exist_ok=True)
+              target.write_text(json.dumps({
+                  "schema": 1,
+                  "status": "failed",
+                  "reason": "build-or-validation-failure",
+                  "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                  "workflow_run": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                  "log_tail": "\n\n".join(logs),
+              }, ensure_ascii=False, indent=2) + "\n")
+          PY
+      - name: Write update summary
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          target = Path(".cache/diagnostics/lane-update-report.json")
+          if target.exists():
+              report = json.loads(target.read_text())
+              lines = [
+                  "## Lane update blocked or failed",
+                  f"- Status: {report.get('status')}",
+                  f"- Reason: {report.get('reason')}",
+              ]
+              if report.get("candidate_sha256"):
+                  lines.append(f"- Candidate SHA256: `{report['candidate_sha256']}`")
+          else:
+              lines = ["## Lane update", "- Build and validation completed successfully."]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as handle:
+              handle.write("\n".join(lines) + "\n")
+          PY
+      - name: Upload AI diagnostic
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lane-update-diagnostic-${{ github.run_id }}
+          path: |
+            .cache/diagnostics/
+            lane-build.log
+            lane-test.log
+          if-no-files-found: warn
+          retention-days: 30
       - name: Commit changed outputs
         shell: bash
         run: |

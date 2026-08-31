@@ -112,8 +112,8 @@ def test_surge_hidden_subscriptions_are_expanded_through_manual():
     edited = text.replace(groups[0], groups[0].replace(SUBSCRIPTION_PLACEHOLDER, URLS[0]), 1)
     edited = edited.replace(commented, second + "\n" + third)
     edited = edited.replace(
-        "Manual = select,include-other-group=Subscription1,",
-        'Manual = select,include-other-group="Subscription1,Subscription2,Subscription3",',
+        "Node Pool = select,include-other-group=Subscription1,",
+        'Node Pool = select,include-other-group="Subscription1,Subscription2,Subscription3",',
     )
     parsed = {line.split(" = ", 1)[0]: line.split(" = ", 1)[1]
               for line in _section(edited, "Proxy Group")}
@@ -121,18 +121,20 @@ def test_surge_hidden_subscriptions_are_expanded_through_manual():
         assert parsed[f"Subscription{index}"] == (
             f"select,policy-path={url},update-interval={NODE_INTERVAL},hidden=true"
         )
-    assert parsed["Manual"] == (
-        'select,include-other-group="Subscription1,Subscription2,Subscription3",include-all-proxies=true'
+    assert parsed["Node Pool"] == (
+        'select,include-other-group="Subscription1,Subscription2,Subscription3",'
+        'include-all-proxies=true,hidden=true'
     )
-    assert "policy-path=" not in parsed["Manual"]
+    assert "policy-path=" not in parsed["Node Pool"]
     policies = load_project_config(ROOT)["policies"]
     expected_visible = ["Manual", *policies["service_groups"], *[
-        name for region in policies["regions"] for name in (region["auto_name"], region["manual_name"])
+        name for region in policies["regions"]
+        for name in (region["surge_smart_name"], region["manual_name"])
     ]]
     assert [name for name, value in parsed.items() if "hidden=true" not in value] == expected_visible
     for region in policies["regions"]:
-        for name in (region["auto_name"], region["manual_name"]):
-            assert "include-other-group=Manual," in parsed[name]
+        for name in (region["surge_smart_name"], region["manual_name"]):
+            assert "include-other-group=Node Pool," in parsed[name]
     assert 'include-other-group="Subscription1,Subscription2"' in text
 
 
@@ -152,8 +154,8 @@ def test_egern_urls_accept_additional_items_without_changing_region_groups():
 
 @pytest.mark.parametrize("target,old,new,error", [
     ("surge", "hidden=true\n", "hidden=false\n", "hidden source group"),
-    ("surge", "Manual = select,include-other-group=Subscription1,",
-     "Manual = select,include-other-group=Subscription2,", "Manual must expand"),
+    ("surge", "Node Pool = select,include-other-group=Subscription1,",
+     "Node Pool = select,include-other-group=Subscription2,", "Node Pool must expand"),
     ("egern", f"    - {SUBSCRIPTION_PLACEHOLDER}\n",
      f'    - "{SUBSCRIPTION_PLACEHOLDER}"\n', "must not be quoted"),
     ("loon", f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n", "", "commented second"),
