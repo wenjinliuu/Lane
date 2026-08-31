@@ -1,9 +1,9 @@
 # Lane | Local profile template
-# Last updated: 2026-08-31 15:03:33 (Asia/Shanghai)
+# Last updated: 2026-08-31 18:24:52 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
-# Brokerage：富途/Moomoo、老虎、长桥，统一分流登录、行情及入金/交易相关连接。
+# Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名。
 # Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。
 # Schwab：嘉信独立分流，可单独选择 DIRECT 或代理。
 # 上述三组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。
@@ -49,6 +49,12 @@ proxy-providers:
 proxy-groups:
 - name: Manual
   type: select
+  proxies:
+  - US Auto
+  - JP Auto
+  - HK Auto
+  - TW Auto
+  - SG Auto
   include-all: true
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png
 - name: AI

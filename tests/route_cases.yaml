@@ -105,6 +105,38 @@ cases:
       ruleset: brokerage
       policy: Brokerage
 
+  - id: brokerage-tiger-tested-minimum
+    input:
+      type: domain
+      value: api.skytigris.cn
+    expected:
+      ruleset: brokerage
+      policy: Brokerage
+
+  - id: brokerage-longbridge-tested-minimum
+    input:
+      type: domain
+      value: geotest.lbkrs.com
+    expected:
+      ruleset: brokerage
+      policy: Brokerage
+
+  - id: tiger-broad-brand-falls-through
+    input:
+      type: domain
+      value: www.itiger.com
+    expected:
+      ruleset: proxy
+      policy: Final
+
+  - id: longbridge-broad-brand-falls-through
+    input:
+      type: domain
+      value: www.longbridge.com
+    expected:
+      ruleset: proxy
+      policy: Final
+
   - id: brokerage-ip-before-china
     input:
       type: ip
