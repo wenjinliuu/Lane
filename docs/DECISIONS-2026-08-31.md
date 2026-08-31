@@ -70,3 +70,12 @@ Egern 新增隐藏 `Node Pool`：
 ## 后续边界
 
 是否把华盛、uSMART、Webull、IBKR 或其他香港券商加入 `Brokerage`，需要单独审计已有维护项目、规则来源和“必须代理”的实测证据。本次不因品牌规模或官网域名存在就直接扩张生产规则。
+
+## D4. 策略组图标自托管
+
+- 策略组图标统一存放在仓库的 `assets/icons/`，生成配置仅引用 Lane 自己的 GitHub Raw 地址，避免运行时依赖第三方图标仓库。
+- Apple、影视和 Final 分别采用 Qure 的 `Apple_1`、`Netflix` 和 `Global` 图标；使用到的 Qure 文件独立放在 `assets/icons/third-party/qure/`，保留来源、版本与授权提示，不纳入 Lane 的 MIT 授权声明。
+- AI 使用中性灰阶自绘图标，以兼顾浅色和深色界面；嘉信使用专属识别图标。
+- 证券组使用通用行情图标，不绑定富途；Crypto 使用通用数字资产图标，不绑定币安。这样不会让覆盖多个服务商的策略组产生单一品牌归属误导。
+- 地区 Auto 组使用带自动角标的国旗图标，Manual 组继续使用无角标国旗，便于快速区分。
+- Stash、Loon、Quantumult X、Egern 输出图标；Surge 与 Shadowrocket 维持现有无自定义图标输出，以符合当前客户端兼容策略。

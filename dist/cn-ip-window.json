@@ -22,22 +22,22 @@
     "families": {
       "ipv4": {
         "baseline_available": true,
-        "previous_addresses": "344324864",
+        "previous_addresses": "344321792",
         "current_addresses": "344321792",
-        "added_addresses": "1024",
-        "removed_addresses": "4096",
-        "changed_addresses": "5120",
-        "changed_percent": 0.001487,
+        "added_addresses": "0",
+        "removed_addresses": "0",
+        "changed_addresses": "0",
+        "changed_percent": 0.0,
         "exceeded": false
       },
       "ipv6": {
         "baseline_available": true,
-        "previous_addresses": "5429386650079509993312877543424000",
+        "previous_addresses": "5429465877033098438035841912668160",
         "current_addresses": "5429465877033098438035841912668160",
-        "added_addresses": "79228162514264337593543950336",
-        "removed_addresses": "1208925819614629174706176",
-        "changed_addresses": "79229371440083952222718656512",
-        "changed_percent": 0.001459,
+        "added_addresses": "0",
+        "removed_addresses": "0",
+        "changed_addresses": "0",
+        "changed_percent": 0.0,
         "exceeded": false
       }
     },

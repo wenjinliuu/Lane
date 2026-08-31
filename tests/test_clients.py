@@ -315,6 +315,7 @@ def test_legacy_migration_preserves_unrecognized_rule_files(tmp_path):
 def test_validator_rejects_broken_remote_rule_reference(tmp_path):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
     path = tmp_path / "dist/qx/Lane_qx.conf"
     path.write_text(
         path.read_text().replace(

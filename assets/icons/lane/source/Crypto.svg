@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144">
+  <defs>
+    <linearGradient id="bg" x1="19" y1="17" x2="125" y2="131" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5138C9"/>
+      <stop offset="1" stop-color="#181A2B"/>
+    </linearGradient>
+    <linearGradient id="coin" x1="42" y1="38" x2="105" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD66B"/>
+      <stop offset="1" stop-color="#F39C36"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="128" height="128" rx="32" fill="url(#bg)"/>
+  <circle cx="72" cy="72" r="43" fill="url(#coin)"/>
+  <path d="M72 43L97 57.5V86.5L72 101L47 86.5V57.5L72 43Z" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M56 64L72 55L88 64V80L72 89L56 80V64Z" fill="none" stroke="#FFFFFF" stroke-opacity="0.74" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="72" cy="72" r="6" fill="#FFFFFF"/>
+</svg>

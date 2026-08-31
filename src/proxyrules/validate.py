@@ -233,12 +233,42 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         name for region in policies["regions"]
         for name in (region["auto_name"], region["manual_name"])
     ]]
+    icon_config = config["icons"]
+    icon_base = icon_config["base"].rstrip("/")
+    icon_urls = {
+        name: f"{icon_base}/{relative}"
+        for name, relative in icon_config["icons"].items()
+    }
+    for name, relative in icon_config["icons"].items():
+        path = root / "assets/icons" / relative
+        try:
+            data = path.read_bytes()
+        except OSError as exc:
+            raise ValidationError(f"Missing self-hosted icon for {name}: {path}") from exc
+        if (data[:8] != b"\x89PNG\r\n\x1a\n"
+                or len(data) < 24
+                or int.from_bytes(data[16:20], "big") != 144
+                or int.from_bytes(data[20:24], "big") != 144):
+            raise ValidationError(f"Policy icon must be a 144x144 PNG: {path}")
+    for target in ("stash", "loon", "qx", "egern"):
+        for name, url in icon_urls.items():
+            if url not in texts[target]:
+                raise ValidationError(f"{target}: missing self-hosted icon for {name}")
+    for target in ("surge", "shadowrocket"):
+        if icon_base in texts[target]:
+            raise ValidationError(f"{target}: icons must remain omitted for compatibility")
+    if any("raw.githubusercontent.com/Koolson/Qure" in text for text in texts.values()):
+        raise ValidationError("Generated profiles must not depend on the external Qure URL")
+
     filters = build_filters(policies)
     options = list(policies["service_options"])
     auto_names = [region["auto_name"] for region in policies["regions"]]
     stash_by_name = {group["name"]: group for group in stash["proxy-groups"]}
     if list(stash_by_name) != expected_order:
         raise ValidationError("Stash groups must be base, services, then regions")
+    for name in expected_order:
+        if stash_by_name[name].get("icon") != icon_urls[name]:
+            raise ValidationError(f"Stash {name} uses the wrong self-hosted icon")
     if (list(stash.get("proxy-providers", {})) != ["Subscription1"]
             or stash["proxy-providers"]["Subscription1"]["url"] != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")

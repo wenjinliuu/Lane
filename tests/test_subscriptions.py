@@ -166,6 +166,7 @@ def test_egern_urls_accept_additional_items_without_changing_region_groups():
 def test_validator_rejects_subscription_template_regressions(tmp_path, target, old, new, error):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
     path = tmp_path / "dist" / target / CONFIG_FILENAMES[target]
     text = path.read_text(encoding="utf-8")
     assert old in text

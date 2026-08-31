@@ -1,25 +1,30 @@
-base: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color
+base: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons
 
 icons:
-  Manual: Proxy.png
-  United States: United_States.png
-  Japan: Japan.png
-  Hong Kong: Hong_Kong.png
-  Taiwan: China.png
-  Singapore: Singapore.png
-  AI: AI.png
-  Apple: Apple.png
-  Microsoft: Microsoft.png
-  Google: Google_Search.png
-  Developer: GitHub.png
-  Telegram: Telegram.png
-  Social: X.png
-  YouTube: YouTube.png
-  TikTok: TikTok.png
-  Streaming: ForeignMedia.png
-  Emby: Emby.png
-  Gaming: Steam.png
-  Brokerage: Magic.png
-  Schwab: SSID_1.png
-  Crypto: Cryptocurrency_3.png
-  Final: Final.png
+  Manual: third-party/qure/Proxy.png
+  AI: lane/AI.png
+  Schwab: lane/Schwab.png
+  Brokerage: lane/Brokerage.png
+  Crypto: lane/Crypto.png
+  YouTube: third-party/qure/YouTube.png
+  TikTok: third-party/qure/TikTok.png
+  Emby: third-party/qure/Emby.png
+  Streaming: third-party/qure/Netflix.png
+  Gaming: third-party/qure/Steam.png
+  Telegram: third-party/qure/Telegram.png
+  Social: third-party/qure/X.png
+  Developer: third-party/qure/GitHub.png
+  Google: third-party/qure/Google_Search.png
+  Microsoft: third-party/qure/Microsoft.png
+  Apple: third-party/qure/Apple_1.png
+  Final: third-party/qure/Global.png
+  US Auto: third-party/qure-derived/US_Auto.png
+  US Manual: third-party/qure/United_States.png
+  JP Auto: third-party/qure-derived/JP_Auto.png
+  JP Manual: third-party/qure/Japan.png
+  HK Auto: third-party/qure-derived/HK_Auto.png
+  HK Manual: third-party/qure/Hong_Kong.png
+  TW Auto: third-party/qure-derived/TW_Auto.png
+  TW Manual: third-party/qure/China.png
+  SG Auto: third-party/qure-derived/SG_Auto.png
+  SG Manual: third-party/qure/Singapore.png
