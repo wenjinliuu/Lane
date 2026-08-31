@@ -11,7 +11,7 @@
 - `Manual` 包含用户导入的全部节点，不排除流量、到期、高倍率或维护信息项。
 - 地区仅保留美国、日本、香港、台湾与新加坡；每个地区分别提供 `XX Auto` 自动优选和 `XX Manual` 手动选点。
 - 策略组按 `Manual`、服务组、地区组排列，十个地区 Auto / Manual 组统一放在列表末尾。
-- 地区筛选只做正向匹配，不使用排除词：国旗、中文地区名（含繁体）、英文全称、带词边界的两字母代码，以及常见城市名与中转简称（如 `沪日`、`深港`、`洛杉矶`）。机场代码（LAX 等）不参与匹配。
+- 地区筛选只做正向匹配，不使用排除词：国旗、完整中文地区名（含繁体）、英文全称、带词边界的地区代码。城市名和单字简称均不参与匹配；新加坡额外接受 `狮` / `獅`。
 - 服务组可切换到 `DIRECT`，或五个地区各自的 Auto / Manual 策略。
 - `Brokerage` 合并 Futu、Moomoo、Tiger 与 Longbridge；`Schwab` 单独成组。除 v2fly 上游外，还合并经过实际使用的补充域名与 Futu IP 段；生成时把域名与 IP 拆成两个规则集，但仍使用同一策略组。2026-08-30 补齐 `futubos.com`、`futuie.com`、`futuhainan.com`；既有 63 个 Futu CIDR 不扩张，并按真机交易结果置于 `China` 之前。
 - `Crypto` 只匹配 Binance、OKX、Bybit 与 Bitget。其他交易所不单独分类，按后续规则或 `Final` 处理。
@@ -74,12 +74,12 @@ Loon 用户若选择重新导入远程配置，请选择保留现有节点/订�
 | --- | --- | --- |
 | Stash | 取消 `Subscription2` 整块注释并填写 `url`，包括该块的更新与测速参数 | 复制整块，名称依次改为 `Subscription3` 等；现有 `include-all` 会纳入全部代理集，无需逐个改策略组 |
 | Loon | 取消 `Subscription2 =` 行的注释并填写 | 复制该行，使用不同别名；现有节点筛选会处理所有订阅 |
-| Surge | 取消隐藏组 `Subscription2` 的注释并填写，再把 Manual 的参数改为 `include-other-group="Subscription1,Subscription2"` | 新增 `Subscription3` 等隐藏组，并逐一加入 Manual 的引用列表 |
+| Surge | 取消隐藏组 `Subscription2` 的注释并填写，再把隐藏 `Node Pool` 的参数改为 `include-other-group="Subscription1,Subscription2"` | 新增 `Subscription3` 等隐藏组，并逐一加入 `Node Pool` 的引用列表 |
 | Quantumult X | 取消 `tag=Subscription2` 那一行的注释并填写 | 复制该行，使用不同的 `tag`；现有策略组会按节点名称筛选 |
 | Egern | 取消 Manual 的 `urls` 下第二个列表项的注释并填写 | 在同一 `urls` 列表下逐行追加地址，无需新增策略组 |
 | Shadowrocket | 在应用内添加 | 在应用内继续添加，Lane 不放订阅模板 |
 
-Surge 的订阅由隐藏组加载，`Manual` 通过 `include-other-group` 展开这些组的全部节点，地区组再从 Manual 中筛选，并非只取得隐藏组当前选中的一个节点。因此可见策略组仍按 Manual、服务组、地区组排列；不能只启用第二份订阅却漏改 Manual 的引用。[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)、[隐藏组参数](https://manual.nssurge.com/policy-groups/parameters.html)。
+Surge 的订阅先进入隐藏 `Node Pool`，五个 `US/JP/HK/TW/SG Auto Smart` 与地区 Manual 组都从中展开真实节点。顶层 `Manual` 同时列出五个 Smart 组和全部单节点，因此服务组直接选择某个 Smart，与服务组选择 Manual、再由 Manual 选择同一个 Smart，最终使用的是同一策略对象。该结构也避免了 Manual 与地区组互相引用的循环。[Surge Smart](https://manual.nssurge.com/policy-groups/smart.html)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)。
 
 订阅别名不同不代表节点名称不会重复。多个订阅尽量避免同名节点：Surge 和 Egern 都有按名称去重的行为；Surge 如需区分，可在各订阅组分别添加 `external-policy-name-prefix=S1-`、`external-policy-name-prefix=S2-`。这不是默认配置，不影响地区正向匹配。[Surge 节点命名](https://manual.nssurge.com/policy-groups/policy-including.html)、[Egern 多订阅](https://egernapp.com/docs/configuration/policy_groups/)。
 
@@ -110,7 +110,7 @@ Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类�
 - Surge、Shadowrocket、Loon、QX 在节点不支持 UDP 时分别使用客户端原生的拒绝回落项；Stash/Egern 保持默认行为。配置不包含 `block-quic`、`udp_drop_list = QUIC` 或 `disable-udp-ports = 443`。
 - Egern 使用原生 YAML 规则集，保留 `no_resolve`，地区组通过 `flatten` 展开订阅节点；请使用支持 `urls` / `flatten` 的当前版本。
 - QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
-- Auto 使用各客户端原生自动测速类型，Manual 使用手动类型；Surge 自身允许临时手动覆盖自动组，Lane 不把自动组改成手动组，也不能禁用客户端的这项 UI 功能。
+- Stash、Loon、Shadowrocket、QX 与 Egern 的 Auto 使用各自原生自动测速类型；Surge 使用原生 Smart 算法并命名为 `地区 Auto Smart`。Manual 组保持手动选择。
 - 六端均通过静态结构与生成测试；测试不等于在六款付费客户端上完成真机导入、联网验证。订阅协议和空地区组行为仍需在实际客户端确认。
 
 格式依据：[Stash 规则集](https://stash.wiki/en/rules/rule-set)、[Stash 代理集](https://stash.wiki/proxy-protocols/proxy-providers)、[Loon General](https://nsloon.app/en/docs/General/)、[Loon 官方示例](https://github.com/Loon0x00/LoonExampleConfig/blob/master/example.conf)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)、[QX 官方示例](https://github.com/crossutility/Quantumult-X/blob/master/sample.conf)、[Egern 策略组](https://egernapp.com/docs/configuration/policy_groups/)、[Egern 规则](https://egernapp.com/docs/configuration/rules/)。
@@ -142,9 +142,10 @@ python -m pytest
 lane check
 ```
 
-CN-IP 七日稳定窗相对上一个已发布版本的地址空间变化超过 1% 时，构建会在写入
-`dist` 前停止。人工核对 `dist/cn-ip-window.json` 与上游提交后，可显式运行
-`lane build --refresh --accept-cn-ip-change` 接受这一次变化；定时任务不会自动绕过熔断。
+CN-IP 3-of-5 共识窗相对上一个已发布版本的地址空间变化超过 1% 时，构建会在写入
+`dist` 前停止并生成 AI 诊断文件。人工核对后，只能运行
+`lane build --refresh --accept-cn-ip-sha256 <候选 SHA256>` 接受该确切候选；定时任务
+不会自动绕过熔断，也不存在可长期放行后续候选的通用开关。
 
 离线复现已缓存的上游版本：
 
@@ -174,7 +175,7 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 | 规则集 | 来源 | 默认策略与位置 |
 | --- | --- | --- |
 | `apple-cn`（AppleCN） | felixonmars `apple.china.conf` + v2fly `apple@cn` | `DIRECT`，本地自定义规则之后、服务规则之前，优先于 Apple 主规则 |
-| `cn-ip`（CN IP） | gaoyifan `ip-lists` 的 5-of-7 七日稳定窗 | `DIRECT`，包含 IPv4 + IPv6，位于 Brokerage IP、China、Proxy 与 Telegram IP 之后、原有 GEOIP 与最终兜底之前 |
+| `cn-ip`（CN IP） | gaoyifan `ip-lists` 的 3-of-5 共识窗 | `DIRECT`，包含 IPv4 + IPv6，位于 Brokerage IP、China、Proxy 与 Telegram IP 之后、原有 GEOIP 与最终兜底之前 |
 
 两者均为独立远程规则集，不并入 `china`，也不新增策略组。AppleCN 从 felixonmars 提取域名后缀，不复制 dnsmasq 的 DNS 服务器或其他指令；同时只合并 v2fly `apple` include 链中明确带 `@cn` 的条目，不把普通 Apple 域名扩大为直连。它不是整个 Apple 直连开关；未命中例外名单的连接仍由 Apple 策略组处理。上游说明 Apple 国内 CDN 在部分运营商网络下可能不可用，出现问题时可停止引用该规则集。
 
@@ -186,13 +187,13 @@ GitHub Actions 每天 UTC 04:00（北京时间 12:00）执行以下流程：
 
 该规则集设置 `no_resolve`，只作用于 IP 规则：`lan` 是配置中的第一条规则，不带 `no-resolve` 的话，任何域名请求在第一步就会被迫做一次本地解析。`198.18.0.0/15` 被有意排除——六个客户端都用它作为 fake-IP 段。Quantumult X 的原生 IP 匹配语义不接受 Surge 式修饰符，因此其产物不含 `no-resolve`，这与既有的 Brokerage / Telegram IP 处理一致。
 
-CN IP 的唯一发布主源是 **gaoyifan/china-operator-ip**，但不直接采用最新一天。构建从 git 历史选择最近七个不同 UTC 日期的快照，在合并过等价 CIDR 覆盖后，只发布至少五份快照均出现的地址空间。这样单日的异常增减不会立刻进入规则。保留已有 `GEOIP,CN,DIRECT` 作为第二层故障保险；`Final` 及其他服务组的默认选择不变。`cn-ip` 仍然不加 `no-resolve`。
+CN IP 的唯一发布主源是 **gaoyifan/china-operator-ip**，但不直接采用最新一天。构建从 git 历史选择最近五个不同 UTC 日期的快照，在合并过等价 CIDR 覆盖后，只发布至少三份快照均出现的地址空间。这样单日的异常增减不会立刻进入规则。保留已有 `GEOIP,CN,DIRECT` 作为第二层故障保险；`Final` 及其他服务组的默认选择不变。`cn-ip` 仍然不加 `no-resolve`。
 
-[`dist/cn-ip-window.json`](dist/cn-ip-window.json) 记录七个日期、commit、双栈文件摘要、每天与最终窗口的规则数/地址覆盖，以及相对上次发布的变化。熔断按每个地址族的**对称地址空间差**计算，而不是按 CIDR 行数：等价的拆分/聚合不会误报，等量替换仍能被发现。变化超过 1% 时定时构建停止，旧 `dist` 和 last-known-good 缓存保持不变；必须人工复核后使用显式接受参数。
+[`dist/cn-ip-window.json`](dist/cn-ip-window.json) 记录五个日期、commit、双栈文件摘要、每天与最终窗口的规则数/地址覆盖，以及相对上次发布的变化。熔断按每个地址族的**对称地址空间差**计算，而不是按 CIDR 行数：等价的拆分/聚合不会误报，等量替换仍能被发现。变化超过 1% 时定时构建停止，旧 `dist` 和 last-known-good 缓存保持不变；诊断工件会记录候选摘要，接受操作必须绑定其准确 SHA256。
 
-[`dist/cn-ip-validation.json`](dist/cn-ip-validation.json) 使用 **misakaio/chnroutes2** 做独立 BGP IPv4 交叉验证，记录两侧地址覆盖，以及独有范围的总数、完整摘要和前 100 条样本，但绝不把参考源并入路由。misakaio 没有 IPv6 文本清单，因此报告会明确写 `IPv6 reference_available: false`；IPv6 仍经过七日窗口与格式验证，不冒充独立双栈验证。空名单、缺失主源地址族、默认路由、无效快照或缓存摘要不一致都会中止构建。
+[`dist/cn-ip-validation.json`](dist/cn-ip-validation.json) 使用 **misakaio/chnroutes2** 做独立 BGP IPv4 交叉验证，记录两侧地址覆盖，以及独有范围的总数、完整摘要和前 100 条样本，但绝不把参考源并入路由。misakaio 没有 IPv6 文本清单，因此报告会明确写 `IPv6 reference_available: false`；IPv6 仍经过 3-of-5 窗口与格式验证，不冒充独立双栈验证。空名单、缺失主源地址族、默认路由、无效快照或缓存摘要不一致都会中止构建。
 
-候选 git 仓库先克隆到 staging，七份快照、双栈、窗口与熔断全部通过后，才用单一缓存工件做原子替换。网络失败且有有效缓存时会明确回退；首次拉取失败则中止。Loyalsoldier 三个仓库只保留作人工差分审计，不再作为 Lane 主上游。
+候选 git 仓库先克隆到 staging，五份快照、双栈、窗口与熔断全部通过后，才用单一缓存工件做原子替换。网络失败且有有效缓存时会明确回退；首次拉取失败则中止。Loyalsoldier 三个仓库只保留作人工差分审计，不再作为 Lane 主上游。
 
 单一 `rules/` 产物恢复后，旧 `rules-full/` / `rules-profile/` URL 停止发布。已有用户需要手动升级一次完整配置；升级时请保留或重新填入自己的节点订阅及个人修改。之后这些远程规则可继续独立更新。
 
@@ -204,7 +205,7 @@ Python 内部包名 `proxyrules` 和旧命令保留兼容，公开项目与新�
 
 - [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)（MIT）
 - [Telegram 官方 CIDR](https://core.telegram.org/resources/cidr.txt)
-- [gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)（MIT；CN IP 双栈七日稳定窗主源）
+- [gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)（MIT；CN IP 双栈 3-of-5 共识窗主源）
 - [misakaio/chnroutes2](https://github.com/misakaio/chnroutes2)（CC BY-SA 4.0；独立 IPv4 交叉验证，不并入路由）
 - [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip)（仅用于人工差分审计，不参与构建）
 - [felixonmars/dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)（WTFPL 2.0；仅使用 AppleCN）

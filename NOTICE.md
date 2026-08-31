@@ -20,9 +20,9 @@ Generated files record their upstream revision in `dist/metadata.json`.
 The primary CN IPv4/IPv6 input is the `ip-lists` git history from
 [`gaoyifan/china-operator-ip`](https://github.com/gaoyifan/china-operator-ip)
 (Copyright (c) 2017 Yifan Gao;
-[MIT License](licenses/gaoyifan-MIT.txt)). Lane reads seven distinct daily
+[MIT License](licenses/gaoyifan-MIT.txt)). Lane reads five distinct daily
 snapshots of `china.txt` and `china6.txt` and keeps address space present in at
-least five snapshots. CIDR spelling is normalized before coverage is counted.
+least three snapshots. CIDR spelling is normalized before coverage is counted.
 Generated `dist/*/rules/cn-ip.*` files are adapted MIT-licensed outputs.
 
 [`misakaio/chnroutes2`](https://github.com/misakaio/chnroutes2) provides the

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -55,25 +56,25 @@ def test_stable_window_keeps_five_days_and_drops_four_days() -> None:
     assert "2001:db8:4::/120" not in values
 
 
-def test_august_cn_ip_incident_waits_for_fifth_snapshot() -> None:
-    """Pin the 2026-08-25 rise / 2026-08-28 fall threshold behavior."""
+def test_august_cn_ip_incident_waits_for_third_of_five_snapshots() -> None:
+    """Pin the settled 3-of-5 consensus behavior."""
 
     base = ["1.12.0.0/14", "2400:3200::/32"]
-    four_days = [
-        _rules(*(base + (["59.192.0.0/10"] if day in {25, 26, 27, 29} else [])))
-        for day in (22, 23, 25, 26, 27, 28, 29)
+    two_days = [
+        _rules(*(base + (["59.192.0.0/10"] if day in {25, 26} else [])))
+        for day in (23, 24, 25, 26, 27)
     ]
-    four_day_values = {
-        rule.value for rule in stable_window_rules(four_days, 5, "cn")
+    two_day_values = {
+        rule.value for rule in stable_window_rules(two_days, 3, "cn")
     }
-    assert "59.192.0.0/10" not in four_day_values
+    assert "59.192.0.0/10" not in two_day_values
 
-    fifth_snapshot = list(four_days)
-    fifth_snapshot[1] = _rules(*base, "59.192.0.0/10")
-    five_day_values = {
-        rule.value for rule in stable_window_rules(fifth_snapshot, 5, "cn")
+    third_snapshot = list(two_days)
+    third_snapshot[1] = _rules(*base, "59.192.0.0/10")
+    three_day_values = {
+        rule.value for rule in stable_window_rules(third_snapshot, 3, "cn")
     }
-    assert "59.192.0.0/10" in five_day_values
+    assert "59.192.0.0/10" in three_day_values
 
 
 def test_breaker_uses_symmetric_address_space_difference() -> None:
@@ -153,8 +154,8 @@ def _source(repository: Path) -> dict[str, object]:
         "ref": "ip-lists",
         "url": "https://example.invalid/history",
         "files": {"ipv4": "china.txt", "ipv6": "china6.txt"},
-        "window_days": 7,
-        "minimum_presence_days": 5,
+        "window_days": 5,
+        "minimum_presence_days": 3,
         "history_depth": 16,
         "breaker_percent": 1,
         "license": "MIT",
@@ -173,15 +174,13 @@ def test_history_source_stages_validates_and_preserves_cache(tmp_path: Path) -> 
     target = cache / "history" / "cn_ip_primary.json"
     assert not target.exists()
     commit_history_source_cache(prepared)
-    assert prepared.report["window"]["minimum_presence_days"] == 5
+    assert prepared.report["window"]["minimum_presence_days"] == 3
     assert [item["date"] for item in prepared.report["snapshots"]] == [
         "2026-08-07",
         "2026-08-06",
         "2026-08-05",
         "2026-08-04",
         "2026-08-03",
-        "2026-08-02",
-        "2026-08-01",
     ]
     last_known_good = target.read_bytes()
 
@@ -196,6 +195,21 @@ def test_history_source_stages_validates_and_preserves_cache(tmp_path: Path) -> 
             previous_rules=reviewed_baseline,
         )
     assert target.read_bytes() == last_known_good
+    diagnostic = json.loads(
+        (cache / "diagnostics/lane-update-report.json").read_text()
+    )
+    candidate_digest = diagnostic["candidate_sha256"]
+    assert diagnostic["published_sha256"] != candidate_digest
+    with pytest.raises(UpstreamError, match="candidate SHA256"):
+        prepare_cidr_history_source(
+            "cn_ip_primary",
+            source,
+            cache,
+            refresh=True,
+            offline=False,
+            previous_rules=reviewed_baseline,
+            accept_breaker_sha256="0" * 64,
+        )
     accepted = prepare_cidr_history_source(
         "cn_ip_primary",
         source,
@@ -203,10 +217,11 @@ def test_history_source_stages_validates_and_preserves_cache(tmp_path: Path) -> 
         refresh=True,
         offline=False,
         previous_rules=reviewed_baseline,
-        accept_breaker=True,
+        accept_breaker_sha256=candidate_digest,
     )
     assert accepted.report["breaker"]["exceeded"] is True
     assert accepted.report["breaker"]["accepted"] is True
+    assert accepted.report["breaker"]["approval_sha256"] == candidate_digest
     commit_history_source_cache(accepted)
     last_known_good = target.read_bytes()
 

@@ -33,6 +33,30 @@ cases:
       ruleset: apple-cn
       policy: DIRECT
 
+  - id: apple-cn-before-streaming
+    input:
+      type: domain
+      value: music.apple.com
+    expected:
+      ruleset: apple-cn
+      policy: DIRECT
+
+  - id: apple-cn-mapkit-before-developer
+    input:
+      type: domain
+      value: cdn-cn1.apple-mapkit.com
+    expected:
+      ruleset: apple-cn
+      policy: DIRECT
+
+  - id: apple-cn-download-before-developer
+    input:
+      type: domain
+      value: download.developer.apple.com
+    expected:
+      ruleset: apple-cn
+      policy: DIRECT
+
   - id: icloud-cn-v2fly-include-attribute
     input:
       type: domain

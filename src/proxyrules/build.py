@@ -96,7 +96,7 @@ def build_project(
     upstream_dir: Path | None = None,
     refresh: bool = False,
     offline: bool = False,
-    accept_cn_ip_change: bool = False,
+    accept_cn_ip_sha256: str | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     cache_dir = (cache_dir or root / ".cache").resolve()
@@ -142,7 +142,7 @@ def build_project(
                 previous_rules=(
                     previous_cn_rules if source_id == "cn_ip_primary" else None
                 ),
-                accept_breaker=accept_cn_ip_change,
+                accept_breaker_sha256=accept_cn_ip_sha256,
             )
             text_sources[source_id] = prepared.content
             text_metadata[source_id] = prepared.metadata

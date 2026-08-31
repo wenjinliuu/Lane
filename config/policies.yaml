@@ -2,40 +2,40 @@ base_groups:
   - name: Manual
     type: select
 
-# Region patterns are matched against subscription node names, which in practice
-# use city names (东京, 洛杉矶) and transit shorthands (沪日, 深港) far more often
-# than country names. The earlier patterns recognised only flags, full country
-# names and two-letter codes, and matched 1 of 12 realistic node names — leaving
-# every region group empty on import. Latin codes keep their word boundaries so
-# "RUSSIA" still does not match US; the CJK terms are added on top.
+# Region patterns intentionally use flags, full country/region names and bounded
+# Latin codes only. City names and one-character abbreviations are too ambiguous
+# across providers. Singapore additionally accepts 狮/獅 as the settled exception.
 regions:
   - name: United States
     code: US
     auto_name: US Auto
+    surge_smart_name: US Auto Smart
     manual_name: US Manual
-    pattern: '(?:🇺🇸|美|United\s*States|洛杉矶|圣何塞|西雅图|芝加哥|纽约|达拉斯|凤凰城|硅谷|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))'
+    pattern: '(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))'
   - name: Japan
     code: JP
     auto_name: JP Auto
+    surge_smart_name: JP Auto Smart
     manual_name: JP Manual
-    pattern: '(?:🇯🇵|日|Japan|Tokyo|Osaka|东京|大阪|埼玉|名古屋|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))'
+    pattern: '(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))'
   - name: Hong Kong
     code: HK
     auto_name: HK Auto
+    surge_smart_name: HK Auto Smart
     manual_name: HK Manual
-    pattern: '(?:🇭🇰|港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))'
+    pattern: '(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))'
   - name: Taiwan
     code: TW
     auto_name: TW Auto
+    surge_smart_name: TW Auto Smart
     manual_name: TW Manual
-    pattern: '(?:🇹🇼|台|臺|Taiwan|Taipei|新北|彰化|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))'
-  # Singapore deliberately lists each transit shorthand instead of a bare 新:
-  # 新 alone would also claim 新北, which is in Taiwan.
+    pattern: '(?:🇹🇼|台湾|臺灣|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))'
   - name: Singapore
     code: SG
     auto_name: SG Auto
+    surge_smart_name: SG Auto Smart
     manual_name: SG Manual
-    pattern: '(?:🇸🇬|新加坡|狮城|獅城|Singapore|沪新|京新|深新|杭新|广新|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))'
+    pattern: '(?:🇸🇬|新加坡|狮|獅|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))'
 
 service_groups:
   - AI

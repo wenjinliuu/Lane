@@ -97,7 +97,7 @@ def test_generated_artifacts_use_one_complete_rule_tier() -> None:
     audit = metadata["redundancy_audit"]
     assert audit["mode"] == "report-only"
     assert audit["within_parent_suffix_candidates"] == 4736
-    assert audit["total_candidates"] == 11060
+    assert audit["total_candidates"] == 11059
 
     for target in TARGETS:
         directory = ROOT / "dist" / target / RULES_DIR

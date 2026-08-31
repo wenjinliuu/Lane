@@ -247,11 +247,10 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         if stash_by_name[service].get("proxies") != options:
             raise ValidationError(f"Stash {service} options differ from the manifest")
 
-    for target in ("loon", "shadowrocket", "surge"):
+    for target in ("loon", "shadowrocket"):
         groups = {line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
                   for line in _section(texts[target], "Proxy Group")}
-        target_order = ["Subscription1", *expected_order] if target == "surge" else expected_order
-        if list(groups) != target_order:
+        if list(groups) != expected_order:
             raise ValidationError(f"{target}: invalid group order or missing groups")
         for service in policies["service_groups"]:
             if not groups[service].startswith(f"select,{','.join(options)}"):
@@ -262,23 +261,46 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
         for line in _section(texts["surge"], "Proxy Group")
     }
+    smart_names = [region["surge_smart_name"] for region in policies["regions"]]
+    surge_order = ["Subscription1", "Node Pool", "Manual", *policies["service_groups"], *[
+        name for region in policies["regions"]
+        for name in (region["surge_smart_name"], region["manual_name"])
+    ]]
+    if list(surge_groups) != surge_order:
+        raise ValidationError("surge: invalid hidden pool, service or region group order")
     node_interval = config["project"]["updates"]["node_interval"]
     if surge_groups["Subscription1"] != (
         f"select,policy-path={SUBSCRIPTION_PLACEHOLDER},update-interval={node_interval},hidden=true"
     ):
         raise ValidationError("Surge must load subscriptions through a hidden source group")
-    if surge_groups["Manual"] != "select,include-other-group=Subscription1,include-all-proxies=true":
-        raise ValidationError("Surge Manual must expand the hidden subscription group")
+    if surge_groups["Node Pool"] != (
+        "select,include-other-group=Subscription1,include-all-proxies=true,hidden=true"
+    ):
+        raise ValidationError("Surge Node Pool must expand raw proxies and remain hidden")
+    if surge_groups["Manual"] != (
+        f"select,{','.join(smart_names)},include-other-group=Node Pool"
+    ):
+        raise ValidationError("Surge Manual must expose Smart groups and raw nodes")
+    surge_options = ["Manual", "DIRECT"]
+    for region in policies["regions"]:
+        surge_options.extend([region["surge_smart_name"], region["manual_name"]])
+    for service in policies["service_groups"]:
+        if surge_groups[service] != f"select,{','.join(surge_options)}":
+            raise ValidationError(f"Surge {service} options differ from the Smart manifest")
     for region in policies["regions"]:
         for name, group_type in ((region["auto_name"], "url-test"), (region["manual_name"], "select")):
             group = stash_by_name[name]
             if (group["type"] != group_type or not group.get("include-all")
                     or group.get("filter") != filters["regions"][region["name"]]):
                 raise ValidationError(f"Invalid Stash region group: {name}")
-            surge_line = next(line for line in _section(texts["surge"], "Proxy Group")
-                              if line.startswith(f"{name} = "))
-            if f"{name} = {group_type},include-other-group=Manual," not in surge_line:
-                raise ValidationError(f"Surge {name} must expand subscription nodes")
+        suffix = (
+            f'include-other-group=Node Pool,policy-regex-filter="'
+            f'{filters["regions"][region["name"]]}"'
+        )
+        if surge_groups[region["surge_smart_name"]] != f"smart,{suffix}":
+            raise ValidationError(f"Surge {region['surge_smart_name']} must be a Smart group")
+        if surge_groups[region["manual_name"]] != f"select,{suffix}":
+            raise ValidationError(f"Surge {region['manual_name']} must expand Node Pool")
 
     egern = yaml.safe_load(texts["egern"])
     egern_groups = {next(iter(group.values()))["name"]: group for group in egern["policy_groups"]}
@@ -496,8 +518,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     ).hexdigest()
     window_output = window.get("output", {})
     breaker_state_valid = (
-        (breaker.get("exceeded") is False and breaker.get("accepted") is False)
-        or (breaker.get("exceeded") is True and breaker.get("accepted") is True)
+        (breaker.get("exceeded") is False
+         and breaker.get("accepted") is False
+         and breaker.get("approval_sha256") is None)
+        or (breaker.get("exceeded") is True
+            and breaker.get("accepted") is True
+            and breaker.get("approval_sha256") == window_output.get("sha256"))
     )
     metadata_ids = [entry.get("id") for entry in metadata.get("rulesets", [])]
     exact_removed_total = sum(
@@ -555,12 +581,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             raise ValidationError(f"Invalid single-tier counts for {rule_id}")
     if (window.get("source", {}).get("id") != "cn_ip_primary"
             or window.get("window") != {
-                "snapshot_days": 7,
-                "minimum_presence_days": 5,
+                "snapshot_days": 5,
+                "minimum_presence_days": 3,
                 "selection": "latest commit for each distinct UTC date",
             }
-            or len(snapshots) != 7
-            or len({snapshot.get("date") for snapshot in snapshots}) != 7
+            or len(snapshots) != 5
+            or len({snapshot.get("date") for snapshot in snapshots}) != 5
             or window_output.get("sha256") != primary_metadata.get("sha256")
             or window_output.get("sha256") != published_digest
             or window_output.get("coverage") != coverage_stats(published_rules)

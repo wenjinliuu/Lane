@@ -186,9 +186,16 @@ def test_surge_expands_subscription_members_instead_of_selected_node():
     assert "policy-path=" in groups[0]
     assert groups[0].startswith("Subscription1 = select,")
     assert groups[0].endswith(",hidden=true")
-    assert groups[1] == "Manual = select,include-other-group=Subscription1,include-all-proxies=true"
+    assert groups[1] == (
+        "Node Pool = select,include-other-group=Subscription1,"
+        "include-all-proxies=true,hidden=true"
+    )
+    assert groups[2] == (
+        "Manual = select,US Auto Smart,JP Auto Smart,HK Auto Smart,"
+        "TW Auto Smart,SG Auto Smart,include-other-group=Node Pool"
+    )
     for line in groups[-10:]:
-        assert "include-other-group=Manual" in line
+        assert "include-other-group=Node Pool" in line
         assert "policy-regex-filter=" in line
         assert ",Manual," not in line
 

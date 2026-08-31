@@ -50,6 +50,9 @@ def validate_config(config: dict[str, Any]) -> None:
         raise ConfigError("Region names must be unique")
     if [item.get("code") for item in regions] != ["US", "JP", "HK", "TW", "SG"]:
         raise ConfigError("Regions must be US, JP, HK, TW and SG in that order")
+    expected_smart_names = [f"{item['code']} Auto Smart" for item in regions]
+    if [item.get("surge_smart_name") for item in regions] != expected_smart_names:
+        raise ConfigError("Surge Smart groups must use '<region> Auto Smart' names")
 
     base_names = [entry.get("name") for entry in policies.get("base_groups", [])]
     if base_names != ["Manual"]:
@@ -124,8 +127,11 @@ def validate_config(config: dict[str, Any]) -> None:
             raise ConfigError(
                 f"{rule_id} must combine the DIRECT dnsmasq source with v2fly apple@cn"
             )
-        if ordered_ids.index(rule_id) >= ordered_ids.index(main_id):
-            raise ConfigError(f"{rule_id} must precede {main_id}")
+        if ordered_ids[:4] != ["lan", "custom-direct", "custom-proxy", "apple-cn"]:
+            raise ConfigError("apple-cn must remain after custom overrides and before services")
+        if any(ordered_ids.index(rule_id) >= ordered_ids.index(later)
+               for later in ("streaming", "developer", main_id)):
+            raise ConfigError(f"{rule_id} must precede Streaming, Developer and {main_id}")
     # Resolving a Google domain through a Chinese DNS server is not a direct-
     # reachability guarantee. GoogleCN is therefore neither routed nor emitted.
     if ("google-cn" in by_id
@@ -167,11 +173,11 @@ def validate_config(config: dict[str, Any]) -> None:
             or primary_spec.get("repository") != "https://github.com/gaoyifan/china-operator-ip.git"
             or primary_spec.get("ref") != "ip-lists"
             or primary_spec.get("files") != {"ipv4": "china.txt", "ipv6": "china6.txt"}
-            or primary_spec.get("window_days") != 7
-            or primary_spec.get("minimum_presence_days") != 5
+            or primary_spec.get("window_days") != 5
+            or primary_spec.get("minimum_presence_days") != 3
             or primary_spec.get("breaker_percent") != 1
             or primary_spec.get("license") != "MIT"):
-        raise ConfigError("Primary CN IP source must be gaoyifan's 5-of-7 dual-stack window")
+        raise ConfigError("Primary CN IP source must be gaoyifan's 3-of-5 dual-stack window")
     reference_spec = sources.get("cn_ipv4_reference", {})
     if (reference_spec.get("kind") != "text"
             or reference_spec.get("format") != "cidr"

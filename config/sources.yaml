@@ -19,8 +19,8 @@ sources:
     files:
       ipv4: china.txt
       ipv6: china6.txt
-    window_days: 7
-    minimum_presence_days: 5
+    window_days: 5
+    minimum_presence_days: 3
     history_depth: 32
     breaker_percent: 1
     license: MIT
