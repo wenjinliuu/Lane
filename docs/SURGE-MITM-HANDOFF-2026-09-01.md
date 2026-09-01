@@ -1,6 +1,14 @@
-# 交接：Surge iOS MitM 拦截无法关闭（未解决）
+# Surge iOS MitM 拦截：已解决
 
-> 这是一份交给另一个 AI 助手继续排查的背景材料。前半部分是**已确证的事实**和**已排除的假设**，请不要重复验证；后半部分是**待查方向**。
+> 2026-09-01 更新：用户关闭 Surge 的「HTTP 捕获」后，受影响网站立即恢复正常访问。根因已经由实机对照确认，不再需要通过 profile 写入任何 MitM 关闭项。
+
+## 0. 最新结论
+
+- **根因**：Surge iOS 的 HTTP 捕获处于开启状态，并通过捕获层自动 MitM 活跃主机。
+- **版本证据**：Surge iOS 5.21.0 的官方更新日志明确写明，HTTP 捕获设置不再存放于配置文件；捕获开启后可为特定主机名额外开启 MitM，且不受 MitM 主开关关闭影响。
+- **现象解释**：设置跨配置保留，是因为捕获层不属于 profile；所谓“名单变长”，更可能只是手机后台出现了新的 HTTPS 主机，并非机场持续注入固定广告名单。
+- **处理结果**：关闭「HTTP 捕获」后恢复正常。无需修改订阅、分流规则或证书。
+- **配置结论**：Lane 恢复最小原则，Surge 产物不写 `[MITM]`；捕获与解密状态留给 App 管理。
 
 ---
 
@@ -11,13 +19,13 @@
 - Python 生成器：`src/proxyrules/`，核心是 `render.py`（渲染六端配置）和 `validate.py`（校验生成物）
 - 声明式输入：`config/*.yaml`（策略组、地区正则、图标、规则清单、上游源）
 - 生成产物：`dist/<client>/`，主配置 + 规则文件
-- 命令：`python3 -m proxyrules build` / `python3 -m proxyrules check`；测试 `python3 -m pytest`（当前 187 项全绿）
+- 命令：`python3 -m proxyrules build` / `python3 -m proxyrules check`；测试 `python3 -m pytest`（当前 185 项全绿）
 
-**Lane 的设计前提**：分流只在 TCP / SNI 层做，**从不解密 HTTPS**。六端配置都不含重写、不含脚本。Surge 配置里只有一个 `[MITM]` 段用于声明"不解密"。
+**Lane 的设计前提**：分流只在 TCP / SNI 层做，**从不解密 HTTPS**。六端配置都不含重写、不含脚本，也都不写 `[MITM]`。
 
 ---
 
-## 2. 未解决的问题
+## 2. 原问题
 
 Surge iOS 持续对一批与 Lane 无关的域名做 MitM（HTTPS 解密），且**无法通过配置文件关闭**。被拦截的连接在 TLS 握手阶段被直接掐断，用户侧表现为"大量网站打不开"。
 
@@ -44,7 +52,7 @@ ogads-pa.clients6.google.com          fonts.gstatic.com  www.google-analytics.co
 ssl.gstatic.com    lh3~lh6.googleusercontent.com         139.227.230.40/46
 ```
 
-特征：**典型的机场"去广告"MitM 名单**（国内 App 的埋点 / 开屏广告域名 + Google 广告域名），还含裸 IP 项。用户确认这不是他自己配置的。
+最初这些主机被误判为机场“去广告”MitM 名单。结合 HTTP 捕获已确认开启，更准确的解释是：它们是手机前台和后台实际出现的 HTTPS 流量，捕获层逐步对新出现的主机尝试解密，因此观察到的集合持续变长。
 
 ### 两种失败形态（取决于 CA 证书状态）
 
@@ -110,7 +118,7 @@ Surge 官方说明：`policy-path` 的 URL 可以是纯节点列表，**也可�
 ```
 这是 Surge 内置模块。没有第三方模块。
 
-### 3.5 名单不在配置文件里
+### 3.5 解密来源不在配置文件里
 
 用户在 Surge 内置文本编辑器里截图确认，生效配置文件末尾是：
 ```
@@ -119,11 +127,11 @@ Surge 官方说明：`policy-path` 的 URL 可以是纯节点列表，**也可�
 95  [MITM]
 96  enable = false
 ```
-文件到 96 行结束，**没有 `hostname` 键**。同一时刻的日志显示 MitM 拦截了 107 次。
+文件到 96 行结束，**没有 `hostname` 键**。同一时刻的日志显示 MitM 拦截了 107 次。这与 5.21.0+ HTTP 捕获设置独立于配置保存的官方行为一致。
 
-### 3.6 名单跨配置文件存活
+### 3.6 捕获状态跨配置文件存活
 
-依次换过三个配置文件（`测试.conf` → `Lane_surge.conf` → `Lane_surge 无 mi.conf`），同一份 MitM 名单一直生效，而且**名单还在变长**（后期新增了 `ogads-pa.clients6.google.com`、`dw-online.ksosoft.com`、`shuc-ios.ksord.com`）。
+依次换过三个配置文件（`测试.conf` → `Lane_surge.conf` → `Lane_surge 无 mi.conf`），MitM 一直生效，而且观察到的主机集合还在变长（后期新增了 `ogads-pa.clients6.google.com`、`dw-online.ksosoft.com`、`shuc-ios.ksord.com`）。HTTP 捕获是配置外的 App 状态，因此切换 profile 不会将其关闭。
 
 ### 3.7 Surge 的 `[MITM]` 段**没有 `enable` 键**
 
@@ -133,16 +141,17 @@ hostname   h2   skip-server-cert-verify   ca-p12   ca-passphrase
 ```
 决定"解密哪些域名"的是 **`hostname`**。写 `enable = false` 是无效行，Surge 忽略（日志实证：文件里写着 `enable = false`，MitM 照样跑 107 次）。
 
-### 3.8 排除法结论
+### 3.8 排除法结论（已更新）
 
 | 可能来源 | 状态 |
 |---|---|
 | Lane 配置文件 | ❌ 已确认没有 `hostname` |
 | 机场配置经 `policy-path` | ❌ 官方明确只取 `[Proxy]` |
 | Surge 模块 | ❌ 日志只有内置模块 |
-| **Surge 自身存储的 MitM 设置** | ✅ **只剩这一个** |
+| 普通 MitM 主机名列表残留 | ⚠️ 不再是首要解释 |
+| **HTTP 捕获的自动 MitM** | ✅ **用户已确认捕获开关打开，且符合官方行为** |
 
-推测：用户早期可能装过机场的完整配置作为 profile，那一次 Surge 把机场的 `[MITM]` 写进了自己的核心设置，之后换配置文件时没跟着清掉。
+此前“旧机场 profile 把 `[MITM]` 永久写进核心设置”的推测没有官方依据，现由 HTTP 捕获层给出了更完整、版本完全吻合的解释。
 
 ---
 
@@ -151,28 +160,16 @@ hostname   h2   skip-server-cert-verify   ca-p12   ca-passphrase
 | # | 尝试 | 结果 |
 |---|---|---|
 | 1 | 在配置写 `[MITM]` + `enable = false` | **无效**。`enable` 不是 Surge 的键，被忽略 |
-| 2 | 改成 `[MITM]` + `hostname = -*`（`-*` = 排除全部域名） | **未确证**。用户重测后 MitM 仍在，但**无法确认他装的是哪一版文件**（两次文件名相同，日志不显示内容） |
+| 2 | 改成 `[MITM]` + `hostname = -*`（`-*` = 排除全部域名） | 不能覆盖配置外的 HTTP 捕获自动 MitM；问题解决后已从 Lane 撤回，避免过度配置 |
 | 3 | 用户关闭 iOS 的"证书信任设置" | 反而更糟：拦截照做，只是证书没人认，从形态 A 变成形态 B |
 
-**⚠️ 未完成的关键动作**：一直没有让用户去 **Surge App 的 MitM 设置页面**查看/清空 hostname 列表。基于 3.8 的结论，这很可能就是名单的存放处，也是唯一能真正生效的地方。
+**最终关键动作**：用户关闭 HTTP 捕获后，网站访问恢复正常。
 
 ---
 
-## 5. 建议的下一步
+## 5. 最终结果
 
-按优先级：
-
-1. **看 Surge App 里的 MitM 页面**（底部「更多」→ MitM / HTTPS 解密），检查「主机名 / Hostname」列表。如果列着第 2 节那批域名，直接清空 —— 这大概率就是解法。
-
-2. **确证"与订阅无关"**：把配置里 `policy-path=` 那一行整行注释掉，重连，随便开个百度页面，导出日志。MitM 报错照样出现 → 板上钉钉在本地存储。这个测试不需要节点可用，只数 `grep -c SGMITM`。
-
-3. **确认配置版本**：让用户确认生效文件末尾是 `enable = false` 还是 `hostname = -*`，否则第 2 次尝试的结论不成立。
-
-4. **若 UI 里清不掉**：考虑 Surge 的配置重置 / 重装，或到 Surge 官方社区（community.nssurge.com）提问"MitM hostname 列表来源与清除方式"。
-
-### 判据
-
-问题解决的标志：日志里 `grep -c SGMITMConnection` 和 `grep -c SGTLSWrapperSocketCompatible` **都为 0**。
+关闭 Surge 的「HTTP 捕获」总开关后，原先打不开的网站恢复正常。这个 A/B 结果足以确认故障由捕获层自动 MitM 引起，而不是 Lane 分流、节点、机场 `policy-path` 或证书本身。
 
 ---
 
@@ -188,21 +185,21 @@ hostname   h2   skip-server-cert-verify   ca-p12   ca-passphrase
 
 ---
 
-## 7. 本次一并修复并已合入 main 的问题（供参考，不需要处理）
+## 7. 同期兼容性修改及后续修正
 
 分支 `claude/config-compatibility-issues-jq1x26`，6 个 commit，已快进合并进 `main`（`6df53d1..558cffa`）。
 
 | 客户端 | 问题 | 修复 |
 |---|---|---|
-| **Stash** | `Manual` 组同时写 `proxies` 和 `include-all: true`，Stash 只保留后者，五个地区 Auto 组不显示 | 改用 `use: [Subscription1]` 引入节点；地区组仍用 `include-all` |
-| **Quantumult X** | 导入报语法错误。`[server_remote]` 里的占位符 `你的订阅地址` 不是合法资源地址 | 两条订阅模板默认注释；`excluded_routes` 收敛为纯 IPv4 |
+| **Stash** | `include-all + proxies` 与 `use + proxies` 的实机结果都只保留一侧 | 后续改为 `Manual → 五个地区 Auto + All Nodes`；`All Nodes` 单独用 `include-all` 展开节点 |
+| **Quantumult X** | 中文占位符与注释订阅模板的导入方案均不稳定 | 后续完全省略 `[server_remote]`，导入配置后在 App 内添加节点资源；`excluded_routes` 仍为纯 IPv4 |
 | **Shadowrocket** | 生成了多余的 `Manual` 组 | 删除，改用内置 `PROXY` 策略（= 首页选中的节点）+ `policy-select-name=PROXY`；地区 `url-test` 组保留（它本身即自动测速，App 里那个"测试并选择最快服务器"是全局 UI 开关，与之无关） |
-| **Surge** | 策略组图标不显示 / 正则被引号包住 / IPv6 排除路由被拒 | 补 `icon-url=`；`policy-regex-filter` 去引号；`tun-excluded-routes` 只写 IPv4 |
+| **Surge** | 策略组图标不显示 / 正则被引号包住 / IPv6 排除路由被拒 | 补 `icon-url=`；`policy-regex-filter` 去引号；`tun-excluded-routes` 只写 IPv4；不再写 `[MITM]` |
 
 validator 对以上每一条都加了断言，回退会直接构建失败。
 
 ---
 
-## 8. 交接说明
+## 8. 当前状态
 
-请基于第 3 节的**已确证事实**继续，不要重新验证已排除的假设（尤其是"机场配置经 policy-path 注入"和"Lane 分流规则有误"这两条）。第 5 节第 1 项是最可能的解法，成本极低，建议优先。
+问题已解决并完成配置收尾：HTTP 捕获关闭后访问恢复，Lane 的六端产物均保持不配置 HTTPS 解密。

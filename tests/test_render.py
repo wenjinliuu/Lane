@@ -10,6 +10,7 @@ from proxyrules.render import (
     MULTICAST_EXCLUDED_ROUTES,
     PROFILE_HEADER,
     REAL_IP_DOMAINS,
+    STASH_ALL_NODES_GROUP,
     STASH_REAL_IP_DOMAINS,
     SUBSCRIPTION_PLACEHOLDER,
     _with_stable_update_time,
@@ -103,7 +104,9 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
         for name in (region["auto_name"], region["manual_name"])
     ]
     expected_group_names = ["Manual", *service_names, *region_names]
-    assert [group["name"] for group in stash["proxy-groups"]] == expected_group_names
+    assert [group["name"] for group in stash["proxy-groups"]] == [
+        "Manual", STASH_ALL_NODES_GROUP, *expected_group_names[1:]
+    ]
 
     loon_group_block = loon_text.split("[Proxy Group]\n", 1)[1].split(
         "\n[Remote Rule]", 1
@@ -127,8 +130,9 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
     icon_config = config["icons"]
     icon_base = icon_config["base"].rstrip("/")
     for group in stash["proxy-groups"]:
+        icon_name = "Manual" if group["name"] == STASH_ALL_NODES_GROUP else group["name"]
         assert group["icon"] == (
-            f"{icon_base}/{icon_config['icons'][group['name']]}"
+            f"{icon_base}/{icon_config['icons'][icon_name]}"
         )
 
     expected_icons = {

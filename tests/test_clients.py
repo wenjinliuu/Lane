@@ -11,7 +11,7 @@ from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
     CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER, RULES_DIR,
-    SUBSCRIPTION_PLACEHOLDER, TARGETS,
+    STASH_ALL_NODES_GROUP, SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -147,17 +147,19 @@ def test_generated_rule_counts_agree_with_capability_report():
             )
 
 
-def test_all_templates_have_one_active_subscription_and_local_update_guidance():
+def test_subscription_templates_and_local_update_guidance():
     for target, filename in CONFIG_FILENAMES.items():
         text = (ROOT / "dist" / target / filename).read_text()
-        if target == "shadowrocket":
+        if target in {"shadowrocket", "qx"}:
             assert SUBSCRIPTION_PLACEHOLDER not in text
+            if target == "qx":
+                assert "[server_remote]" not in text
             continue
         occurrences = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
                        and not line.lstrip().startswith(("#", ";", "//"))]
-        # QX validates [server_remote] entries as resource addresses, so both of its
-        # templates ship commented out and an unedited profile still imports.
-        assert len(occurrences) == (0 if target == "qx" else 1)
+        # Egern uses two explicit URL lists because its on-device parser did not
+        # expand the YAML alias generated for one shared Python list.
+        assert len(occurrences) == (2 if target == "egern" else 1)
         assert "本地配置" in text and "重新填入" in text
         assert "#!MANAGED-CONFIG" not in text
         assert "auto_update:" not in text
@@ -172,11 +174,17 @@ def test_manual_exposes_regional_auto_groups_on_all_clients():
 
     stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
     stash_manual = next(group for group in stash["proxy-groups"] if group["name"] == "Manual")
-    assert stash_manual["proxies"] == auto_names
-    # Stash drops the explicit proxies of a group that also sets include-all, which
-    # hid the region Auto groups; naming the provider with use keeps both visible.
+    assert stash_manual["proxies"] == [*auto_names, STASH_ALL_NODES_GROUP]
+    # Stash device testing retained only one side of mixed static/dynamic sources.
+    # A dedicated group makes every raw node reachable without hiding region Autos.
     assert "include-all" not in stash_manual
-    assert stash_manual["use"] == ["Subscription1"]
+    assert "use" not in stash_manual
+    stash_all_nodes = next(
+        group for group in stash["proxy-groups"]
+        if group["name"] == STASH_ALL_NODES_GROUP
+    )
+    assert stash_all_nodes["type"] == "select"
+    assert stash_all_nodes["include-all"] is True
 
     loon_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
@@ -220,6 +228,8 @@ def test_manual_exposes_regional_auto_groups_on_all_clients():
     assert egern_groups["Manual"]["policies"] == auto_names
     assert egern_groups["Manual"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
     assert egern_groups["Node Pool"]["hidden"] is True
+    egern_text = (ROOT / "dist/egern/Lane_egern.yaml").read_text()
+    assert "&id" not in egern_text and "*id" not in egern_text
 
 
 def test_brokerage_keeps_tiger_and_longbridge_to_tested_minimums():
@@ -415,8 +425,9 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
 @pytest.mark.parametrize("target,old,new,error", [
     ("surge", ",icon-url=", ",icon-uri=", "Surge Manual"),
     ("surge", "policy-regex-filter=(?i)", 'policy-regex-filter="(?i)', "must not be quoted"),
-    ("surge", "hostname = -*", "hostname = *", "MitM hostname"),
     ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
+    ("stash", "name: All Nodes\n  type: select\n  include-all: true",
+     "name: All Nodes\n  type: select\n  include-all: false", "All Nodes"),
     ("shadowrocket", "Final = select,PROXY,",
      "Final = select,Manual,", "must default to PROXY"),
     ("qx", "excluded_routes = 224.0.0.0/4, 239.255.255.250/32",
@@ -439,13 +450,22 @@ def test_validator_rejects_client_capability_regressions(tmp_path, target, old, 
 
 
 def test_no_profile_decrypts_https():
-    """Lane routes on TCP/SNI; Surge states MitM off so an enabled switch cannot survive."""
+    """Lane routes on TCP/SNI and does not configure HTTPS decryption."""
 
-    surge = (ROOT / "dist/surge/Lane_surge.conf").read_text()
-    # Surge has no [MITM] enable key; an empty hostname list is what stops decryption.
-    assert _section(surge, "MITM") == ["hostname = -*"]
     for target, filename in CONFIG_FILENAMES.items():
         text = (ROOT / "dist" / target / filename).read_text()
-        if target != "surge":
-            assert "[MITM]" not in text
-            assert "hostname" not in text
+        assert "[MITM]" not in text
+        assert "hostname" not in text
+
+
+def test_validator_rejects_any_profile_mitm_section(tmp_path):
+    shutil.copytree(ROOT / "dist", tmp_path / "dist")
+    shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
+    path = tmp_path / "dist/surge/Lane_surge.conf"
+    path.write_text(
+        path.read_text(encoding="utf-8") + "\n[MITM]\nhostname = *\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValidationError, match="must not configure HTTPS decryption"):
+        validate_generated(tmp_path, load_project_config(ROOT))

@@ -6,7 +6,9 @@ import pytest
 import yaml
 
 from proxyrules.config import load_project_config
-from proxyrules.render import CONFIG_FILENAMES, SUBSCRIPTION_PLACEHOLDER
+from proxyrules.render import (
+    CONFIG_FILENAMES, STASH_ALL_NODES_GROUP, SUBSCRIPTION_PLACEHOLDER,
+)
 from proxyrules.validate import ValidationError, _section, validate_generated
 
 
@@ -29,9 +31,12 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
     assert "默认均为 Manual" in heading
     assert "不保证入金或交易结果" in heading
     assert "勿上传私人订阅" not in text
-    if target == "shadowrocket":
+    if target in {"shadowrocket", "qx"}:
         assert SUBSCRIPTION_PLACEHOLDER not in text
         assert "多订阅" not in text
+        if target == "qx":
+            assert "应用内添加" in text
+            assert "[server_remote]" not in text
     else:
         assert SUBSCRIPTION_PLACEHOLDER == "你的订阅地址"
         assert f'"{SUBSCRIPTION_PLACEHOLDER}"' not in text
@@ -41,9 +46,7 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         assert "导入启用前" in heading
         active = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
                   and not line.lstrip().startswith(("#", ";", "//"))]
-        # QX validates [server_remote] entries as resource addresses, so its templates
-        # stay commented out and an unedited profile still imports.
-        assert len(active) == (0 if target == "qx" else 1)
+        assert len(active) == (2 if target == "egern" else 1)
 
 
 def test_stash_optional_block_can_be_enabled_and_copied_with_valid_indentation():
@@ -64,7 +67,9 @@ def test_stash_optional_block_can_be_enabled_and_copied_with_valid_indentation()
     for name, url in zip(providers, URLS):
         assert providers[name] == {**original["proxy-providers"]["Subscription1"], "url": url}
     assert parsed["proxy-groups"] == original["proxy-groups"]
-    assert parsed["proxy-groups"][0]["use"] == ["Subscription1"]
+    assert parsed["proxy-groups"][0]["proxies"][-1] == STASH_ALL_NODES_GROUP
+    assert parsed["proxy-groups"][1]["name"] == STASH_ALL_NODES_GROUP
+    assert parsed["proxy-groups"][1]["include-all"] is True
     for group in parsed["proxy-groups"][-10:]:
         assert group["include-all"] is True
 
@@ -84,30 +89,14 @@ def test_loon_additional_subscriptions_do_not_require_filter_changes():
         assert _section(edited, section) == _section(text, section)
 
 
-def test_qx_optional_subscriptions_keep_unique_tags_and_section_order():
+def test_qx_omits_private_subscription_resources_from_public_profile():
     text = _profile("qx")
-    # QX rejects a profile whose [server_remote] entries are not resource addresses,
-    # so both templates ship commented out and the section starts empty.
-    assert _section(text, "server_remote") == []
-    templates = [
-        next(line for line in text.splitlines()
-             if line.startswith(f"# {SUBSCRIPTION_PLACEHOLDER}, tag={tag},"))
-        for tag in ("Subscription1", "Subscription2")
-    ]
-    first = templates[0].removeprefix("# ").replace(SUBSCRIPTION_PLACEHOLDER, URLS[0])
-    second = templates[1].removeprefix("# ").replace(SUBSCRIPTION_PLACEHOLDER, URLS[1])
-    third = second.replace(URLS[1], URLS[2]).replace("tag=Subscription2,", "tag=Subscription3,")
-    edited = text.replace(templates[0], first, 1)
-    edited = edited.replace(templates[1], second + "\n" + third)
-    entries = _section(edited, "server_remote")
-    assert len(entries) == 3
-    for index, (line, url) in enumerate(zip(entries, URLS), 1):
-        assert line.startswith(url + ",")
-        assert f"tag=Subscription{index}," in line
-        assert f"update-interval={NODE_INTERVAL}, enabled=true" in line
-    assert _section(edited, "policy") == _section(text, "policy")
-    assert re.findall(r"(?m)^\[([^\]]+)\]$", edited) == [
-        "general", "dns", "policy", "server_remote", "server_local", "filter_remote", "filter_local"
+    assert SUBSCRIPTION_PLACEHOLDER not in text
+    assert "[server_remote]" not in text
+    assert "[server_local]" not in text
+    assert "应用内添加" in text
+    assert re.findall(r"(?m)^\[([^\]]+)\]$", text) == [
+        "general", "dns", "policy", "filter_remote", "filter_local"
     ]
 
 
@@ -151,9 +140,13 @@ def test_egern_urls_accept_additional_items_without_changing_region_groups():
     original = yaml.safe_load(text)
     assert original["policy_groups"][0]["select"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
     assert original["policy_groups"][1]["select"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
-    edited = text.replace(f"    - {SUBSCRIPTION_PLACEHOLDER}\n", f"    - {URLS[0]}\n", 1)
+    edited = text.replace(
+        f"    - {SUBSCRIPTION_PLACEHOLDER}\n", f"    - {URLS[0]}\n", 2
+    )
     edited = edited.replace(
-        f"    # - {SUBSCRIPTION_PLACEHOLDER}\n", f"    - {URLS[1]}\n    - {URLS[2]}\n", 1
+        f"    # - {SUBSCRIPTION_PLACEHOLDER}\n",
+        f"    - {URLS[1]}\n    - {URLS[2]}\n",
+        2,
     )
     parsed = yaml.safe_load(edited)
     assert parsed["policy_groups"][0]["select"]["urls"] == URLS
@@ -170,6 +163,8 @@ def test_egern_urls_accept_additional_items_without_changing_region_groups():
     ("egern", f"    - {SUBSCRIPTION_PLACEHOLDER}\n",
      f'    - "{SUBSCRIPTION_PLACEHOLDER}"\n', "must not be quoted"),
     ("loon", f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n", "", "commented second"),
+    ("qx", "\n[filter_remote]\n", "\n[server_remote]\n\n[filter_remote]\n",
+     "omit subscription resources"),
 ])
 def test_validator_rejects_subscription_template_regressions(tmp_path, target, old, new, error):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")

@@ -7,11 +7,11 @@
 
 本文记录本轮已经确认的产品语义。生成器、静态校验、路由回归和发布产物必须同时满足这些约束，避免以后自动更新时退回旧行为。
 
-## D1. 六端 Manual 都提供五个地区自动组
+## D1. 六端都提供五个地区自动组与手动选点入口
 
 ### 决策
 
-Stash、Loon、Shadowrocket、Surge、Quantumult X 与 Egern 的顶层 `Manual` 都必须同时提供：
+Loon、Surge、Quantumult X 与 Egern 的顶层 `Manual` 必须同时提供：
 
 1. 美国、日本、香港、台湾、新加坡五个地区自动组；
 2. 用户订阅中的全部单节点。
@@ -24,7 +24,7 @@ Surge 使用原生 Smart 组，名称固定为：
 - `TW Auto Smart`
 - `SG Auto Smart`
 
-其余五端使用对应的 `US/JP/HK/TW/SG Auto`。服务策略直接选择地区自动组，或先选择 `Manual`、再在其中选择同一个地区自动组，必须指向同一个既有策略对象，不复制另一套测速策略。
+其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 实机无法在同一个组中稳定混合静态地区组和动态节点源，因此 `Manual` 列出五个地区 Auto 与 `All Nodes`，全部单节点在后者中展开。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
 
 ### Egern 的无循环结构
 
@@ -33,7 +33,7 @@ Egern 新增隐藏 `Node Pool`：
 - `Node Pool` 加载节点订阅；
 - 十个地区 Auto / Manual 组从 `Node Pool` 执行 `flatten` 与地区筛选，不再反向引用 `Manual`；
 - `Manual` 列出五个地区 Auto，并继续加载全部单节点；
-- `Node Pool.urls` 与 `Manual.urls` 使用 YAML 锚点共享同一列表，用户只填写一次订阅地址。
+- `Node Pool.urls` 与 `Manual.urls` 各自写出显式列表，用户在两处填写相同地址；不使用部分 Egern 版本无法展开的 YAML 锚点。
 
 这样既保留 Manual 的地区自动选择和原始单节点，也避免 `Manual → 地区 Auto → Manual` 的策略环。
 
@@ -59,7 +59,7 @@ Egern 新增隐藏 `Node Pool`：
 
 每次生成与上游更新都必须验证：
 
-1. 六端 `Manual` 的前五个可选项是对应的地区自动组，随后仍能选择订阅单节点；
+1. Loon、Surge、QX、Egern 的 `Manual` 可选择地区自动组与订阅单节点；Stash 通过 `Manual → All Nodes` 选择单节点；Shadowrocket 通过内置 `PROXY` 选点；
 2. Surge 地区自动组仍是 Smart，Egern `Node Pool` 仍隐藏且地区组只从该池展开；
 3. `api.skytigris.cn` 首先命中 `Brokerage`；
 4. `geotest.lbkrs.com` 首先命中 `Brokerage`；
@@ -77,7 +77,7 @@ Egern 新增隐藏 `Node Pool`：
 - 不再维护 Lane 自绘或二次加工图标。全部运行时 PNG 均从 Qure 指定提交原样复制到 `assets/icons/third-party/qure/`，保留来源、版本与授权提示，不纳入 Lane 的 MIT 授权声明。
 - 恢复自绘改动前的映射：AI 使用 `AI`、证券使用 `Magic`、Crypto 使用 `Cryptocurrency_3`；同一地区的 Auto 与 Manual 共用普通地区图标，不添加 Auto 角标。台湾继续使用已经确定的 `China`。
 - 仅保留三项替换：Apple、影视和 Final 分别使用 `Apple_1`、`Netflix` 和 `Global`。
-- Stash、Loon、Quantumult X、Egern 输出图标；Surge 与 Shadowrocket 维持现有无自定义图标输出，以符合当前客户端兼容策略。
+- Stash、Loon、Quantumult X、Egern 与 Surge 输出策略组图标；Shadowrocket 维持无自定义图标输出，以符合当前客户端能力。
 
 ## D5. 嘉信规则并入 Brokerage
 

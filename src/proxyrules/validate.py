@@ -14,6 +14,7 @@ from .render import (
     IPV4_EXCLUDED_ROUTES,
     RULES_DIR,
     SHADOWROCKET_MANUAL_POLICY,
+    STASH_ALL_NODES_GROUP,
     STASH_BEHAVIOR_ORDER,
     STASH_PROVIDER_NAME,
     SUBSCRIPTION_PLACEHOLDER,
@@ -79,31 +80,27 @@ def _validate_subscription_template(target: str, text: str) -> None:
         if SUBSCRIPTION_PLACEHOLDER in line
         and not line.lstrip().startswith(("#", ";", "//"))
     ]
-    if target == "shadowrocket":
+    if target in {"shadowrocket", "qx"}:
         if SUBSCRIPTION_PLACEHOLDER in text:
-            raise ValidationError("Shadowrocket must not contain subscription templates")
+            raise ValidationError(f"{target}: must not contain subscription templates")
+        if target == "qx" and "[server_remote]" in text:
+            raise ValidationError("QX must omit server_remote from the public template")
         return
-    # QX validates every [server_remote] entry as a resource address, so both of its
-    # templates stay commented out and an unedited profile still imports.
-    expected_active = 0 if target == "qx" else 1
+    # Egern gets two explicit copies because on-device parsing did not expand the
+    # YAML alias emitted for a shared list. Other template-bearing clients need one.
+    expected_active = 2 if target == "egern" else 1
     if len(active) != expected_active:
         raise ValidationError(
             f"{target}: exactly {expected_active} active subscription placeholder(s) required"
         )
     if any(f"{quote}{SUBSCRIPTION_PLACEHOLDER}{quote}" in text for quote in ('"', "'")):
         raise ValidationError(f"{target}: subscription placeholders must not be quoted")
-    first_templates = {
-        "qx": f"# {SUBSCRIPTION_PLACEHOLDER}, tag=Subscription1,",
-    }
     optional_templates = {
         "stash": f"  # Subscription2:\n  #   url: {SUBSCRIPTION_PLACEHOLDER}\n",
         "loon": f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n",
         "surge": f"# Subscription2 = select,policy-path={SUBSCRIPTION_PLACEHOLDER},",
-        "qx": f"# {SUBSCRIPTION_PLACEHOLDER}, tag=Subscription2,",
         "egern": f"    # - {SUBSCRIPTION_PLACEHOLDER}\n",
     }
-    if target in first_templates and first_templates[target] not in text:
-        raise ValidationError(f"{target}: a commented first subscription template is required")
     if optional_templates[target] not in text:
         raise ValidationError(f"{target}: a commented second subscription template is required")
 
@@ -212,7 +209,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         | set(config["policies"]["service_groups"])
     )
     stash_groups = {entry["name"] for entry in stash.get("proxy-groups", [])}
-    if stash_groups != expected_groups:
+    if stash_groups != expected_groups | {STASH_ALL_NODES_GROUP}:
         raise ValidationError("Stash strategy groups do not match the policy manifest")
 
     rulesets = config["rulesets"]["rulesets"]
@@ -290,18 +287,27 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     options = list(policies["service_options"])
     auto_names = [region["auto_name"] for region in policies["regions"]]
     stash_by_name = {group["name"]: group for group in stash["proxy-groups"]}
-    if list(stash_by_name) != expected_order:
-        raise ValidationError("Stash groups must be base, services, then regions")
+    stash_order = ["Manual", STASH_ALL_NODES_GROUP, *expected_order[1:]]
+    if list(stash_by_name) != stash_order:
+        raise ValidationError("Stash groups must be Manual, All Nodes, services, then regions")
     for name in expected_order:
         if stash_by_name[name].get("icon") != icon_urls[name]:
             raise ValidationError(f"Stash {name} uses the wrong self-hosted icon")
-    if (list(stash.get("proxy-providers", {})) != ["Subscription1"]
-            or stash["proxy-providers"]["Subscription1"]["url"] != SUBSCRIPTION_PLACEHOLDER):
+    if stash_by_name[STASH_ALL_NODES_GROUP].get("icon") != icon_urls["Manual"]:
+        raise ValidationError("Stash All Nodes uses the wrong self-hosted icon")
+    if (list(stash.get("proxy-providers", {})) != [STASH_PROVIDER_NAME]
+            or stash["proxy-providers"][STASH_PROVIDER_NAME]["url"]
+            != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")
-    if (stash_by_name["Manual"].get("use") != [STASH_PROVIDER_NAME]
+    if (stash_by_name["Manual"].get("use")
             or stash_by_name["Manual"].get("include-all")
-            or stash_by_name["Manual"].get("proxies") != auto_names):
-        raise ValidationError("Stash Manual must expose regional Auto groups and nodes")
+            or stash_by_name["Manual"].get("proxies")
+            != [*auto_names, STASH_ALL_NODES_GROUP]):
+        raise ValidationError("Stash Manual must expose regional Auto groups and All Nodes")
+    all_nodes = stash_by_name[STASH_ALL_NODES_GROUP]
+    if (all_nodes.get("type") != "select" or all_nodes.get("include-all") is not True
+            or all_nodes.get("proxies") or all_nodes.get("use")):
+        raise ValidationError("Stash All Nodes must include every raw node")
     for service in policies["service_groups"]:
         if stash_by_name[service].get("proxies") != options:
             raise ValidationError(f"Stash {service} options differ from the manifest")
@@ -363,13 +369,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         "select,include-other-group=Subscription1,include-all-proxies=true,hidden=true"
     ):
         raise ValidationError("Surge Node Pool must expand raw proxies and remain hidden")
-    # Lane never decrypts. Surge has no `enable` key in [MITM]; `hostname` decides what
-    # is decrypted, and omitting it leaves the client's stored list untouched.
-    if _section(texts["surge"], "MITM") != ["hostname = -*"]:
-        raise ValidationError("Surge must clear the MitM hostname list")
     for target, text in texts.items():
-        if target != "surge" and "[MITM]" in text:
-            raise ValidationError(f"{target}: profiles must not enable HTTPS decryption")
+        if "[MITM]" in text:
+            raise ValidationError(f"{target}: profiles must not configure HTTPS decryption")
     # A quoted filter keeps its quotes as part of the pattern, so it matches no node
     # and Surge closes every connection routed to the resulting empty group.
     if 'policy-regex-filter="' in texts["surge"]:
@@ -424,6 +426,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     if (egern_manual.get("urls") != [SUBSCRIPTION_PLACEHOLDER]
             or egern_manual.get("policies") != auto_names):
         raise ValidationError("Egern Manual must expose regional Auto groups and nodes")
+    if any(token in texts["egern"] for token in ("&id", "*id")):
+        raise ValidationError("Egern subscription URLs must not use YAML anchors or aliases")
     for service in policies["service_groups"]:
         if egern_groups[service]["select"]["policies"] != options:
             raise ValidationError(f"Egern {service} options differ from the manifest")
@@ -468,19 +472,11 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     for target, key in (("qx", "excluded_routes"), ("surge", "tun-excluded-routes")):
         if f"{key} = {ipv4_routes}" not in texts[target].splitlines():
             raise ValidationError(f"{target}: {key} must list the IPv4 ranges only")
-    # Both QX templates stay commented: QX rejects a profile whose [server_remote]
-    # entries are not valid resource addresses, and the placeholder is not one.
-    if _section(texts["qx"], "server_remote"):
-        raise ValidationError("QX subscription templates must stay commented out")
-    for tag in ("Subscription1", "Subscription2"):
-        template = (
-            f"# {SUBSCRIPTION_PLACEHOLDER}, tag={tag}, "
-            f"update-interval={node_interval}, enabled=true"
-        )
-        if template not in texts["qx"]:
-            raise ValidationError(f"QX {tag} template is missing")
-    if texts["qx"].index("\n[server_remote]\n") < texts["qx"].index("\n[policy]\n"):
-        raise ValidationError("QX subscription section must remain after policy groups")
+    # A public template has no private subscription URL to put here. Omitting the
+    # section avoids invalid placeholders or dummy network resources; users add a
+    # node resource in QX after importing the routing profile.
+    if "[server_remote]" in texts["qx"] or SUBSCRIPTION_PLACEHOLDER in texts["qx"]:
+        raise ValidationError("QX public profile must omit subscription resources")
     if _section(texts["qx"], "filter_local")[-2:] != ["geoip,cn,direct", "final,Final"]:
         raise ValidationError("QX final routing rules are invalid")
 

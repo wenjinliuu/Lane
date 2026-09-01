@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-08-31 23:50:33 (Asia/Shanghai)
+# Last updated: 2026-09-01 16:45:26 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -43,13 +43,13 @@ dns:
   - wildcard:
       match: '*'
       value: bootstrap
-# 在隐藏 Node Pool 的 urls 中填写 Egern 节点订阅；Manual 与地区组共享该来源。
+# 将同一份 Egern 节点订阅分别填入 Node Pool 与 Manual 的 urls；不要使用 YAML 锚点。
 policy_groups:
 - select:
     name: Node Pool
-    urls: &id001
+    urls:
     - 你的订阅地址
-    # 多订阅：取消下一行注释并填写；更多地址在 urls 中逐行追加，保留缩进。
+    # 多订阅：取消下一行注释并填写，并在另一组的 urls 中做相同修改。
     # - 你的订阅地址
     update_interval: 86400
     hidden: true
@@ -61,7 +61,10 @@ policy_groups:
     - HK Auto
     - TW Auto
     - SG Auto
-    urls: *id001
+    urls:
+    - 你的订阅地址
+    # 多订阅：取消下一行注释并填写，并在另一组的 urls 中做相同修改。
+    # - 你的订阅地址
     update_interval: 86400
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - select:
