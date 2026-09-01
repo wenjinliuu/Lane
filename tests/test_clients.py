@@ -175,17 +175,14 @@ def test_manual_exposes_regional_auto_groups_on_all_clients():
 
     stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
     stash_manual = next(group for group in stash["proxy-groups"] if group["name"] == "Manual")
-    assert stash_manual["proxies"] == [*auto_names, STASH_ALL_NODES_GROUP]
-    # Stash device testing retained only one side of mixed static/dynamic sources.
-    # A dedicated group makes every raw node reachable without hiding region Autos.
+    assert stash_manual["proxies"] == auto_names
+    assert stash_manual["use"] == ["Subscription1"]
+    # Stash expands explicitly named providers beside the static regional groups.
+    # include-all is intentionally avoided so the provider linkage stays explicit.
     assert "include-all" not in stash_manual
-    assert "use" not in stash_manual
-    stash_all_nodes = next(
-        group for group in stash["proxy-groups"]
-        if group["name"] == STASH_ALL_NODES_GROUP
-    )
-    assert stash_all_nodes["type"] == "select"
-    assert stash_all_nodes["include-all"] is True
+    assert STASH_ALL_NODES_GROUP not in {
+        group["name"] for group in stash["proxy-groups"]
+    }
 
     loon_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
@@ -428,8 +425,8 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
     ("surge", ",icon-url=", ",icon-uri=", "Surge Manual"),
     ("surge", "policy-regex-filter=(?i)", 'policy-regex-filter="(?i)', "must not be quoted"),
     ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
-    ("stash", "name: All Nodes\n  type: select\n  include-all: true",
-     "name: All Nodes\n  type: select\n  include-all: false", "All Nodes"),
+    ("stash", "  use:\n  - Subscription1",
+     "  use:\n  - MissingProvider", "Stash Manual"),
     ("shadowrocket", "Final = select,PROXY,",
      "Final = select,Manual,", "must default to PROXY"),
     ("qx", "excluded_routes = 224.0.0.0/4, 239.255.255.250/32",

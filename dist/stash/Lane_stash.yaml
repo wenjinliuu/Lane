@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-09-01 16:45:26 (Asia/Shanghai)
+# Last updated: 2026-09-01 22:51:11 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -38,13 +38,16 @@ proxy-providers:
     benchmark-url: http://cp.cloudflare.com/generate_204
     benchmark-timeout: 5
   # 多订阅：取消下方 Subscription2 整块注释并填写；更多订阅复制整块、名称递增，保留缩进。
-  # All Nodes 与地区组使用 include-all，会自动纳入新增的代理集，无需再改策略组。
+  # 启用后还要把完全相同的名称加入下方 Manual.use，例如 Subscription1、Subscription2。
+  # 使用覆写新增代理集时也遵守同名规则，并同步修改本地主配置的 Manual.use。
+  # 地区组使用 include-all，会自动纳入所有代理集，不需要逐个填写名称。
   # Subscription2:
   #   url: 你的订阅地址
   #   interval: 86400
   #   benchmark-url: http://cp.cloudflare.com/generate_204
   #   benchmark-timeout: 5
 
+# Manual.use 的名称必须与上方 proxy-providers 的键完全一致。
 # Base, service, and region strategy groups.
 proxy-groups:
 - name: Manual
@@ -55,11 +58,8 @@ proxy-groups:
   - HK Auto
   - TW Auto
   - SG Auto
-  - All Nodes
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
-- name: All Nodes
-  type: select
-  include-all: true
+  use:
+  - Subscription1
   icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - name: AI
   type: select

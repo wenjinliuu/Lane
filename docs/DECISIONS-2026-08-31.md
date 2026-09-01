@@ -1,6 +1,7 @@
 # Lane 六端 Manual 与证券最小规则决策记录
 
 - 日期：2026-08-31
+- 最近修订：2026-09-01（Stash 单层 Manual、Egern 2.20.0 兼容边界）
 - 状态：已确认，随生成器、校验器、回归用例与六端产物同步实施
 - 实施基线：`main` @ `f85cd60`
 - 实施分支：`codex/manual-auto-brokerage-minimal`
@@ -24,7 +25,9 @@ Surge 使用原生 Smart 组，名称固定为：
 - `TW Auto Smart`
 - `SG Auto Smart`
 
-其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 实机无法在同一个组中稳定混合静态地区组和动态节点源，因此 `Manual` 列出五个地区 Auto 与 `All Nodes`，全部单节点在后者中展开。Egern 的 `flatten` 无法只展开节点池而保留同级地区组，也采用这一两层结构。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
+其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 使用 `proxies + use`：`proxies` 列出五个地区 Auto，`use` 以准确名称引用 `proxy-providers`，从而在同一个 `Manual` 直接展开全部单节点；默认名称为 `Subscription1`，多订阅必须把新增名称同步加入两处。Egern 2.20.0 的 `flatten` 无法只展开节点池而保留同级地区组，继续采用两层结构。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
+
+Stash 覆写可以递归合并 `proxy-providers` 字典，却不能按 `name` 修改 `proxy-groups` 数组中的既有 `Manual` 项。因此用覆写增加代理集后，用户仍需在本地主配置的 `Manual.use` 加入同名项；不为此引入 `All Nodes`，也不使用容易覆盖整套策略组的 `#!replace` 作为默认模板。
 
 ### Egern 的单订阅源无循环结构
 
@@ -59,7 +62,7 @@ Egern 使用可见的 `All Nodes`：
 
 每次生成与上游更新都必须验证：
 
-1. Loon、Surge、QX 的 `Manual` 可选择地区自动组与订阅单节点；Stash、Egern 通过 `Manual → All Nodes` 选择单节点；Shadowrocket 通过内置 `PROXY` 选点；
+1. Stash、Loon、Surge、QX 的 `Manual` 可选择地区自动组与订阅单节点；Egern 通过 `Manual → All Nodes` 选择单节点；Shadowrocket 通过内置 `PROXY` 选点；
 2. Surge 地区自动组仍是 Smart；Egern 只在 `All Nodes` 加载一次订阅，地区组只从该组展开；
 3. `api.skytigris.cn` 首先命中 `Brokerage`；
 4. `geotest.lbkrs.com` 首先命中 `Brokerage`；

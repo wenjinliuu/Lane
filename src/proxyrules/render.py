@@ -110,7 +110,8 @@ EGERN_RULE_FIELDS = {
 CLIENT_NOTES = {
     "stash": (
         "Domain and CIDR payloads use specialized rule-provider behaviors; "
-        "DOMAIN-REGEX and other non-specialized rules remain classical."
+        "DOMAIN-REGEX and other non-specialized rules remain classical. Manual "
+        "combines regional groups with raw nodes from explicitly named providers."
     ),
     "loon": (
         "DOMAIN-REGEX is omitted because Loon remote rules do not support it. "
@@ -332,33 +333,22 @@ def _stash_config(
     filters = build_filters(policies)
 
     groups: list[dict[str, Any]] = []
-    # On-device Stash testing shows that mixed dynamic/static sources keep only one
-    # side in Manual: ``include-all`` hides explicit groups, while ``use`` beside
-    # ``proxies`` can hide provider nodes. Keep the sources in separate groups so
-    # both choices remain available deterministically.
+    # Stash supports static policy groups in ``proxies`` and explicitly named
+    # proxy providers in ``use`` at the same time. Avoid ``include-all`` here:
+    # explicit provider names make multi-subscription behavior reviewable and let
+    # Manual expose both the regional Auto groups and every raw node directly.
     groups.append(
         _with_icon(
             {
                 "name": "Manual",
                 "type": "select",
-                "proxies": [*_region_auto_names(policies), STASH_ALL_NODES_GROUP],
+                "proxies": _region_auto_names(policies),
+                "use": [STASH_PROVIDER_NAME],
             },
             icons,
             "Manual",
         )
     )
-    groups.append(
-        _with_icon(
-            {
-                "name": STASH_ALL_NODES_GROUP,
-                "type": "select",
-                "include-all": True,
-            },
-            icons,
-            "Manual",
-        )
-    )
-
     for service in policies["service_groups"]:
         groups.append(
             _with_icon(
@@ -462,9 +452,12 @@ def _stash_config(
     body = body.replace(
         "proxy-groups:\n",
         "  # 多订阅：取消下方 Subscription2 整块注释并填写；更多订阅复制整块、名称递增，保留缩进。\n"
-        "  # All Nodes 与地区组使用 include-all，会自动纳入新增的代理集，无需再改策略组。\n"
+        "  # 启用后还要把完全相同的名称加入下方 Manual.use，例如 Subscription1、Subscription2。\n"
+        "  # 使用覆写新增代理集时也遵守同名规则，并同步修改本地主配置的 Manual.use。\n"
+        "  # 地区组使用 include-all，会自动纳入所有代理集，不需要逐个填写名称。\n"
         + optional_subscription
-        + "\n# Base, service, and region strategy groups.\nproxy-groups:\n",
+        + "\n# Manual.use 的名称必须与上方 proxy-providers 的键完全一致。\n"
+        "# Base, service, and region strategy groups.\nproxy-groups:\n",
         1,
     )
     body = body.replace(

@@ -214,7 +214,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         | set(config["policies"]["service_groups"])
     )
     stash_groups = {entry["name"] for entry in stash.get("proxy-groups", [])}
-    if stash_groups != expected_groups | {STASH_ALL_NODES_GROUP}:
+    if stash_groups != expected_groups:
         raise ValidationError("Stash strategy groups do not match the policy manifest")
 
     rulesets = config["rulesets"]["rulesets"]
@@ -292,27 +292,24 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     options = list(policies["service_options"])
     auto_names = [region["auto_name"] for region in policies["regions"]]
     stash_by_name = {group["name"]: group for group in stash["proxy-groups"]}
-    stash_order = ["Manual", STASH_ALL_NODES_GROUP, *expected_order[1:]]
+    stash_order = expected_order
     if list(stash_by_name) != stash_order:
-        raise ValidationError("Stash groups must be Manual, All Nodes, services, then regions")
+        raise ValidationError("Stash groups must be Manual, services, then regions")
     for name in expected_order:
         if stash_by_name[name].get("icon") != icon_urls[name]:
             raise ValidationError(f"Stash {name} uses the wrong self-hosted icon")
-    if stash_by_name[STASH_ALL_NODES_GROUP].get("icon") != icon_urls["Manual"]:
-        raise ValidationError("Stash All Nodes uses the wrong self-hosted icon")
     if (list(stash.get("proxy-providers", {})) != [STASH_PROVIDER_NAME]
             or stash["proxy-providers"][STASH_PROVIDER_NAME]["url"]
             != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")
-    if (stash_by_name["Manual"].get("use")
+    if (stash_by_name["Manual"].get("type") != "select"
+            or stash_by_name["Manual"].get("use") != [STASH_PROVIDER_NAME]
             or stash_by_name["Manual"].get("include-all")
             or stash_by_name["Manual"].get("proxies")
-            != [*auto_names, STASH_ALL_NODES_GROUP]):
-        raise ValidationError("Stash Manual must expose regional Auto groups and All Nodes")
-    all_nodes = stash_by_name[STASH_ALL_NODES_GROUP]
-    if (all_nodes.get("type") != "select" or all_nodes.get("include-all") is not True
-            or all_nodes.get("proxies") or all_nodes.get("use")):
-        raise ValidationError("Stash All Nodes must include every raw node")
+            != auto_names):
+        raise ValidationError(
+            "Stash Manual must expose regional Auto groups and the named provider"
+        )
     for service in policies["service_groups"]:
         if stash_by_name[service].get("proxies") != options:
             raise ValidationError(f"Stash {service} options differ from the manifest")

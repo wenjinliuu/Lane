@@ -45,7 +45,7 @@
     "egern": {}
   },
   "notes": {
-    "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical.",
+    "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical. Manual combines regional groups with raw nodes from explicitly named providers.",
     "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters intentionally leave their sources unpinned so local nodes and multiple subscriptions can be considered.",
     "shadowrocket": "DOMAIN-REGEX is omitted for compatibility. Service groups follow the built-in PROXY policy (the node picked on the home screen) instead of a generated Manual group; icons are omitted because Shadowrocket has no policy-group icon parameter.",
     "surge": "DOMAIN-REGEX is unsupported and omitted. Region automation uses native Smart groups over a hidden raw-node pool; visible groups carry icon-url.",

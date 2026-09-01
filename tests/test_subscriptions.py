@@ -8,7 +8,7 @@ import yaml
 from proxyrules.config import load_project_config
 from proxyrules.render import (
     CONFIG_FILENAMES, QX_PLACEHOLDER_CONTENT, QX_PLACEHOLDER_FILENAME,
-    STASH_ALL_NODES_GROUP, SUBSCRIPTION_PLACEHOLDER,
+    SUBSCRIPTION_PLACEHOLDER,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
 
@@ -50,7 +50,7 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         assert len(active) == 1
 
 
-def test_stash_optional_block_can_be_enabled_and_copied_with_valid_indentation():
+def test_stash_optional_block_can_be_enabled_copied_and_linked_by_name():
     text = _profile("stash")
     original = yaml.safe_load(text)
     assert list(original["proxy-providers"]) == ["Subscription1"]
@@ -68,9 +68,16 @@ def test_stash_optional_block_can_be_enabled_and_copied_with_valid_indentation()
     for name, url in zip(providers, URLS):
         assert providers[name] == {**original["proxy-providers"]["Subscription1"], "url": url}
     assert parsed["proxy-groups"] == original["proxy-groups"]
-    assert parsed["proxy-groups"][0]["proxies"][-1] == STASH_ALL_NODES_GROUP
-    assert parsed["proxy-groups"][1]["name"] == STASH_ALL_NODES_GROUP
-    assert parsed["proxy-groups"][1]["include-all"] is True
+    assert parsed["proxy-groups"][0]["use"] == ["Subscription1"]
+
+    linked = edited.replace(
+        "  use:\n  - Subscription1\n",
+        "  use:\n  - Subscription1\n  - Subscription2\n  - Subscription3\n",
+        1,
+    )
+    linked_manual = yaml.safe_load(linked)["proxy-groups"][0]
+    assert linked_manual["use"] == list(providers)
+    assert "名称必须与上方 proxy-providers 的键完全一致" in text
     for group in parsed["proxy-groups"][-10:]:
         assert group["include-all"] is True
 
