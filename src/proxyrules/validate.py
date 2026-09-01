@@ -11,7 +11,7 @@ from .cn_window import canonical_cidr_text, coverage_stats
 from .filters import build_filters
 from .render import (
     CONFIG_FILENAMES,
-    QX_EXCLUDED_ROUTES,
+    IPV4_EXCLUDED_ROUTES,
     RULES_DIR,
     SHADOWROCKET_MANUAL_POLICY,
     STASH_BEHAVIOR_ORDER,
@@ -455,9 +455,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                 raise ValidationError(f"Invalid QX region group: {name}")
     # QX documents excluded_routes with IPv4 ranges only, so the IPv6 multicast entry
     # the other clients carry must not leak into this profile.
-    qx_routes = f"excluded_routes = {', '.join(QX_EXCLUDED_ROUTES)}"
-    if qx_routes not in texts["qx"].splitlines():
-        raise ValidationError("QX excluded_routes must list the IPv4 ranges only")
+    # Surge logs "Invalid excluded route" and drops an IPv6 entry here; QX only
+    # documents IPv4 ranges. Both must carry the IPv4 subset, nothing more.
+    ipv4_routes = ", ".join(IPV4_EXCLUDED_ROUTES)
+    for target, key in (("qx", "excluded_routes"), ("surge", "tun-excluded-routes")):
+        if f"{key} = {ipv4_routes}" not in texts[target].splitlines():
+            raise ValidationError(f"{target}: {key} must list the IPv4 ranges only")
     # Both QX templates stay commented: QX rejects a profile whose [server_remote]
     # entries are not valid resource addresses, and the placeholder is not one.
     if _section(texts["qx"], "server_remote"):

@@ -421,6 +421,9 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
     ("qx", "excluded_routes = 224.0.0.0/4, 239.255.255.250/32",
      "excluded_routes = 224.0.0.0/4, 239.255.255.250/32, ff02::fb/128",
      "excluded_routes"),
+    ("surge", "tun-excluded-routes = 224.0.0.0/4, 239.255.255.250/32",
+     "tun-excluded-routes = 224.0.0.0/4, 239.255.255.250/32, ff02::fb/128",
+     "tun-excluded-routes"),
 ])
 def test_validator_rejects_client_capability_regressions(tmp_path, target, old, new, error):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")

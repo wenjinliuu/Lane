@@ -184,11 +184,13 @@ def test_client_dns_and_multicast_capability_matrix() -> None:
 
     assert f"bypass-tun = {route_csv}" in text["loon"]
     assert f"tun-excluded-routes = {route_csv}" in text["shadowrocket"]
-    assert f"tun-excluded-routes = {route_csv}" in text["surge"]
-    # QX documents excluded_routes with IPv4 ranges only.
-    qx_route_csv = ", ".join(r for r in MULTICAST_EXCLUDED_ROUTES if ":" not in r)
-    assert f"excluded_routes = {qx_route_csv}" in text["qx"]
-    assert "ff02::fb/128" not in text["qx"]
+    # Surge logs "Invalid excluded route" for an IPv6 entry and QX documents IPv4
+    # ranges only, so both carry the IPv4 subset.
+    ipv4_route_csv = ", ".join(r for r in MULTICAST_EXCLUDED_ROUTES if ":" not in r)
+    assert f"excluded_routes = {ipv4_route_csv}" in text["qx"]
+    assert f"tun-excluded-routes = {ipv4_route_csv}" in text["surge"]
+    for target in ("qx", "surge"):
+        assert "ff02::fb/128" not in text[target]
     egern = yaml.safe_load(text["egern"])
     assert egern["vif_excluded_routes"] == list(MULTICAST_EXCLUDED_ROUTES)
     assert "excluded" not in text["stash"]

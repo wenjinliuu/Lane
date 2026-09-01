@@ -34,7 +34,10 @@ MULTICAST_EXCLUDED_ROUTES = (
     "239.255.255.250/32",
     "ff02::fb/128",
 )
-QX_EXCLUDED_ROUTES = tuple(
+# Surge rejects an IPv6 entry here ("Invalid excluded route: ff02::fb/128") and QX
+# only documents IPv4 ranges, so both get the IPv4 subset. Shadowrocket documents
+# the IPv6 form and Loon/Egern take the full list.
+IPV4_EXCLUDED_ROUTES = tuple(
     route for route in MULTICAST_EXCLUDED_ROUTES if ":" not in route
 )
 REAL_IP_DOMAINS = (
@@ -650,7 +653,7 @@ def _surge_config(
         "[General]", "loglevel = notify", "ipv6 = false",
         "udp-policy-not-supported-behaviour = REJECT",
         "allow-wifi-access = false", "dns-server = system",
-        f"tun-excluded-routes = {', '.join(MULTICAST_EXCLUDED_ROUTES)}",
+        f"tun-excluded-routes = {', '.join(IPV4_EXCLUDED_ROUTES)}",
         f"always-real-ip = {', '.join(REAL_IP_DOMAINS)}",
         f"hijack-dns = {', '.join(HIJACK_DNS_SERVERS)}",
         f"proxy-test-url = {benchmark['url']}",
@@ -719,9 +722,8 @@ def _qx_config(
         f"server_check_timeout = {min(5000, benchmark['timeout'] * 1000)}",
         "fallback_udp_policy = reject",
         f"dns_exclusion_list = {', '.join(REAL_IP_DOMAINS)}",
-        # QX documents excluded_routes with IPv4 ranges only; the IPv6 multicast
-        # entry other clients carry is dropped rather than risking a parse error.
-        f"excluded_routes = {', '.join(QX_EXCLUDED_ROUTES)}",
+        # QX documents excluded_routes with IPv4 ranges only.
+        f"excluded_routes = {', '.join(IPV4_EXCLUDED_ROUTES)}",
         # QX's [dns] server takes resolver addresses only. The system resolvers
         # are used by default and are turned off with no-system, so there is no
         # `server = system` to write here.
