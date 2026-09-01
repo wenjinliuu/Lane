@@ -45,11 +45,11 @@
     "egern": {}
   },
   "notes": {
-    "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical. Manual combines regional groups with raw nodes from explicitly named providers.",
+    "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical. Manual combines explicit regional groups with raw nodes from every provider via include-all, so provider names remain user-defined.",
     "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters intentionally leave their sources unpinned so local nodes and multiple subscriptions can be considered.",
     "shadowrocket": "DOMAIN-REGEX is omitted for compatibility. Service groups follow the built-in PROXY policy (the node picked on the home screen) instead of a generated Manual group; icons are omitted because Shadowrocket has no policy-group icon parameter.",
     "surge": "DOMAIN-REGEX is unsupported and omitted. Region automation uses native Smart groups over a hidden raw-node pool; visible groups carry icon-url.",
-    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted. excluded_routes stays IPv4-only. A disabled, empty self-hosted server_remote placeholder satisfies QX's complete-profile import requirement without providing a usable node.",
+    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted. excluded_routes stays IPv4-only. An empty server_local section and a disabled, empty self-hosted server_remote placeholder satisfy QX's complete-profile import requirement without providing a usable node.",
     "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support. Manual reaches raw nodes through a dedicated All Nodes subscription group."
   }
 }

@@ -86,7 +86,8 @@ LOCAL_PROFILE_NOTICE = (
     "# 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。\n"
 )
 QX_LOCAL_PROFILE_NOTICE = (
-    "# Lane 不提供节点；[server_remote] 内置一条默认禁用的空占位资源，仅用于通过完整配置导入检查。\n"
+    "# Lane 不提供节点；[server_local] 保持为空，[server_remote] 内置一条默认禁用的空占位资源。\n"
+    "# 两个节点模块只用于通过完整配置导入检查，不会添加虚拟节点。\n"
     "# 导入后可在节点资源页面添加订阅；也可替换占位 URL，并将 enabled=false 改为 enabled=true。\n"
     "# 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。\n"
     "# 换用新版完整配置前，请备份节点资源与个人修改。\n"
@@ -111,7 +112,8 @@ CLIENT_NOTES = {
     "stash": (
         "Domain and CIDR payloads use specialized rule-provider behaviors; "
         "DOMAIN-REGEX and other non-specialized rules remain classical. Manual "
-        "combines regional groups with raw nodes from explicitly named providers."
+        "combines explicit regional groups with raw nodes from every provider via "
+        "include-all, so provider names remain user-defined."
     ),
     "loon": (
         "DOMAIN-REGEX is omitted because Loon remote rules do not support it. "
@@ -133,8 +135,9 @@ CLIENT_NOTES = {
         "Surge-style no-resolve is not emitted. QX uses native domain/IP "
         "matching priorities. System DNS is used by default, so no "
         "server = system entry is emitted. excluded_routes stays IPv4-only. "
-        "A disabled, empty self-hosted server_remote placeholder satisfies QX's "
-        "complete-profile import requirement without providing a usable node."
+        "An empty server_local section and a disabled, empty self-hosted "
+        "server_remote placeholder satisfy QX's complete-profile import requirement "
+        "without providing a usable node."
     ),
     "egern": (
         "Native YAML rule sets preserve domain regex and no_resolve. Requires a "
@@ -333,17 +336,17 @@ def _stash_config(
     filters = build_filters(policies)
 
     groups: list[dict[str, Any]] = []
-    # Stash supports static policy groups in ``proxies`` and explicitly named
-    # proxy providers in ``use`` at the same time. Avoid ``include-all`` here:
-    # explicit provider names make multi-subscription behavior reviewable and let
-    # Manual expose both the regional Auto groups and every raw node directly.
+    # ``include-all`` appends every local proxy and proxy-provider node while the
+    # explicit ``proxies`` list keeps the regional Auto groups at the front. This
+    # makes provider keys user-defined and lets overrides add providers without
+    # patching the Manual group array.
     groups.append(
         _with_icon(
             {
                 "name": "Manual",
                 "type": "select",
                 "proxies": _region_auto_names(policies),
-                "use": [STASH_PROVIDER_NAME],
+                "include-all": True,
             },
             icons,
             "Manual",
@@ -452,12 +455,10 @@ def _stash_config(
     body = body.replace(
         "proxy-groups:\n",
         "  # 多订阅：取消下方 Subscription2 整块注释并填写；更多订阅复制整块、名称递增，保留缩进。\n"
-        "  # 启用后还要把完全相同的名称加入下方 Manual.use，例如 Subscription1、Subscription2。\n"
-        "  # 使用覆写新增代理集时也遵守同名规则，并同步修改本地主配置的 Manual.use。\n"
-        "  # 地区组使用 include-all，会自动纳入所有代理集，不需要逐个填写名称。\n"
+        "  # proxy-providers 的名称可自定义但必须唯一；Manual 与地区组会自动纳入所有代理集。\n"
+        "  # 使用覆写新增代理集时只需新增 proxy-providers 项，不需要修改 Manual。\n"
         + optional_subscription
-        + "\n# Manual.use 的名称必须与上方 proxy-providers 的键完全一致。\n"
-        "# Base, service, and region strategy groups.\nproxy-groups:\n",
+        + "\n# Base, service, and region strategy groups.\nproxy-groups:\n",
         1,
     )
     body = body.replace(
@@ -750,6 +751,8 @@ def _qx_config(
         "", "[dns]", "no-ipv6", "",
         "[server_remote]",
         f"{placeholder_url}, tag=Lane Placeholder, update-interval=-1, enabled=false",
+        "", "[server_local]",
+        "# Lane 不内置本地节点；保留空模块以满足 QX 完整配置导入检查。",
         "",
         "[policy]", (
             f"static = Manual, {', '.join(_region_auto_names(policies))}, "

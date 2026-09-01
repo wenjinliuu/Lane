@@ -25,9 +25,9 @@ Surge 使用原生 Smart 组，名称固定为：
 - `TW Auto Smart`
 - `SG Auto Smart`
 
-其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 使用 `proxies + use`：`proxies` 列出五个地区 Auto，`use` 以准确名称引用 `proxy-providers`，从而在同一个 `Manual` 直接展开全部单节点；默认名称为 `Subscription1`，多订阅必须把新增名称同步加入两处。Egern 2.20.0 的 `flatten` 无法只展开节点池而保留同级地区组，继续采用两层结构。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
+其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 在 `Manual.proxies` 列出五个地区 Auto，并以 `include-all: true` 自动展开全部本地节点和代理集节点；`proxy-providers` 的键可由用户自定义，只需保持唯一，多订阅或覆写新增代理集都不需要修改 `Manual`。Egern 2.20.0 的 `flatten` 无法只展开节点池而保留同级地区组，继续采用两层结构。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
 
-Stash 覆写可以递归合并 `proxy-providers` 字典，却不能按 `name` 修改 `proxy-groups` 数组中的既有 `Manual` 项。因此用覆写增加代理集后，用户仍需在本地主配置的 `Manual.use` 加入同名项；不为此引入 `All Nodes`，也不使用容易覆盖整套策略组的 `#!replace` 作为默认模板。
+Stash 覆写可以递归合并 `proxy-providers` 字典。由于 `Manual` 与地区组统一使用 `include-all`，覆写只需新增代理集字典项，无需修改 `proxy-groups` 数组，也不需要 `#!replace` 或额外的 `All Nodes`。
 
 ### Egern 的单订阅源无循环结构
 
@@ -88,9 +88,10 @@ Egern 使用可见的 `All Nodes`：
 - `schwab` 逻辑规则集、v2fly `schwab` 来源与 `rules/custom/schwab.list` 全部保留，生成的独立规则文件也继续发布。
 - 嘉信规则命中后统一交给 `Brokerage`，与其他证券规则共用同一策略选择；不把嘉信域名删除或改为硬编码 DIRECT。
 
-## D6. QX 完整配置保留禁用占位资源
+## D6. QX 完整配置保留完整节点模块
 
-- QX 真机从远程 URL 导入完整配置时要求存在 `[server_remote]`；完全省略该模块会直接拒绝导入。
+- QX 真机从远程 URL 导入完整配置时会依次检查 `[server_remote]` 与 `[server_local]`；缺少任一模块都会直接拒绝导入。
+- `[server_local]` 只保留空模块，不放置示例、虚拟或本地节点。
 - 公开配置只写一条 Lane 自托管的空节点资源，固定 `enabled=false`、`update-interval=-1`，不提供任何可用代理，也不主动联网更新。
 - 用户可在 QX 节点资源页面另行添加订阅；若直接编辑配置，则替换占位 URL 并显式改为 `enabled=true`。
-- 校验器同时锁定资源 URL、禁用状态和空文件内容，防止以后把示例节点或第三方订阅误当作默认资源发布。
+- 校验器同时锁定空的 `[server_local]`、资源 URL、禁用状态和空文件内容，防止以后把示例节点或第三方订阅误当作默认资源发布。

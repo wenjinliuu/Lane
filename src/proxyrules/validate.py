@@ -91,6 +91,8 @@ def _validate_subscription_template(target: str, text: str) -> None:
             raise ValidationError("qx: must not contain a private subscription template")
         if "[server_remote]" not in text:
             raise ValidationError("QX complete profile must include server_remote")
+        if "[server_local]" not in text:
+            raise ValidationError("QX complete profile must include server_local")
         return
     expected_active = 1
     if len(active) != expected_active:
@@ -303,12 +305,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")
     if (stash_by_name["Manual"].get("type") != "select"
-            or stash_by_name["Manual"].get("use") != [STASH_PROVIDER_NAME]
-            or stash_by_name["Manual"].get("include-all")
+            or stash_by_name["Manual"].get("include-all") is not True
+            or "use" in stash_by_name["Manual"]
             or stash_by_name["Manual"].get("proxies")
             != auto_names):
         raise ValidationError(
-            "Stash Manual must expose regional Auto groups and the named provider"
+            "Stash Manual must expose regional Auto groups and all providers"
         )
     for service in policies["service_groups"]:
         if stash_by_name[service].get("proxies") != options:
@@ -448,6 +450,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     qx_groups = {}
     if "\n[server_remote]\n" not in texts["qx"]:
         raise ValidationError("QX complete profile must include server_remote")
+    if "\n[server_local]\n" not in texts["qx"]:
+        raise ValidationError("QX complete profile must include server_local")
     for line in _section(texts["qx"], "policy"):
         kind, value = line.split("=", 1)
         name = value.split(",", 1)[0].strip()
@@ -482,6 +486,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         f"{qx_placeholder_url}, tag=Lane Placeholder, update-interval=-1, enabled=false"
     ]:
         raise ValidationError("QX server_remote must contain only the disabled Lane placeholder")
+    if _section(texts["qx"], "server_local"):
+        raise ValidationError("QX server_local must remain empty")
     placeholder_path = dist / "qx" / QX_PLACEHOLDER_FILENAME
     if placeholder_path.read_text(encoding="utf-8") != QX_PLACEHOLDER_CONTENT:
         raise ValidationError("QX placeholder resource must remain empty and documented")

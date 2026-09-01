@@ -38,6 +38,7 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         if target == "qx":
             assert "节点资源页面添加" in text
             assert "[server_remote]" in text
+            assert "[server_local]" in text
     else:
         assert SUBSCRIPTION_PLACEHOLDER == "你的订阅地址"
         assert f'"{SUBSCRIPTION_PLACEHOLDER}"' not in text
@@ -50,7 +51,7 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         assert len(active) == 1
 
 
-def test_stash_optional_block_can_be_enabled_copied_and_linked_by_name():
+def test_stash_optional_block_can_be_enabled_without_manual_name_linkage():
     text = _profile("stash")
     original = yaml.safe_load(text)
     assert list(original["proxy-providers"]) == ["Subscription1"]
@@ -68,18 +69,21 @@ def test_stash_optional_block_can_be_enabled_copied_and_linked_by_name():
     for name, url in zip(providers, URLS):
         assert providers[name] == {**original["proxy-providers"]["Subscription1"], "url": url}
     assert parsed["proxy-groups"] == original["proxy-groups"]
-    assert parsed["proxy-groups"][0]["use"] == ["Subscription1"]
-
-    linked = edited.replace(
-        "  use:\n  - Subscription1\n",
-        "  use:\n  - Subscription1\n  - Subscription2\n  - Subscription3\n",
-        1,
-    )
-    linked_manual = yaml.safe_load(linked)["proxy-groups"][0]
-    assert linked_manual["use"] == list(providers)
-    assert "名称必须与上方 proxy-providers 的键完全一致" in text
+    assert parsed["proxy-groups"][0]["include-all"] is True
+    assert "use" not in parsed["proxy-groups"][0]
+    assert "名称可自定义但必须唯一" in text
+    assert "不需要修改 Manual" in text
     for group in parsed["proxy-groups"][-10:]:
         assert group["include-all"] is True
+
+    renamed = edited.replace("\n  Subscription1:\n", "\n  MainProvider:\n", 1)
+    renamed = renamed.replace("\n  Subscription2:\n", "\n  BackupProvider:\n", 1)
+    renamed = renamed.replace("\n  Subscription3:\n", "\n  ExtraProvider:\n", 1)
+    renamed_config = yaml.safe_load(renamed)
+    assert list(renamed_config["proxy-providers"]) == [
+        "MainProvider", "BackupProvider", "ExtraProvider"
+    ]
+    assert renamed_config["proxy-groups"] == original["proxy-groups"]
 
 
 def test_loon_additional_subscriptions_do_not_require_filter_changes():
@@ -107,10 +111,11 @@ def test_qx_uses_only_a_disabled_empty_placeholder_resource():
         f"{QX_PLACEHOLDER_FILENAME}, tag=Lane Placeholder, "
         "update-interval=-1, enabled=false"
     ]
-    assert "[server_local]" not in text
+    assert _section(text, "server_local") == []
     assert "节点资源页面添加" in text
     assert re.findall(r"(?m)^\[([^\]]+)\]$", text) == [
-        "general", "dns", "server_remote", "policy", "filter_remote", "filter_local"
+        "general", "dns", "server_remote", "server_local", "policy",
+        "filter_remote", "filter_local"
     ]
 
 
@@ -177,6 +182,8 @@ def test_egern_all_nodes_accepts_additional_urls_without_duplication():
     ("loon", f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n", "", "commented second"),
     ("qx", "\n[server_remote]\n", "\n[server_remote_removed]\n",
      "must include server_remote"),
+    ("qx", "\n[server_local]\n", "\n[server_local_removed]\n",
+     "must include server_local"),
     ("qx", "update-interval=-1, enabled=false",
      "update-interval=-1, enabled=true", "disabled Lane placeholder"),
 ])
