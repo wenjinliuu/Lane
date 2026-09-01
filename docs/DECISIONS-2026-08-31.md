@@ -11,7 +11,7 @@
 
 ### 决策
 
-Loon、Surge、Quantumult X 与 Egern 的顶层 `Manual` 必须同时提供：
+Loon、Surge 与 Quantumult X 的顶层 `Manual` 必须同时提供：
 
 1. 美国、日本、香港、台湾、新加坡五个地区自动组；
 2. 用户订阅中的全部单节点。
@@ -24,18 +24,18 @@ Surge 使用原生 Smart 组，名称固定为：
 - `TW Auto Smart`
 - `SG Auto Smart`
 
-其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 实机无法在同一个组中稳定混合静态地区组和动态节点源，因此 `Manual` 列出五个地区 Auto 与 `All Nodes`，全部单节点在后者中展开。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
+其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 实机无法在同一个组中稳定混合静态地区组和动态节点源，因此 `Manual` 列出五个地区 Auto 与 `All Nodes`，全部单节点在后者中展开。Egern 的 `flatten` 无法只展开节点池而保留同级地区组，也采用这一两层结构。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
 
-### Egern 的无循环结构
+### Egern 的单订阅源无循环结构
 
-Egern 新增隐藏 `Node Pool`：
+Egern 使用可见的 `All Nodes`：
 
-- `Node Pool` 加载节点订阅；
-- 十个地区 Auto / Manual 组从 `Node Pool` 执行 `flatten` 与地区筛选，不再反向引用 `Manual`；
-- `Manual` 列出五个地区 Auto，并继续加载全部单节点；
-- `Node Pool.urls` 与 `Manual.urls` 各自写出显式列表，用户在两处填写相同地址；不使用部分 Egern 版本无法展开的 YAML 锚点。
+- `All Nodes.urls` 只加载一次节点订阅；
+- 十个地区 Auto / Manual 组从 `All Nodes` 执行 `flatten` 与地区筛选，不反向引用 `Manual`；
+- `Manual` 列出五个地区 Auto 与 `All Nodes`；
+- 用户只需填写一处订阅地址，多订阅也只在同一 `urls` 列表中追加。
 
-这样既保留 Manual 的地区自动选择和原始单节点，也避免 `Manual → 地区 Auto → Manual` 的策略环。
+这样既避免 `Manual → 地区 Auto → Manual` 的策略环，也规避同一订阅重复加载后节点被去重；选择单节点时多进入一层 `All Nodes`。
 
 ## D2. 老虎与长桥只保留实测关键域名
 
@@ -59,8 +59,8 @@ Egern 新增隐藏 `Node Pool`：
 
 每次生成与上游更新都必须验证：
 
-1. Loon、Surge、QX、Egern 的 `Manual` 可选择地区自动组与订阅单节点；Stash 通过 `Manual → All Nodes` 选择单节点；Shadowrocket 通过内置 `PROXY` 选点；
-2. Surge 地区自动组仍是 Smart，Egern `Node Pool` 仍隐藏且地区组只从该池展开；
+1. Loon、Surge、QX 的 `Manual` 可选择地区自动组与订阅单节点；Stash、Egern 通过 `Manual → All Nodes` 选择单节点；Shadowrocket 通过内置 `PROXY` 选点；
+2. Surge 地区自动组仍是 Smart；Egern 只在 `All Nodes` 加载一次订阅，地区组只从该组展开；
 3. `api.skytigris.cn` 首先命中 `Brokerage`；
 4. `geotest.lbkrs.com` 首先命中 `Brokerage`；
 5. `www.itiger.com` 与 `www.longbridge.com` 不再命中 `Brokerage`，而是命中 `General Proxy` / `Final`；
@@ -84,3 +84,10 @@ Egern 新增隐藏 `Node Pool`：
 - 删除六端可见的 `Schwab` 策略组，不再单独占用策略选择项。
 - `schwab` 逻辑规则集、v2fly `schwab` 来源与 `rules/custom/schwab.list` 全部保留，生成的独立规则文件也继续发布。
 - 嘉信规则命中后统一交给 `Brokerage`，与其他证券规则共用同一策略选择；不把嘉信域名删除或改为硬编码 DIRECT。
+
+## D6. QX 完整配置保留禁用占位资源
+
+- QX 真机从远程 URL 导入完整配置时要求存在 `[server_remote]`；完全省略该模块会直接拒绝导入。
+- 公开配置只写一条 Lane 自托管的空节点资源，固定 `enabled=false`、`update-interval=-1`，不提供任何可用代理，也不主动联网更新。
+- 用户可在 QX 节点资源页面另行添加订阅；若直接编辑配置，则替换占位 URL 并显式改为 `enabled=true`。
+- 校验器同时锁定资源 URL、禁用状态和空文件内容，防止以后把示例节点或第三方订阅误当作默认资源发布。

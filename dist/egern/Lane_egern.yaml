@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-09-01 16:45:26 (Asia/Shanghai)
+# Last updated: 2026-09-01 21:56:41 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -43,16 +43,16 @@ dns:
   - wildcard:
       match: '*'
       value: bootstrap
-# 将同一份 Egern 节点订阅分别填入 Node Pool 与 Manual 的 urls；不要使用 YAML 锚点。
+# 只需在 All Nodes 的 urls 填写订阅；Manual 通过 All Nodes 进入全部单节点。
 policy_groups:
 - select:
-    name: Node Pool
+    name: All Nodes
     urls:
     - 你的订阅地址
-    # 多订阅：取消下一行注释并填写，并在另一组的 urls 中做相同修改。
+    # 多订阅：取消下一行注释并填写；地区组会自动从 All Nodes 展开。
     # - 你的订阅地址
     update_interval: 86400
-    hidden: true
+    icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - select:
     name: Manual
     policies:
@@ -61,11 +61,7 @@ policy_groups:
     - HK Auto
     - TW Auto
     - SG Auto
-    urls:
-    - 你的订阅地址
-    # 多订阅：取消下一行注释并填写，并在另一组的 urls 中做相同修改。
-    # - 你的订阅地址
-    update_interval: 86400
+    - All Nodes
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - select:
     name: AI
@@ -310,7 +306,7 @@ policy_groups:
 - auto_test:
     name: US Auto
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -320,14 +316,14 @@ policy_groups:
 - select:
     name: US Manual
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/United_States.png
 - auto_test:
     name: JP Auto
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -337,14 +333,14 @@ policy_groups:
 - select:
     name: JP Manual
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Japan.png
 - auto_test:
     name: HK Auto
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -354,14 +350,14 @@ policy_groups:
 - select:
     name: HK Manual
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Hong_Kong.png
 - auto_test:
     name: TW Auto
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇹🇼|台湾|臺灣|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -371,14 +367,14 @@ policy_groups:
 - select:
     name: TW Manual
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇹🇼|台湾|臺灣|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/China.png
 - auto_test:
     name: SG Auto
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇸🇬|新加坡|狮|獅|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -388,7 +384,7 @@ policy_groups:
 - select:
     name: SG Manual
     policies:
-    - Node Pool
+    - All Nodes
     flatten: true
     filter: (?i)^.*(?:(?:🇸🇬|新加坡|狮|獅|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Singapore.png

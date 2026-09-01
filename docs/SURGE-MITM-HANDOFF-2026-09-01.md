@@ -192,9 +192,10 @@ hostname   h2   skip-server-cert-verify   ca-p12   ca-passphrase
 | 客户端 | 问题 | 修复 |
 |---|---|---|
 | **Stash** | `include-all + proxies` 与 `use + proxies` 的实机结果都只保留一侧 | 后续改为 `Manual → 五个地区 Auto + All Nodes`；`All Nodes` 单独用 `include-all` 展开节点 |
-| **Quantumult X** | 中文占位符与注释订阅模板的导入方案均不稳定 | 后续完全省略 `[server_remote]`，导入配置后在 App 内添加节点资源；`excluded_routes` 仍为纯 IPv4 |
+| **Quantumult X** | 中文占位符和注释订阅模板都会导致完整配置导入失败；完全省略 `[server_remote]` 也会被真机拒绝 | 保留 `[server_remote]`，引用 Lane 自托管、内容为空、默认禁用且不自动更新的占位资源；导入后在 App 内添加真实节点资源，或替换该行 URL 并启用；`excluded_routes` 仍为纯 IPv4 |
 | **Shadowrocket** | 生成了多余的 `Manual` 组 | 删除，改用内置 `PROXY` 策略（= 首页选中的节点）+ `policy-select-name=PROXY`；地区 `url-test` 组保留（它本身即自动测速，App 里那个"测试并选择最快服务器"是全局 UI 开关，与之无关） |
 | **Surge** | 策略组图标不显示 / 正则被引号包住 / IPv6 排除路由被拒 | 补 `icon-url=`；`policy-regex-filter` 去引号；`tun-excluded-routes` 只写 IPv4；不再写 `[MITM]` |
+| **Egern** | `Manual` 直接混合地区 Auto 与订阅节点时只能稳定显示一侧；重复加载同一订阅又会触发节点去重 | 改为 `Manual → 五个地区 Auto + All Nodes`；订阅只在可见的 `All Nodes.urls` 填写一次，地区组从中 `flatten` 并筛选 |
 
 validator 对以上每一条都加了断言，回退会直接构建失败。
 

@@ -7,7 +7,8 @@ import yaml
 
 from proxyrules.config import load_project_config
 from proxyrules.render import (
-    CONFIG_FILENAMES, STASH_ALL_NODES_GROUP, SUBSCRIPTION_PLACEHOLDER,
+    CONFIG_FILENAMES, QX_PLACEHOLDER_CONTENT, QX_PLACEHOLDER_FILENAME,
+    STASH_ALL_NODES_GROUP, SUBSCRIPTION_PLACEHOLDER,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
 
@@ -35,8 +36,8 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         assert SUBSCRIPTION_PLACEHOLDER not in text
         assert "多订阅" not in text
         if target == "qx":
-            assert "应用内添加" in text
-            assert "[server_remote]" not in text
+            assert "节点资源页面添加" in text
+            assert "[server_remote]" in text
     else:
         assert SUBSCRIPTION_PLACEHOLDER == "你的订阅地址"
         assert f'"{SUBSCRIPTION_PLACEHOLDER}"' not in text
@@ -46,7 +47,7 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         assert "导入启用前" in heading
         active = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
                   and not line.lstrip().startswith(("#", ";", "//"))]
-        assert len(active) == (2 if target == "egern" else 1)
+        assert len(active) == 1
 
 
 def test_stash_optional_block_can_be_enabled_and_copied_with_valid_indentation():
@@ -89,14 +90,20 @@ def test_loon_additional_subscriptions_do_not_require_filter_changes():
         assert _section(edited, section) == _section(text, section)
 
 
-def test_qx_omits_private_subscription_resources_from_public_profile():
+def test_qx_uses_only_a_disabled_empty_placeholder_resource():
     text = _profile("qx")
     assert SUBSCRIPTION_PLACEHOLDER not in text
-    assert "[server_remote]" not in text
+    placeholder = ROOT / "dist" / "qx" / QX_PLACEHOLDER_FILENAME
+    assert placeholder.read_text(encoding="utf-8") == QX_PLACEHOLDER_CONTENT
+    assert _section(text, "server_remote") == [
+        "https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/qx/"
+        f"{QX_PLACEHOLDER_FILENAME}, tag=Lane Placeholder, "
+        "update-interval=-1, enabled=false"
+    ]
     assert "[server_local]" not in text
-    assert "应用内添加" in text
+    assert "节点资源页面添加" in text
     assert re.findall(r"(?m)^\[([^\]]+)\]$", text) == [
-        "general", "dns", "policy", "filter_remote", "filter_local"
+        "general", "dns", "server_remote", "policy", "filter_remote", "filter_local"
     ]
 
 
@@ -135,25 +142,23 @@ def test_surge_hidden_subscriptions_are_expanded_through_manual():
     assert 'include-other-group="Subscription1,Subscription2"' in text
 
 
-def test_egern_urls_accept_additional_items_without_changing_region_groups():
+def test_egern_all_nodes_accepts_additional_urls_without_duplication():
     text = _profile("egern")
     original = yaml.safe_load(text)
     assert original["policy_groups"][0]["select"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
-    assert original["policy_groups"][1]["select"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
     edited = text.replace(
-        f"    - {SUBSCRIPTION_PLACEHOLDER}\n", f"    - {URLS[0]}\n", 2
+        f"    - {SUBSCRIPTION_PLACEHOLDER}\n", f"    - {URLS[0]}\n", 1
     )
     edited = edited.replace(
         f"    # - {SUBSCRIPTION_PLACEHOLDER}\n",
         f"    - {URLS[1]}\n    - {URLS[2]}\n",
-        2,
+        1,
     )
     parsed = yaml.safe_load(edited)
     assert parsed["policy_groups"][0]["select"]["urls"] == URLS
-    assert parsed["policy_groups"][1]["select"]["urls"] == URLS
     assert parsed["policy_groups"][0]["select"]["update_interval"] == NODE_INTERVAL
-    assert parsed["policy_groups"][1]["select"]["update_interval"] == NODE_INTERVAL
     assert parsed["policy_groups"][2:] == original["policy_groups"][2:]
+    assert "urls" not in parsed["policy_groups"][1]["select"]
 
 
 @pytest.mark.parametrize("target,old,new,error", [
@@ -163,8 +168,10 @@ def test_egern_urls_accept_additional_items_without_changing_region_groups():
     ("egern", f"    - {SUBSCRIPTION_PLACEHOLDER}\n",
      f'    - "{SUBSCRIPTION_PLACEHOLDER}"\n', "must not be quoted"),
     ("loon", f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n", "", "commented second"),
-    ("qx", "\n[filter_remote]\n", "\n[server_remote]\n\n[filter_remote]\n",
-     "omit subscription resources"),
+    ("qx", "\n[server_remote]\n", "\n[server_remote_removed]\n",
+     "must include server_remote"),
+    ("qx", "update-interval=-1, enabled=false",
+     "update-interval=-1, enabled=true", "disabled Lane placeholder"),
 ])
 def test_validator_rejects_subscription_template_regressions(tmp_path, target, old, new, error):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")

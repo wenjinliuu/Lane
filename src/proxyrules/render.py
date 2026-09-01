@@ -30,6 +30,12 @@ PROFILE_HEADER = "# Lane | Local profile template\n"
 SUBSCRIPTION_PLACEHOLDER = "你的订阅地址"
 STASH_PROVIDER_NAME = "Subscription1"
 STASH_ALL_NODES_GROUP = "All Nodes"
+QX_PLACEHOLDER_FILENAME = "server-placeholder.conf"
+QX_PLACEHOLDER_CONTENT = (
+    "# Lane Quantumult X placeholder resource.\n"
+    "# This file intentionally contains no proxy servers.\n"
+    "# Replace its URL in [server_remote] with your own QX-compatible subscription.\n"
+)
 MULTICAST_EXCLUDED_ROUTES = (
     "224.0.0.0/4",
     "239.255.255.250/32",
@@ -80,7 +86,8 @@ LOCAL_PROFILE_NOTICE = (
     "# 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。\n"
 )
 QX_LOCAL_PROFILE_NOTICE = (
-    "# Lane 不提供节点；先导入本配置，再在 Quantumult X 应用内添加节点订阅。\n"
+    "# Lane 不提供节点；[server_remote] 内置一条默认禁用的空占位资源，仅用于通过完整配置导入检查。\n"
+    "# 导入后可在节点资源页面添加订阅；也可替换占位 URL，并将 enabled=false 改为 enabled=true。\n"
     "# 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。\n"
     "# 换用新版完整配置前，请备份节点资源与个人修改。\n"
 )
@@ -125,12 +132,13 @@ CLIENT_NOTES = {
         "Surge-style no-resolve is not emitted. QX uses native domain/IP "
         "matching priorities. System DNS is used by default, so no "
         "server = system entry is emitted. excluded_routes stays IPv4-only. "
-        "The profile omits server_remote entirely; users add their private node "
-        "resources in the app after importing the routing profile."
+        "A disabled, empty self-hosted server_remote placeholder satisfies QX's "
+        "complete-profile import requirement without providing a usable node."
     ),
     "egern": (
         "Native YAML rule sets preserve domain regex and no_resolve. Requires a "
-        "current Egern release with urls and flatten support."
+        "current Egern release with urls and flatten support. Manual reaches raw "
+        "nodes through a dedicated All Nodes subscription group."
     ),
 }
 UPDATE_TIME_PREFIX = "# Last updated: "
@@ -727,6 +735,8 @@ def _qx_config(
     benchmark = project["benchmark"]
     updates = project["updates"]
     filters = build_filters(policies)
+    raw_base = project["project"]["raw_base"].rstrip("/")
+    placeholder_url = f"{raw_base}/dist/qx/{QX_PLACEHOLDER_FILENAME}"
 
     def icon(name: str) -> str:
         url = _icon(icons, name)
@@ -734,7 +744,7 @@ def _qx_config(
 
     lines = [
         PROFILE_HEADER.rstrip(), QX_LOCAL_PROFILE_NOTICE.rstrip(), SERVICE_GROUP_NOTICE.rstrip(),
-        "# QX 模板不预置节点资源；先导入配置，再在应用内添加自己的节点订阅。", "",
+        "# 占位资源不含节点且默认禁用；不要将 enabled=true 打开后仍保留占位 URL。", "",
         "[general]", f"server_check_url = {benchmark['url']}",
         f"server_check_timeout = {min(5000, benchmark['timeout'] * 1000)}",
         "fallback_udp_policy = reject",
@@ -745,6 +755,9 @@ def _qx_config(
         # are used by default and are turned off with no-system, so there is no
         # `server = system` to write here.
         "", "[dns]", "no-ipv6", "",
+        "[server_remote]",
+        f"{placeholder_url}, tag=Lane Placeholder, update-interval=-1, enabled=false",
+        "",
         "[policy]", (
             f"static = Manual, {', '.join(_region_auto_names(policies))}, "
             f"server-tag-regex=.+{icon('Manual')}"
@@ -784,15 +797,13 @@ def _egern_config(
     filters = build_filters(policies)
     subscription_urls = [SUBSCRIPTION_PLACEHOLDER]
     groups = [{"select": {
-        "name": "Node Pool", "urls": list(subscription_urls),
-        "update_interval": updates["node_interval"], "hidden": True,
+        "name": STASH_ALL_NODES_GROUP, "urls": list(subscription_urls),
+        "update_interval": updates["node_interval"],
+        "icon": _icon(icons, "Manual"),
     }}]
     groups.append({"select": _with_icon({
-        "name": "Manual", "policies": _region_auto_names(policies),
-        # Keep a distinct list object. Some Egern builds do not expand the YAML
-        # anchor/alias PyYAML emits when both groups share one object.
-        "urls": list(subscription_urls),
-        "update_interval": updates["node_interval"],
+        "name": "Manual",
+        "policies": [*_region_auto_names(policies), STASH_ALL_NODES_GROUP],
     }, icons, "Manual")})
     for service in policies["service_groups"]:
         groups.append({"select": _with_icon({
@@ -801,7 +812,7 @@ def _egern_config(
     for region in policies["regions"]:
         for kind, name in (("auto_test", region["auto_name"]), ("select", region["manual_name"])):
             group = {
-                "name": name, "policies": ["Node Pool"], "flatten": True,
+                "name": name, "policies": [STASH_ALL_NODES_GROUP], "flatten": True,
                 "filter": filters["regions"][region["name"]],
             }
             if kind == "auto_test":
@@ -826,16 +837,16 @@ def _egern_config(
     }
     body = _yaml(data).replace(
         "policy_groups:\n",
-        "# 将同一份 Egern 节点订阅分别填入 Node Pool 与 Manual 的 urls；不要使用 YAML 锚点。\n"
+        "# 只需在 All Nodes 的 urls 填写订阅；Manual 通过 All Nodes 进入全部单节点。\n"
         "policy_groups:\n",
         1,
     )
     body = body.replace(
         f"    - {SUBSCRIPTION_PLACEHOLDER}\n",
         f"    - {SUBSCRIPTION_PLACEHOLDER}\n"
-        "    # 多订阅：取消下一行注释并填写，并在另一组的 urls 中做相同修改。\n"
+        "    # 多订阅：取消下一行注释并填写；地区组会自动从 All Nodes 展开。\n"
         f"    # - {SUBSCRIPTION_PLACEHOLDER}\n",
-        2,
+        1,
     )
     return PROFILE_HEADER + LOCAL_PROFILE_NOTICE + SERVICE_GROUP_NOTICE + "\n" + body
 
@@ -917,6 +928,10 @@ def render_all(
         "stash": _stash_config, "loon": _loon_config, "surge": _surge_config,
         "qx": _qx_config, "egern": _egern_config,
     }
+    write_if_changed(
+        dist / "qx" / QX_PLACEHOLDER_FILENAME,
+        QX_PLACEHOLDER_CONTENT,
+    )
     for target in TARGETS:
         content = (_shadowrocket_config(project, render_policies) if target == "shadowrocket"
                    else renderers[target](project, render_policies, icons))

@@ -12,6 +12,8 @@ from .filters import build_filters
 from .render import (
     CONFIG_FILENAMES,
     IPV4_EXCLUDED_ROUTES,
+    QX_PLACEHOLDER_CONTENT,
+    QX_PLACEHOLDER_FILENAME,
     RULES_DIR,
     SHADOWROCKET_MANUAL_POLICY,
     STASH_ALL_NODES_GROUP,
@@ -80,15 +82,17 @@ def _validate_subscription_template(target: str, text: str) -> None:
         if SUBSCRIPTION_PLACEHOLDER in line
         and not line.lstrip().startswith(("#", ";", "//"))
     ]
-    if target in {"shadowrocket", "qx"}:
+    if target == "shadowrocket":
         if SUBSCRIPTION_PLACEHOLDER in text:
             raise ValidationError(f"{target}: must not contain subscription templates")
-        if target == "qx" and "[server_remote]" in text:
-            raise ValidationError("QX must omit server_remote from the public template")
         return
-    # Egern gets two explicit copies because on-device parsing did not expand the
-    # YAML alias emitted for a shared list. Other template-bearing clients need one.
-    expected_active = 2 if target == "egern" else 1
+    if target == "qx":
+        if SUBSCRIPTION_PLACEHOLDER in text:
+            raise ValidationError("qx: must not contain a private subscription template")
+        if "[server_remote]" not in text:
+            raise ValidationError("QX complete profile must include server_remote")
+        return
+    expected_active = 1
     if len(active) != expected_active:
         raise ValidationError(
             f"{target}: exactly {expected_active} active subscription placeholder(s) required"
@@ -194,6 +198,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         dist / "report.json",
         dist / "cn-ip-window.json",
         dist / "cn-ip-validation.json",
+        dist / "qx" / QX_PLACEHOLDER_FILENAME,
     ]
     missing = [str(path.relative_to(root)) for path in required if not path.is_file()]
     if missing:
@@ -416,16 +421,16 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
 
     egern = yaml.safe_load(texts["egern"])
     egern_groups = {next(iter(group.values()))["name"]: group for group in egern["policy_groups"]}
-    if list(egern_groups) != ["Node Pool", *expected_order]:
+    if list(egern_groups) != [STASH_ALL_NODES_GROUP, *expected_order]:
         raise ValidationError("Egern group order differs from the manifest")
-    egern_pool = egern_groups["Node Pool"]["select"]
+    egern_pool = egern_groups[STASH_ALL_NODES_GROUP]["select"]
     egern_manual = egern_groups["Manual"]["select"]
     if (egern_pool.get("urls") != [SUBSCRIPTION_PLACEHOLDER]
-            or egern_pool.get("hidden") is not True):
-        raise ValidationError("Egern Node Pool must load the hidden subscription source")
-    if (egern_manual.get("urls") != [SUBSCRIPTION_PLACEHOLDER]
-            or egern_manual.get("policies") != auto_names):
-        raise ValidationError("Egern Manual must expose regional Auto groups and nodes")
+            or egern_pool.get("hidden") is not None):
+        raise ValidationError("Egern All Nodes must be the single visible subscription source")
+    if ("urls" in egern_manual
+            or egern_manual.get("policies") != [*auto_names, STASH_ALL_NODES_GROUP]):
+        raise ValidationError("Egern Manual must expose regional Auto groups and All Nodes")
     if any(token in texts["egern"] for token in ("&id", "*id")):
         raise ValidationError("Egern subscription URLs must not use YAML anchors or aliases")
     for service in policies["service_groups"]:
@@ -434,9 +439,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     for region in policies["regions"]:
         for name, kind in ((region["auto_name"], "auto_test"), (region["manual_name"], "select")):
             group = egern_groups[name][kind]
-            if (group.get("policies") != ["Node Pool"] or not group.get("flatten")
+            if (group.get("policies") != [STASH_ALL_NODES_GROUP] or not group.get("flatten")
                     or group.get("filter") != filters["regions"][region["name"]]):
-                raise ValidationError(f"Egern {name} must flatten and filter Node Pool")
+                raise ValidationError(f"Egern {name} must flatten and filter All Nodes")
     if egern["rules"][-2:] != [{"geoip": {"match": "CN", "policy": "DIRECT"}},
                                {"default": {"policy": "Final"}}]:
         raise ValidationError("Egern final routing rules are invalid")
@@ -444,6 +449,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Egern must not automatically replace the local profile")
 
     qx_groups = {}
+    if "\n[server_remote]\n" not in texts["qx"]:
+        raise ValidationError("QX complete profile must include server_remote")
     for line in _section(texts["qx"], "policy"):
         kind, value = line.split("=", 1)
         name = value.split(",", 1)[0].strip()
@@ -472,15 +479,18 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     for target, key in (("qx", "excluded_routes"), ("surge", "tun-excluded-routes")):
         if f"{key} = {ipv4_routes}" not in texts[target].splitlines():
             raise ValidationError(f"{target}: {key} must list the IPv4 ranges only")
-    # A public template has no private subscription URL to put here. Omitting the
-    # section avoids invalid placeholders or dummy network resources; users add a
-    # node resource in QX after importing the routing profile.
-    if "[server_remote]" in texts["qx"] or SUBSCRIPTION_PLACEHOLDER in texts["qx"]:
-        raise ValidationError("QX public profile must omit subscription resources")
+    raw_base = config["project"]["project"]["raw_base"].rstrip("/")
+    qx_placeholder_url = f"{raw_base}/dist/qx/{QX_PLACEHOLDER_FILENAME}"
+    if _section(texts["qx"], "server_remote") != [
+        f"{qx_placeholder_url}, tag=Lane Placeholder, update-interval=-1, enabled=false"
+    ]:
+        raise ValidationError("QX server_remote must contain only the disabled Lane placeholder")
+    placeholder_path = dist / "qx" / QX_PLACEHOLDER_FILENAME
+    if placeholder_path.read_text(encoding="utf-8") != QX_PLACEHOLDER_CONTENT:
+        raise ValidationError("QX placeholder resource must remain empty and documented")
     if _section(texts["qx"], "filter_local")[-2:] != ["geoip,cn,direct", "final,Final"]:
         raise ValidationError("QX final routing rules are invalid")
 
-    raw_base = config["project"]["project"]["raw_base"].rstrip("/")
     rule_interval = config["project"]["updates"]["rule_interval"]
     entries_by_id = {entry["id"]: entry for entry in rulesets}
     expected_stash_providers: dict[str, dict[str, Any]] = {}

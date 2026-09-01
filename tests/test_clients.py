@@ -11,7 +11,8 @@ from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
     CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER, RULES_DIR,
-    STASH_ALL_NODES_GROUP, SUBSCRIPTION_PLACEHOLDER, TARGETS,
+    QX_PLACEHOLDER_FILENAME, STASH_ALL_NODES_GROUP,
+    SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -153,13 +154,12 @@ def test_subscription_templates_and_local_update_guidance():
         if target in {"shadowrocket", "qx"}:
             assert SUBSCRIPTION_PLACEHOLDER not in text
             if target == "qx":
-                assert "[server_remote]" not in text
+                assert "[server_remote]" in text
+                assert "enabled=false" in text
             continue
         occurrences = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
                        and not line.lstrip().startswith(("#", ";", "//"))]
-        # Egern uses two explicit URL lists because its on-device parser did not
-        # expand the YAML alias generated for one shared Python list.
-        assert len(occurrences) == (2 if target == "egern" else 1)
+        assert len(occurrences) == 1
         assert "本地配置" in text and "重新填入" in text
         assert "#!MANAGED-CONFIG" not in text
         assert "auto_update:" not in text
@@ -167,6 +167,7 @@ def test_subscription_templates_and_local_update_guidance():
     provider = stash["proxy-providers"]["Subscription1"]
     assert provider["interval"] > 0
     assert provider["benchmark-url"] == load_project_config(ROOT)["project"]["benchmark"]["url"]
+    assert (ROOT / "dist" / "qx" / QX_PLACEHOLDER_FILENAME).is_file()
 
 
 def test_manual_exposes_regional_auto_groups_on_all_clients():
@@ -225,9 +226,10 @@ def test_manual_exposes_regional_auto_groups_on_all_clients():
         next(iter(group.values()))["name"]: next(iter(group.values()))
         for group in egern["policy_groups"]
     }
-    assert egern_groups["Manual"]["policies"] == auto_names
-    assert egern_groups["Manual"]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
-    assert egern_groups["Node Pool"]["hidden"] is True
+    assert egern_groups["Manual"]["policies"] == [*auto_names, STASH_ALL_NODES_GROUP]
+    assert "urls" not in egern_groups["Manual"]
+    assert egern_groups[STASH_ALL_NODES_GROUP]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
+    assert "hidden" not in egern_groups[STASH_ALL_NODES_GROUP]
     egern_text = (ROOT / "dist/egern/Lane_egern.yaml").read_text()
     assert "&id" not in egern_text and "*id" not in egern_text
 
