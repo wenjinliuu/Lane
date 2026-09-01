@@ -363,11 +363,10 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         "select,include-other-group=Subscription1,include-all-proxies=true,hidden=true"
     ):
         raise ValidationError("Surge Node Pool must expand raw proxies and remain hidden")
-    # Lane never decrypts, and Surge stores MitM per profile: an omitted section lets
-    # an already-enabled MitM switch survive the import and break every intercepted
-    # host's TLS handshake.
-    if _section(texts["surge"], "MITM") != ["enable = false"]:
-        raise ValidationError("Surge must disable MitM explicitly")
+    # Lane never decrypts. Surge has no `enable` key in [MITM]; `hostname` decides what
+    # is decrypted, and omitting it leaves the client's stored list untouched.
+    if _section(texts["surge"], "MITM") != ["hostname = -*"]:
+        raise ValidationError("Surge must clear the MitM hostname list")
     for target, text in texts.items():
         if target != "surge" and "[MITM]" in text:
             raise ValidationError(f"{target}: profiles must not enable HTTPS decryption")

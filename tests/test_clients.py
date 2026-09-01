@@ -415,7 +415,7 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
 @pytest.mark.parametrize("target,old,new,error", [
     ("surge", ",icon-url=", ",icon-uri=", "Surge Manual"),
     ("surge", "policy-regex-filter=(?i)", 'policy-regex-filter="(?i)', "must not be quoted"),
-    ("surge", "enable = false", "enable = true", "disable MitM"),
+    ("surge", "hostname = -*", "hostname = *", "MitM hostname"),
     ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
     ("shadowrocket", "Final = select,PROXY,",
      "Final = select,Manual,", "must default to PROXY"),
@@ -442,9 +442,10 @@ def test_no_profile_decrypts_https():
     """Lane routes on TCP/SNI; Surge states MitM off so an enabled switch cannot survive."""
 
     surge = (ROOT / "dist/surge/Lane_surge.conf").read_text()
-    assert _section(surge, "MITM") == ["enable = false"]
+    # Surge has no [MITM] enable key; an empty hostname list is what stops decryption.
+    assert _section(surge, "MITM") == ["hostname = -*"]
     for target, filename in CONFIG_FILENAMES.items():
         text = (ROOT / "dist" / target / filename).read_text()
-        assert "hostname" not in text
         if target != "surge":
             assert "[MITM]" not in text
+            assert "hostname" not in text

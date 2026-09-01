@@ -120,7 +120,7 @@ Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类�
 - QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
 - Stash、Loon、Shadowrocket、QX 与 Egern 的 Auto 使用各自原生自动测速类型；Surge 使用原生 Smart 算法并命名为 `地区 Auto Smart`。Shadowrocket 的 `url-test` 组本身即自动测速切换，应用内「测试并选择最快服务器」是对全部代理分组生效的界面开关，与配置无关，不影响该组自动切换。
 - Surge 的 `tun-excluded-routes` 与 QX 的 `excluded_routes` 只写 IPv4 网段：Surge 会对 IPv6 条目报 `Invalid excluded route: ff02::fb/128` 并丢弃，QX 官方示例也未记录 IPv6 写法。Shadowrocket 官方文档给出了 IPv6 写法，它与 Loon、Egern 仍保留完整列表。
-- 分流在 TCP / SNI 层完成，不读取加密内容，六端都不需要 HTTPS 解密。Surge 的 MitM 设置随配置保存，因此配置末尾显式写入 `[MITM]` + `enable = false`：不写这一段，客户端里已经打开的 MitM 开关和域名列表会被沿用。其余五端不写 `[MITM]` 段，需要在客户端里自行关闭 MitM。
+- 分流在 TCP / SNI 层完成，不读取加密内容，六端都不需要 HTTPS 解密。Surge 的 `[MITM]` 没有 `enable` 开关，决定解密范围的是 `hostname`；配置不写这一项时，客户端会沿用它已经存着的解密域名列表。因此 Surge 配置末尾写入 `[MITM]` + `hostname = -*`（排除全部域名，解密名单为空）。其余五端不写 `[MITM]` 段，需要在客户端里自行关闭 MitM。
 - 若客户端自身开启了 MitM 而 CA 证书缺失或未被信任，被解密的域名会在 TLS 握手阶段被直接关闭（Surge 日志为 `Failed to generate MitM cert for: <域名>`），表现为大量网站打不开；这与分流规则无关。
 - 关闭 iOS 的「证书信任设置」不等于关闭 MitM：客户端仍会拦截并签发证书，只是设备不再接受，报错变成 `TLS handshake with <域名> failed: SSLV3_ALERT_CERTIFICATE_UNKNOWN`，同样表现为大面积打不开。
 - 补装并信任 CA 证书可以消除上述报错，但 MitM 仍会拦截名单内的全部域名；对启用证书绑定（certificate pinning）的站点依然失败，Surge 日志为 `Client closed connection without sending any request over the MitM connection`（实测命中 `ssl.gstatic.com`、`fonts.gstatic.com`、`lh3~lh6.googleusercontent.com` 等）。因此关闭 MitM 比补证书更彻底。
