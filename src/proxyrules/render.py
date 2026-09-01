@@ -701,6 +701,16 @@ def _surge_config(
         lines.append(f"RULE-SET,{_rule_url(project, 'surge', entry.id)},{entry.policy},"
                      f"update-interval={updates['rule_interval']}")
     lines.extend(["GEOIP,CN,DIRECT", "FINAL,Final"])
+    # Lane routes on TCP/SNI and never reads decrypted traffic. Surge keeps its MitM
+    # settings per profile, so state it explicitly: without this section an enabled
+    # MitM switch carries over and closes the TLS handshake for every intercepted
+    # host, which looks exactly like broken routing.
+    lines.extend([
+        "",
+        "# Lane 不做 HTTPS 解密；显式关闭 MitM，避免沿用客户端里已有的开关和域名列表。",
+        "[MITM]",
+        "enable = false",
+    ])
     return "\n".join(lines) + "\n"
 
 

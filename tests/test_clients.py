@@ -415,6 +415,7 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
 @pytest.mark.parametrize("target,old,new,error", [
     ("surge", ",icon-url=", ",icon-uri=", "Surge Manual"),
     ("surge", "policy-regex-filter=(?i)", 'policy-regex-filter="(?i)', "must not be quoted"),
+    ("surge", "enable = false", "enable = true", "disable MitM"),
     ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
     ("shadowrocket", "Final = select,PROXY,",
      "Final = select,Manual,", "must default to PROXY"),
@@ -435,3 +436,15 @@ def test_validator_rejects_client_capability_regressions(tmp_path, target, old, 
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
     with pytest.raises(ValidationError, match=error):
         validate_generated(tmp_path, load_project_config(ROOT))
+
+
+def test_no_profile_decrypts_https():
+    """Lane routes on TCP/SNI; Surge states MitM off so an enabled switch cannot survive."""
+
+    surge = (ROOT / "dist/surge/Lane_surge.conf").read_text()
+    assert _section(surge, "MITM") == ["enable = false"]
+    for target, filename in CONFIG_FILENAMES.items():
+        text = (ROOT / "dist" / target / filename).read_text()
+        assert "hostname" not in text
+        if target != "surge":
+            assert "[MITM]" not in text
