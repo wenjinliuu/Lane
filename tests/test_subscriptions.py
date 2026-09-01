@@ -8,6 +8,7 @@ import yaml
 from proxyrules.config import load_project_config
 from proxyrules.render import (
     CONFIG_FILENAMES, QX_PLACEHOLDER_CONTENT, QX_PLACEHOLDER_FILENAME,
+    QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS, STASH_PROVIDER_NAME,
     SUBSCRIPTION_PLACEHOLDER,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -51,7 +52,7 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         assert len(active) == 1
 
 
-def test_stash_optional_block_can_be_enabled_without_manual_name_linkage():
+def test_stash_optional_block_requires_manual_name_linkage():
     text = _profile("stash")
     original = yaml.safe_load(text)
     assert list(original["proxy-providers"]) == ["Subscription1"]
@@ -63,27 +64,27 @@ def test_stash_optional_block_can_be_enabled_without_manual_name_linkage():
     third = enabled.replace("Subscription2:", "Subscription3:", 1).replace(SUBSCRIPTION_PLACEHOLDER, URLS[2])
     edited = text.replace(f"url: {SUBSCRIPTION_PLACEHOLDER}", f"url: {URLS[0]}", 1)
     edited = edited.replace(block, second + third)
-    parsed = yaml.safe_load(edited)
-    providers = parsed["proxy-providers"]
+    unlinked = yaml.safe_load(edited)
+    providers = unlinked["proxy-providers"]
     assert list(providers) == ["Subscription1", "Subscription2", "Subscription3"]
     for name, url in zip(providers, URLS):
         assert providers[name] == {**original["proxy-providers"]["Subscription1"], "url": url}
-    assert parsed["proxy-groups"] == original["proxy-groups"]
-    assert parsed["proxy-groups"][0]["include-all"] is True
-    assert "use" not in parsed["proxy-groups"][0]
-    assert "名称可自定义但必须唯一" in text
-    assert "不需要修改 Manual" in text
+    assert unlinked["proxy-groups"][0]["use"] == [STASH_PROVIDER_NAME]
+
+    linked = edited.replace(
+        "  use:\n  - Subscription1\n",
+        "  use:\n  - Subscription1\n  - Subscription2\n  - Subscription3\n",
+        1,
+    )
+    parsed = yaml.safe_load(linked)
+    manual = parsed["proxy-groups"][0]
+    assert manual["proxies"] == ["US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto"]
+    assert manual["use"] == ["Subscription1", "Subscription2", "Subscription3"]
+    assert "include-all" not in manual
+    assert "完全相同的名称" in text
+    assert "同步修改本地主配置的 Manual.use" in text
     for group in parsed["proxy-groups"][-10:]:
         assert group["include-all"] is True
-
-    renamed = edited.replace("\n  Subscription1:\n", "\n  MainProvider:\n", 1)
-    renamed = renamed.replace("\n  Subscription2:\n", "\n  BackupProvider:\n", 1)
-    renamed = renamed.replace("\n  Subscription3:\n", "\n  ExtraProvider:\n", 1)
-    renamed_config = yaml.safe_load(renamed)
-    assert list(renamed_config["proxy-providers"]) == [
-        "MainProvider", "BackupProvider", "ExtraProvider"
-    ]
-    assert renamed_config["proxy-groups"] == original["proxy-groups"]
 
 
 def test_loon_additional_subscriptions_do_not_require_filter_changes():
@@ -112,11 +113,10 @@ def test_qx_uses_only_a_disabled_empty_placeholder_resource():
         "update-interval=-1, enabled=false"
     ]
     assert _section(text, "server_local") == []
+    for section in QX_REQUIRED_EMPTY_SECTIONS:
+        assert _section(text, section) == []
     assert "节点资源页面添加" in text
-    assert re.findall(r"(?m)^\[([^\]]+)\]$", text) == [
-        "general", "dns", "server_remote", "server_local", "policy",
-        "filter_remote", "filter_local"
-    ]
+    assert tuple(re.findall(r"(?m)^\[([^\]]+)\]$", text)) == QX_REQUIRED_SECTIONS
 
 
 def test_surge_hidden_subscriptions_are_expanded_through_manual():
@@ -180,10 +180,6 @@ def test_egern_all_nodes_accepts_additional_urls_without_duplication():
     ("egern", f"    - {SUBSCRIPTION_PLACEHOLDER}\n",
      f'    - "{SUBSCRIPTION_PLACEHOLDER}"\n', "must not be quoted"),
     ("loon", f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n", "", "commented second"),
-    ("qx", "\n[server_remote]\n", "\n[server_remote_removed]\n",
-     "must include server_remote"),
-    ("qx", "\n[server_local]\n", "\n[server_local_removed]\n",
-     "must include server_local"),
     ("qx", "update-interval=-1, enabled=false",
      "update-interval=-1, enabled=true", "disabled Lane placeholder"),
 ])
@@ -196,4 +192,21 @@ def test_validator_rejects_subscription_template_regressions(tmp_path, target, o
     assert old in text
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
     with pytest.raises(ValidationError, match=error):
+        validate_generated(tmp_path, load_project_config(ROOT))
+
+
+@pytest.mark.parametrize("section", QX_REQUIRED_SECTIONS)
+def test_validator_rejects_any_missing_qx_complete_profile_section(tmp_path, section):
+    shutil.copytree(ROOT / "dist", tmp_path / "dist")
+    shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
+    path = tmp_path / "dist/qx/Lane_qx.conf"
+    text = path.read_text(encoding="utf-8")
+    marker = f"\n[{section}]\n"
+    assert marker in text
+    path.write_text(
+        text.replace(marker, f"\n[{section}_removed]\n", 1),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValidationError, match=rf"must include {section}"):
         validate_generated(tmp_path, load_project_config(ROOT))

@@ -50,7 +50,7 @@ Lane 只控制网络路径，不保证入金或交易成功，也不改变账户
 
 ### 首次使用
 
-1. 下载对应配置。除 Shadowrocket 与 Quantumult X 外，在下表指定的订阅字段中，将 `你的订阅地址` 替换为服务提供商为该客户端提供的完整订阅链接；占位符统一不加引号。QX 保留空的 `[server_local]`，并在 `[server_remote]` 放置一条默认禁用的 Lane 空资源；二者仅用于通过完整配置导入检查，导入后再在 App 内添加节点订阅。
+1. 下载对应配置。除 Shadowrocket 与 Quantumult X 外，在下表指定的订阅字段中，将 `你的订阅地址` 替换为服务提供商为该客户端提供的完整订阅链接；占位符统一不加引号。QX 按官方顺序保留完整模块骨架，并在 `[server_remote]` 放置一条默认禁用的 Lane 空资源；其余未使用模块为空，导入后再在 App 内添加节点订阅。
 2. `你的订阅地址` 只是占位文字，不是有效 URL，Lane 不提供节点。部分客户端可能在导入时校验地址，请先在本地填写，再导入并复制/保存为本地配置，不让整份配置继续跟随远程更新。仅改显示名称不等于本地化；Surge 托管配置需先创建普通副本，Egern 不设置主配置 `auto_update`。
 3. 保存并启用配置，在 `Manual` 中选择地区组或节点；Stash 的单节点与地区 Auto 位于同一层，Egern 的全部单节点位于 `Manual → All Nodes`。服务组默认跟随 `Manual`，也可选择直连或地区 Auto / Manual。Shadowrocket 不含订阅模板，继续使用应用内已有节点订阅，并在首页选节点；服务组默认跟随该选择（`PROXY`）。
 4. 开启客户端的节点与规则资源自动更新。配置内能指定的更新间隔为 24 小时；Loon 的资源定时更新在应用设置中管理。客户端后台调度、联网状态和订阅可用性仍会影响实际更新时间。
@@ -74,7 +74,7 @@ Loon 用户若选择重新导入远程配置，请选择保留现有节点/订�
 
 | 客户端 | 第二份订阅 | 第三份及更多订阅 |
 | --- | --- | --- |
-| Stash | 取消 `Subscription2` 整块注释并填写 `url`；`Manual` 会自动纳入 | 复制整块并使用任意不重复的名称；无需修改 `Manual`，覆写新增代理集也是如此 |
+| Stash | 取消 `Subscription2` 整块注释并填写 `url`，再把 `Subscription2` 加入 `Manual.use` | 复制整块并使用不重复的名称，再把每个完全相同的名称加入 `Manual.use`；覆写新增代理集时也要同步修改本地主配置 |
 | Loon | 取消 `Subscription2 =` 行的注释并填写 | 复制该行，使用不同别名；现有节点筛选会处理所有订阅 |
 | Surge | 取消隐藏组 `Subscription2` 的注释并填写，再把隐藏 `Node Pool` 的参数改为 `include-other-group="Subscription1,Subscription2"` | 新增 `Subscription3` 等隐藏组，并逐一加入 `Node Pool` 的引用列表 |
 | Quantumult X | 在 App 的节点资源页面添加；若直接编辑配置，则替换禁用占位 URL 并改为 `enabled=true` | 在 App 内继续添加，或复制 `[server_remote]` 资源行；Lane 占位资源始终保持禁用且不含节点 |
@@ -85,7 +85,7 @@ Surge 的 `policy-regex-filter` 不加引号：Surge 会把引号当作模式的
 
 Surge 的订阅先进入隐藏 `Node Pool`，五个 `US/JP/HK/TW/SG Auto Smart` 与地区 Manual 组都从中展开真实节点。顶层 `Manual` 同时列出五个 Smart 组和全部单节点，因此服务组直接选择某个 Smart，与服务组选择 Manual、再由 Manual 选择同一个 Smart，最终使用的是同一策略对象。该结构也避免了 Manual 与地区组互相引用的循环。[Surge Smart](https://manual.nssurge.com/policy-groups/smart.html)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)。
 
-Stash、Loon 与 Quantumult X 的 `Manual` 可直接列出五个原生 `地区 Auto` 和全部单节点。Stash 的 `Manual` 用显式 `proxies` 固定五个地区 Auto，并用 `include-all: true` 自动纳入全部本地节点及 `proxy-providers`。因此代理集名称可以由用户自定义，只需在 YAML 字典中保持唯一；使用覆写新增 `proxy-providers` 时也不需要同步修改 `Manual`。Surge 是例外：订阅组名称仍必须与隐藏 `Node Pool` 的 `include-other-group` 引用完全一致。
+Stash、Loon 与 Quantumult X 的 `Manual` 可直接列出五个原生 `地区 Auto` 和全部单节点。Stash 真机实测表明，在同一组混用显式 `proxies` 与动态 `include-all` 时，动态节点会覆盖界面中的地区组；因此 Lane 改用 `proxies` 固定地区 Auto，并用 `use` 显式列出代理集。`Manual.use` 中的名称必须与 `proxy-providers` 的键完全一致；添加第二、第三份订阅或用覆写新增代理集时，都要同步更新本地主配置。Surge 的隐藏 `Node Pool` 同样需要显式维护订阅组引用。
 
 Egern 2.20.0 的 `flatten` 会展开所有嵌套组，无法只展开节点池并同时保留五个 Auto 为策略项；因此采用两层结构，且订阅只在 `All Nodes.urls` 填写一次。新版官方文档展示的同组 `policies + urls` 能力晚于 2.20.0，Lane 目前不以它为最低兼容前提。Shadowrocket 由内置 `PROXY` 承担手动选点，五个 `地区 Auto` 仍在每个服务组中可选。
 
@@ -117,10 +117,10 @@ Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类�
 - Loon、Shadowrocket、Surge、QX 中不支持或未确认兼容的域名正则会省略，逐规则集计数见 `dist/report.json`，不会误转换为 URL 重写。Loon 使用现行 `ip-mode = ipv4-only`，最低支持版本为 3.2.3 (754)。
 - Surge、Shadowrocket、Loon、QX 在节点不支持 UDP 时分别使用客户端原生的拒绝回落项；Stash/Egern 保持默认行为。配置不包含 `block-quic`、`udp_drop_list = QUIC` 或 `disable-udp-ports = 443`。
 - Egern 使用原生 YAML 规则集，保留 `no_resolve`；为兼容用户实测的 2.20.0，可见的 `All Nodes` 加载一次订阅，地区组通过 `flatten` 从中筛选节点，`Manual` 列出五个地区 Auto 与 `All Nodes`。
-- QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。完整配置保留空的 `[server_local]`，并在 `[server_remote]` 放置 Lane 自托管的空占位资源；后者默认 `enabled=false` 且禁止自动更新。两个模块只用于满足完整配置导入检查，不提供虚拟节点。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
+- QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。完整配置按官方示例顺序保留全部模块；`[server_remote]` 只有 Lane 自托管的空占位资源，默认 `enabled=false` 且禁止自动更新；`[rewrite_remote]`、`[server_local]`、`[rewrite_local]`、`[task_local]`、`[http_backend]` 与 `[mitm]` 均为空。空模块只满足完整配置导入检查，不提供节点，也不启用重写、脚本、后端或 HTTPS 解密。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
 - Stash、Loon、Shadowrocket、QX 与 Egern 的 Auto 使用各自原生自动测速类型；Surge 使用原生 Smart 算法并命名为 `地区 Auto Smart`。Shadowrocket 的 `url-test` 组本身即自动测速切换，应用内「测试并选择最快服务器」是对全部代理分组生效的界面开关，与配置无关，不影响该组自动切换。
 - Surge 的 `tun-excluded-routes` 与 QX 的 `excluded_routes` 只写 IPv4 网段：Surge 会对 IPv6 条目报 `Invalid excluded route: ff02::fb/128` 并丢弃，QX 官方示例也未记录 IPv6 写法。Shadowrocket 官方文档给出了 IPv6 写法，它与 Loon、Egern 仍保留完整列表。
-- 分流在 TCP / SNI 层完成，不读取加密内容；六端配置都不写 `[MITM]`，HTTPS 捕获与解密由用户在客户端内自行管理。
+- 分流在 TCP / SNI 层完成，不读取加密内容；Lane 不配置任何 MitM 主机名、证书或解密参数。QX 仅因完整配置导入要求保留空的 `[mitm]` 模块头，其他客户端不写 MitM 段；HTTPS 捕获与解密由用户在客户端内自行管理。
 - Surge iOS 5.21.0 起，HTTP 捕获设置独立于配置；开启捕获可能自动 MitM 活跃主机。若出现跨配置的 TLS 失败，先关闭 HTTP 捕获。参见 [Surge iOS 更新日志](https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/surge-ios)。
 - 六端均通过静态结构与生成测试；测试不等于在六款付费客户端上完成真机导入、联网验证。订阅协议和空地区组行为仍需在实际客户端确认。
 

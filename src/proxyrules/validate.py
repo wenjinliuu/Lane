@@ -14,6 +14,8 @@ from .render import (
     IPV4_EXCLUDED_ROUTES,
     QX_PLACEHOLDER_CONTENT,
     QX_PLACEHOLDER_FILENAME,
+    QX_REQUIRED_EMPTY_SECTIONS,
+    QX_REQUIRED_SECTIONS,
     RULES_DIR,
     SHADOWROCKET_MANUAL_POLICY,
     STASH_ALL_NODES_GROUP,
@@ -76,6 +78,14 @@ def _section(text: str, name: str) -> list[str]:
     return lines
 
 
+def _section_headers(text: str) -> tuple[str, ...]:
+    return tuple(
+        stripped[1:-1]
+        for raw in text.splitlines()
+        if (stripped := raw.strip()).startswith("[") and stripped.endswith("]")
+    )
+
+
 def _validate_subscription_template(target: str, text: str) -> None:
     active = [
         line for line in text.splitlines()
@@ -89,10 +99,10 @@ def _validate_subscription_template(target: str, text: str) -> None:
     if target == "qx":
         if SUBSCRIPTION_PLACEHOLDER in text:
             raise ValidationError("qx: must not contain a private subscription template")
-        if "[server_remote]" not in text:
-            raise ValidationError("QX complete profile must include server_remote")
-        if "[server_local]" not in text:
-            raise ValidationError("QX complete profile must include server_local")
+        headers = _section_headers(text)
+        for section in QX_REQUIRED_SECTIONS:
+            if section not in headers:
+                raise ValidationError(f"QX complete profile must include {section}")
         return
     expected_active = 1
     if len(active) != expected_active:
@@ -305,12 +315,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")
     if (stash_by_name["Manual"].get("type") != "select"
-            or stash_by_name["Manual"].get("include-all") is not True
-            or "use" in stash_by_name["Manual"]
+            or stash_by_name["Manual"].get("use") != [STASH_PROVIDER_NAME]
+            or stash_by_name["Manual"].get("include-all")
             or stash_by_name["Manual"].get("proxies")
             != auto_names):
         raise ValidationError(
-            "Stash Manual must expose regional Auto groups and all providers"
+            "Stash Manual must expose regional Auto groups and the named provider"
         )
     for service in policies["service_groups"]:
         if stash_by_name[service].get("proxies") != options:
@@ -374,8 +384,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     ):
         raise ValidationError("Surge Node Pool must expand raw proxies and remain hidden")
     for target, text in texts.items():
-        if "[MITM]" in text:
+        headers = _section_headers(text)
+        mitm_headers = [header for header in headers if header.lower() == "mitm"]
+        if _section(text, "MITM") or _section(text, "mitm"):
             raise ValidationError(f"{target}: profiles must not configure HTTPS decryption")
+        if target != "qx" and mitm_headers:
+            raise ValidationError(f"{target}: profiles must not include a MitM section")
     # A quoted filter keeps its quotes as part of the pattern, so it matches no node
     # and Surge closes every connection routed to the resulting empty group.
     if 'policy-regex-filter="' in texts["surge"]:
@@ -448,10 +462,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Egern must not automatically replace the local profile")
 
     qx_groups = {}
-    if "\n[server_remote]\n" not in texts["qx"]:
-        raise ValidationError("QX complete profile must include server_remote")
-    if "\n[server_local]\n" not in texts["qx"]:
-        raise ValidationError("QX complete profile must include server_local")
+    qx_headers = _section_headers(texts["qx"])
+    for section in QX_REQUIRED_SECTIONS:
+        if section not in qx_headers:
+            raise ValidationError(f"QX complete profile must include {section}")
+    if qx_headers != QX_REQUIRED_SECTIONS:
+        raise ValidationError("QX complete profile sections must follow the official order")
     for line in _section(texts["qx"], "policy"):
         kind, value = line.split("=", 1)
         name = value.split(",", 1)[0].strip()
@@ -486,8 +502,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         f"{qx_placeholder_url}, tag=Lane Placeholder, update-interval=-1, enabled=false"
     ]:
         raise ValidationError("QX server_remote must contain only the disabled Lane placeholder")
-    if _section(texts["qx"], "server_local"):
-        raise ValidationError("QX server_local must remain empty")
+    for section in QX_REQUIRED_EMPTY_SECTIONS:
+        if _section(texts["qx"], section):
+            raise ValidationError(f"QX {section} must remain empty")
     placeholder_path = dist / "qx" / QX_PLACEHOLDER_FILENAME
     if placeholder_path.read_text(encoding="utf-8") != QX_PLACEHOLDER_CONTENT:
         raise ValidationError("QX placeholder resource must remain empty and documented")

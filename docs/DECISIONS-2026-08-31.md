@@ -1,7 +1,7 @@
 # Lane 六端 Manual 与证券最小规则决策记录
 
 - 日期：2026-08-31
-- 最近修订：2026-09-01（Stash 单层 Manual、Egern 2.20.0 兼容边界）
+- 最近修订：2026-09-01（Stash 显式代理集引用、QX 完整模块骨架、Egern 2.20.0 兼容边界）
 - 状态：已确认，随生成器、校验器、回归用例与六端产物同步实施
 - 实施基线：`main` @ `f85cd60`
 - 实施分支：`codex/manual-auto-brokerage-minimal`
@@ -25,9 +25,9 @@ Surge 使用原生 Smart 组，名称固定为：
 - `TW Auto Smart`
 - `SG Auto Smart`
 
-其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 在 `Manual.proxies` 列出五个地区 Auto，并以 `include-all: true` 自动展开全部本地节点和代理集节点；`proxy-providers` 的键可由用户自定义，只需保持唯一，多订阅或覆写新增代理集都不需要修改 `Manual`。Egern 2.20.0 的 `flatten` 无法只展开节点池而保留同级地区组，继续采用两层结构。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
+其余客户端使用对应的 `US/JP/HK/TW/SG Auto`。Stash 在 `Manual.proxies` 列出五个地区 Auto，并以 `Manual.use` 显式引用代理集。真机实测中，`proxies + include-all` 会显示全部订阅节点但隐藏地区组，不能用作两者的加法；因此每次新增或重命名 `proxy-providers` 时，必须把完全相同的键同步加入 `Manual.use`。Egern 2.20.0 的 `flatten` 无法只展开节点池而保留同级地区组，继续采用两层结构。Shadowrocket 不生成 `Manual`，由内置 `PROXY` 表示首页选择的单节点。服务策略直接选择地区自动组，或经各客户端的手动入口选择，必须指向同一个既有策略对象，不复制另一套测速策略。
 
-Stash 覆写可以递归合并 `proxy-providers` 字典。由于 `Manual` 与地区组统一使用 `include-all`，覆写只需新增代理集字典项，无需修改 `proxy-groups` 数组，也不需要 `#!replace` 或额外的 `All Nodes`。
+Stash 覆写可以递归合并 `proxy-providers` 字典，但新增代理集不会自动进入顶层 `Manual`。若用覆写添加代理集，必须同时在本地主配置的 `Manual.use` 中加入同名键；地区 Auto / Manual 组仍用 `include-all` 自动筛选全部代理集，不需要逐组维护名称。
 
 ### Egern 的单订阅源无循环结构
 
@@ -88,10 +88,10 @@ Egern 使用可见的 `All Nodes`：
 - `schwab` 逻辑规则集、v2fly `schwab` 来源与 `rules/custom/schwab.list` 全部保留，生成的独立规则文件也继续发布。
 - 嘉信规则命中后统一交给 `Brokerage`，与其他证券规则共用同一策略选择；不把嘉信域名删除或改为硬编码 DIRECT。
 
-## D6. QX 完整配置保留完整节点模块
+## D6. QX 完整配置保留官方模块骨架
 
-- QX 真机从远程 URL 导入完整配置时会依次检查 `[server_remote]` 与 `[server_local]`；缺少任一模块都会直接拒绝导入。
-- `[server_local]` 只保留空模块，不放置示例、虚拟或本地节点。
+- QX 真机从远程 URL 导入完整配置时会逐项检查模块；已先后报缺少 `[server_remote]`、`[server_local]` 与 `[rewrite_remote]`。因此生成物按官方示例顺序保留全部 12 个模块，而不是继续逐个补洞。
+- `[rewrite_remote]`、`[server_local]`、`[rewrite_local]`、`[task_local]`、`[http_backend]` 与 `[mitm]` 只保留空模块，不放置重写资源、本地节点、脚本、后端、证书或主机名。
 - 公开配置只写一条 Lane 自托管的空节点资源，固定 `enabled=false`、`update-interval=-1`，不提供任何可用代理，也不主动联网更新。
 - 用户可在 QX 节点资源页面另行添加订阅；若直接编辑配置，则替换占位 URL 并显式改为 `enabled=true`。
-- 校验器同时锁定空的 `[server_local]`、资源 URL、禁用状态和空文件内容，防止以后把示例节点或第三方订阅误当作默认资源发布。
+- 校验器锁定 12 个模块的完整顺序、六个空模块、资源 URL、禁用状态和空文件内容，防止以后把示例节点、第三方订阅、重写或 MitM 参数误当作默认配置发布。

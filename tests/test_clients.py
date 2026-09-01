@@ -11,8 +11,8 @@ from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
     CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER, RULES_DIR,
-    QX_PLACEHOLDER_FILENAME, STASH_ALL_NODES_GROUP,
-    SUBSCRIPTION_PLACEHOLDER, TARGETS,
+    QX_PLACEHOLDER_FILENAME, QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS,
+    STASH_ALL_NODES_GROUP, STASH_PROVIDER_NAME, SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -154,8 +154,8 @@ def test_subscription_templates_and_local_update_guidance():
         if target in {"shadowrocket", "qx"}:
             assert SUBSCRIPTION_PLACEHOLDER not in text
             if target == "qx":
-                assert "[server_remote]" in text
-                assert "[server_local]" in text
+                for section in QX_REQUIRED_SECTIONS:
+                    assert f"[{section}]" in text
                 assert "enabled=false" in text
             continue
         occurrences = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
@@ -177,10 +177,8 @@ def test_manual_exposes_regional_auto_groups_on_all_clients():
     stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
     stash_manual = next(group for group in stash["proxy-groups"] if group["name"] == "Manual")
     assert stash_manual["proxies"] == auto_names
-    # Every provider is expanded beside the static regional groups, regardless of
-    # the provider key chosen by the user or by an override.
-    assert stash_manual["include-all"] is True
-    assert "use" not in stash_manual
+    assert stash_manual["use"] == [STASH_PROVIDER_NAME]
+    assert "include-all" not in stash_manual
     assert STASH_ALL_NODES_GROUP not in {
         group["name"] for group in stash["proxy-groups"]
     }
@@ -426,8 +424,8 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
     ("surge", ",icon-url=", ",icon-uri=", "Surge Manual"),
     ("surge", "policy-regex-filter=(?i)", 'policy-regex-filter="(?i)', "must not be quoted"),
     ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
-    ("stash", "  include-all: true",
-     "  include-all: false", "Stash Manual"),
+    ("stash", "  - Subscription1\n",
+     "  - MissingProvider\n", "Stash Manual"),
     ("shadowrocket", "Final = select,PROXY,",
      "Final = select,Manual,", "must default to PROXY"),
     ("qx", "excluded_routes = 224.0.0.0/4, 239.255.255.250/32",
@@ -456,6 +454,12 @@ def test_no_profile_decrypts_https():
         text = (ROOT / "dist" / target / filename).read_text()
         assert "[MITM]" not in text
         assert "hostname" not in text
+        if target == "qx":
+            assert _section(text, "mitm") == []
+            for section in QX_REQUIRED_EMPTY_SECTIONS:
+                assert _section(text, section) == []
+        else:
+            assert "[mitm]" not in text
 
 
 def test_validator_rejects_any_profile_mitm_section(tmp_path):
