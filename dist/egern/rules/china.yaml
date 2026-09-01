@@ -261,6 +261,7 @@ domain_suffix_set:
 - 360pay.cn
 - 360qhcdn.com
 - 360safe.com
+- 360scdn.com
 - 360shouji.com
 - 360sjyh.cn
 - 360so.com
@@ -2420,6 +2421,7 @@ domain_suffix_set:
 - deepin.org.cn
 - deepinos.org
 - deepseek.com
+- deepseeksvc.com
 - dengguobi.com
 - deppon.com
 - deppon.com.cn
@@ -6472,6 +6474,7 @@ domain_suffix_set:
 - tcltech.com
 - tcp5.com
 - tcss.qq.com
+- tctpwebankcdn.net
 - tcwqqdy.guru
 - tdnsdl1.cn
 - tdnsdl1.com.cn
@@ -6551,7 +6554,9 @@ domain_suffix_set:
 - tencentcdb.cn
 - tencentcdb.com
 - tencentcdb.com.cn
+- tencentclb.cn
 - tencentclb.com
+- tencentclb.com.cn
 - tencentcloud-aiot.com
 - tencentcloud.com
 - tencentcloudapi.com
@@ -6575,6 +6580,7 @@ domain_suffix_set:
 - tencentelasticsearch.com
 - tencentid.com
 - tencentidentity.com
+- tencentmiying.com
 - tencentmusic.com
 - tencentproxy.com
 - tencentrio.com
@@ -6587,6 +6593,7 @@ domain_suffix_set:
 - tendbcluster.com
 - tendcloud.com
 - tendis.net
+- tengmed.com
 - tenpay.com
 - tenxcloud.com
 - tesoon.com
@@ -7287,6 +7294,7 @@ domain_suffix_set:
 - wbclick.mobile.sina.cn
 - wbimg.cn
 - wbimg.com
+- wbweilicai.com
 - wcbygame.com
 - wcdn.cn
 - wch-ic.com
@@ -7416,6 +7424,7 @@ domain_suffix_set:
 - wooyun.org
 - woozooo.com
 - woread.com.cn
+- workbuddy.cn
 - workercn.cn
 - worktile.com
 - worldofship.cn

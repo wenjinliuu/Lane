@@ -259,6 +259,7 @@ host-suffix,360panyun.cn,direct
 host-suffix,360pay.cn,direct
 host-suffix,360qhcdn.com,direct
 host-suffix,360safe.com,direct
+host-suffix,360scdn.com,direct
 host-suffix,360shouji.com,direct
 host-suffix,360sjyh.cn,direct
 host-suffix,360so.com,direct
@@ -2418,6 +2419,7 @@ host-suffix,deepin.com,direct
 host-suffix,deepin.org.cn,direct
 host-suffix,deepinos.org,direct
 host-suffix,deepseek.com,direct
+host-suffix,deepseeksvc.com,direct
 host-suffix,dengguobi.com,direct
 host-suffix,deppon.com,direct
 host-suffix,deppon.com.cn,direct
@@ -6470,6 +6472,7 @@ host-suffix,tcloudscdn.net,direct
 host-suffix,tcltech.com,direct
 host-suffix,tcp5.com,direct
 host-suffix,tcss.qq.com,direct
+host-suffix,tctpwebankcdn.net,direct
 host-suffix,tcwqqdy.guru,direct
 host-suffix,tdnsdl1.cn,direct
 host-suffix,tdnsdl1.com.cn,direct
@@ -6549,7 +6552,9 @@ host-suffix,tencentbyod.com,direct
 host-suffix,tencentcdb.cn,direct
 host-suffix,tencentcdb.com,direct
 host-suffix,tencentcdb.com.cn,direct
+host-suffix,tencentclb.cn,direct
 host-suffix,tencentclb.com,direct
+host-suffix,tencentclb.com.cn,direct
 host-suffix,tencentcloud-aiot.com,direct
 host-suffix,tencentcloud.com,direct
 host-suffix,tencentcloudapi.com,direct
@@ -6573,6 +6578,7 @@ host-suffix,tencenteiam.com,direct
 host-suffix,tencentelasticsearch.com,direct
 host-suffix,tencentid.com,direct
 host-suffix,tencentidentity.com,direct
+host-suffix,tencentmiying.com,direct
 host-suffix,tencentmusic.com,direct
 host-suffix,tencentproxy.com,direct
 host-suffix,tencentrio.com,direct
@@ -6585,6 +6591,7 @@ host-suffix,tenda.com.cn,direct
 host-suffix,tendbcluster.com,direct
 host-suffix,tendcloud.com,direct
 host-suffix,tendis.net,direct
+host-suffix,tengmed.com,direct
 host-suffix,tenpay.com,direct
 host-suffix,tenxcloud.com,direct
 host-suffix,tesoon.com,direct
@@ -7285,6 +7292,7 @@ host-suffix,wasumedia.cn,direct
 host-suffix,wbclick.mobile.sina.cn,direct
 host-suffix,wbimg.cn,direct
 host-suffix,wbimg.com,direct
+host-suffix,wbweilicai.com,direct
 host-suffix,wcbygame.com,direct
 host-suffix,wcdn.cn,direct
 host-suffix,wch-ic.com,direct
@@ -7414,6 +7422,7 @@ host-suffix,woodo.cn,direct
 host-suffix,wooyun.org,direct
 host-suffix,woozooo.com,direct
 host-suffix,woread.com.cn,direct
+host-suffix,workbuddy.cn,direct
 host-suffix,workercn.cn,direct
 host-suffix,worktile.com,direct
 host-suffix,worldofship.cn,direct
