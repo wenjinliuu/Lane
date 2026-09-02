@@ -8,13 +8,13 @@
     "ipv4": {
       "reference_available": true,
       "equal_coverage": false,
-      "primary_rule_count": 6228,
+      "primary_rule_count": 6229,
       "reference_rule_count": 3899,
-      "primary_addresses": "344323328",
+      "primary_addresses": "344323840",
       "reference_addresses": "282521088",
       "common_addresses": "281962240",
-      "primary_only_cidr_count": 6696,
-      "primary_only_cidrs_sha256": "ded0618a3d53a9bcd896521e40cf83327b757090f0c074ef00cc6d61ad5e30ad",
+      "primary_only_cidr_count": 6697,
+      "primary_only_cidrs_sha256": "511f315f613c7b7c02c126761e4fa799613fcfab191dce20ba02ad77194648e7",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -227,9 +227,9 @@
     "ipv6": {
       "reference_available": false,
       "equal_coverage": null,
-      "primary_rule_count": 3406,
+      "primary_rule_count": 3397,
       "reference_rule_count": 0,
-      "primary_addresses": "5429465877033098438035841912668160",
+      "primary_addresses": "5429465903629466469557683756204032",
       "reference_addresses": null,
       "common_addresses": null,
       "primary_only_cidrs": null,
@@ -242,18 +242,18 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "176fa998f37913f605b2d645db46b9a222d09c4b",
-        "sha256": "758579f33e40561582db55f2f475c2b4c2349ca8ed0b02c3e8b3f788185b4eea",
+        "revision": "7c6403c7e3ac66412fb577cc768068f3546f1ef4",
+        "sha256": "391626a956f9ee3ab794e8f80af8f3ce5878e916dadfc48b649681dc378d3d49",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
         "breaker_percent": 1.0,
         "snapshot_dates": [
+          "2026-09-02",
           "2026-09-01",
           "2026-08-31",
           "2026-08-30",
-          "2026-08-29",
-          "2026-08-28"
+          "2026-08-29"
         ],
         "window_report": "cn-ip-window.json"
       }
@@ -261,7 +261,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "4ec2dc47a0d7c8abe5abdc2cf5a2ca9a9831c41f04c04c4a5eeaa7d03a08e198",
+        "sha256": "d7b67c53d636a544fdbb259c3cf80b824b69121bbecd4ce7fa14323e78747312",
         "license": "CC-BY-SA-4.0"
       }
     }
