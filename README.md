@@ -50,7 +50,7 @@ Lane 只控制网络路径，不保证入金或交易成功，也不改变账户
 
 ### 首次使用
 
-1. 下载对应配置。除 Shadowrocket 与 Quantumult X 外，在下表指定的订阅字段中，将 `你的订阅地址` 替换为服务提供商为该客户端提供的完整订阅链接；占位符统一不加引号。QX 按官方顺序保留完整模块骨架，并在 `[server_remote]` 放置一条默认禁用的 Lane 空资源；其余未使用模块为空，导入后再在 App 内添加节点订阅。
+1. 下载对应配置。除 Shadowrocket 与 Quantumult X 外，在下表指定的订阅字段中，将 `你的订阅地址` 替换为服务提供商为该客户端提供的完整订阅链接；占位符统一不加引号。QX 按官方顺序保留完整模块骨架，并在 `[server_remote]` 放置一条标为 `Lane 节点订阅占位`、默认禁用的空资源；配置顶部和该段内都写有节点添加步骤。
 2. `你的订阅地址` 只是占位文字，不是有效 URL，Lane 不提供节点。部分客户端可能在导入时校验地址，请先在本地填写，再导入并复制/保存为本地配置，不让整份配置继续跟随远程更新。仅改显示名称不等于本地化；Surge 托管配置需先创建普通副本，Egern 不设置主配置 `auto_update`。
 3. 保存并启用配置，在 `Manual` 中选择地区组或节点；Stash 的单节点与地区 Auto 位于同一层，Egern 的全部单节点位于 `Manual → All Nodes`。服务组默认跟随 `Manual`，也可选择直连或地区 Auto / Manual。Shadowrocket 不含订阅模板，继续使用应用内已有节点订阅，并在首页选节点；服务组默认跟随该选择（`PROXY`）。
 4. 开启客户端的节点与规则资源自动更新。配置内能指定的更新间隔为 24 小时；Loon 的资源定时更新在应用设置中管理。客户端后台调度、联网状态和订阅可用性仍会影响实际更新时间。
@@ -60,7 +60,7 @@ Lane 只控制网络路径，不保证入金或交易成功，也不改变账户
 | Stash | `proxy-providers → Subscription1 → url`，使用 Stash / Clash 格式节点订阅 |
 | Loon | `[Remote Proxy]` 的 `Subscription1 =` 后面，使用 Loon 支持的格式 |
 | Surge | `[Proxy Group]` 的隐藏组 `Subscription1`，替换 `policy-path=` 后面的占位符；使用 Surge 节点列表或包含 `[Proxy]` 的配置 |
-| Quantumult X | `[server_remote]` 内置默认禁用的 Lane 空资源；导入后在节点资源页面添加 QX 原生订阅，或替换占位 URL 并改为 `enabled=true` |
+| Quantumult X | 推荐导入后进入 `设置 → 节点 → 节点资源` 添加；也可搜索 `[server_remote]`，把占位行第一个逗号前的 URL 换成真实订阅，并将 `enabled=false` 改为 `enabled=true` |
 | Egern | `All Nodes → urls`；只填一次，使用 Egern 支持的节点订阅 |
 | Shadowrocket | 无模板，直接使用应用内已有节点订阅 |
 
@@ -77,7 +77,7 @@ Loon 用户若选择重新导入远程配置，请选择保留现有节点/订�
 | Stash | 取消 `Subscription2` 整块注释并填写 `url`，再把 `Subscription2` 加入 `Manual.use` | 复制整块并使用不重复的名称，再把每个完全相同的名称加入 `Manual.use`；覆写新增代理集时也要同步修改本地主配置 |
 | Loon | 取消 `Subscription2 =` 行的注释并填写 | 复制该行，使用不同别名；现有节点筛选会处理所有订阅 |
 | Surge | 取消隐藏组 `Subscription2` 的注释并填写，再把隐藏 `Node Pool` 的参数改为 `include-other-group="Subscription1,Subscription2"` | 新增 `Subscription3` 等隐藏组，并逐一加入 `Node Pool` 的引用列表 |
-| Quantumult X | 在 App 的节点资源页面添加；若直接编辑配置，则替换禁用占位 URL 并改为 `enabled=true` | 在 App 内继续添加，或复制 `[server_remote]` 资源行；Lane 占位资源始终保持禁用且不含节点 |
+| Quantumult X | 在 App 的 `设置 → 节点 → 节点资源` 添加；若直接编辑配置，则替换禁用占位 URL 并改为 `enabled=true` | 在 App 内继续添加，或复制 `[server_remote]` 资源行；每行一个 URL、使用不同 `tag` |
 | Egern | 在 `All Nodes → urls` 取消第二项注释并填写 | 在同一 `urls` 下逐行追加；地区组会自动从 `All Nodes` 展开 |
 | Shadowrocket | 在应用内添加 | 在应用内继续添加，Lane 不放订阅模板 |
 
@@ -117,7 +117,7 @@ Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类�
 - Loon、Shadowrocket、Surge、QX 中不支持或未确认兼容的域名正则会省略，逐规则集计数见 `dist/report.json`，不会误转换为 URL 重写。Loon 使用现行 `ip-mode = ipv4-only`，最低支持版本为 3.2.3 (754)。
 - Surge、Shadowrocket、Loon、QX 在节点不支持 UDP 时分别使用客户端原生的拒绝回落项；Stash/Egern 保持默认行为。配置不包含 `block-quic`、`udp_drop_list = QUIC` 或 `disable-udp-ports = 443`。
 - Egern 使用原生 YAML 规则集，保留 `no_resolve`；为兼容用户实测的 2.20.0，可见的 `All Nodes` 加载一次订阅，地区组通过 `flatten` 从中筛选节点，`Manual` 列出五个地区 Auto 与 `All Nodes`。
-- QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。完整配置按官方示例顺序保留全部模块；`[server_remote]` 只有 Lane 自托管的空占位资源，默认 `enabled=false` 且禁止自动更新；`[rewrite_remote]`、`[server_local]`、`[rewrite_local]`、`[task_local]`、`[http_backend]` 与 `[mitm]` 均为空。空模块只满足完整配置导入检查，不提供节点，也不启用重写、脚本、后端或 HTTPS 解密。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
+- QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。完整配置按官方示例顺序保留全部模块；`[server_remote]` 只有 Lane 自托管的空占位资源，默认 `enabled=false`，因此不会加载节点；用户替换 URL 并启用后按 24 小时间隔更新。`[rewrite_remote]`、`[server_local]`、`[rewrite_local]`、`[task_local]`、`[http_backend]` 与 `[mitm]` 均为空。空模块只满足完整配置导入检查，不提供节点，也不启用重写、脚本、后端或 HTTPS 解密。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
 - Stash、Loon、Shadowrocket、QX 与 Egern 的 Auto 使用各自原生自动测速类型；Surge 使用原生 Smart 算法并命名为 `地区 Auto Smart`。Shadowrocket 的 `url-test` 组本身即自动测速切换，应用内「测试并选择最快服务器」是对全部代理分组生效的界面开关，与配置无关，不影响该组自动切换。
 - Surge 的 `tun-excluded-routes` 与 QX 的 `excluded_routes` 只写 IPv4 网段：Surge 会对 IPv6 条目报 `Invalid excluded route: ff02::fb/128` 并丢弃，QX 官方示例也未记录 IPv6 写法。Shadowrocket 官方文档给出了 IPv6 写法，它与 Loon、Egern 仍保留完整列表。
 - 分流在 TCP / SNI 层完成，不读取加密内容；Lane 不配置任何 MitM 主机名、证书或解密参数。QX 仅因完整配置导入要求保留空的 `[mitm]` 模块头，其他客户端不写 MitM 段；HTTPS 捕获与解密由用户在客户端内自行管理。

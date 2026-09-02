@@ -8,7 +8,8 @@ import yaml
 from proxyrules.config import load_project_config
 from proxyrules.render import (
     CONFIG_FILENAMES, QX_PLACEHOLDER_CONTENT, QX_PLACEHOLDER_FILENAME,
-    QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS, STASH_PROVIDER_NAME,
+    QX_PLACEHOLDER_TAG, QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS,
+    STASH_PROVIDER_NAME,
     SUBSCRIPTION_PLACEHOLDER,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -35,11 +36,13 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
     assert "勿上传私人订阅" not in text
     if target in {"shadowrocket", "qx"}:
         assert SUBSCRIPTION_PLACEHOLDER not in text
-        assert "多订阅" not in text
         if target == "qx":
+            assert "多订阅时复制整行" in text
             assert "节点资源页面添加" in text
             assert "[server_remote]" in text
             assert "[server_local]" in text
+        else:
+            assert "多订阅" not in text
     else:
         assert SUBSCRIPTION_PLACEHOLDER == "你的订阅地址"
         assert f'"{SUBSCRIPTION_PLACEHOLDER}"' not in text
@@ -109,13 +112,17 @@ def test_qx_uses_only_a_disabled_empty_placeholder_resource():
     assert placeholder.read_text(encoding="utf-8") == QX_PLACEHOLDER_CONTENT
     assert _section(text, "server_remote") == [
         "https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/qx/"
-        f"{QX_PLACEHOLDER_FILENAME}, tag=Lane Placeholder, "
-        "update-interval=-1, enabled=false"
+        f"{QX_PLACEHOLDER_FILENAME}, tag={QX_PLACEHOLDER_TAG}, "
+        f"update-interval={NODE_INTERVAL}, enabled=false"
     ]
     assert _section(text, "server_local") == []
     for section in QX_REQUIRED_EMPTY_SECTIONS:
         assert _section(text, section) == []
     assert "节点资源页面添加" in text
+    assert "搜索 [server_remote]" in text
+    assert "设置 → 节点 → 节点资源" in text
+    assert "只修改下一行" in text
+    assert "多订阅时复制整行" in text
     assert tuple(re.findall(r"(?m)^\[([^\]]+)\]$", text)) == QX_REQUIRED_SECTIONS
 
 
@@ -180,8 +187,9 @@ def test_egern_all_nodes_accepts_additional_urls_without_duplication():
     ("egern", f"    - {SUBSCRIPTION_PLACEHOLDER}\n",
      f'    - "{SUBSCRIPTION_PLACEHOLDER}"\n', "must not be quoted"),
     ("loon", f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n", "", "commented second"),
-    ("qx", "update-interval=-1, enabled=false",
-     "update-interval=-1, enabled=true", "disabled Lane placeholder"),
+    ("qx", "多订阅时复制整行", "多份资源请复制整行", "subscription guidance"),
+    ("qx", f"update-interval={NODE_INTERVAL}, enabled=false",
+     f"update-interval={NODE_INTERVAL}, enabled=true", "disabled Lane placeholder"),
 ])
 def test_validator_rejects_subscription_template_regressions(tmp_path, target, old, new, error):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")

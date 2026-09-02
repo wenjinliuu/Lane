@@ -157,6 +157,7 @@ def test_subscription_templates_and_local_update_guidance():
                 for section in QX_REQUIRED_SECTIONS:
                     assert f"[{section}]" in text
                 assert "enabled=false" in text
+                assert "设置 → 节点 → 节点资源" in text
             continue
         occurrences = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
                        and not line.lstrip().startswith(("#", ";", "//"))]

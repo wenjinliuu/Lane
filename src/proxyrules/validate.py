@@ -14,8 +14,10 @@ from .render import (
     IPV4_EXCLUDED_ROUTES,
     QX_PLACEHOLDER_CONTENT,
     QX_PLACEHOLDER_FILENAME,
+    QX_PLACEHOLDER_TAG,
     QX_REQUIRED_EMPTY_SECTIONS,
     QX_REQUIRED_SECTIONS,
+    QX_SUBSCRIPTION_GUIDANCE_MARKERS,
     RULES_DIR,
     SHADOWROCKET_MANUAL_POLICY,
     STASH_ALL_NODES_GROUP,
@@ -463,6 +465,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
 
     qx_groups = {}
     qx_headers = _section_headers(texts["qx"])
+    for marker in QX_SUBSCRIPTION_GUIDANCE_MARKERS:
+        if marker not in texts["qx"]:
+            raise ValidationError(f"QX subscription guidance must include: {marker}")
     for section in QX_REQUIRED_SECTIONS:
         if section not in qx_headers:
             raise ValidationError(f"QX complete profile must include {section}")
@@ -499,7 +504,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     raw_base = config["project"]["project"]["raw_base"].rstrip("/")
     qx_placeholder_url = f"{raw_base}/dist/qx/{QX_PLACEHOLDER_FILENAME}"
     if _section(texts["qx"], "server_remote") != [
-        f"{qx_placeholder_url}, tag=Lane Placeholder, update-interval=-1, enabled=false"
+        f"{qx_placeholder_url}, tag={QX_PLACEHOLDER_TAG}, "
+        f"update-interval={node_interval}, enabled=false"
     ]:
         raise ValidationError("QX server_remote must contain only the disabled Lane placeholder")
     for section in QX_REQUIRED_EMPTY_SECTIONS:

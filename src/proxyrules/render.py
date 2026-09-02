@@ -31,6 +31,7 @@ SUBSCRIPTION_PLACEHOLDER = "你的订阅地址"
 STASH_PROVIDER_NAME = "Subscription1"
 STASH_ALL_NODES_GROUP = "All Nodes"
 QX_PLACEHOLDER_FILENAME = "server-placeholder.conf"
+QX_PLACEHOLDER_TAG = "Lane 节点订阅占位"
 QX_PLACEHOLDER_CONTENT = (
     "# Lane Quantumult X placeholder resource.\n"
     "# This file intentionally contains no proxy servers.\n"
@@ -57,6 +58,12 @@ QX_REQUIRED_EMPTY_SECTIONS = (
     "task_local",
     "http_backend",
     "mitm",
+)
+QX_SUBSCRIPTION_GUIDANCE_MARKERS = (
+    "搜索 [server_remote]",
+    "设置 → 节点 → 节点资源",
+    "只修改下一行",
+    "多订阅时复制整行",
 )
 MULTICAST_EXCLUDED_ROUTES = (
     "224.0.0.0/4",
@@ -108,6 +115,7 @@ LOCAL_PROFILE_NOTICE = (
     "# 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。\n"
 )
 QX_LOCAL_PROFILE_NOTICE = (
+    "# 节点订阅入口：搜索 [server_remote]；或导入后进入「设置 → 节点 → 节点资源」添加。\n"
     "# Lane 不提供节点；[server_remote] 内置一条默认禁用的空占位资源。\n"
     "# QX 完整配置要求的未使用模块只保留空段；不会启用重写、脚本、HTTP 后端或 MitM。\n"
     "# 导入后可在节点资源页面添加订阅；也可替换占位 URL，并将 enabled=false 改为 enabled=true。\n"
@@ -789,8 +797,14 @@ def _qx_config(
         lines.append(f"static = {region['manual_name']}, server-tag-regex={expression}"
                      f"{icon(region['manual_name'])}")
     lines.extend([
-        "", "[server_remote]",
-        f"{placeholder_url}, tag=Lane Placeholder, update-interval=-1, enabled=false",
+        "", "# ==================== 节点订阅填写处 ====================",
+        "[server_remote]",
+        "# 推荐：导入 Lane 后，在 QX「设置 → 节点 → 节点资源」添加机场提供的 QX 节点订阅。",
+        "# 如直接编辑本文件，只修改下一行：将第一个逗号前的 URL 换成真实订阅，并把 enabled=false 改为 enabled=true。",
+        "# tag 可自行改名；多订阅时复制整行，每行一个 URL、使用不同 tag。",
+        "# 格式示例：https://example.com/your-qx-subscription, tag=Subscription1, update-interval=86400, enabled=true",
+        f"{placeholder_url}, tag={QX_PLACEHOLDER_TAG}, "
+        f"update-interval={updates['node_interval']}, enabled=false",
         "", "[filter_remote]",
         "# 不导入客户端默认 CN/LAN 资源，避免抢先覆盖本项目的服务分流。",
     ])
