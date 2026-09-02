@@ -5,9 +5,11 @@ import yaml
 from proxyrules.config import load_project_config, validate_config
 from proxyrules.model import Rule
 from proxyrules.render import (
+    BASE_GROUP_NAME,
     CONFIG_FILENAMES,
     HIJACK_DNS_SERVERS,
     MULTICAST_EXCLUDED_ROUTES,
+    NODE_GROUP_NAME,
     PROFILE_HEADER,
     REAL_IP_DOMAINS,
     STASH_REAL_IP_DOMAINS,
@@ -102,8 +104,10 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
         for region in config["policies"]["regions"]
         for name in (region["auto_name"], region["manual_name"])
     ]
-    expected_group_names = ["Manual", *service_names, *region_names]
-    assert [group["name"] for group in stash["proxy-groups"]] == expected_group_names
+    expected_group_names = [BASE_GROUP_NAME, *service_names, *region_names]
+    assert [group["name"] for group in stash["proxy-groups"]] == [
+        NODE_GROUP_NAME, *expected_group_names
+    ]
 
     loon_group_block = loon_text.split("[Proxy Group]\n", 1)[1].split(
         "\n[Remote Rule]", 1
@@ -117,19 +121,18 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
     shadow_group_block = shadow_text.split("[Proxy Group]\n", 1)[1].split(
         "\n[Rule]", 1
     )[0]
-    # Shadowrocket has no Manual group: it follows the built-in PROXY policy.
+    # Shadowrocket has no generated Proxy group: it follows the built-in PROXY policy.
     assert [
         line.split(" = ", 1)[0]
         for line in shadow_group_block.splitlines()
         if " = " in line
-    ] == [name for name in expected_group_names if name != "Manual"]
+    ] == [name for name in expected_group_names if name != BASE_GROUP_NAME]
 
     icon_config = config["icons"]
     icon_base = icon_config["base"].rstrip("/")
     for group in stash["proxy-groups"]:
-        assert group["icon"] == (
-            f"{icon_base}/{icon_config['icons'][group['name']]}"
-        )
+        icon_name = BASE_GROUP_NAME if group["name"] == NODE_GROUP_NAME else group["name"]
+        assert group["icon"] == f"{icon_base}/{icon_config['icons'][icon_name]}"
 
     expected_icons = {
         "AI": "third-party/qure/AI.png",

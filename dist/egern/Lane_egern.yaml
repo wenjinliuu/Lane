@@ -1,11 +1,11 @@
 # Lane | Local profile template
-# Last updated: 2026-09-01 21:56:41 (Asia/Shanghai)
+# Last updated: 2026-09-02 14:40:37 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
 # Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名；嘉信规则并入本组。
 # Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。
-# 上述两组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。
+# 上述两组默认均为 Proxy；分流只控制网络路径，不保证入金或交易结果。
 # AppleCN：命中苹果大陆服务名单时优先 DIRECT，其他 Apple 服务仍走 Apple 策略组。
 # Google 不再有大陆直连例外名单，全部域名统一走 Google 策略组。
 # LAN：私有网段与本地域名直连，位于全部规则之前，带 no-resolve。
@@ -43,30 +43,30 @@ dns:
   - wildcard:
       match: '*'
       value: bootstrap
-# 只需在 All Nodes 的 urls 填写订阅；Manual 通过 All Nodes 进入全部单节点。
+# 只需在 我的节点 的 urls 填写订阅；Proxy 通过它进入全部单节点。
 policy_groups:
 - select:
-    name: All Nodes
+    name: 我的节点
     urls:
     - 你的订阅地址
-    # 多订阅：取消下一行注释并填写；地区组会自动从 All Nodes 展开。
+    # 多订阅：取消下一行注释并填写；地区组会自动从 我的节点 展开。
     # - 你的订阅地址
     update_interval: 86400
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - select:
-    name: Manual
+    name: Proxy
     policies:
     - US Auto
     - JP Auto
     - HK Auto
     - TW Auto
     - SG Auto
-    - All Nodes
+    - 我的节点
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - select:
     name: AI
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -82,7 +82,7 @@ policy_groups:
 - select:
     name: Brokerage
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -98,7 +98,7 @@ policy_groups:
 - select:
     name: Crypto
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -114,7 +114,7 @@ policy_groups:
 - select:
     name: YouTube
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -130,7 +130,7 @@ policy_groups:
 - select:
     name: TikTok
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -146,7 +146,7 @@ policy_groups:
 - select:
     name: Emby
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -162,7 +162,7 @@ policy_groups:
 - select:
     name: Streaming
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -178,7 +178,7 @@ policy_groups:
 - select:
     name: Gaming
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -194,7 +194,7 @@ policy_groups:
 - select:
     name: Telegram
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -210,7 +210,7 @@ policy_groups:
 - select:
     name: Social
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -226,7 +226,7 @@ policy_groups:
 - select:
     name: Developer
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -242,7 +242,7 @@ policy_groups:
 - select:
     name: Google
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -258,7 +258,7 @@ policy_groups:
 - select:
     name: Microsoft
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -274,7 +274,7 @@ policy_groups:
 - select:
     name: Apple
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -290,7 +290,7 @@ policy_groups:
 - select:
     name: Final
     policies:
-    - Manual
+    - Proxy
     - DIRECT
     - US Auto
     - US Manual
@@ -306,7 +306,7 @@ policy_groups:
 - auto_test:
     name: US Auto
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -316,14 +316,14 @@ policy_groups:
 - select:
     name: US Manual
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇺🇸|美国|United\s*States|(?:^|[^A-Za-z])(?:US|USA)(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/United_States.png
 - auto_test:
     name: JP Auto
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -333,14 +333,14 @@ policy_groups:
 - select:
     name: JP Manual
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇯🇵|日本|Japan|(?:^|[^A-Za-z])JP(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Japan.png
 - auto_test:
     name: HK Auto
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -350,14 +350,14 @@ policy_groups:
 - select:
     name: HK Manual
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇭🇰|香港|Hong\s*Kong|(?:^|[^A-Za-z])HK(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Hong_Kong.png
 - auto_test:
     name: TW Auto
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇹🇼|台湾|臺灣|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -367,14 +367,14 @@ policy_groups:
 - select:
     name: TW Manual
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇹🇼|台湾|臺灣|Taiwan|(?:^|[^A-Za-z])TW(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/China.png
 - auto_test:
     name: SG Auto
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇸🇬|新加坡|狮|獅|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     interval: 600
@@ -384,7 +384,7 @@ policy_groups:
 - select:
     name: SG Manual
     policies:
-    - All Nodes
+    - 我的节点
     flatten: true
     filter: (?i)^.*(?:(?:🇸🇬|新加坡|狮|獅|Singapore|(?:^|[^A-Za-z])SG(?:[0-9]+)?(?:$|[^A-Za-z]))).*$
     icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Singapore.png

@@ -10,9 +10,9 @@ from proxyrules.compiler import CompiledRuleset
 from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
-    CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER, RULES_DIR,
-    QX_PLACEHOLDER_FILENAME, QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS,
-    STASH_ALL_NODES_GROUP, STASH_PROVIDER_NAME, SUBSCRIPTION_PLACEHOLDER, TARGETS,
+    BASE_GROUP_NAME, CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER,
+    NODE_GROUP_NAME, RULES_DIR, QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS,
+    STASH_PROVIDER_NAME, SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -124,6 +124,25 @@ def test_stash_uses_specialized_payloads_without_changing_rule_semantics(tmp_pat
     ]
 
 
+def test_shadowrocket_maps_shared_proxy_rule_policy_to_builtin_proxy(tmp_path):
+    config = load_project_config(ROOT)
+    ruleset = CompiledRuleset(
+        "sample", "Sample", BASE_GROUP_NAME, (Rule("domain", "example.com"),)
+    )
+    render_all(
+        tmp_path,
+        config["project"],
+        config["policies"],
+        config["icons"],
+        [ruleset],
+    )
+    text = (tmp_path / "dist/shadowrocket/Lane_shadowrocket.conf").read_text()
+    assert any(
+        line.startswith("RULE-SET,") and line.endswith(",PROXY")
+        for line in _section(text, "Rule")
+    )
+
+
 def test_generated_rule_counts_agree_with_capability_report():
     metadata = json.loads((ROOT / "dist/metadata.json").read_text())
     report = json.loads((ROOT / "dist/report.json").read_text())
@@ -156,7 +175,7 @@ def test_subscription_templates_and_local_update_guidance():
             if target == "qx":
                 for section in QX_REQUIRED_SECTIONS:
                     assert f"[{section}]" in text
-                assert "enabled=false" in text
+                assert _section(text, "server_remote") == []
                 assert "设置 → 节点 → 节点资源" in text
             continue
         occurrences = [line for line in text.splitlines() if SUBSCRIPTION_PLACEHOLDER in line
@@ -169,28 +188,25 @@ def test_subscription_templates_and_local_update_guidance():
     provider = stash["proxy-providers"]["Subscription1"]
     assert provider["interval"] > 0
     assert provider["benchmark-url"] == load_project_config(ROOT)["project"]["benchmark"]["url"]
-    assert (ROOT / "dist" / "qx" / QX_PLACEHOLDER_FILENAME).is_file()
+    assert not (ROOT / "dist" / "qx" / "server-placeholder.conf").exists()
 
 
-def test_manual_exposes_regional_auto_groups_on_all_clients():
+def test_proxy_exposes_regional_auto_groups_and_node_pool_on_five_clients():
     auto_names = ["US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto"]
 
     stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
-    stash_manual = next(group for group in stash["proxy-groups"] if group["name"] == "Manual")
-    assert stash_manual["proxies"] == auto_names
-    assert stash_manual["use"] == [STASH_PROVIDER_NAME]
-    assert "include-all" not in stash_manual
-    assert STASH_ALL_NODES_GROUP not in {
-        group["name"] for group in stash["proxy-groups"]
-    }
+    stash_groups = {group["name"]: group for group in stash["proxy-groups"]}
+    assert stash_groups[NODE_GROUP_NAME]["include-all"] is True
+    assert stash_groups[BASE_GROUP_NAME]["proxies"] == [*auto_names, NODE_GROUP_NAME]
 
     loon_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
         for line in _section((ROOT / "dist/loon/Lane_loon.conf").read_text(), "Proxy Group")
     }
-    assert loon_groups["Manual"].split(",")[1:6] == auto_names
+    assert loon_groups[BASE_GROUP_NAME].split(",")[1:6] == auto_names
+    assert loon_groups[BASE_GROUP_NAME].split(",")[6] == NODE_GROUP_NAME
 
-    # Shadowrocket has no Manual group: its built-in PROXY policy is the node picked
+    # Shadowrocket has no generated Proxy group: its built-in PROXY policy is the node picked
     # on the home screen, and every service group offers the region Auto groups.
     shadow_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
@@ -198,7 +214,7 @@ def test_manual_exposes_regional_auto_groups_on_all_clients():
             (ROOT / "dist/shadowrocket/Lane_shadowrocket.conf").read_text(), "Proxy Group"
         )
     }
-    assert "Manual" not in shadow_groups
+    assert BASE_GROUP_NAME not in shadow_groups
     assert shadow_groups["Final"].split(",")[1] == "PROXY"
     for name in auto_names:
         assert name in shadow_groups["Final"].split(",")
@@ -208,25 +224,27 @@ def test_manual_exposes_regional_auto_groups_on_all_clients():
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
         for line in _section((ROOT / "dist/surge/Lane_surge.conf").read_text(), "Proxy Group")
     }
-    assert surge_groups["Manual"].split(",")[1:6] == [
+    assert surge_groups[BASE_GROUP_NAME].split(",")[1:6] == [
         "US Auto Smart", "JP Auto Smart", "HK Auto Smart", "TW Auto Smart", "SG Auto Smart"
     ]
+    assert surge_groups[BASE_GROUP_NAME].split(",")[6] == NODE_GROUP_NAME
 
-    qx_manual = next(
+    qx_proxy = next(
         line for line in _section((ROOT / "dist/qx/Lane_qx.conf").read_text(), "policy")
-        if line.startswith("static = Manual,")
+        if line.startswith(f"static = {BASE_GROUP_NAME},")
     )
-    assert [part.strip() for part in qx_manual.split("=", 1)[1].split(",")][1:6] == auto_names
+    assert [part.strip() for part in qx_proxy.split("=", 1)[1].split(",")][1:6] == auto_names
+    assert [part.strip() for part in qx_proxy.split("=", 1)[1].split(",")][6] == NODE_GROUP_NAME
 
     egern = yaml.safe_load((ROOT / "dist/egern/Lane_egern.yaml").read_text())
     egern_groups = {
         next(iter(group.values()))["name"]: next(iter(group.values()))
         for group in egern["policy_groups"]
     }
-    assert egern_groups["Manual"]["policies"] == [*auto_names, STASH_ALL_NODES_GROUP]
-    assert "urls" not in egern_groups["Manual"]
-    assert egern_groups[STASH_ALL_NODES_GROUP]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
-    assert "hidden" not in egern_groups[STASH_ALL_NODES_GROUP]
+    assert egern_groups[BASE_GROUP_NAME]["policies"] == [*auto_names, NODE_GROUP_NAME]
+    assert "urls" not in egern_groups[BASE_GROUP_NAME]
+    assert egern_groups[NODE_GROUP_NAME]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
+    assert "hidden" not in egern_groups[NODE_GROUP_NAME]
     egern_text = (ROOT / "dist/egern/Lane_egern.yaml").read_text()
     assert "&id" not in egern_text and "*id" not in egern_text
 
@@ -270,21 +288,21 @@ def test_surge_expands_subscription_members_instead_of_selected_node():
     assert groups[0].startswith("Subscription1 = select,")
     assert groups[0].endswith(",hidden=true")
     assert groups[1] == (
-        "Node Pool = select,include-other-group=Subscription1,"
-        "include-all-proxies=true,hidden=true"
+        f"{NODE_GROUP_NAME} = select,include-other-group=Subscription1,"
+        "include-all-proxies=true,icon-url=https://raw.githubusercontent.com/"
+        "wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png"
     )
     assert groups[2].startswith(
-        "Manual = select,US Auto Smart,JP Auto Smart,HK Auto Smart,"
-        "TW Auto Smart,SG Auto Smart,include-other-group=Node Pool,icon-url="
+        f"{BASE_GROUP_NAME} = select,US Auto Smart,JP Auto Smart,HK Auto Smart,"
+        f"TW Auto Smart,SG Auto Smart,{NODE_GROUP_NAME},icon-url="
     )
     for line in groups[-10:]:
-        assert "include-other-group=Node Pool" in line
+        assert f"include-other-group={NODE_GROUP_NAME}" in line
         assert "policy-regex-filter=" in line
-        assert ",Manual," not in line
-    # Hidden source groups carry no icon; every visible group does.
-    for line in groups[:2]:
-        assert "icon-url=" not in line
-    for line in groups[2:]:
+        assert f",{BASE_GROUP_NAME}," not in line
+    # The hidden subscription source has no icon; every visible group does.
+    assert "icon-url=" not in groups[0]
+    for line in groups[1:]:
         assert "icon-url=" in line
 
 
@@ -380,7 +398,7 @@ def test_surge_carries_policy_group_icons_and_shadowrocket_does_not():
         for line in _section((ROOT / "dist/surge/Lane_surge.conf").read_text(), "Proxy Group")
     }
     policies = config["policies"]
-    for name in ["Manual", *policies["service_groups"]]:
+    for name in [BASE_GROUP_NAME, *policies["service_groups"]]:
         expected = f"{icon_base}/{icon_config['icons'][name]}"
         assert surge_groups[name].endswith(f",icon-url={expected}")
     for region in policies["regions"]:
@@ -389,8 +407,10 @@ def test_surge_carries_policy_group_icons_and_shadowrocket_does_not():
         manual = f"{icon_base}/{icon_config['icons'][region['manual_name']]}"
         assert surge_groups[region["surge_smart_name"]].endswith(f",icon-url={smart}")
         assert surge_groups[region["manual_name"]].endswith(f",icon-url={manual}")
-    for hidden in ("Subscription1", "Node Pool"):
-        assert "icon-url=" not in surge_groups[hidden]
+    assert "icon-url=" not in surge_groups["Subscription1"]
+    assert surge_groups[NODE_GROUP_NAME].endswith(
+        f"icon-url={icon_base}/{icon_config['icons'][BASE_GROUP_NAME]}"
+    )
     assert icon_base not in (ROOT / "dist/shadowrocket/Lane_shadowrocket.conf").read_text()
 
 
@@ -404,10 +424,10 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
         line.split(" = ", 1)[0]: line.split(" = ", 1)[1]
         for line in _section(text, "Proxy Group")
     }
-    assert "Manual" not in groups
-    assert "Manual" not in [line.split(",")[-1] for line in _section(text, "Rule")]
+    assert BASE_GROUP_NAME not in groups
+    assert BASE_GROUP_NAME not in [line.split(",")[-1] for line in _section(text, "Rule")]
     expected_options = [
-        "PROXY" if option == "Manual" else option
+        "PROXY" if option == BASE_GROUP_NAME else option
         for option in policies["service_options"]
     ]
     for service in policies["service_groups"]:
@@ -422,13 +442,13 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
 
 
 @pytest.mark.parametrize("target,old,new,error", [
-    ("surge", ",icon-url=", ",icon-uri=", "Surge Manual"),
+    ("surge", ",icon-url=", ",icon-uri=", "Surge 我的节点"),
     ("surge", "policy-regex-filter=(?i)", 'policy-regex-filter="(?i)', "must not be quoted"),
     ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
-    ("stash", "  - Subscription1\n",
-     "  - MissingProvider\n", "Stash Manual"),
+    ("stash", "  include-all: true\n",
+     "  include-all: false\n", "Stash 我的节点"),
     ("shadowrocket", "Final = select,PROXY,",
-     "Final = select,Manual,", "must default to PROXY"),
+     "Final = select,Proxy,", "must default to PROXY"),
     ("qx", "excluded_routes = 224.0.0.0/4, 239.255.255.250/32",
      "excluded_routes = 224.0.0.0/4, 239.255.255.250/32, ff02::fb/128",
      "excluded_routes"),

@@ -354,17 +354,17 @@ def test_validator_rejects_wrong_cn_policy(target, tmp_path):
     if target == "stash":
         text = text.replace(
             "RULE-SET,apple-cn-domain,DIRECT",
-            "RULE-SET,apple-cn-domain,Manual",
+            "RULE-SET,apple-cn-domain,Proxy",
         )
     elif target == "egern":
         # Preserve the required header/notice strings when mutating just the rule.
         original = next(rule for rule in text.splitlines() if "apple-cn.yaml" in rule)
         tail = text.split(original, 1)[1]
-        text = text.split(original, 1)[0] + original + tail.replace("policy: DIRECT", "policy: Manual", 1)
+        text = text.split(original, 1)[0] + original + tail.replace("policy: DIRECT", "policy: Proxy", 1)
     else:
         lines = text.splitlines()
         index = next(i for i, line in enumerate(lines) if "apple-cn.list" in line)
-        lines[index] = lines[index].replace("DIRECT", "Manual").replace("force-policy=direct", "force-policy=Manual")
+        lines[index] = lines[index].replace("DIRECT", "Proxy").replace("force-policy=direct", "force-policy=Proxy")
         text = "\n".join(lines) + "\n"
     path.write_text(text)
     with pytest.raises(ValidationError, match="polic"):

@@ -19,7 +19,7 @@ rulesets:
 
   - id: custom-proxy
     title: Custom Proxy
-    policy: Manual
+    policy: Proxy
     custom: rules/custom/proxy.list
     omit_if_empty: true
 

@@ -191,11 +191,11 @@ hostname   h2   skip-server-cert-verify   ca-p12   ca-passphrase
 
 | 客户端 | 问题 | 修复 |
 |---|---|---|
-| **Stash** | `proxies + include-all` 真机只显示全部节点并隐藏地区组 | 恢复 `Manual.proxies + Manual.use`：前者固定五个地区 Auto，后者显式列出代理集；新增订阅或覆写时必须同步维护完全相同的代理集名称 |
-| **Quantumult X** | 中文占位符和注释订阅模板会导致完整配置导入失败；真机又依次报缺少 `[server_remote]`、`[server_local]`、`[rewrite_remote]` | 按官方顺序保留 12 个完整模块；`[server_remote]` 只有默认禁用的 Lane 空资源，并在顶部和段内明确 App 添加路径及直接替换方法；其余未使用模块为空，不启用重写、脚本、后端或 MitM；`excluded_routes` 仍为纯 IPv4 |
+| **Stash** | `proxies + include-all` 真机只显示全部节点并隐藏地区组 | 拆为 `我的节点` 与 `Proxy` 两层：前者 `include-all` 自动汇总全部代理集，后者固定五个地区 Auto 与 `我的节点`；新增订阅或覆写无需维护代理集名称 |
+| **Quantumult X** | 中文占位符和注释订阅模板会导致完整配置导入失败；真机又依次报缺少 `[server_remote]`、`[server_local]`、`[rewrite_remote]` | 按官方顺序保留 12 个完整模块并全部补齐；`[server_remote]` 保持为空，用户从 App 的节点资源页添加订阅；不启用重写、脚本、后端或 MitM；`excluded_routes` 仍为纯 IPv4 |
 | **Shadowrocket** | 生成了多余的 `Manual` 组 | 删除，改用内置 `PROXY` 策略（= 首页选中的节点）+ `policy-select-name=PROXY`；地区 `url-test` 组保留（它本身即自动测速，App 里那个"测试并选择最快服务器"是全局 UI 开关，与之无关） |
 | **Surge** | 策略组图标不显示 / 正则被引号包住 / IPv6 排除路由被拒 | 补 `icon-url=`；`policy-regex-filter` 去引号；`tun-excluded-routes` 只写 IPv4；不再写 `[MITM]` |
-| **Egern** | 2.20.0 中 `Manual` 直接混合地区 Auto 与订阅节点时只能稳定显示一侧；重复加载同一订阅又会触发节点去重 | 保持 `Manual → 五个地区 Auto + All Nodes`；订阅只在可见的 `All Nodes.urls` 填写一次，地区组从中 `flatten` 并筛选 |
+| **Egern** | 2.20.0 中单组直接混合地区 Auto 与订阅节点时只能稳定显示一侧；重复加载同一订阅又会触发节点去重 | 使用 `我的节点 → Proxy` 两层入口；订阅只在可见的 `我的节点.urls` 填写一次，地区组从中 `flatten` 并筛选 |
 
 validator 对以上每一条都加了断言，回退会直接构建失败。
 

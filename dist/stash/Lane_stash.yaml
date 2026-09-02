@@ -1,11 +1,11 @@
 # Lane | Local profile template
-# Last updated: 2026-09-01 23:53:38 (Asia/Shanghai)
+# Last updated: 2026-09-02 14:40:37 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
 # Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名；嘉信规则并入本组。
 # Crypto：仅 Binance、OKX、Bybit、Bitget；当前网络可正常访问时，可手动选择 DIRECT。
-# 上述两组默认均为 Manual；分流只控制网络路径，不保证入金或交易结果。
+# 上述两组默认均为 Proxy；分流只控制网络路径，不保证入金或交易结果。
 # AppleCN：命中苹果大陆服务名单时优先 DIRECT，其他 Apple 服务仍走 Apple 策略组。
 # Google 不再有大陆直连例外名单，全部域名统一走 Google 策略组。
 # LAN：私有网段与本地域名直连，位于全部规则之前，带 no-resolve。
@@ -38,19 +38,22 @@ proxy-providers:
     benchmark-url: http://cp.cloudflare.com/generate_204
     benchmark-timeout: 5
   # 多订阅：取消下方 Subscription2 整块注释并填写；更多订阅复制整块、名称递增，保留缩进。
-  # 启用后还要把完全相同的名称加入下方 Manual.use，例如 Subscription1、Subscription2。
-  # 使用覆写新增代理集时也遵守同名规则，并同步修改本地主配置的 Manual.use。
-  # 地区组使用 include-all，会自动纳入所有代理集，不需要逐个填写名称。
+  # 我的节点 与地区组使用 include-all，会自动纳入所有代理集，无需维护订阅名称。
+  # 使用覆写新增代理集时只需新增 proxy-providers 项，不需要修改策略组。
   # Subscription2:
   #   url: 你的订阅地址
   #   interval: 86400
   #   benchmark-url: http://cp.cloudflare.com/generate_204
   #   benchmark-timeout: 5
 
-# Manual.use 的名称必须与上方 proxy-providers 的键完全一致。
+# 我的节点 排在 Proxy 前；Proxy 通过它进入全部单节点。
 # Base, service, and region strategy groups.
 proxy-groups:
-- name: Manual
+- name: 我的节点
+  type: select
+  include-all: true
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
+- name: Proxy
   type: select
   proxies:
   - US Auto
@@ -58,13 +61,12 @@ proxy-groups:
   - HK Auto
   - TW Auto
   - SG Auto
-  use:
-  - Subscription1
+  - 我的节点
   icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png
 - name: AI
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -80,7 +82,7 @@ proxy-groups:
 - name: Brokerage
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -96,7 +98,7 @@ proxy-groups:
 - name: Crypto
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -112,7 +114,7 @@ proxy-groups:
 - name: YouTube
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -128,7 +130,7 @@ proxy-groups:
 - name: TikTok
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -144,7 +146,7 @@ proxy-groups:
 - name: Emby
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -160,7 +162,7 @@ proxy-groups:
 - name: Streaming
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -176,7 +178,7 @@ proxy-groups:
 - name: Gaming
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -192,7 +194,7 @@ proxy-groups:
 - name: Telegram
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -208,7 +210,7 @@ proxy-groups:
 - name: Social
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -224,7 +226,7 @@ proxy-groups:
 - name: Developer
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -240,7 +242,7 @@ proxy-groups:
 - name: Google
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -256,7 +258,7 @@ proxy-groups:
 - name: Microsoft
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -272,7 +274,7 @@ proxy-groups:
 - name: Apple
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual
@@ -288,7 +290,7 @@ proxy-groups:
 - name: Final
   type: select
   proxies:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual

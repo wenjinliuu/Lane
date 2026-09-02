@@ -7,9 +7,8 @@ import yaml
 
 from proxyrules.config import load_project_config
 from proxyrules.render import (
-    CONFIG_FILENAMES, QX_PLACEHOLDER_CONTENT, QX_PLACEHOLDER_FILENAME,
-    QX_PLACEHOLDER_TAG, QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS,
-    STASH_PROVIDER_NAME,
+    BASE_GROUP_NAME, CONFIG_FILENAMES, NODE_GROUP_NAME,
+    QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS, STASH_PROVIDER_NAME,
     SUBSCRIPTION_PLACEHOLDER,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
@@ -31,14 +30,14 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
     assert "Brokerage：富途/Moomoo 保留域名与 IP 覆盖；老虎、长桥仅保留实测关键域名；嘉信规则并入本组" in heading
     assert "Crypto：仅 Binance、OKX、Bybit、Bitget" in heading
     assert "嘉信独立分流" not in heading
-    assert "默认均为 Manual" in heading
+    assert "默认均为 Proxy" in heading
     assert "不保证入金或交易结果" in heading
     assert "勿上传私人订阅" not in text
     if target in {"shadowrocket", "qx"}:
         assert SUBSCRIPTION_PLACEHOLDER not in text
         if target == "qx":
-            assert "多订阅时复制整行" in text
-            assert "节点资源页面添加" in text
+            assert "[server_remote] 保持为空" in text
+            assert "在应用内添加" in text
             assert "[server_remote]" in text
             assert "[server_local]" in text
         else:
@@ -55,7 +54,7 @@ def test_plain_placeholder_and_service_guidance_at_top(target):
         assert len(active) == 1
 
 
-def test_stash_optional_block_requires_manual_name_linkage():
+def test_stash_all_nodes_automatically_includes_every_provider():
     text = _profile("stash")
     original = yaml.safe_load(text)
     assert list(original["proxy-providers"]) == ["Subscription1"]
@@ -67,25 +66,20 @@ def test_stash_optional_block_requires_manual_name_linkage():
     third = enabled.replace("Subscription2:", "Subscription3:", 1).replace(SUBSCRIPTION_PLACEHOLDER, URLS[2])
     edited = text.replace(f"url: {SUBSCRIPTION_PLACEHOLDER}", f"url: {URLS[0]}", 1)
     edited = edited.replace(block, second + third)
-    unlinked = yaml.safe_load(edited)
-    providers = unlinked["proxy-providers"]
+    parsed = yaml.safe_load(edited)
+    providers = parsed["proxy-providers"]
     assert list(providers) == ["Subscription1", "Subscription2", "Subscription3"]
     for name, url in zip(providers, URLS):
         assert providers[name] == {**original["proxy-providers"]["Subscription1"], "url": url}
-    assert unlinked["proxy-groups"][0]["use"] == [STASH_PROVIDER_NAME]
-
-    linked = edited.replace(
-        "  use:\n  - Subscription1\n",
-        "  use:\n  - Subscription1\n  - Subscription2\n  - Subscription3\n",
-        1,
-    )
-    parsed = yaml.safe_load(linked)
-    manual = parsed["proxy-groups"][0]
-    assert manual["proxies"] == ["US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto"]
-    assert manual["use"] == ["Subscription1", "Subscription2", "Subscription3"]
-    assert "include-all" not in manual
-    assert "完全相同的名称" in text
-    assert "同步修改本地主配置的 Manual.use" in text
+    node_group, proxy_group = parsed["proxy-groups"][:2]
+    assert node_group["name"] == NODE_GROUP_NAME
+    assert node_group["include-all"] is True
+    assert "use" not in node_group and "proxies" not in node_group
+    assert proxy_group["name"] == BASE_GROUP_NAME
+    assert proxy_group["proxies"] == [
+        "US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto", NODE_GROUP_NAME
+    ]
+    assert "无需维护订阅名称" in text
     for group in parsed["proxy-groups"][-10:]:
         assert group["include-all"] is True
 
@@ -105,28 +99,21 @@ def test_loon_additional_subscriptions_do_not_require_filter_changes():
         assert _section(edited, section) == _section(text, section)
 
 
-def test_qx_uses_only_a_disabled_empty_placeholder_resource():
+def test_qx_keeps_server_remote_empty_for_app_managed_resources():
     text = _profile("qx")
     assert SUBSCRIPTION_PLACEHOLDER not in text
-    placeholder = ROOT / "dist" / "qx" / QX_PLACEHOLDER_FILENAME
-    assert placeholder.read_text(encoding="utf-8") == QX_PLACEHOLDER_CONTENT
-    assert _section(text, "server_remote") == [
-        "https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/qx/"
-        f"{QX_PLACEHOLDER_FILENAME}, tag={QX_PLACEHOLDER_TAG}, "
-        f"update-interval={NODE_INTERVAL}, enabled=false"
-    ]
+    assert not (ROOT / "dist" / "qx" / "server-placeholder.conf").exists()
+    assert _section(text, "server_remote") == []
     assert _section(text, "server_local") == []
     for section in QX_REQUIRED_EMPTY_SECTIONS:
         assert _section(text, section) == []
-    assert "节点资源页面添加" in text
-    assert "搜索 [server_remote]" in text
+    assert "[server_remote] 保持为空" in text
     assert "设置 → 节点 → 节点资源" in text
-    assert "只修改下一行" in text
-    assert "多订阅时复制整行" in text
+    assert "在应用内添加" in text
     assert tuple(re.findall(r"(?m)^\[([^\]]+)\]$", text)) == QX_REQUIRED_SECTIONS
 
 
-def test_surge_hidden_subscriptions_are_expanded_through_manual():
+def test_surge_hidden_subscriptions_are_expanded_through_node_group():
     text = _profile("surge")
     groups = _section(text, "Proxy Group")
     commented = next(line for line in text.splitlines() if line.startswith("# Subscription2 = select,"))
@@ -135,8 +122,8 @@ def test_surge_hidden_subscriptions_are_expanded_through_manual():
     edited = text.replace(groups[0], groups[0].replace(SUBSCRIPTION_PLACEHOLDER, URLS[0]), 1)
     edited = edited.replace(commented, second + "\n" + third)
     edited = edited.replace(
-        "Node Pool = select,include-other-group=Subscription1,",
-        'Node Pool = select,include-other-group="Subscription1,Subscription2,Subscription3",',
+        f"{NODE_GROUP_NAME} = select,include-other-group=Subscription1,",
+        f'{NODE_GROUP_NAME} = select,include-other-group="Subscription1,Subscription2,Subscription3",',
     )
     parsed = {line.split(" = ", 1)[0]: line.split(" = ", 1)[1]
               for line in _section(edited, "Proxy Group")}
@@ -144,20 +131,21 @@ def test_surge_hidden_subscriptions_are_expanded_through_manual():
         assert parsed[f"Subscription{index}"] == (
             f"select,policy-path={url},update-interval={NODE_INTERVAL},hidden=true"
         )
-    assert parsed["Node Pool"] == (
+    assert parsed[NODE_GROUP_NAME] == (
         'select,include-other-group="Subscription1,Subscription2,Subscription3",'
-        'include-all-proxies=true,hidden=true'
+        'include-all-proxies=true,icon-url='
+        'https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png'
     )
-    assert "policy-path=" not in parsed["Node Pool"]
+    assert "policy-path=" not in parsed[NODE_GROUP_NAME]
     policies = load_project_config(ROOT)["policies"]
-    expected_visible = ["Manual", *policies["service_groups"], *[
+    expected_visible = [NODE_GROUP_NAME, BASE_GROUP_NAME, *policies["service_groups"], *[
         name for region in policies["regions"]
         for name in (region["surge_smart_name"], region["manual_name"])
     ]]
     assert [name for name, value in parsed.items() if "hidden=true" not in value] == expected_visible
     for region in policies["regions"]:
         for name in (region["surge_smart_name"], region["manual_name"]):
-            assert "include-other-group=Node Pool," in parsed[name]
+            assert f"include-other-group={NODE_GROUP_NAME}," in parsed[name]
     assert 'include-other-group="Subscription1,Subscription2"' in text
 
 
@@ -182,14 +170,16 @@ def test_egern_all_nodes_accepts_additional_urls_without_duplication():
 
 @pytest.mark.parametrize("target,old,new,error", [
     ("surge", "hidden=true\n", "hidden=false\n", "hidden source group"),
-    ("surge", "Node Pool = select,include-other-group=Subscription1,",
-     "Node Pool = select,include-other-group=Subscription2,", "Node Pool must expand"),
+    ("surge", f"{NODE_GROUP_NAME} = select,include-other-group=Subscription1,",
+     f"{NODE_GROUP_NAME} = select,include-other-group=Subscription2,", "我的节点 must expand"),
     ("egern", f"    - {SUBSCRIPTION_PLACEHOLDER}\n",
      f'    - "{SUBSCRIPTION_PLACEHOLDER}"\n', "must not be quoted"),
     ("loon", f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n", "", "commented second"),
-    ("qx", "多订阅时复制整行", "多份资源请复制整行", "subscription guidance"),
-    ("qx", f"update-interval={NODE_INTERVAL}, enabled=false",
-     f"update-interval={NODE_INTERVAL}, enabled=true", "disabled Lane placeholder"),
+    ("qx", "Lane 不提供节点；[server_remote] 保持为空，不内置虚拟地址或订阅占位",
+     "Lane 不提供节点；[server_remote] 可填写订阅", "subscription guidance"),
+    ("qx", "[server_remote]\n# [server_remote] 保持为空。",
+     "[server_remote]\nhttps://example.com/nodes, tag=Example\n# [server_remote] 保持为空。",
+     "must remain empty"),
 ])
 def test_validator_rejects_subscription_template_regressions(tmp_path, target, old, new, error):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")

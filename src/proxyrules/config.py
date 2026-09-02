@@ -42,8 +42,8 @@ def validate_config(config: dict[str, Any]) -> None:
 
     if not services or services[-1] != "Final":
         raise ConfigError("Final must be the last service group")
-    if not options or options[0] != "Manual":
-        raise ConfigError("Manual must be the default service option")
+    if not options or options[0] != "Proxy":
+        raise ConfigError("Proxy must be the default service option")
     if "DIRECT" not in options:
         raise ConfigError("Every service group must expose DIRECT")
     if len({item["name"] for item in regions}) != len(regions):
@@ -55,10 +55,10 @@ def validate_config(config: dict[str, Any]) -> None:
         raise ConfigError("Surge Smart groups must use '<region> Auto Smart' names")
 
     base_names = [entry.get("name") for entry in policies.get("base_groups", [])]
-    if base_names != ["Manual"]:
-        raise ConfigError("Manual must be the only base strategy group")
+    if base_names != ["Proxy"]:
+        raise ConfigError("Proxy must be the only base strategy group")
 
-    expected_options = ["Manual", "DIRECT"]
+    expected_options = ["Proxy", "DIRECT"]
     for region in regions:
         expected_options.extend([region.get("auto_name"), region.get("manual_name")])
     if options != expected_options:
@@ -66,7 +66,7 @@ def validate_config(config: dict[str, Any]) -> None:
 
     icon_config = config["icons"]
     icon_map = icon_config.get("icons")
-    expected_icon_names = ["Manual", *services]
+    expected_icon_names = ["Proxy", *services]
     for region in regions:
         expected_icon_names.extend([region["auto_name"], region["manual_name"]])
     expected_icon_base = (
@@ -83,7 +83,7 @@ def validate_config(config: dict[str, Any]) -> None:
         if path.is_absolute() or ".." in path.parts or path.suffix.lower() != ".png":
             raise ConfigError(f"Invalid icon path for {name}: {value!r}")
 
-    allowed_policies = set(services) | {"DIRECT", "Manual"}
+    allowed_policies = set(services) | {"DIRECT", "Proxy"}
     ids: set[str] = set()
     sources = config["sources"]["sources"]
     for entry in rulesets:

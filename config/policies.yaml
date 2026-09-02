@@ -1,5 +1,5 @@
 base_groups:
-  - name: Manual
+  - name: Proxy
     type: select
 
 # Region patterns intentionally use flags, full country/region names and bounded
@@ -55,7 +55,7 @@ service_groups:
   - Final
 
 service_options:
-  - Manual
+  - Proxy
   - DIRECT
   - US Auto
   - US Manual

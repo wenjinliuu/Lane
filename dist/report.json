@@ -45,11 +45,11 @@
     "egern": {}
   },
   "notes": {
-    "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical. Manual combines regional groups with raw nodes from explicitly named providers.",
+    "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical. A dedicated 我的节点 group includes every provider, while Proxy keeps regional groups visible.",
     "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters intentionally leave their sources unpinned so local nodes and multiple subscriptions can be considered.",
-    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility. Service groups follow the built-in PROXY policy (the node picked on the home screen) instead of a generated Manual group; icons are omitted because Shadowrocket has no policy-group icon parameter.",
-    "surge": "DOMAIN-REGEX is unsupported and omitted. Region automation uses native Smart groups over a hidden raw-node pool; visible groups carry icon-url.",
-    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted. excluded_routes stays IPv4-only. The official complete-profile section skeleton is preserved. Unused rewrite, script, HTTP backend, and MitM sections remain empty, while a disabled self-hosted server_remote placeholder provides no usable node.",
-    "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support. Manual reaches raw nodes through a dedicated All Nodes subscription group."
+    "shadowrocket": "DOMAIN-REGEX is omitted for compatibility. Service groups follow the built-in PROXY policy (the node picked on the home screen) instead of a generated Proxy group; icons are omitted because Shadowrocket has no policy-group icon parameter.",
+    "surge": "DOMAIN-REGEX is unsupported and omitted. Region automation uses native Smart groups over the visible 我的节点 pool; visible groups carry icon-url.",
+    "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted. excluded_routes stays IPv4-only. The official complete-profile section skeleton is preserved. server_remote and all unused rewrite, script, HTTP backend, and MitM sections remain empty.",
+    "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support. Proxy reaches raw nodes through the dedicated 我的节点 subscription group."
   }
 }

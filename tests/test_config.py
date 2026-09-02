@@ -12,9 +12,9 @@ def test_manifest_invariants() -> None:
     config = load_project_config(ROOT)
     validate_config(config)
     policies = config["policies"]
-    assert policies["service_options"][0] == "Manual"
+    assert policies["service_options"][0] == "Proxy"
     assert policies["service_groups"][-1] == "Final"
-    assert [item["name"] for item in policies["base_groups"]] == ["Manual"]
+    assert [item["name"] for item in policies["base_groups"]] == ["Proxy"]
     assert [item["code"] for item in policies["regions"]] == [
         "US",
         "JP",

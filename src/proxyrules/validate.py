@@ -10,17 +10,15 @@ import yaml
 from .cn_window import canonical_cidr_text, coverage_stats
 from .filters import build_filters
 from .render import (
+    BASE_GROUP_NAME,
     CONFIG_FILENAMES,
     IPV4_EXCLUDED_ROUTES,
-    QX_PLACEHOLDER_CONTENT,
-    QX_PLACEHOLDER_FILENAME,
-    QX_PLACEHOLDER_TAG,
+    NODE_GROUP_NAME,
     QX_REQUIRED_EMPTY_SECTIONS,
     QX_REQUIRED_SECTIONS,
     QX_SUBSCRIPTION_GUIDANCE_MARKERS,
     RULES_DIR,
     SHADOWROCKET_MANUAL_POLICY,
-    STASH_ALL_NODES_GROUP,
     STASH_BEHAVIOR_ORDER,
     STASH_PROVIDER_NAME,
     SUBSCRIPTION_PLACEHOLDER,
@@ -212,7 +210,6 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         dist / "report.json",
         dist / "cn-ip-window.json",
         dist / "cn-ip-validation.json",
-        dist / "qx" / QX_PLACEHOLDER_FILENAME,
     ]
     missing = [str(path.relative_to(root)) for path in required if not path.is_file()]
     if missing:
@@ -228,7 +225,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         | set(config["policies"]["service_groups"])
     )
     stash_groups = {entry["name"] for entry in stash.get("proxy-groups", [])}
-    if stash_groups != expected_groups:
+    if stash_groups != expected_groups | {NODE_GROUP_NAME}:
         raise ValidationError("Stash strategy groups do not match the policy manifest")
 
     rulesets = config["rulesets"]["rulesets"]
@@ -250,22 +247,22 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         line.split("=", 1)[0].strip()
         for line in _section(shadow_text, "Proxy Group")
     }
-    # Shadowrocket routes Manual to its built-in PROXY policy, so it defines no
-    # Manual group of its own.
-    shadow_expected_groups = expected_groups - {"Manual"}
+    # Shadowrocket routes Lane's Proxy group to its built-in PROXY policy, so it
+    # defines no separate base group of its own.
+    shadow_expected_groups = expected_groups - {BASE_GROUP_NAME}
     if loon_groups != expected_groups or shadow_groups != shadow_expected_groups:
         raise ValidationError("Loon or Shadowrocket strategy groups differ from the manifest")
-    if "Manual" in shadow_groups or SHADOWROCKET_MANUAL_POLICY not in shadow_text:
+    if BASE_GROUP_NAME in shadow_groups or SHADOWROCKET_MANUAL_POLICY not in shadow_text:
         raise ValidationError("Shadowrocket must follow the built-in PROXY policy")
 
     for service in config["policies"]["service_groups"]:
-        if f"{service} = select,Manual," not in loon_text:
-            raise ValidationError(f"{service} must default to Manual")
+        if f"{service} = select,{BASE_GROUP_NAME}," not in loon_text:
+            raise ValidationError(f"{service} must default to Proxy")
         if f"{service} = select,{SHADOWROCKET_MANUAL_POLICY}," not in shadow_text:
             raise ValidationError(f"{service} must default to PROXY on Shadowrocket")
 
     policies = config["policies"]
-    expected_order = ["Manual", *policies["service_groups"], *[
+    expected_order = [BASE_GROUP_NAME, *policies["service_groups"], *[
         name for region in policies["regions"]
         for name in (region["auto_name"], region["manual_name"])
     ]]
@@ -306,24 +303,27 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     options = list(policies["service_options"])
     auto_names = [region["auto_name"] for region in policies["regions"]]
     stash_by_name = {group["name"]: group for group in stash["proxy-groups"]}
-    stash_order = expected_order
+    stash_order = [NODE_GROUP_NAME, *expected_order]
     if list(stash_by_name) != stash_order:
-        raise ValidationError("Stash groups must be Manual, services, then regions")
+        raise ValidationError("Stash groups must be 我的节点, Proxy, services, then regions")
     for name in expected_order:
         if stash_by_name[name].get("icon") != icon_urls[name]:
             raise ValidationError(f"Stash {name} uses the wrong self-hosted icon")
+    if stash_by_name[NODE_GROUP_NAME].get("icon") != icon_urls[BASE_GROUP_NAME]:
+        raise ValidationError("Stash 我的节点 must reuse the Proxy icon")
     if (list(stash.get("proxy-providers", {})) != [STASH_PROVIDER_NAME]
             or stash["proxy-providers"][STASH_PROVIDER_NAME]["url"]
             != SUBSCRIPTION_PLACEHOLDER):
         raise ValidationError("Stash must contain the public subscription placeholder")
-    if (stash_by_name["Manual"].get("type") != "select"
-            or stash_by_name["Manual"].get("use") != [STASH_PROVIDER_NAME]
-            or stash_by_name["Manual"].get("include-all")
-            or stash_by_name["Manual"].get("proxies")
-            != auto_names):
-        raise ValidationError(
-            "Stash Manual must expose regional Auto groups and the named provider"
-        )
+    node_group = stash_by_name[NODE_GROUP_NAME]
+    if (node_group.get("type") != "select" or node_group.get("include-all") is not True
+            or node_group.get("proxies") or node_group.get("use")):
+        raise ValidationError("Stash 我的节点 must include every proxy provider")
+    proxy_group = stash_by_name[BASE_GROUP_NAME]
+    if (proxy_group.get("type") != "select"
+            or proxy_group.get("proxies") != [*auto_names, NODE_GROUP_NAME]
+            or proxy_group.get("include-all") or proxy_group.get("use")):
+        raise ValidationError("Stash Proxy must expose regional Auto groups and 我的节点")
     for service in policies["service_groups"]:
         if stash_by_name[service].get("proxies") != options:
             raise ValidationError(f"Stash {service} options differ from the manifest")
@@ -334,19 +334,25 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     }
     if list(loon_groups_by_name) != expected_order:
         raise ValidationError("loon: invalid group order or missing groups")
-    if not loon_groups_by_name["Manual"].startswith(
-        f"select,{','.join(auto_names)},Manual Nodes,"
+    if not loon_groups_by_name[BASE_GROUP_NAME].startswith(
+        f"select,{','.join(auto_names)},{NODE_GROUP_NAME},"
     ):
-        raise ValidationError("loon: Manual must expose regional Auto groups and nodes")
+        raise ValidationError("loon: Proxy must expose regional Auto groups and 我的节点")
+    remote_filters = {
+        line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
+        for line in _section(loon_text, "Remote Filter")
+    }
+    if not remote_filters.get(NODE_GROUP_NAME, "").startswith("NameRegex"):
+        raise ValidationError("loon: 我的节点 must be the all-node filter")
     for service in policies["service_groups"]:
         if not loon_groups_by_name[service].startswith(f"select,{','.join(options)}"):
-            raise ValidationError(f"loon: {service} must default to Manual")
+            raise ValidationError(f"loon: {service} must default to Proxy")
 
     shadow_groups_by_name = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
         for line in _section(shadow_text, "Proxy Group")
     }
-    shadow_order = [name for name in expected_order if name != "Manual"]
+    shadow_order = [name for name in expected_order if name != BASE_GROUP_NAME]
     if list(shadow_groups_by_name) != shadow_order:
         raise ValidationError("shadowrocket: invalid group order or missing groups")
     shadow_options = shadowrocket_options(policies)
@@ -370,7 +376,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         for line in _section(texts["surge"], "Proxy Group")
     }
     smart_names = [region["surge_smart_name"] for region in policies["regions"]]
-    surge_order = ["Subscription1", "Node Pool", "Manual", *policies["service_groups"], *[
+    surge_order = ["Subscription1", NODE_GROUP_NAME, BASE_GROUP_NAME, *policies["service_groups"], *[
         name for region in policies["regions"]
         for name in (region["surge_smart_name"], region["manual_name"])
     ]]
@@ -381,10 +387,11 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         f"select,policy-path={SUBSCRIPTION_PLACEHOLDER},update-interval={node_interval},hidden=true"
     ):
         raise ValidationError("Surge must load subscriptions through a hidden source group")
-    if surge_groups["Node Pool"] != (
-        "select,include-other-group=Subscription1,include-all-proxies=true,hidden=true"
+    if surge_groups[NODE_GROUP_NAME] != (
+        f"select,include-other-group=Subscription1,include-all-proxies=true"
+        f",icon-url={icon_urls[BASE_GROUP_NAME]}"
     ):
-        raise ValidationError("Surge Node Pool must expand raw proxies and remain hidden")
+        raise ValidationError("Surge 我的节点 must expand raw proxies and remain visible")
     for target, text in texts.items():
         headers = _section_headers(text)
         mitm_headers = [header for header in headers if header.lower() == "mitm"]
@@ -400,12 +407,12 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     def surge_icon(name: str) -> str:
         return f",icon-url={icon_urls[name]}"
 
-    if surge_groups["Manual"] != (
-        f"select,{','.join(smart_names)},include-other-group=Node Pool"
-        f"{surge_icon('Manual')}"
+    if surge_groups[BASE_GROUP_NAME] != (
+        f"select,{','.join(smart_names)},{NODE_GROUP_NAME}"
+        f"{surge_icon(BASE_GROUP_NAME)}"
     ):
-        raise ValidationError("Surge Manual must expose Smart groups and raw nodes")
-    surge_options = ["Manual", "DIRECT"]
+        raise ValidationError("Surge Proxy must expose Smart groups and 我的节点")
+    surge_options = [BASE_GROUP_NAME, "DIRECT"]
     for region in policies["regions"]:
         surge_options.extend([region["surge_smart_name"], region["manual_name"]])
     for service in policies["service_groups"]:
@@ -421,7 +428,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         # Unquoted: Surge treats surrounding quotes as part of the pattern, which
         # would leave the group empty and make Surge close routed connections.
         suffix = (
-            "include-other-group=Node Pool,"
+            f"include-other-group={NODE_GROUP_NAME},"
             f"policy-regex-filter={filters['regions'][region['name']]}"
         )
         # The Smart group reuses the region Auto icon so icons.yaml stays client neutral.
@@ -432,20 +439,20 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         if surge_groups[region["manual_name"]] != (
             f"select,{suffix}{surge_icon(region['manual_name'])}"
         ):
-            raise ValidationError(f"Surge {region['manual_name']} must expand Node Pool")
+            raise ValidationError(f"Surge {region['manual_name']} must expand 我的节点")
 
     egern = yaml.safe_load(texts["egern"])
     egern_groups = {next(iter(group.values()))["name"]: group for group in egern["policy_groups"]}
-    if list(egern_groups) != [STASH_ALL_NODES_GROUP, *expected_order]:
+    if list(egern_groups) != [NODE_GROUP_NAME, *expected_order]:
         raise ValidationError("Egern group order differs from the manifest")
-    egern_pool = egern_groups[STASH_ALL_NODES_GROUP]["select"]
-    egern_manual = egern_groups["Manual"]["select"]
+    egern_pool = egern_groups[NODE_GROUP_NAME]["select"]
+    egern_proxy = egern_groups[BASE_GROUP_NAME]["select"]
     if (egern_pool.get("urls") != [SUBSCRIPTION_PLACEHOLDER]
             or egern_pool.get("hidden") is not None):
-        raise ValidationError("Egern All Nodes must be the single visible subscription source")
-    if ("urls" in egern_manual
-            or egern_manual.get("policies") != [*auto_names, STASH_ALL_NODES_GROUP]):
-        raise ValidationError("Egern Manual must expose regional Auto groups and All Nodes")
+        raise ValidationError("Egern 我的节点 must be the single visible subscription source")
+    if ("urls" in egern_proxy
+            or egern_proxy.get("policies") != [*auto_names, NODE_GROUP_NAME]):
+        raise ValidationError("Egern Proxy must expose regional Auto groups and 我的节点")
     if any(token in texts["egern"] for token in ("&id", "*id")):
         raise ValidationError("Egern subscription URLs must not use YAML anchors or aliases")
     for service in policies["service_groups"]:
@@ -454,9 +461,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     for region in policies["regions"]:
         for name, kind in ((region["auto_name"], "auto_test"), (region["manual_name"], "select")):
             group = egern_groups[name][kind]
-            if (group.get("policies") != [STASH_ALL_NODES_GROUP] or not group.get("flatten")
+            if (group.get("policies") != [NODE_GROUP_NAME] or not group.get("flatten")
                     or group.get("filter") != filters["regions"][region["name"]]):
-                raise ValidationError(f"Egern {name} must flatten and filter All Nodes")
+                raise ValidationError(f"Egern {name} must flatten and filter 我的节点")
     if egern["rules"][-2:] != [{"geoip": {"match": "CN", "policy": "DIRECT"}},
                                {"default": {"policy": "Final"}}]:
         raise ValidationError("Egern final routing rules are invalid")
@@ -477,17 +484,22 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         kind, value = line.split("=", 1)
         name = value.split(",", 1)[0].strip()
         qx_groups[name] = (kind.strip(), value.strip())
-    if list(qx_groups) != expected_order:
+    if list(qx_groups) != [NODE_GROUP_NAME, *expected_order]:
         raise ValidationError("QX group order differs from the manifest")
-    qx_manual_kind, qx_manual_value = qx_groups["Manual"]
-    qx_manual_prefix = f"Manual, {', '.join(auto_names)}, server-tag-regex=.+"
-    if qx_manual_kind != "static" or not qx_manual_value.startswith(qx_manual_prefix):
-        raise ValidationError("QX Manual must expose regional Auto groups and nodes")
+    qx_nodes_kind, qx_nodes_value = qx_groups[NODE_GROUP_NAME]
+    if qx_nodes_kind != "static" or not qx_nodes_value.startswith(
+        f"{NODE_GROUP_NAME}, server-tag-regex=.+"
+    ):
+        raise ValidationError("QX 我的节点 must include every enabled node resource")
+    qx_proxy_kind, qx_proxy_value = qx_groups[BASE_GROUP_NAME]
+    qx_proxy_prefix = f"{BASE_GROUP_NAME}, {', '.join(auto_names)}, {NODE_GROUP_NAME}"
+    if qx_proxy_kind != "static" or not qx_proxy_value.startswith(qx_proxy_prefix):
+        raise ValidationError("QX Proxy must expose regional Auto groups and 我的节点")
     qx_options = ", ".join("direct" if option == "DIRECT" else option for option in options)
     for service in policies["service_groups"]:
         kind, value = qx_groups[service]
         if kind != "static" or not value.startswith(f"{service}, {qx_options}"):
-            raise ValidationError(f"QX {service} must default to Manual")
+            raise ValidationError(f"QX {service} must default to Proxy")
     for region in policies["regions"]:
         for name, kind in ((region["auto_name"], "url-latency-benchmark"), (region["manual_name"], "static")):
             actual, value = qx_groups[name]
@@ -502,18 +514,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         if f"{key} = {ipv4_routes}" not in texts[target].splitlines():
             raise ValidationError(f"{target}: {key} must list the IPv4 ranges only")
     raw_base = config["project"]["project"]["raw_base"].rstrip("/")
-    qx_placeholder_url = f"{raw_base}/dist/qx/{QX_PLACEHOLDER_FILENAME}"
-    if _section(texts["qx"], "server_remote") != [
-        f"{qx_placeholder_url}, tag={QX_PLACEHOLDER_TAG}, "
-        f"update-interval={node_interval}, enabled=false"
-    ]:
-        raise ValidationError("QX server_remote must contain only the disabled Lane placeholder")
     for section in QX_REQUIRED_EMPTY_SECTIONS:
         if _section(texts["qx"], section):
             raise ValidationError(f"QX {section} must remain empty")
-    placeholder_path = dist / "qx" / QX_PLACEHOLDER_FILENAME
-    if placeholder_path.read_text(encoding="utf-8") != QX_PLACEHOLDER_CONTENT:
-        raise ValidationError("QX placeholder resource must remain empty and documented")
     if _section(texts["qx"], "filter_local")[-2:] != ["geoip,cn,direct", "final,Final"]:
         raise ValidationError("QX final routing rules are invalid")
 
@@ -583,7 +586,16 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         elif target in {"surge", "shadowrocket"}:
             actual_policies = [line.split(",")[2].strip() for line in _section(text, "Rule")
                                if line.startswith("RULE-SET,")]
-            if actual_policies != expected_policy_list:
+            target_expected_policies = (
+                [
+                    SHADOWROCKET_MANUAL_POLICY
+                    if policy == BASE_GROUP_NAME else policy
+                    for policy in expected_policy_list
+                ]
+                if target == "shadowrocket"
+                else expected_policy_list
+            )
+            if actual_policies != target_expected_policies:
                 raise ValidationError(f"{target}: routing policies differ from the manifest")
             if _section(text, "Rule")[-2:] != ["GEOIP,CN,DIRECT", "FINAL,Final"]:
                 raise ValidationError(f"{target}: final routing rules are invalid")
