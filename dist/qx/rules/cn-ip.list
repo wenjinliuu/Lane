@@ -2002,6 +2002,8 @@ ip-cidr,106.75.224.0/19,direct
 ip-cidr,106.8.0.0/15,direct
 ip-cidr,106.80.0.0/12,direct
 ip-cidr,109.244.0.0/16,direct
+ip-cidr,110.100.0.0/14,direct
+ip-cidr,110.104.0.0/13,direct
 ip-cidr,110.112.0.0/13,direct
 ip-cidr,110.120.0.0/16,direct
 ip-cidr,110.121.0.0/22,direct
@@ -2051,7 +2053,8 @@ ip-cidr,110.88.0.0/14,direct
 ip-cidr,110.92.68.0/22,direct
 ip-cidr,110.93.32.0/19,direct
 ip-cidr,110.94.0.0/15,direct
-ip-cidr,110.96.0.0/12,direct
+ip-cidr,110.96.0.0/15,direct
+ip-cidr,110.98.0.0/16,direct
 ip-cidr,111.0.0.0/10,direct
 ip-cidr,111.112.0.0/14,direct
 ip-cidr,111.116.0.0/15,direct
@@ -3406,12 +3409,6 @@ ip-cidr,180.208.0.0/15,direct
 ip-cidr,180.210.212.0/22,direct
 ip-cidr,180.212.0.0/15,direct
 ip-cidr,180.222.224.0/19,direct
-ip-cidr,180.223.196.0/24,direct
-ip-cidr,180.223.200.0/22,direct
-ip-cidr,180.223.212.0/24,direct
-ip-cidr,180.223.232.0/21,direct
-ip-cidr,180.223.240.0/21,direct
-ip-cidr,180.223.252.0/22,direct
 ip-cidr,180.233.0.0/18,direct
 ip-cidr,180.233.144.0/22,direct
 ip-cidr,180.233.64.0/19,direct
@@ -5035,6 +5032,7 @@ ip-cidr,203.99.20.0/22,direct
 ip-cidr,203.99.24.0/21,direct
 ip-cidr,203.99.8.0/23,direct
 ip-cidr,203.99.80.0/20,direct
+ip-cidr,206.109.70.0/23,direct
 ip-cidr,206.109.75.0/24,direct
 ip-cidr,210.12.0.0/15,direct
 ip-cidr,210.14.112.0/20,direct
