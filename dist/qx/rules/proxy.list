@@ -639,6 +639,7 @@ host,ksn-url-geo.kaspersky-labs.com,Final
 host,ksn-url.geoksn.kaspersky.com,Final
 host,ksn-verdict-geo.kaspersky-labs.com,Final
 host,ksn-verdict.geoksn.kaspersky.com,Final
+host,lastfm-img.freetls.fastly.net,Final
 host,lastfm.freetls.fastly.net,Final
 host,lazer.ppy.sh,Final
 host,lex.download.prss.microsoft.com,Final

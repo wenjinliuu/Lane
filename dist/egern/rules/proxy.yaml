@@ -640,6 +640,7 @@ domain_set:
 - ksn-url.geoksn.kaspersky.com
 - ksn-verdict-geo.kaspersky-labs.com
 - ksn-verdict.geoksn.kaspersky.com
+- lastfm-img.freetls.fastly.net
 - lastfm.freetls.fastly.net
 - lazer.ppy.sh
 - lex.download.prss.microsoft.com
