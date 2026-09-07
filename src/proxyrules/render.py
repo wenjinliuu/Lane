@@ -373,7 +373,7 @@ def _stash_config(
                 "include-all": True,
             },
             icons,
-            BASE_GROUP_NAME,
+            NODE_GROUP_NAME,
         )
     )
     groups.append(
@@ -381,7 +381,7 @@ def _stash_config(
             {
                 "name": BASE_GROUP_NAME,
                 "type": "select",
-                "proxies": [*_region_auto_names(policies), NODE_GROUP_NAME],
+                "proxies": [NODE_GROUP_NAME, *_region_auto_names(policies)],
             },
             icons,
             BASE_GROUP_NAME,
@@ -720,9 +720,9 @@ def _surge_config(
         f'# 多订阅：取消 Subscription2 注释并填写，再将 {NODE_GROUP_NAME} 引用改为 include-other-group="Subscription1,Subscription2"。',
         f"# 更多订阅复制订阅行、名称递增，并逐一加入 {NODE_GROUP_NAME}；它汇总全部真实代理节点。",
         f"{NODE_GROUP_NAME} = select,include-other-group=Subscription1,include-all-proxies=true"
-        f"{_surge_icon(icons, BASE_GROUP_NAME)}",
+        f"{_surge_icon(icons, NODE_GROUP_NAME)}",
         f"# {BASE_GROUP_NAME} 可选择地区 Smart，也可进入 {NODE_GROUP_NAME} 手动选择单节点。",
-        f"{BASE_GROUP_NAME} = select,{','.join(smart_names)},{NODE_GROUP_NAME}"
+        f"{BASE_GROUP_NAME} = select,{NODE_GROUP_NAME},{','.join(smart_names)}"
         f"{_surge_icon(icons, BASE_GROUP_NAME)}",
     ]
     # Surge iOS and Mac both read icon-url on a policy group; hidden groups skip it.
@@ -782,10 +782,10 @@ def _qx_config(
         # `server = system` to write here.
         "", "[dns]", "no-ipv6", "",
         "[policy]",
-        f"static = {NODE_GROUP_NAME}, server-tag-regex=.+{icon(BASE_GROUP_NAME)}",
+        f"static = {NODE_GROUP_NAME}, server-tag-regex=.+{icon(NODE_GROUP_NAME)}",
         (
             f"static = {BASE_GROUP_NAME}, {', '.join(_region_auto_names(policies))}, "
-            f"{NODE_GROUP_NAME}{icon(BASE_GROUP_NAME)}"
+            f"server-tag-regex=.+{icon(BASE_GROUP_NAME)}"
         ),
     ]
     options = ", ".join(_qx_policy(option) for option in policies["service_options"])
@@ -841,11 +841,11 @@ def _egern_config(
     groups = [{"select": {
         "name": NODE_GROUP_NAME, "urls": list(subscription_urls),
         "update_interval": updates["node_interval"],
-        "icon": _icon(icons, BASE_GROUP_NAME),
+        "icon": _icon(icons, NODE_GROUP_NAME),
     }}]
     groups.append({"select": _with_icon({
         "name": BASE_GROUP_NAME,
-        "policies": [*_region_auto_names(policies), NODE_GROUP_NAME],
+        "policies": [NODE_GROUP_NAME, *_region_auto_names(policies)],
     }, icons, BASE_GROUP_NAME)})
     for service in policies["service_groups"]:
         groups.append({"select": _with_icon({

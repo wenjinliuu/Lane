@@ -77,7 +77,7 @@ def test_stash_all_nodes_automatically_includes_every_provider():
     assert "use" not in node_group and "proxies" not in node_group
     assert proxy_group["name"] == BASE_GROUP_NAME
     assert proxy_group["proxies"] == [
-        "US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto", NODE_GROUP_NAME
+        NODE_GROUP_NAME, "US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto"
     ]
     assert "无需维护订阅名称" in text
     for group in parsed["proxy-groups"][-10:]:
@@ -134,7 +134,7 @@ def test_surge_hidden_subscriptions_are_expanded_through_node_group():
     assert parsed[NODE_GROUP_NAME] == (
         'select,include-other-group="Subscription1,Subscription2,Subscription3",'
         'include-all-proxies=true,icon-url='
-        'https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png'
+        'https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Round_Robin.png'
     )
     assert "policy-path=" not in parsed[NODE_GROUP_NAME]
     policies = load_project_config(ROOT)["policies"]

@@ -197,7 +197,7 @@ def test_proxy_exposes_regional_auto_groups_and_node_pool_on_five_clients():
     stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
     stash_groups = {group["name"]: group for group in stash["proxy-groups"]}
     assert stash_groups[NODE_GROUP_NAME]["include-all"] is True
-    assert stash_groups[BASE_GROUP_NAME]["proxies"] == [*auto_names, NODE_GROUP_NAME]
+    assert stash_groups[BASE_GROUP_NAME]["proxies"] == [NODE_GROUP_NAME, *auto_names]
 
     loon_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
@@ -224,24 +224,26 @@ def test_proxy_exposes_regional_auto_groups_and_node_pool_on_five_clients():
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
         for line in _section((ROOT / "dist/surge/Lane_surge.conf").read_text(), "Proxy Group")
     }
-    assert surge_groups[BASE_GROUP_NAME].split(",")[1:6] == [
+    assert surge_groups[BASE_GROUP_NAME].split(",")[1] == NODE_GROUP_NAME
+    assert surge_groups[BASE_GROUP_NAME].split(",")[2:7] == [
         "US Auto Smart", "JP Auto Smart", "HK Auto Smart", "TW Auto Smart", "SG Auto Smart"
     ]
-    assert surge_groups[BASE_GROUP_NAME].split(",")[6] == NODE_GROUP_NAME
 
     qx_proxy = next(
         line for line in _section((ROOT / "dist/qx/Lane_qx.conf").read_text(), "policy")
         if line.startswith(f"static = {BASE_GROUP_NAME},")
     )
     assert [part.strip() for part in qx_proxy.split("=", 1)[1].split(",")][1:6] == auto_names
-    assert [part.strip() for part in qx_proxy.split("=", 1)[1].split(",")][6] == NODE_GROUP_NAME
+    assert [part.strip() for part in qx_proxy.split("=", 1)[1].split(",")][6] == (
+        "server-tag-regex=.+"
+    )
 
     egern = yaml.safe_load((ROOT / "dist/egern/Lane_egern.yaml").read_text())
     egern_groups = {
         next(iter(group.values()))["name"]: next(iter(group.values()))
         for group in egern["policy_groups"]
     }
-    assert egern_groups[BASE_GROUP_NAME]["policies"] == [*auto_names, NODE_GROUP_NAME]
+    assert egern_groups[BASE_GROUP_NAME]["policies"] == [NODE_GROUP_NAME, *auto_names]
     assert "urls" not in egern_groups[BASE_GROUP_NAME]
     assert egern_groups[NODE_GROUP_NAME]["urls"] == [SUBSCRIPTION_PLACEHOLDER]
     assert "hidden" not in egern_groups[NODE_GROUP_NAME]
@@ -290,11 +292,11 @@ def test_surge_expands_subscription_members_instead_of_selected_node():
     assert groups[1] == (
         f"{NODE_GROUP_NAME} = select,include-other-group=Subscription1,"
         "include-all-proxies=true,icon-url=https://raw.githubusercontent.com/"
-        "wenjinliuu/Lane/main/assets/icons/third-party/qure/Proxy.png"
+        "wenjinliuu/Lane/main/assets/icons/third-party/qure/Round_Robin.png"
     )
     assert groups[2].startswith(
-        f"{BASE_GROUP_NAME} = select,US Auto Smart,JP Auto Smart,HK Auto Smart,"
-        f"TW Auto Smart,SG Auto Smart,{NODE_GROUP_NAME},icon-url="
+        f"{BASE_GROUP_NAME} = select,{NODE_GROUP_NAME},US Auto Smart,JP Auto Smart,"
+        "HK Auto Smart,TW Auto Smart,SG Auto Smart,icon-url="
     )
     for line in groups[-10:]:
         assert f"include-other-group={NODE_GROUP_NAME}" in line
@@ -409,7 +411,7 @@ def test_surge_carries_policy_group_icons_and_shadowrocket_does_not():
         assert surge_groups[region["manual_name"]].endswith(f",icon-url={manual}")
     assert "icon-url=" not in surge_groups["Subscription1"]
     assert surge_groups[NODE_GROUP_NAME].endswith(
-        f"icon-url={icon_base}/{icon_config['icons'][BASE_GROUP_NAME]}"
+        f"icon-url={icon_base}/{icon_config['icons'][NODE_GROUP_NAME]}"
     )
     assert icon_base not in (ROOT / "dist/shadowrocket/Lane_shadowrocket.conf").read_text()
 

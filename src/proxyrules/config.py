@@ -66,7 +66,7 @@ def validate_config(config: dict[str, Any]) -> None:
 
     icon_config = config["icons"]
     icon_map = icon_config.get("icons")
-    expected_icon_names = ["Proxy", *services]
+    expected_icon_names = ["Proxy", "我的节点", *services]
     for region in regions:
         expected_icon_names.extend([region["auto_name"], region["manual_name"]])
     expected_icon_base = (

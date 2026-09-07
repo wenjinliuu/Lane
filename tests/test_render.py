@@ -131,10 +131,11 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
     icon_config = config["icons"]
     icon_base = icon_config["base"].rstrip("/")
     for group in stash["proxy-groups"]:
-        icon_name = BASE_GROUP_NAME if group["name"] == NODE_GROUP_NAME else group["name"]
+        icon_name = group["name"]
         assert group["icon"] == f"{icon_base}/{icon_config['icons'][icon_name]}"
 
     expected_icons = {
+        "我的节点": "third-party/qure/Round_Robin.png",
         "AI": "third-party/qure/AI.png",
         "Brokerage": "third-party/qure/Magic.png",
         "Crypto": "third-party/qure/Cryptocurrency_3.png",
@@ -166,7 +167,8 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
         text = main_by_target[target]
         assert all(
             f"{icon_base}/{relative}" in text
-            for relative in icon_config["icons"].values()
+            for name, relative in icon_config["icons"].items()
+            if not (target == "loon" and name == NODE_GROUP_NAME)
         )
         assert "raw.githubusercontent.com/Koolson/Qure" not in text
 

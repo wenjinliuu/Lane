@@ -8,7 +8,7 @@
 
 - 策略组以简洁英文为主；唯一中文基础组 `我的节点` 用于明确表示用户自己的全部订阅节点。
 - `AI`、`Google`、`Developer`、`Telegram`、`Social`、券商、交易所、视频、游戏平台等服务组均默认选择 `Proxy`。
-- 除 Shadowrocket 外，五端统一使用两层基础结构：`我的节点` 汇总全部真实节点并排在最上方，`Proxy` 位于其后，列出五个地区自动组和 `我的节点`。节点不排除流量、到期、高倍率或维护信息项。Surge 的五项名称为 `地区 Auto Smart`，其余为 `地区 Auto`。
+- 除 Shadowrocket 外，五端都保留 `我的节点` 与 `Proxy` 两个基础入口；Surge、Stash、Egern 的 `Proxy` 先列 `我的节点`、后列五个地区自动组，Loon 保持现有组合，QX 的 `Proxy` 直接用正则纳入全部节点并列出五个地区自动组。节点不排除流量、到期、高倍率或维护信息项。Surge 的五项名称为 `地区 Auto Smart`，其余为 `地区 Auto`。
 - Shadowrocket 不生成上述两层组：它用内置策略 `PROXY` 表示首页选中的节点，服务组以 `PROXY` 为第一项并用 `policy-select-name=PROXY` 作为默认值。
 - 地区仅保留美国、日本、香港、台湾与新加坡；每个地区分别提供 `XX Auto` 自动优选和 `XX Manual` 手动选点。
 - 策略组按 `我的节点`、`Proxy`、服务组、地区组排列，十个地区 Auto / Manual 组统一放在列表末尾；Shadowrocket 的列表从服务组开始。
@@ -52,7 +52,7 @@ Lane 只控制网络路径，不保证入金或交易成功，也不改变账户
 
 1. 下载对应配置。除 Shadowrocket 与 Quantumult X 外，在下表指定的订阅字段中，将 `你的订阅地址` 替换为服务提供商为该客户端提供的完整订阅链接；占位符统一不加引号。QX 按官方顺序保留完整模块骨架，但 `[server_remote]` 故意留空；导入后在应用的节点资源页面添加订阅。
 2. `你的订阅地址` 只是占位文字，不是有效 URL，Lane 不提供节点。部分客户端可能在导入时校验地址，请先在本地填写，再导入并复制/保存为本地配置，不让整份配置继续跟随远程更新。仅改显示名称不等于本地化；Surge 托管配置需先创建普通副本，Egern 不设置主配置 `auto_update`。
-3. 保存并启用配置。进入 `我的节点` 可直接选择全部单节点；进入 `Proxy` 可选择五个地区自动组或继续进入 `我的节点`。服务组默认跟随 `Proxy`，也可选择直连或地区 Auto / Manual。Shadowrocket 不含订阅模板，继续使用应用内已有节点订阅并在首页选节点；服务组默认跟随该选择（`PROXY`）。
+3. 保存并启用配置。进入 `我的节点` 可直接选择全部单节点；Surge、Stash、Egern 的 `Proxy` 将 `我的节点` 放在第一项，其后是五个地区自动组。Loon 保持已验证的现有组合方式。QX 的 `Proxy` 直接列出五个地区自动组并通过正则纳入全部单节点，避免嵌套动态节点组导致导入失败。服务组默认跟随 `Proxy`，也可选择直连或地区 Auto / Manual。Shadowrocket 不含订阅模板，继续使用应用内已有节点订阅并在首页选节点；服务组默认跟随该选择（`PROXY`）。
 4. 开启客户端的节点与规则资源自动更新。配置内能指定的更新间隔为 24 小时；Loon 的资源定时更新在应用设置中管理。客户端后台调度、联网状态和订阅可用性仍会影响实际更新时间。
 
 | 客户端 | 第一份订阅填写位置 |
@@ -83,11 +83,11 @@ Loon 用户若选择重新导入远程配置，请选择保留现有节点/订�
 
 Surge 的 `policy-regex-filter` 不加引号：Surge 会把引号当作模式的一部分，被引号包住的正则匹配不到任何节点，地区组因此为空，路由到空组的连接会被 Surge 立即关闭。当前五个地区正则都不含逗号，无需引号保护。
 
-Surge 的订阅先进入隐藏的 `SubscriptionN` 来源组，可见的 `我的节点` 展开这些来源中的真实节点；五个 `US/JP/HK/TW/SG Auto Smart` 与地区 Manual 组再从 `我的节点` 筛选。`Proxy` 列出五个 Smart 组和 `我的节点`，既保持入口清楚，也避免策略环。[Surge Smart](https://manual.nssurge.com/policy-groups/smart.html)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)。
+Surge 的订阅先进入隐藏的 `SubscriptionN` 来源组，可见的 `我的节点` 展开这些来源中的真实节点；五个 `US/JP/HK/TW/SG Auto Smart` 与地区 Manual 组再从 `我的节点` 筛选。`Proxy` 把 `我的节点` 放在第一项，后接五个 Smart 组，既保持入口清楚，也避免策略环。[Surge Smart](https://manual.nssurge.com/policy-groups/smart.html)、[Surge 节点引用](https://manual.nssurge.com/policy-groups/policy-including.html)。
 
-Stash 真机实测表明，在同一组混用显式 `proxies` 与动态 `include-all` 时，界面只稳定显示一侧。因此 Lane 将动态节点单独放进 `我的节点`，再让 `Proxy` 显式列出五个地区 Auto 与 `我的节点`。这样新增第二、第三份 `proxy-providers` 或用覆写增加代理集时，`include-all` 会自动纳入，无需同步维护 provider 名称。Loon、Quantumult X 与 Egern 使用同样的两层可见语义。
+Stash 真机实测表明，在同一组混用显式 `proxies` 与动态 `include-all` 时，界面只稳定显示一侧。因此 Lane 将动态节点单独放进 `我的节点`，再让 `Proxy` 先列出 `我的节点`、后列五个地区 Auto。这样新增第二、第三份 `proxy-providers` 或用覆写增加代理集时，`include-all` 会自动纳入，无需同步维护 provider 名称。Loon 保持现有的 Remote Filter 组合；Egern 使用同样的两层可见语义。QX 则在 `Proxy` 内直接同时写入地区 Auto 与 `server-tag-regex=.+`，不再嵌套动态 `我的节点` 组。
 
-Egern 2.20.0 的 `flatten` 会展开所有嵌套组，无法在同一个选择器里同时稳定保留地区组与真实节点，因此订阅只在 `我的节点.urls` 填写一次，`Proxy` 再引用它。Shadowrocket 由内置 `PROXY` 承担手动选点，五个 `地区 Auto` 仍在每个服务组中可选。
+Egern 2.20.0 的 `flatten` 会展开所有嵌套组，无法在同一个选择器里同时稳定保留地区组与真实节点，因此订阅只在 `我的节点.urls` 填写一次，`Proxy` 将它放在第一项。Shadowrocket 由内置 `PROXY` 承担手动选点，五个 `地区 Auto` 仍在每个服务组中可选。
 
 订阅别名不同不代表节点名称不会重复。多个订阅尽量避免同名节点：Surge 和 Egern 都有按名称去重的行为；Surge 如需区分，可在各订阅组分别添加 `external-policy-name-prefix=S1-`、`external-policy-name-prefix=S2-`。这不是默认配置，不影响地区正向匹配。[Surge 节点命名](https://manual.nssurge.com/policy-groups/policy-including.html)、[Egern 多订阅](https://egernapp.com/docs/configuration/policy_groups/)。
 
@@ -109,14 +109,14 @@ Stash 在同一个 `rules/` 目录中保留每个逻辑规则集的原始带类�
 
 旧的 `rules-full/`、`rules-profile/` 已统一回 `rules/`，GoogleCN 也不再抓取或发布。已经保存旧版 Lane 配置的用户必须升级一次完整主配置，重新填入节点订阅并迁移个人修改；之后规则资源仍可独立自动更新。
 
-全部策略图标都从 Qure 指定提交原样复制到本仓库的 [`assets/icons/third-party/qure/`](assets/icons/third-party/qure/) 并通过 Lane 自己的 Raw URL 发布，运行时不再依赖外部图标仓库。仅保留三项替换：Apple 使用 `Apple_1`，Streaming 使用 `Netflix`，Final 使用 `Global`；其他策略恢复此前的 Qure 图标，同一地区的 Auto 与 Manual 共用普通地区图标，不再使用 Lane 自绘图标或 Auto 角标。Stash/Egern 使用 `icon`，Loon/QX 使用 `img-url`，Surge 使用 `icon-url`（iOS 与 Mac 同样读取，隐藏的 `Subscription1` 不设置）；`我的节点` 复用 Proxy 图标，Surge 的 `地区 Auto Smart` 复用同地区 Auto 图标。Shadowrocket 没有策略组图标参数，仍不写入图标。
+全部策略图标都从 Qure 指定提交原样复制到本仓库的 [`assets/icons/third-party/qure/`](assets/icons/third-party/qure/) 并通过 Lane 自己的 Raw URL 发布，运行时不再依赖外部图标仓库。仅保留三项替换：Apple 使用 `Apple_1`，Streaming 使用 `Netflix`，Final 使用 `Global`；`我的节点` 使用 `Round_Robin`，其他策略恢复此前的 Qure 图标，同一地区的 Auto 与 Manual 共用普通地区图标，不再使用 Lane 自绘图标或 Auto 角标。Stash/Egern 使用 `icon`，Loon/QX 使用 `img-url`，Surge 使用 `icon-url`（iOS 与 Mac 同样读取，隐藏的 `Subscription1` 不设置）；Surge 的 `地区 Auto Smart` 复用同地区 Auto 图标。Shadowrocket 没有策略组图标参数，仍不写入图标。
 
 ### 客户端兼容性
 
 - Stash 将精确域名与后缀放入 `behavior: domain`（后缀使用同时覆盖根域和子域的 `+.` 形式），CIDR 放入 `behavior: ipcidr`，正则/关键词保留在 `behavior: classical`；三类仍是远程更新的文本 provider。Egern 继续用原生 YAML 保留域名正则。
 - Loon、Shadowrocket、Surge、QX 中不支持或未确认兼容的域名正则会省略，逐规则集计数见 `dist/report.json`，不会误转换为 URL 重写。Loon 使用现行 `ip-mode = ipv4-only`，最低支持版本为 3.2.3 (754)。
 - Surge、Shadowrocket、Loon、QX 在节点不支持 UDP 时分别使用客户端原生的拒绝回落项；Stash/Egern 保持默认行为。配置不包含 `block-quic`、`udp_drop_list = QUIC` 或 `disable-udp-ports = 443`。
-- Egern 使用原生 YAML 规则集，保留 `no_resolve`；为兼容用户实测的 2.20.0，可见的 `我的节点` 加载一次订阅，地区组通过 `flatten` 从中筛选节点，`Proxy` 列出五个地区 Auto 与 `我的节点`。
+- Egern 使用原生 YAML 规则集，保留 `no_resolve`；为兼容用户实测的 2.20.0，可见的 `我的节点` 加载一次订阅，地区组通过 `flatten` 从中筛选节点，`Proxy` 先列 `我的节点`、后列五个地区 Auto。
 - QX 使用原生 `host` / `host-suffix` / `ip-cidr` / `ip6-cidr`，不写入 Surge 风格的 `no-resolve`。完整配置按官方示例顺序保留全部模块；`[server_remote]` 与其他未使用模块均保持为空，用户通过 `设置 → 节点 → 节点资源` 在应用内添加订阅。空模块只满足完整配置导入检查，不提供节点，也不启用重写、脚本、后端或 HTTPS 解密。QX 自身的域名/IP 匹配优先级与其他内核不同，不能保证所有重叠规则逐条等价。没有额外加入抢先匹配的默认 CN/LAN 资源。
 - Stash、Loon、Shadowrocket、QX 与 Egern 的 Auto 使用各自原生自动测速类型；Surge 使用原生 Smart 算法并命名为 `地区 Auto Smart`。Shadowrocket 的 `url-test` 组本身即自动测速切换，应用内「测试并选择最快服务器」是对全部代理分组生效的界面开关，与配置无关，不影响该组自动切换。
 - Surge 的 `tun-excluded-routes` 与 QX 的 `excluded_routes` 只写 IPv4 网段：Surge 会对 IPv6 条目报 `Invalid excluded route: ff02::fb/128` 并丢弃，QX 官方示例也未记录 IPv6 写法。Shadowrocket 官方文档给出了 IPv6 写法，它与 Loon、Egern 仍保留完整列表。

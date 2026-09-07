@@ -2,6 +2,7 @@ base: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons
 
 icons:
   Proxy: third-party/qure/Proxy.png
+  我的节点: third-party/qure/Round_Robin.png
   AI: third-party/qure/AI.png
   Brokerage: third-party/qure/Magic.png
   Crypto: third-party/qure/Cryptocurrency_3.png

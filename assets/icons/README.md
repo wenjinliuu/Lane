@@ -23,8 +23,8 @@ README requests attribution, restricts commercial use, and states that the
 underlying marks remain the property of their respective owners. These files
 are not covered by Lane's MIT license.
 
-The mapping deliberately retains the pre-self-drawing appearance: AI uses
-`AI.png`, Brokerage uses `Magic.png`, Crypto uses `Cryptocurrency_3.png`, and
+The mapping deliberately retains the pre-self-drawing appearance: `我的节点`
+uses `Round_Robin.png`, AI uses `AI.png`, Brokerage uses `Magic.png`, Crypto uses `Cryptocurrency_3.png`, and
 each region's Auto and Manual groups share the same unchanged country/region
 icon. The only selected replacements are Apple `Apple_1.png`, Streaming
 `Netflix.png`, and Final `Global.png`. Taiwan continues to use `China.png` as

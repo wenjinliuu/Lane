@@ -285,6 +285,10 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             raise ValidationError(f"Policy icon must be a 144x144 PNG: {path}")
     for target in ("stash", "loon", "qx", "egern"):
         for name, url in icon_urls.items():
+            # Loon's 我的节点 is a Remote Filter rather than an icon-capable
+            # visible policy group; Proxy expands it directly.
+            if target == "loon" and name == NODE_GROUP_NAME:
+                continue
             if url not in texts[target]:
                 raise ValidationError(f"{target}: missing self-hosted icon for {name}")
     for name, url in icon_urls.items():
@@ -309,8 +313,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     for name in expected_order:
         if stash_by_name[name].get("icon") != icon_urls[name]:
             raise ValidationError(f"Stash {name} uses the wrong self-hosted icon")
-    if stash_by_name[NODE_GROUP_NAME].get("icon") != icon_urls[BASE_GROUP_NAME]:
-        raise ValidationError("Stash 我的节点 must reuse the Proxy icon")
+    if stash_by_name[NODE_GROUP_NAME].get("icon") != icon_urls[NODE_GROUP_NAME]:
+        raise ValidationError("Stash 我的节点 uses the wrong self-hosted icon")
     if (list(stash.get("proxy-providers", {})) != [STASH_PROVIDER_NAME]
             or stash["proxy-providers"][STASH_PROVIDER_NAME]["url"]
             != SUBSCRIPTION_PLACEHOLDER):
@@ -321,7 +325,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Stash 我的节点 must include every proxy provider")
     proxy_group = stash_by_name[BASE_GROUP_NAME]
     if (proxy_group.get("type") != "select"
-            or proxy_group.get("proxies") != [*auto_names, NODE_GROUP_NAME]
+            or proxy_group.get("proxies") != [NODE_GROUP_NAME, *auto_names]
             or proxy_group.get("include-all") or proxy_group.get("use")):
         raise ValidationError("Stash Proxy must expose regional Auto groups and 我的节点")
     for service in policies["service_groups"]:
@@ -389,7 +393,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Surge must load subscriptions through a hidden source group")
     if surge_groups[NODE_GROUP_NAME] != (
         f"select,include-other-group=Subscription1,include-all-proxies=true"
-        f",icon-url={icon_urls[BASE_GROUP_NAME]}"
+        f",icon-url={icon_urls[NODE_GROUP_NAME]}"
     ):
         raise ValidationError("Surge 我的节点 must expand raw proxies and remain visible")
     for target, text in texts.items():
@@ -408,7 +412,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         return f",icon-url={icon_urls[name]}"
 
     if surge_groups[BASE_GROUP_NAME] != (
-        f"select,{','.join(smart_names)},{NODE_GROUP_NAME}"
+        f"select,{NODE_GROUP_NAME},{','.join(smart_names)}"
         f"{surge_icon(BASE_GROUP_NAME)}"
     ):
         raise ValidationError("Surge Proxy must expose Smart groups and 我的节点")
@@ -451,7 +455,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             or egern_pool.get("hidden") is not None):
         raise ValidationError("Egern 我的节点 must be the single visible subscription source")
     if ("urls" in egern_proxy
-            or egern_proxy.get("policies") != [*auto_names, NODE_GROUP_NAME]):
+            or egern_proxy.get("policies") != [NODE_GROUP_NAME, *auto_names]):
         raise ValidationError("Egern Proxy must expose regional Auto groups and 我的节点")
     if any(token in texts["egern"] for token in ("&id", "*id")):
         raise ValidationError("Egern subscription URLs must not use YAML anchors or aliases")
@@ -492,9 +496,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     ):
         raise ValidationError("QX 我的节点 must include every enabled node resource")
     qx_proxy_kind, qx_proxy_value = qx_groups[BASE_GROUP_NAME]
-    qx_proxy_prefix = f"{BASE_GROUP_NAME}, {', '.join(auto_names)}, {NODE_GROUP_NAME}"
+    qx_proxy_prefix = f"{BASE_GROUP_NAME}, {', '.join(auto_names)}, server-tag-regex=.+"
     if qx_proxy_kind != "static" or not qx_proxy_value.startswith(qx_proxy_prefix):
-        raise ValidationError("QX Proxy must expose regional Auto groups and 我的节点")
+        raise ValidationError("QX Proxy must expose regional Auto groups and all nodes directly")
     qx_options = ", ".join("direct" if option == "DIRECT" else option for option in options)
     for service in policies["service_groups"]:
         kind, value = qx_groups[service]
