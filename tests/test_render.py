@@ -135,7 +135,7 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
         assert group["icon"] == f"{icon_base}/{icon_config['icons'][icon_name]}"
 
     expected_icons = {
-        "我的节点": "third-party/qure/Round_Robin.png",
+        "我的节点": "third-party/qure/Rocket.png",
         "AI": "third-party/qure/AI.png",
         "Brokerage": "third-party/qure/Magic.png",
         "Crypto": "third-party/qure/Cryptocurrency_3.png",
@@ -168,7 +168,7 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
         assert all(
             f"{icon_base}/{relative}" in text
             for name, relative in icon_config["icons"].items()
-            if not (target == "loon" and name == NODE_GROUP_NAME)
+            if not (target in {"loon", "qx"} and name == NODE_GROUP_NAME)
         )
         assert "raw.githubusercontent.com/Koolson/Qure" not in text
 

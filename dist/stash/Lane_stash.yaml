@@ -1,5 +1,5 @@
 # Lane | Local profile template
-# Last updated: 2026-09-07 14:07:02 (Asia/Shanghai)
+# Last updated: 2026-09-07 14:41:21 (Asia/Shanghai)
 # Lane 不提供节点；导入启用前，将你的订阅地址替换为本客户端支持的完整订阅链接。
 # 建议复制/保存为本地配置，不跟随远程整份更新；节点与远程规则仍独立更新。
 # 换用新版完整配置前，请备份并重新填入订阅地址及个人修改。
@@ -52,7 +52,7 @@ proxy-groups:
 - name: 我的节点
   type: select
   include-all: true
-  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Round_Robin.png
+  icon: https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Rocket.png
 - name: Proxy
   type: select
   proxies:

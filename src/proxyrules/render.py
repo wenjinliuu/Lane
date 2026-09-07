@@ -791,7 +791,6 @@ def _qx_config(
         "", "[dns]", "no-ipv6", "",
         "[policy]",
         f"# QX 的 proxy 是内置保留策略名，因此本客户端将 Proxy 组显示为 {QX_BASE_GROUP_NAME}。",
-        f"static = {NODE_GROUP_NAME}, server-tag-regex=.+{icon(NODE_GROUP_NAME)}",
         (
             f"static = {QX_BASE_GROUP_NAME}, {', '.join(_region_auto_names(policies))}, "
             f"server-tag-regex=.+{icon(BASE_GROUP_NAME)}"

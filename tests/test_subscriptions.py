@@ -134,7 +134,7 @@ def test_surge_hidden_subscriptions_are_expanded_through_node_group():
     assert parsed[NODE_GROUP_NAME] == (
         'select,include-other-group="Subscription1,Subscription2,Subscription3",'
         'include-all-proxies=true,icon-url='
-        'https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Round_Robin.png'
+        'https://raw.githubusercontent.com/wenjinliuu/Lane/main/assets/icons/third-party/qure/Rocket.png'
     )
     assert "policy-path=" not in parsed[NODE_GROUP_NAME]
     policies = load_project_config(ROOT)["policies"]

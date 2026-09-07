@@ -287,8 +287,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     for target in ("stash", "loon", "qx", "egern"):
         for name, url in icon_urls.items():
             # Loon's 我的节点 is a Remote Filter rather than an icon-capable
-            # visible policy group; Proxy expands it directly.
-            if target == "loon" and name == NODE_GROUP_NAME:
+            # visible policy group. QX folds raw nodes directly into 代理选择 and
+            # deliberately omits the redundant 我的节点 group.
+            if target in {"loon", "qx"} and name == NODE_GROUP_NAME:
                 continue
             if url not in texts[target]:
                 raise ValidationError(f"{target}: missing self-hosted icon for {name}")
@@ -490,7 +491,6 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         name = value.split(",", 1)[0].strip()
         qx_groups[name] = (kind.strip(), value.strip())
     qx_expected_order = [
-        NODE_GROUP_NAME,
         QX_BASE_GROUP_NAME,
         *policies["service_groups"],
         *[
@@ -500,11 +500,8 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     ]
     if list(qx_groups) != qx_expected_order:
         raise ValidationError("QX group order differs from the manifest")
-    qx_nodes_kind, qx_nodes_value = qx_groups[NODE_GROUP_NAME]
-    if qx_nodes_kind != "static" or not qx_nodes_value.startswith(
-        f"{NODE_GROUP_NAME}, server-tag-regex=.+"
-    ):
-        raise ValidationError("QX 我的节点 must include every enabled node resource")
+    if NODE_GROUP_NAME in qx_groups:
+        raise ValidationError("QX must omit the redundant 我的节点 group")
     qx_proxy_kind, qx_proxy_value = qx_groups[QX_BASE_GROUP_NAME]
     qx_proxy_prefix = f"{QX_BASE_GROUP_NAME}, {', '.join(auto_names)}, server-tag-regex=.+"
     if qx_proxy_kind != "static" or not qx_proxy_value.startswith(qx_proxy_prefix):

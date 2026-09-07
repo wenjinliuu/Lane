@@ -241,6 +241,10 @@ def test_proxy_exposes_regional_auto_groups_and_node_pool_on_five_clients():
     assert f"static = {BASE_GROUP_NAME}," not in _section(
         (ROOT / "dist/qx/Lane_qx.conf").read_text(), "policy"
     )
+    assert not any(
+        line.startswith(f"static = {NODE_GROUP_NAME},")
+        for line in _section((ROOT / "dist/qx/Lane_qx.conf").read_text(), "policy")
+    )
 
     egern = yaml.safe_load((ROOT / "dist/egern/Lane_egern.yaml").read_text())
     egern_groups = {
@@ -296,7 +300,7 @@ def test_surge_expands_subscription_members_instead_of_selected_node():
     assert groups[1] == (
         f"{NODE_GROUP_NAME} = select,include-other-group=Subscription1,"
         "include-all-proxies=true,icon-url=https://raw.githubusercontent.com/"
-        "wenjinliuu/Lane/main/assets/icons/third-party/qure/Round_Robin.png"
+        "wenjinliuu/Lane/main/assets/icons/third-party/qure/Rocket.png"
     )
     assert groups[2].startswith(
         f"{BASE_GROUP_NAME} = select,{NODE_GROUP_NAME},US Auto Smart,JP Auto Smart,"
