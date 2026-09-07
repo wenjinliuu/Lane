@@ -492,6 +492,7 @@ ip-cidr,103.143.228.0/23,direct
 ip-cidr,103.143.74.0/23,direct
 ip-cidr,103.144.136.0/23,direct
 ip-cidr,103.144.158.0/23,direct
+ip-cidr,103.144.41.0/24,direct
 ip-cidr,103.144.66.0/23,direct
 ip-cidr,103.144.70.0/23,direct
 ip-cidr,103.144.72.0/23,direct
@@ -1125,6 +1126,7 @@ ip-cidr,103.238.24.0/21,direct
 ip-cidr,103.238.252.0/22,direct
 ip-cidr,103.238.32.0/21,direct
 ip-cidr,103.238.40.0/22,direct
+ip-cidr,103.238.46.0/23,direct
 ip-cidr,103.238.48.0/21,direct
 ip-cidr,103.238.56.0/22,direct
 ip-cidr,103.238.88.0/21,direct
@@ -2431,7 +2433,9 @@ ip-cidr,117.134.0.0/17,direct
 ip-cidr,117.134.128.0/18,direct
 ip-cidr,117.134.205.0/24,direct
 ip-cidr,117.134.207.0/24,direct
-ip-cidr,117.134.208.0/20,direct
+ip-cidr,117.134.208.0/23,direct
+ip-cidr,117.134.212.0/23,direct
+ip-cidr,117.134.216.0/21,direct
 ip-cidr,117.134.232.0/21,direct
 ip-cidr,117.134.240.0/20,direct
 ip-cidr,117.135.0.0/16,direct
@@ -7463,11 +7467,12 @@ ip6-cidr,2403:6380:2000::/35,direct
 ip6-cidr,2403:6380:200::/39,direct
 ip6-cidr,2403:6380:4000::/34,direct
 ip6-cidr,2403:6380:400::/38,direct
+ip6-cidr,2403:6380:41::/48,direct
 ip6-cidr,2403:6380:43::/48,direct
 ip6-cidr,2403:6380:44::/46,direct
 ip6-cidr,2403:6380:48::/45,direct
 ip6-cidr,2403:6380:50::/44,direct
-ip6-cidr,2403:6380:70::/44,direct
+ip6-cidr,2403:6380:60::/43,direct
 ip6-cidr,2403:6380:8000::/33,direct
 ip6-cidr,2403:6380:800::/37,direct
 ip6-cidr,2403:6380:80::/41,direct
@@ -8599,7 +8604,7 @@ ip6-cidr,2406:840:a14::/46,direct
 ip6-cidr,2406:840:a18::/45,direct
 ip6-cidr,2406:840:a20::/44,direct
 ip6-cidr,2406:840:a30::/48,direct
-ip6-cidr,2406:840:a32::/47,direct
+ip6-cidr,2406:840:a33::/48,direct
 ip6-cidr,2406:840:a34::/46,direct
 ip6-cidr,2406:840:a38::/45,direct
 ip6-cidr,2406:840:a40::/42,direct
