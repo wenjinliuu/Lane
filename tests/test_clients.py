@@ -11,7 +11,8 @@ from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
     BASE_GROUP_NAME, CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER,
-    NODE_GROUP_NAME, RULES_DIR, QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS,
+    NODE_GROUP_NAME, QX_BASE_GROUP_NAME, RULES_DIR, QX_REQUIRED_EMPTY_SECTIONS,
+    QX_REQUIRED_SECTIONS,
     STASH_PROVIDER_NAME, SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule,
 )
@@ -231,11 +232,14 @@ def test_proxy_exposes_regional_auto_groups_and_node_pool_on_five_clients():
 
     qx_proxy = next(
         line for line in _section((ROOT / "dist/qx/Lane_qx.conf").read_text(), "policy")
-        if line.startswith(f"static = {BASE_GROUP_NAME},")
+        if line.startswith(f"static = {QX_BASE_GROUP_NAME},")
     )
     assert [part.strip() for part in qx_proxy.split("=", 1)[1].split(",")][1:6] == auto_names
     assert [part.strip() for part in qx_proxy.split("=", 1)[1].split(",")][6] == (
         "server-tag-regex=.+"
+    )
+    assert f"static = {BASE_GROUP_NAME}," not in _section(
+        (ROOT / "dist/qx/Lane_qx.conf").read_text(), "policy"
     )
 
     egern = yaml.safe_load((ROOT / "dist/egern/Lane_egern.yaml").read_text())

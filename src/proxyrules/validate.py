@@ -14,6 +14,7 @@ from .render import (
     CONFIG_FILENAMES,
     IPV4_EXCLUDED_ROUTES,
     NODE_GROUP_NAME,
+    QX_BASE_GROUP_NAME,
     QX_REQUIRED_EMPTY_SECTIONS,
     QX_REQUIRED_SECTIONS,
     QX_SUBSCRIPTION_GUIDANCE_MARKERS,
@@ -488,22 +489,37 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         kind, value = line.split("=", 1)
         name = value.split(",", 1)[0].strip()
         qx_groups[name] = (kind.strip(), value.strip())
-    if list(qx_groups) != [NODE_GROUP_NAME, *expected_order]:
+    qx_expected_order = [
+        NODE_GROUP_NAME,
+        QX_BASE_GROUP_NAME,
+        *policies["service_groups"],
+        *[
+            name for region in policies["regions"]
+            for name in (region["auto_name"], region["manual_name"])
+        ],
+    ]
+    if list(qx_groups) != qx_expected_order:
         raise ValidationError("QX group order differs from the manifest")
     qx_nodes_kind, qx_nodes_value = qx_groups[NODE_GROUP_NAME]
     if qx_nodes_kind != "static" or not qx_nodes_value.startswith(
         f"{NODE_GROUP_NAME}, server-tag-regex=.+"
     ):
         raise ValidationError("QX 我的节点 must include every enabled node resource")
-    qx_proxy_kind, qx_proxy_value = qx_groups[BASE_GROUP_NAME]
-    qx_proxy_prefix = f"{BASE_GROUP_NAME}, {', '.join(auto_names)}, server-tag-regex=.+"
+    qx_proxy_kind, qx_proxy_value = qx_groups[QX_BASE_GROUP_NAME]
+    qx_proxy_prefix = f"{QX_BASE_GROUP_NAME}, {', '.join(auto_names)}, server-tag-regex=.+"
     if qx_proxy_kind != "static" or not qx_proxy_value.startswith(qx_proxy_prefix):
-        raise ValidationError("QX Proxy must expose regional Auto groups and all nodes directly")
-    qx_options = ", ".join("direct" if option == "DIRECT" else option for option in options)
+        raise ValidationError("QX 代理选择 must expose regional Auto groups and all nodes directly")
+    qx_options = ", ".join(
+        "direct" if option == "DIRECT" else QX_BASE_GROUP_NAME
+        if option == BASE_GROUP_NAME else option
+        for option in options
+    )
     for service in policies["service_groups"]:
         kind, value = qx_groups[service]
         if kind != "static" or not value.startswith(f"{service}, {qx_options}"):
-            raise ValidationError(f"QX {service} must default to Proxy")
+            raise ValidationError(f"QX {service} must default to 代理选择")
+    if f"static = {BASE_GROUP_NAME}," in texts["qx"]:
+        raise ValidationError("QX must not redefine its reserved proxy policy token")
     for region in policies["regions"]:
         for name, kind in ((region["auto_name"], "url-latency-benchmark"), (region["manual_name"], "static")):
             actual, value = qx_groups[name]

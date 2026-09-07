@@ -31,6 +31,10 @@ SUBSCRIPTION_PLACEHOLDER = "你的订阅地址"
 STASH_PROVIDER_NAME = "Subscription1"
 BASE_GROUP_NAME = "Proxy"
 NODE_GROUP_NAME = "我的节点"
+# Quantumult X reserves ``proxy`` as a built-in policy token. Policy names are
+# case-insensitive there, so Lane's cross-client ``Proxy`` group needs a
+# client-specific display name instead of colliding with the built-in token.
+QX_BASE_GROUP_NAME = "代理选择"
 QX_REQUIRED_SECTIONS = (
     "general",
     "dns",
@@ -296,7 +300,11 @@ def render_stash_payload_rule(rule: Rule, behavior: str) -> str:
 
 
 def _qx_policy(name: str) -> str:
-    return "direct" if name == "DIRECT" else name
+    if name == "DIRECT":
+        return "direct"
+    if name == BASE_GROUP_NAME:
+        return QX_BASE_GROUP_NAME
+    return name
 
 
 def rule_filename(target: str, rule_id: str) -> str:
@@ -782,9 +790,10 @@ def _qx_config(
         # `server = system` to write here.
         "", "[dns]", "no-ipv6", "",
         "[policy]",
+        f"# QX 的 proxy 是内置保留策略名，因此本客户端将 Proxy 组显示为 {QX_BASE_GROUP_NAME}。",
         f"static = {NODE_GROUP_NAME}, server-tag-regex=.+{icon(NODE_GROUP_NAME)}",
         (
-            f"static = {BASE_GROUP_NAME}, {', '.join(_region_auto_names(policies))}, "
+            f"static = {QX_BASE_GROUP_NAME}, {', '.join(_region_auto_names(policies))}, "
             f"server-tag-regex=.+{icon(BASE_GROUP_NAME)}"
         ),
     ]
