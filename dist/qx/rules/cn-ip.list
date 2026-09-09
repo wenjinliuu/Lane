@@ -8820,6 +8820,11 @@ ip6-cidr,2406:840:f500::/40,direct
 ip6-cidr,2406:840:f600::/42,direct
 ip6-cidr,2406:840:f640::/43,direct
 ip6-cidr,2406:840:f670::/44,direct
+ip6-cidr,2406:840:f680::/47,direct
+ip6-cidr,2406:840:f682::/48,direct
+ip6-cidr,2406:840:f685::/48,direct
+ip6-cidr,2406:840:f686::/47,direct
+ip6-cidr,2406:840:f688::/45,direct
 ip6-cidr,2406:840:f690::/44,direct
 ip6-cidr,2406:840:f6a0::/43,direct
 ip6-cidr,2406:840:f6c0::/42,direct

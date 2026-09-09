@@ -9,7 +9,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "9ff2d61d76ce28edb513920a2727f222793041c0"
+      "revision": "5d939545c84e2a534f8e85ba6ffb2b51fa18fb76"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -18,24 +18,24 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "a334cecd11331c3d9a67f2d8003095934149a56d",
-      "sha256": "c278f8a83dbfbe1af37311696cb0ecc75ca74fc55cdf5d0af18d10ef0786dba8",
+      "revision": "af446dc5cb8d5c83d756efab3aee3309855442fe",
+      "sha256": "956346a4ab25a8b2d598f489f831d46ff7ecdd198e52ed604d3b55c9670a0314",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
       "breaker_percent": 1.0,
       "snapshot_dates": [
+        "2026-09-09",
         "2026-09-08",
         "2026-09-07",
         "2026-09-06",
-        "2026-09-05",
-        "2026-09-04"
+        "2026-09-05"
       ],
       "window_report": "cn-ip-window.json"
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "2faf50b756c0a4268ec019d0a2b07c72751548a7a26763529582e02e66894f36",
+      "sha256": "6bb5e9fb64b2d4f6a3d92ff6da22326bac670c692c84377cd57eaad1e4033ab9",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -341,9 +341,9 @@
     {
       "id": "china",
       "policy": "DIRECT",
-      "rules": 8256,
+      "rules": 8258,
       "kinds": {
-        "domain": 8186,
+        "domain": 8188,
         "full": 67,
         "regexp": 3
       },
@@ -358,9 +358,9 @@
     {
       "id": "proxy",
       "policy": "Final",
-      "rules": 25910,
+      "rules": 25911,
       "kinds": {
-        "domain": 24340,
+        "domain": 24341,
         "full": 1412,
         "regexp": 158
       },
@@ -391,10 +391,10 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9632,
+      "rules": 9637,
       "kinds": {
         "ipcidr": 6237,
-        "ipcidr6": 3395
+        "ipcidr6": 3400
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
