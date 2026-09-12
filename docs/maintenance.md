@@ -53,7 +53,7 @@ AppleCN 保留，因为其大陆 CDN 例外具有独立路由意义。
 5. 完整的 `geolocation-!cn` / General Proxy
 6. Telegram IP
 7. CN IP
-8. 客户端 `GEOIP,CN`
+8. 客户端 `GEOIP,CN`（Loon 通过末位远程规则承载）
 9. Final
 
 关键原因：
@@ -62,7 +62,9 @@ AppleCN 保留，因为其大陆 CDN 例外具有独立路由意义。
 - China 必须位于 General Proxy 之前，让已知中国域名优先直连。
 - General Proxy 必须位于 CN IP 之前，保护已知境外域名不被临时解析到的中国 IP 误判。
 - CN IP 不得加 `no-resolve`；否则域名请求会跳过 Lane 的 CN-IP 快照。
-- `GEOIP,CN` 保留为客户端数据库的最后一层故障保险。
+- `GEOIP,CN` 保留为客户端数据库的最后一层故障保险。Loon 将它单独发布为末位远程
+  `cn-region.lsr`，因此逻辑顺序仍是 `CN IP → GEOIP,CN → Final`；其他客户端继续使用各自
+  的本地规则语法。
 
 ## 业务范围
 
@@ -92,6 +94,9 @@ AppleCN 保留，因为其大陆 CDN 例外具有独立路由意义。
 - 使用 `ip-mode = ipv4-only`，不要恢复旧的 `ipv6 = false`。
 - 完整配置以 `Lane_loon.lcf` 为主入口，远程规则引用 `.lsr`；生成器必须同时发布内容
   完全一致的 `Lane_loon.conf` 与 `.list` 兼容文件，避免旧配置中的固定 URL 失效。
+- `GEOIP,CN` 不得写入本地 `[Rule]`。它必须由 `cn-region.lsr`（及字节一致的 `.list`
+  兼容文件）承载，并在 `[Remote Rule]` 中紧跟 `cn-ip`、位于所有订阅规则的最底部；本地
+  `[Rule]` 只保留 `FINAL,Final`。这样既维持黄金分流顺序，也不会让本地规则抢在插件规则前。
 
 ### Surge
 

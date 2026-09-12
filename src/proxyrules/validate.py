@@ -14,6 +14,9 @@ from .render import (
     CONFIG_COMPAT_FILENAMES,
     CONFIG_FILENAMES,
     IPV4_EXCLUDED_ROUTES,
+    LOON_CN_REGION_RULE_CONTENT,
+    LOON_CN_REGION_RULE_ID,
+    LOON_CN_REGION_RULE_POLICY,
     NODE_GROUP_NAME,
     QX_BASE_GROUP_NAME,
     QX_REQUIRED_EMPTY_SECTIONS,
@@ -581,6 +584,10 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         _validate_subscription_template(target, text)
         if "# Last updated: " not in text:
             raise ValidationError(f"{target}: missing update timestamp")
+        target_rule_ids = [
+            *expected_rule_ids,
+            *([LOON_CN_REGION_RULE_ID] if target == "loon" else []),
+        ]
         if target == "stash":
             actual_urls = [entry["url"] for entry in stash["rule-providers"].values()]
         elif target == "egern":
@@ -600,7 +607,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             expected_urls = [
                 f"{raw_base}/dist/{target}/{RULES_DIR}/"
                 f"{rule_filename(target, rule_id)}"
-                for rule_id in expected_rule_ids
+                for rule_id in target_rule_ids
             ]
         if actual_urls != expected_urls:
             raise ValidationError(f"{target}: remote rule URLs or order differ from the manifest")
@@ -640,11 +647,16 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                 actual_policies.append(settings.get(key))
             expected_native = ["direct" if target == "qx" and p == "DIRECT" else p
                                for p in expected_policy_list]
+            if target == "loon":
+                expected_native.append(LOON_CN_REGION_RULE_POLICY)
             if actual_policies != expected_native:
                 raise ValidationError(f"{target}: routing policies differ from the manifest")
-            if target == "loon" and _section(text, "Rule") != ["GEOIP,CN,DIRECT", "FINAL,Final"]:
-                raise ValidationError("Loon local rules must only contain final routing")
-        for rule_id in expected_rule_ids:
+            if target == "loon" and _section(text, "Rule") != ["FINAL,Final"]:
+                raise ValidationError(
+                    "Loon local rules must only contain FINAL; GEOIP,CN belongs in "
+                    "the final remote rule"
+                )
+        for rule_id in target_rule_ids:
             path = dist / target / RULES_DIR / rule_filename(target, rule_id)
             if not path.is_file():
                 raise ValidationError(f"Missing referenced rule file: {path}")
@@ -659,6 +671,14 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                         f"{target}: compatibility rule differs from preferred rule: "
                         f"{compatibility_path}"
                     )
+            if (
+                target == "loon"
+                and rule_id == LOON_CN_REGION_RULE_ID
+                and path.read_text(encoding="utf-8") != LOON_CN_REGION_RULE_CONTENT
+            ):
+                raise ValidationError(
+                    "Loon cn-region remote rule must contain only GEOIP,CN"
+                )
             if target == "egern" and not isinstance(yaml.safe_load(path.read_text()), dict):
                 raise ValidationError(f"Invalid Egern rule set: {path}")
         for legacy_name in ("rules-full", "rules-profile"):

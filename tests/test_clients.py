@@ -12,6 +12,7 @@ from proxyrules.model import Rule
 from proxyrules.render import (
     BASE_GROUP_NAME, CONFIG_COMPAT_FILENAMES, CONFIG_FILENAMES,
     EGERN_RULE_FIELDS, GENERATED_HEADER,
+    LOON_CN_REGION_RULE_CONTENT, LOON_CN_REGION_RULE_ID,
     NODE_GROUP_NAME, QX_BASE_GROUP_NAME, RULES_DIR, QX_REQUIRED_EMPTY_SECTIONS,
     QX_REQUIRED_SECTIONS,
     STASH_PROVIDER_NAME, SUBSCRIPTION_PLACEHOLDER, TARGETS,
@@ -338,7 +339,7 @@ def test_changed_rules_do_not_change_profile_timestamps(tmp_path):
     assert first == {str(path.relative_to(tmp_path)): path.read_bytes() for path in (tmp_path / "dist").rglob("*") if path.is_file()}
 
 
-def test_egern_stale_generated_rule_files_are_removed(tmp_path):
+def test_stale_generated_rule_files_are_removed(tmp_path):
     config = load_project_config(ROOT)
     args = (tmp_path, config["project"], config["policies"], config["icons"])
     old = CompiledRuleset("obsolete", "Obsolete", "Manual", (Rule("domain", "example.com"),))
@@ -346,7 +347,13 @@ def test_egern_stale_generated_rule_files_are_removed(tmp_path):
     render_all(*args, [])
     for target in TARGETS:
         path = tmp_path / "dist" / target / RULES_DIR
-        assert path.is_dir() and not list(path.iterdir())
+        expected = (
+            {f"{LOON_CN_REGION_RULE_ID}.lsr", f"{LOON_CN_REGION_RULE_ID}.list"}
+            if target == "loon"
+            else set()
+        )
+        assert path.is_dir()
+        assert {entry.name for entry in path.iterdir()} == expected
         assert not (tmp_path / "dist" / target / "rules-full").exists()
         assert not (tmp_path / "dist" / target / "rules-profile").exists()
 
@@ -420,6 +427,22 @@ def test_loon_preferred_and_compatibility_suffixes_are_published_identically():
     assert all(line.split(",", 1)[0].endswith(".lsr") for line in remote_rules)
 
 
+def test_loon_geoip_fallback_is_the_last_remote_rule_before_final():
+    profile = (ROOT / "dist/loon" / CONFIG_FILENAMES["loon"]).read_text()
+    remote_rules = _section(profile, "Remote Rule")
+    assert "/cn-ip.lsr," in remote_rules[-2]
+    assert (
+        f"/{LOON_CN_REGION_RULE_ID}.lsr, policy = DIRECT, "
+        "tag = CN Region, enabled = true"
+    ) in remote_rules[-1]
+    assert _section(profile, "Rule") == ["FINAL,Final"]
+
+    preferred = ROOT / "dist/loon/rules" / f"{LOON_CN_REGION_RULE_ID}.lsr"
+    compatibility = preferred.with_suffix(".list")
+    assert preferred.read_text() == LOON_CN_REGION_RULE_CONTENT
+    assert compatibility.read_bytes() == preferred.read_bytes()
+
+
 def test_readme_exposes_both_loon_profile_downloads_with_preferred_first():
     readme = (ROOT / "README.md").read_text()
     preferred = "dist/loon/Lane_loon.lcf"
@@ -451,6 +474,19 @@ def test_validator_rejects_divergent_loon_compatibility_rule(tmp_path):
     path = tmp_path / "dist/loon/rules/ai.list"
     path.write_text(path.read_text() + "DOMAIN,unexpected.example\n")
     with pytest.raises(ValidationError, match="compatibility rule differs"):
+        validate_generated(tmp_path, load_project_config(ROOT))
+
+
+def test_validator_rejects_local_loon_geoip_fallback(tmp_path):
+    shutil.copytree(ROOT / "dist", tmp_path / "dist")
+    shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
+    for filename in ("Lane_loon.lcf", "Lane_loon.conf"):
+        path = tmp_path / "dist/loon" / filename
+        path.write_text(path.read_text().replace(
+            "[Rule]\nFINAL,Final", "[Rule]\nGEOIP,CN,DIRECT\nFINAL,Final"
+        ))
+    with pytest.raises(ValidationError, match="GEOIP,CN belongs"):
         validate_generated(tmp_path, load_project_config(ROOT))
 
 

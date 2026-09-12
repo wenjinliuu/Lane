@@ -17,6 +17,8 @@ validator, tests, and checked-in `dist/` artifacts as one atomic system.
 - Preserve six-client routing semantics while using client-native syntax.
 - Loon must publish `.lcf`/`.lsr` as preferred artifacts and retain byte-identical
   `.conf`/`.list` compatibility aliases.
+- Loon must keep `GEOIP,CN` in the final `cn-region` remote rule, immediately after
+  `cn-ip`; its local `[Rule]` section must contain only `FINAL,Final`.
 - Preserve the routing order and client-specific policy-group behavior documented in
   `docs/maintenance.md`.
 - Never add private subscription URLs, credentials, sample live nodes, MitM hosts, certificates,
