@@ -420,6 +420,15 @@ def test_loon_preferred_and_compatibility_suffixes_are_published_identically():
     assert all(line.split(",", 1)[0].endswith(".lsr") for line in remote_rules)
 
 
+def test_readme_exposes_both_loon_profile_downloads_with_preferred_first():
+    readme = (ROOT / "README.md").read_text()
+    preferred = "dist/loon/Lane_loon.lcf"
+    compatibility = "dist/loon/Lane_loon.conf"
+    assert preferred in readme
+    assert compatibility in readme
+    assert readme.index(preferred) < readme.index(compatibility)
+
+
 @pytest.mark.parametrize("artifact", ["profile", "rule"])
 def test_validator_rejects_missing_loon_compatibility_artifact(tmp_path, artifact):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")

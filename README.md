@@ -9,7 +9,7 @@ IPv4/IPv6 兜底。项目只负责分流，**不提供节点或订阅转换服�
 | 客户端 | 配置文件 |
 | --- | --- |
 | Stash | [Lane_stash.yaml](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/Lane_stash.yaml) |
-| Loon | [Lane_loon.lcf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/loon/Lane_loon.lcf) |
+| Loon | [Lane_loon.lcf（推荐）](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/loon/Lane_loon.lcf) · [Lane_loon.conf（兼容）](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/loon/Lane_loon.conf) |
 | Shadowrocket | [Lane_shadowrocket.conf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/shadowrocket/Lane_shadowrocket.conf) |
 | Surge | [Lane_surge.conf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/surge/Lane_surge.conf) |
 | Quantumult X | [Lane_qx.conf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/qx/Lane_qx.conf) |
