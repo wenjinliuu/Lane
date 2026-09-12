@@ -11,6 +11,7 @@ from .cn_window import canonical_cidr_text, coverage_stats
 from .filters import build_filters
 from .render import (
     BASE_GROUP_NAME,
+    CONFIG_COMPAT_FILENAMES,
     CONFIG_FILENAMES,
     IPV4_EXCLUDED_ROUTES,
     NODE_GROUP_NAME,
@@ -24,6 +25,7 @@ from .render import (
     STASH_PROVIDER_NAME,
     SUBSCRIPTION_PLACEHOLDER,
     rule_filename,
+    rule_filenames,
     shadowrocket_options,
     stash_provider_id,
 )
@@ -207,6 +209,11 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     dist = root / "dist"
     required = [
         *(dist / target / filename for target, filename in CONFIG_FILENAMES.items()),
+        *(
+            dist / target / filename
+            for target, filenames in CONFIG_COMPAT_FILENAMES.items()
+            for filename in filenames
+        ),
         dist / "metadata.json",
         dist / "report.json",
         dist / "cn-ip-window.json",
@@ -218,6 +225,13 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
 
     texts = {target: (dist / target / filename).read_text(encoding="utf-8")
              for target, filename in CONFIG_FILENAMES.items()}
+    for target, filenames in CONFIG_COMPAT_FILENAMES.items():
+        for filename in filenames:
+            compatibility_text = (dist / target / filename).read_text(encoding="utf-8")
+            if compatibility_text != texts[target]:
+                raise ValidationError(
+                    f"{target}: compatibility profile differs from preferred profile"
+                )
     stash = yaml.safe_load(texts["stash"])
     expected_groups = (
         {item["name"] for item in config["policies"]["base_groups"]}
@@ -634,6 +648,17 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             path = dist / target / RULES_DIR / rule_filename(target, rule_id)
             if not path.is_file():
                 raise ValidationError(f"Missing referenced rule file: {path}")
+            for compatibility_name in rule_filenames(target, rule_id)[1:]:
+                compatibility_path = dist / target / RULES_DIR / compatibility_name
+                if not compatibility_path.is_file():
+                    raise ValidationError(
+                        f"Missing compatibility rule file: {compatibility_path}"
+                    )
+                if compatibility_path.read_bytes() != path.read_bytes():
+                    raise ValidationError(
+                        f"{target}: compatibility rule differs from preferred rule: "
+                        f"{compatibility_path}"
+                    )
             if target == "egern" and not isinstance(yaml.safe_load(path.read_text()), dict):
                 raise ValidationError(f"Invalid Egern rule set: {path}")
         for legacy_name in ("rules-full", "rules-profile"):
@@ -666,7 +691,9 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         raise ValidationError("Global QUIC blocking is outside Lane's UDP fallback scope")
     allowed_reject_lines = {setting.upper() for setting in udp_fallback.values()}
     for path in dist.rglob("*"):
-        if not path.is_file() or path.suffix not in {".yaml", ".conf", ".list"}:
+        if not path.is_file() or path.suffix not in {
+            ".yaml", ".conf", ".lcf", ".list", ".lsr"
+        }:
             continue
         for line in path.read_text(encoding="utf-8").splitlines():
             stripped = line.strip()

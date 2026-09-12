@@ -6,17 +6,20 @@ from proxyrules.config import load_project_config, validate_config
 from proxyrules.model import Rule
 from proxyrules.render import (
     BASE_GROUP_NAME,
+    CONFIG_COMPAT_FILENAMES,
     CONFIG_FILENAMES,
     HIJACK_DNS_SERVERS,
     MULTICAST_EXCLUDED_ROUTES,
     NODE_GROUP_NAME,
     PROFILE_HEADER,
     REAL_IP_DOMAINS,
+    RULES_DIR,
     STASH_REAL_IP_DOMAINS,
     SUBSCRIPTION_PLACEHOLDER,
     _with_stable_update_time,
     render_rule,
     render_stash_payload_rule,
+    rule_filenames,
 )
 from proxyrules.validate import validate_generated
 
@@ -56,6 +59,15 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
             PROFILE_HEADER +
             "# Last updated: "
         )
+    for target, filenames in CONFIG_COMPAT_FILENAMES.items():
+        primary = ROOT / "dist" / target / CONFIG_FILENAMES[target]
+        for filename in filenames:
+            assert (ROOT / "dist" / target / filename).read_bytes() == primary.read_bytes()
+
+    for preferred_path in (ROOT / "dist" / "loon" / RULES_DIR).glob("*.lsr"):
+        _, compatibility = rule_filenames("loon", preferred_path.stem)
+        compatibility_path = preferred_path.with_name(compatibility)
+        assert compatibility_path.read_bytes() == preferred_path.read_bytes()
     main_text = "\n".join(
         path.read_text(encoding="utf-8") for path in main_configs
     )

@@ -16,7 +16,7 @@ from proxyrules.cn_validation import _subtract, compare_cn_coverage
 from proxyrules.compiler import compile_rulesets
 from proxyrules.config import ConfigError, load_project_config, validate_config
 from proxyrules.render import (
-    CONFIG_FILENAMES, RULES_DIR, TARGETS,
+    CONFIG_FILENAMES, RULES_DIR, TARGETS, rule_filename,
 )
 from proxyrules.text_sources import parse_dnsmasq_domains, parse_text_source
 from proxyrules.upstream import UpstreamError, fetch_text_source
@@ -223,8 +223,7 @@ def test_manifest_rejects_cn_policy_source_and_order_regressions(change):
 
 @pytest.mark.parametrize("target", TARGETS)
 def test_generated_cn_rules_are_dual_stack_and_direct(target):
-    suffix = "yaml" if target == "egern" else "list"
-    path = ROOT / "dist" / target / RULES_DIR / f"cn-ip.{suffix}"
+    path = ROOT / "dist" / target / RULES_DIR / rule_filename(target, "cn-ip")
     text = path.read_text()
     assert "gaoyifan/china-operator-ip/tree/ip-lists" in text
     assert "License: MIT" in text
@@ -363,10 +362,13 @@ def test_validator_rejects_wrong_cn_policy(target, tmp_path):
         text = text.split(original, 1)[0] + original + tail.replace("policy: DIRECT", "policy: Proxy", 1)
     else:
         lines = text.splitlines()
-        index = next(i for i, line in enumerate(lines) if "apple-cn.list" in line)
+        filename = rule_filename(target, "apple-cn")
+        index = next(i for i, line in enumerate(lines) if filename in line)
         lines[index] = lines[index].replace("DIRECT", "Proxy").replace("force-policy=direct", "force-policy=Proxy")
         text = "\n".join(lines) + "\n"
     path.write_text(text)
+    if target == "loon":
+        (tmp_path / "dist/loon/Lane_loon.conf").write_text(text)
     with pytest.raises(ValidationError, match="polic"):
         validate_generated(tmp_path, load_project_config(ROOT))
 
@@ -414,6 +416,8 @@ def test_validator_rejects_cn_ip_before_service_rules(target, tmp_path):
                 .replace("/rules/cn-ip.", "/rules/apple-cn.")
                 .replace("/rules/priority-test.", "/rules/cn-ip."))
     path.write_text(text)
+    if target == "loon":
+        (tmp_path / "dist/loon/Lane_loon.conf").write_text(text)
     expected_error = "rule-provider settings|URLs or order" if target == "stash" else "URLs or order"
     with pytest.raises(ValidationError, match=expected_error):
         validate_generated(tmp_path, load_project_config(ROOT))

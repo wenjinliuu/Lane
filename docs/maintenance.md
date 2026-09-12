@@ -90,6 +90,8 @@ AppleCN 保留，因为其大陆 CDN 例外具有独立路由意义。
 
 - `我的节点` 是无图标的 Remote Filter，`Proxy` 组合地区 Auto 与全部真实节点。
 - 使用 `ip-mode = ipv4-only`，不要恢复旧的 `ipv6 = false`。
+- 完整配置以 `Lane_loon.lcf` 为主入口，远程规则引用 `.lsr`；生成器必须同时发布内容
+  完全一致的 `Lane_loon.conf` 与 `.list` 兼容文件，避免旧配置中的固定 URL 失效。
 
 ### Surge
 

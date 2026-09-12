@@ -122,5 +122,5 @@ def test_google_cn_is_neither_fetched_nor_published() -> None:
     assert "google_cn" not in metadata["sources"]
     assert all(entry["id"] != "google-cn" for entry in metadata["rulesets"])
     for target in TARGETS:
-        suffix = "yaml" if target == "egern" else "list"
+        suffix = "yaml" if target == "egern" else "lsr" if target == "loon" else "list"
         assert not (ROOT / "dist" / target / RULES_DIR / f"google-cn.{suffix}").exists()

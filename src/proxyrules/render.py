@@ -16,11 +16,14 @@ from .model import Rule
 
 CONFIG_FILENAMES = {
     "stash": "Lane_stash.yaml",
-    "loon": "Lane_loon.conf",
+    "loon": "Lane_loon.lcf",
     "shadowrocket": "Lane_shadowrocket.conf",
     "surge": "Lane_surge.conf",
     "qx": "Lane_qx.conf",
     "egern": "Lane_egern.yaml",
+}
+CONFIG_COMPAT_FILENAMES = {
+    "loon": ("Lane_loon.conf",),
 }
 TARGETS = tuple(CONFIG_FILENAMES)
 RULES_DIR = "rules"
@@ -143,7 +146,9 @@ CLIENT_NOTES = {
     "loon": (
         "DOMAIN-REGEX is omitted because Loon remote rules do not support it. "
         "Remote filters intentionally leave their sources unpinned so local "
-        "nodes and multiple subscriptions can be considered."
+        "nodes and multiple subscriptions can be considered. The preferred "
+        "profile/rule suffixes are .lcf/.lsr, with byte-identical .conf/.list "
+        "compatibility aliases retained for existing installations."
     ),
     "shadowrocket": (
         "DOMAIN-REGEX is omitted for compatibility. Service groups follow the "
@@ -308,7 +313,19 @@ def _qx_policy(name: str) -> str:
 
 
 def rule_filename(target: str, rule_id: str) -> str:
-    return f"{rule_id}.{'yaml' if target == 'egern' else 'list'}"
+    suffix = (
+        "yaml" if target == "egern" else "lsr" if target == "loon" else "list"
+    )
+    return f"{rule_id}.{suffix}"
+
+
+def rule_filenames(target: str, rule_id: str) -> tuple[str, ...]:
+    """Return the preferred rule filename followed by compatibility aliases."""
+
+    primary = rule_filename(target, rule_id)
+    if target == "loon":
+        return primary, f"{rule_id}.list"
+    return (primary,)
 
 
 def _rule_url(
@@ -628,7 +645,7 @@ def _loon_config(
 
     lines.extend(["", "# Ordered remote routing rules.", "[Remote Rule]"])
     for entry in policies["_compiled_rulesets"]:
-        url = f"{raw_base}/dist/loon/{RULES_DIR}/{entry.id}.list"
+        url = f"{raw_base}/dist/loon/{RULES_DIR}/{rule_filename('loon', entry.id)}"
         lines.append(
             f"{url}, policy = {entry.policy}, tag = {entry.title}, enabled = true"
         )
@@ -927,9 +944,10 @@ def render_all(
                     else:
                         rendered.append(line)
                 content = _ruleset_header(ruleset) + "\n".join(rendered) + "\n"
-            path = dist / target / RULES_DIR / rule_filename(target, ruleset.id)
-            expected[target].add(path)
-            write_if_changed(path, content)
+            for filename in rule_filenames(target, ruleset.id):
+                path = dist / target / RULES_DIR / filename
+                expected[target].add(path)
+                write_if_changed(path, content)
             if target == "stash":
                 for behavior, behavior_rules in stash_provider_parts(ruleset):
                     provider_id = stash_provider_id(ruleset.id, behavior)
@@ -948,7 +966,10 @@ def render_all(
         rules_dir = dist / target / RULES_DIR
         if rules_dir.exists():
             for stale in rules_dir.iterdir():
-                if not stale.is_file() or stale.suffix not in {".list", ".yaml"}:
+                if (
+                    not stale.is_file()
+                    or stale.suffix not in {".list", ".lsr", ".yaml"}
+                ):
                     continue
                 if stale not in expected[target]:
                     stale.unlink()
@@ -961,7 +982,10 @@ def render_all(
             if not legacy.is_dir():
                 continue
             for stale in legacy.iterdir():
-                if not stale.is_file() or stale.suffix not in {".list", ".yaml"}:
+                if (
+                    not stale.is_file()
+                    or stale.suffix not in {".list", ".lsr", ".yaml"}
+                ):
                     continue
                 try:
                     generated = stale.read_text(encoding="utf-8").startswith(
@@ -982,7 +1006,10 @@ def render_all(
         content = (_shadowrocket_config(project, render_policies) if target == "shadowrocket"
                    else renderers[target](project, render_policies, icons))
         path = dist / target / CONFIG_FILENAMES[target]
-        write_if_changed(path, _with_stable_update_time(path, content))
+        rendered = _with_stable_update_time(path, content)
+        write_if_changed(path, rendered)
+        for compatibility_name in CONFIG_COMPAT_FILENAMES.get(target, ()):
+            write_if_changed(dist / target / compatibility_name, rendered)
     return {
         "schema": 3,
         "unsupported_rules": skipped,

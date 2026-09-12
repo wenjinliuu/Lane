@@ -15,6 +15,8 @@ validator, tests, and checked-in `dist/` artifacts as one atomic system.
 ## Hard constraints
 
 - Preserve six-client routing semantics while using client-native syntax.
+- Loon must publish `.lcf`/`.lsr` as preferred artifacts and retain byte-identical
+  `.conf`/`.list` compatibility aliases.
 - Preserve the routing order and client-specific policy-group behavior documented in
   `docs/maintenance.md`.
 - Never add private subscription URLs, credentials, sample live nodes, MitM hosts, certificates,

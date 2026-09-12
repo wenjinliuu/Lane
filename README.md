@@ -9,13 +9,14 @@ IPv4/IPv6 兜底。项目只负责分流，**不提供节点或订阅转换服�
 | 客户端 | 配置文件 |
 | --- | --- |
 | Stash | [Lane_stash.yaml](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/stash/Lane_stash.yaml) |
-| Loon | [Lane_loon.conf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/loon/Lane_loon.conf) |
+| Loon | [Lane_loon.lcf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/loon/Lane_loon.lcf) |
 | Shadowrocket | [Lane_shadowrocket.conf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/shadowrocket/Lane_shadowrocket.conf) |
 | Surge | [Lane_surge.conf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/surge/Lane_surge.conf) |
 | Quantumult X | [Lane_qx.conf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/qx/Lane_qx.conf) |
 | Egern | [Lane_egern.yaml](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/Lane_egern.yaml) |
 
 > 导入前请先保存为本地配置。不要把已经填入私人订阅地址的配置上传到公开仓库。
+> Loon 现主推原生 `.lcf` 配置与 `.lsr` 规则；旧 `.conf` / `.list` 地址继续兼容。
 
 ## 首次使用
 

@@ -46,7 +46,7 @@
   },
   "notes": {
     "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical. A dedicated 我的节点 group includes every provider, while Proxy keeps regional groups visible.",
-    "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters intentionally leave their sources unpinned so local nodes and multiple subscriptions can be considered.",
+    "loon": "DOMAIN-REGEX is omitted because Loon remote rules do not support it. Remote filters intentionally leave their sources unpinned so local nodes and multiple subscriptions can be considered. The preferred profile/rule suffixes are .lcf/.lsr, with byte-identical .conf/.list compatibility aliases retained for existing installations.",
     "shadowrocket": "DOMAIN-REGEX is omitted for compatibility. Service groups follow the built-in PROXY policy (the node picked on the home screen) instead of a generated Proxy group; icons are omitted because Shadowrocket has no policy-group icon parameter.",
     "surge": "DOMAIN-REGEX is unsupported and omitted. Region automation uses native Smart groups over the visible 我的节点 pool; visible groups carry icon-url.",
     "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted. excluded_routes stays IPv4-only. The official complete-profile section skeleton is preserved. server_remote and all unused rewrite, script, HTTP backend, and MitM sections remain empty.",

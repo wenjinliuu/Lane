@@ -188,7 +188,12 @@ def test_validator_rejects_subscription_template_regressions(tmp_path, target, o
     path = tmp_path / "dist" / target / CONFIG_FILENAMES[target]
     text = path.read_text(encoding="utf-8")
     assert old in text
-    path.write_text(text.replace(old, new, 1), encoding="utf-8")
+    edited = text.replace(old, new, 1)
+    path.write_text(edited, encoding="utf-8")
+    if target == "loon":
+        (tmp_path / "dist/loon/Lane_loon.conf").write_text(
+            edited, encoding="utf-8"
+        )
     with pytest.raises(ValidationError, match=error):
         validate_generated(tmp_path, load_project_config(ROOT))
 

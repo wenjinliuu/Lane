@@ -10,11 +10,12 @@ from proxyrules.compiler import CompiledRuleset
 from proxyrules.config import load_project_config
 from proxyrules.model import Rule
 from proxyrules.render import (
-    BASE_GROUP_NAME, CONFIG_FILENAMES, EGERN_RULE_FIELDS, GENERATED_HEADER,
+    BASE_GROUP_NAME, CONFIG_COMPAT_FILENAMES, CONFIG_FILENAMES,
+    EGERN_RULE_FIELDS, GENERATED_HEADER,
     NODE_GROUP_NAME, QX_BASE_GROUP_NAME, RULES_DIR, QX_REQUIRED_EMPTY_SECTIONS,
     QX_REQUIRED_SECTIONS,
     STASH_PROVIDER_NAME, SUBSCRIPTION_PLACEHOLDER, TARGETS,
-    render_all, render_egern_ruleset, render_rule,
+    render_all, render_egern_ruleset, render_rule, rule_filename, rule_filenames,
 )
 from proxyrules.validate import ValidationError, _section, validate_generated
 
@@ -149,8 +150,9 @@ def test_generated_rule_counts_agree_with_capability_report():
     report = json.loads((ROOT / "dist/report.json").read_text())
     for target in TARGETS:
         for entry in metadata["rulesets"]:
-            suffix = "yaml" if target == "egern" else "list"
-            path = ROOT / "dist" / target / RULES_DIR / f"{entry['id']}.{suffix}"
+            path = ROOT / "dist" / target / RULES_DIR / rule_filename(
+                target, entry["id"]
+            )
             if target == "egern":
                 parsed = yaml.safe_load(path.read_text())
                 count = sum(
@@ -202,7 +204,10 @@ def test_proxy_exposes_regional_auto_groups_and_node_pool_on_five_clients():
 
     loon_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
-        for line in _section((ROOT / "dist/loon/Lane_loon.conf").read_text(), "Proxy Group")
+        for line in _section(
+            (ROOT / "dist" / "loon" / CONFIG_FILENAMES["loon"]).read_text(),
+            "Proxy Group",
+        )
     }
     assert loon_groups[BASE_GROUP_NAME].split(",")[1:6] == auto_names
     assert loon_groups[BASE_GROUP_NAME].split(",")[6] == NODE_GROUP_NAME
@@ -384,7 +389,7 @@ def test_validator_rejects_broken_remote_rule_reference(tmp_path):
 
 
 def test_canonical_names_and_new_repository_urls():
-    expected = {"Lane_stash.yaml", "Lane_loon.conf", "Lane_shadowrocket.conf",
+    expected = {"Lane_stash.yaml", "Lane_loon.lcf", "Lane_shadowrocket.conf",
                 "Lane_surge.conf", "Lane_qx.conf", "Lane_egern.yaml"}
     assert set(CONFIG_FILENAMES.values()) == expected
     config = load_project_config(ROOT)
@@ -395,6 +400,49 @@ def test_canonical_names_and_new_repository_urls():
         assert "/ProxyRules/" not in text
         assert not (ROOT / "dist" / target / f"{target}.conf").exists()
         assert not (ROOT / "dist" / target / f"{target}.yaml").exists()
+
+
+def test_loon_preferred_and_compatibility_suffixes_are_published_identically():
+    preferred_profile = ROOT / "dist/loon" / CONFIG_FILENAMES["loon"]
+    assert CONFIG_COMPAT_FILENAMES["loon"] == ("Lane_loon.conf",)
+    compatibility_profile = ROOT / "dist/loon/Lane_loon.conf"
+    assert compatibility_profile.read_bytes() == preferred_profile.read_bytes()
+
+    for preferred_path in (ROOT / "dist/loon" / RULES_DIR).glob("*.lsr"):
+        preferred, compatibility = rule_filenames("loon", preferred_path.stem)
+        assert preferred.endswith(".lsr")
+        assert compatibility.endswith(".list")
+        compatibility_path = ROOT / "dist/loon" / RULES_DIR / compatibility
+        assert compatibility_path.read_bytes() == preferred_path.read_bytes()
+
+    remote_rules = _section(preferred_profile.read_text(), "Remote Rule")
+    assert remote_rules
+    assert all(line.split(",", 1)[0].endswith(".lsr") for line in remote_rules)
+
+
+@pytest.mark.parametrize("artifact", ["profile", "rule"])
+def test_validator_rejects_missing_loon_compatibility_artifact(tmp_path, artifact):
+    shutil.copytree(ROOT / "dist", tmp_path / "dist")
+    shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
+    path = (
+        tmp_path / "dist/loon/Lane_loon.conf"
+        if artifact == "profile"
+        else tmp_path / "dist/loon/rules/ai.list"
+    )
+    path.unlink()
+    with pytest.raises(ValidationError, match="Missing generated|Missing compatibility"):
+        validate_generated(tmp_path, load_project_config(ROOT))
+
+
+def test_validator_rejects_divergent_loon_compatibility_rule(tmp_path):
+    shutil.copytree(ROOT / "dist", tmp_path / "dist")
+    shutil.copytree(ROOT / "rules", tmp_path / "rules")
+    shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
+    path = tmp_path / "dist/loon/rules/ai.list"
+    path.write_text(path.read_text() + "DOMAIN,unexpected.example\n")
+    with pytest.raises(ValidationError, match="compatibility rule differs"):
+        validate_generated(tmp_path, load_project_config(ROOT))
 
 
 def test_surge_carries_policy_group_icons_and_shadowrocket_does_not():
