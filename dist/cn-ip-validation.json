@@ -8,13 +8,13 @@
     "ipv4": {
       "reference_available": true,
       "equal_coverage": false,
-      "primary_rule_count": 6252,
+      "primary_rule_count": 6253,
       "reference_rule_count": 3895,
-      "primary_addresses": "344250624",
-      "reference_addresses": "282470144",
-      "common_addresses": "281910016",
-      "primary_only_cidr_count": 6715,
-      "primary_only_cidrs_sha256": "df323748656544cc5ba6e670901377b68c84b4f9c76de66764daa0fb946cf35d",
+      "primary_addresses": "344250880",
+      "reference_addresses": "282469888",
+      "common_addresses": "281909760",
+      "primary_only_cidr_count": 6717,
+      "primary_only_cidrs_sha256": "4adc6961135fda0aadb5388c84bcf7c0f9ef4cb24fa0fe022208666aefcf2b6e",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -242,18 +242,18 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "a645586401d683672ba187a12b9c47daf6f293a2",
-        "sha256": "3b2fee92cea6084d0e62b9677f61d70e796a360f9af14b25c5f4e3b718398e10",
+        "revision": "465264c29e776925fbff8e44f38c78a404e0d440",
+        "sha256": "ba2775c5758c65fb4e5410ce2b169f39a1f2d1ad4b3afb7036bee44bf2d1461d",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
         "breaker_percent": 1.0,
         "snapshot_dates": [
+          "2026-09-13",
           "2026-09-12",
           "2026-09-11",
           "2026-09-10",
-          "2026-09-09",
-          "2026-09-08"
+          "2026-09-09"
         ],
         "window_report": "cn-ip-window.json"
       }
@@ -261,7 +261,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "c774f74ba50d34531dc05c846c5e055f70533f00bf2a34996dce2876d0b5a912",
+        "sha256": "4c873ea77e9d4388110151590b6ee51a19985ff9d7c3a730d3e8bdfaead5ce91",
         "license": "CC-BY-SA-4.0"
       }
     }
