@@ -62,9 +62,47 @@ IPv4/IPv6 兜底。项目只负责分流，**不提供节点或订阅转换服�
 节点列表和远程规则可以独立更新，不需要频繁替换本地主配置。只有策略组、DNS、规则顺序
 或客户端兼容性发生变化时，才需要重新下载完整配置，并重新填入订阅地址及个人修改。
 
-项目每天自动检查上游数据。当前来源和规则数量记录在
+### CN IP 稳定更新
+
+项目每天自动检查上游，但不会直接照搬某一天的中国 IP 数据。Lane 从
+[`gaoyifan/china-operator-ip`](https://github.com/gaoyifan/china-operator-ip) 读取最近 5 个
+不同 UTC 日期的 IPv4/IPv6 快照，只发布在至少 3 份快照中出现的地址空间，以过滤单日或
+短期的 BGP 数据波动。
+
+新结果还会分别与上一版 IPv4、IPv6 覆盖范围比较；任一地址族变化超过 1%，自动更新立即
+停止，必须人工核对并按候选 SHA-256 明确放行。项目另用
+[`misakaio/chnroutes2`](https://github.com/misakaio/chnroutes2) 独立对照 IPv4，只做异常提示，
+不会把它混入正式规则。也就是说，这是“每天检查、五日滚动、三次共识、异常熔断”，不是
+每周才更新一次。
+
+当前来源、快照日期和规则数量记录在
 [`dist/metadata.json`](dist/metadata.json)，客户端转换差异记录在
 [`dist/report.json`](dist/report.json)。
+
+## 常见疑问
+
+### 为什么配置中间会出现 `DIRECT`？
+
+Lane 使用从上到下的首匹配规则。AppleCN、中国域名等已确认适合直连的流量会在对应位置
+进入 `DIRECT`；境外域名、Telegram IP、CN IP 等仍按既定顺序继续判断。这些直连不是随机
+插入，而是黄金分流顺序的一部分，尤其会确保 Brokerage IP 先于 China / CN IP 匹配。
+
+### Domain 和 IP 为什么有时分开？
+
+同一逻辑规则集里的 Domain/IP，在 Loon、Surge、Shadowrocket、Quantumult X 和 Egern
+可以写在同一个文件；Stash 为使用低占用的 `domain`、`ipcidr`、`classical` provider，
+会生成对应的专用载荷。
+
+`Brokerage` 与 `Brokerage IP`、`Telegram` 与 `Telegram IP`、`China` 与 `CN IP` 则是为了
+匹配阶段和顺序而有意分开：域名规则需要优先判断，IP 规则放在指定的后置位置。把它们简单
+合并会改变 DNS 解析时机和首匹配结果，并可能破坏券商等已验证的分流。
+
+### 为什么 Loon 的 `GEOIP,CN` 不写在本地？
+
+Loon 的本地规则优先级高于插件和订阅规则，本地写入 `GEOIP,CN,DIRECT` 可能让后续插件规则
+失去匹配机会。因此 Lane 将它放在最后一项远程规则 `cn-region.lsr` 中，本地 `[Rule]` 只
+保留 `FINAL,Final`。逻辑顺序仍是 `CN IP → GEOIP,CN → Final`；其中 CN IP 是 Lane 每天维护
+的稳定 CIDR，`GEOIP,CN` 只是客户端数据库的第二层兜底。
 
 ## 文档
 

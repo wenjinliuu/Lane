@@ -452,6 +452,19 @@ def test_readme_exposes_both_loon_profile_downloads_with_preferred_first():
     assert readme.index(preferred) < readme.index(compatibility)
 
 
+def test_readme_explains_cn_ip_updates_and_rule_layout():
+    readme = (ROOT / "README.md").read_text()
+    for statement in (
+        "每天检查、五日滚动、三次共识、异常熔断",
+        "任一地址族变化超过 1%",
+        "Domain 和 IP 为什么有时分开",
+        "Stash 为使用低占用的 `domain`、`ipcidr`、`classical` provider",
+        "为什么 Loon 的 `GEOIP,CN` 不写在本地",
+        "`CN IP → GEOIP,CN → Final`",
+    ):
+        assert statement in readme
+
+
 @pytest.mark.parametrize("artifact", ["profile", "rule"])
 def test_validator_rejects_missing_loon_compatibility_artifact(tmp_path, artifact):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
