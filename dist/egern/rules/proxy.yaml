@@ -804,6 +804,7 @@ domain_set:
 - p13.upd.kaspersky.com
 - p14.upd.kaspersky.com
 - p15.upd.kaspersky.com
+- p16-tiktok-dm-sticker-sign-sg.ibyteimg.com
 - p16-tiktokcdn-com.akamaized.net
 - p16.upd.kaspersky.com
 - p17.upd.kaspersky.com
@@ -21485,6 +21486,9 @@ domain_suffix_set:
 - stripchat.com
 - stripe-terminal-local-reader.net
 - stripe.com
+- stripe.dev
+- stripe.events
+- stripe.global
 - stripe.network
 - stripecdn.com
 - stripparadise.com

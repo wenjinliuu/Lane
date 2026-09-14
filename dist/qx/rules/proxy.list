@@ -803,6 +803,7 @@ host,p12.upd.kaspersky.com,Final
 host,p13.upd.kaspersky.com,Final
 host,p14.upd.kaspersky.com,Final
 host,p15.upd.kaspersky.com,Final
+host,p16-tiktok-dm-sticker-sign-sg.ibyteimg.com,Final
 host,p16-tiktokcdn-com.akamaized.net,Final
 host,p16.upd.kaspersky.com,Final
 host,p17.upd.kaspersky.com,Final
@@ -21483,6 +21484,9 @@ host-suffix,stripcamfun.com,Final
 host-suffix,stripchat.com,Final
 host-suffix,stripe-terminal-local-reader.net,Final
 host-suffix,stripe.com,Final
+host-suffix,stripe.dev,Final
+host-suffix,stripe.events,Final
+host-suffix,stripe.global,Final
 host-suffix,stripe.network,Final
 host-suffix,stripecdn.com,Final
 host-suffix,stripparadise.com,Final
