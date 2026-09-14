@@ -14,7 +14,7 @@ validator, tests, and checked-in `dist/` artifacts as one atomic system.
 
 ## Hard constraints
 
-- Preserve six-client routing semantics while using client-native syntax.
+- Preserve seven-client routing semantics while using client-native syntax.
 - Loon must publish `.lcf`/`.lsr` as preferred artifacts and retain byte-identical
   `.conf`/`.list` compatibility aliases.
 - Loon must keep `GEOIP,CN` in the final `cn-region` remote rule, immediately after
@@ -27,5 +27,7 @@ validator, tests, and checked-in `dist/` artifacts as one atomic system.
   app-managed node resources plus the complete empty-section skeleton.
 - Shadowrocket uses built-in `PROXY`; Surge uses Smart region groups; Stash specialized providers
   and Egern single-load/flatten behavior must remain intact.
+- FlClash must use native Mihomo YAML with a local editable proxy-provider, remote classical
+  rule-providers, combined Domain/IP rule files, and `include-all-providers` node aggregation.
 - Keep third-party provenance and license notices when changing upstream data or icons.
 - Do not bypass the CN-IP change breaker without the exact reviewed candidate SHA-256.

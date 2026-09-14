@@ -21,6 +21,7 @@ CONFIG_FILENAMES = {
     "surge": "Lane_surge.conf",
     "qx": "Lane_qx.conf",
     "egern": "Lane_egern.yaml",
+    "flclash": "Lane_flclash.yaml",
 }
 CONFIG_COMPAT_FILENAMES = {
     "loon": ("Lane_loon.conf",),
@@ -179,6 +180,12 @@ CLIENT_NOTES = {
         "current Egern release with urls and flatten support. Proxy reaches raw "
         "nodes through the dedicated 我的节点 subscription group."
     ),
+    "flclash": (
+        "Native Mihomo YAML for FlClash on Android. A local proxy-provider keeps "
+        "the private node subscription separate from Lane's remote classical "
+        "rule-providers. All logical Domain/IP rules stay together in one file per "
+        "ruleset; Proxy exposes 我的节点 before the five regional Auto groups."
+    ),
 }
 UPDATE_TIME_PREFIX = "# Last updated: "
 UPDATE_TIME_PATTERN = re.compile(r"^# Last updated: .*\n?", re.MULTILINE)
@@ -249,7 +256,7 @@ def render_rule(
             return None
         # QX has its own IP matching semantics; do not emit Surge-only modifiers.
         return f"{qx_kinds[rule.kind]},{rule.value},{_qx_policy(policy)}"
-    if rule.kind == "regexp" and target != "stash":
+    if rule.kind == "regexp" and target not in {"stash", "flclash"}:
         return None
     if rule.kind not in kinds:
         return None
@@ -933,6 +940,175 @@ def _egern_config(
     return PROFILE_HEADER + LOCAL_PROFILE_NOTICE + SERVICE_GROUP_NOTICE + "\n" + body
 
 
+def _flclash_config(
+    project: dict[str, Any], policies: dict[str, Any], icons: dict[str, Any]
+) -> str:
+    """Render a local Android profile using FlClash's native Mihomo schema."""
+
+    benchmark = project["benchmark"]
+    updates = project["updates"]
+    raw_base = project["project"]["raw_base"].rstrip("/")
+    filters = build_filters(policies)
+
+    groups: list[dict[str, Any]] = [
+        _with_icon(
+            {
+                "name": NODE_GROUP_NAME,
+                "type": "select",
+                "include-all-providers": True,
+            },
+            icons,
+            NODE_GROUP_NAME,
+        ),
+        _with_icon(
+            {
+                "name": BASE_GROUP_NAME,
+                "type": "select",
+                "proxies": [NODE_GROUP_NAME, *_region_auto_names(policies)],
+            },
+            icons,
+            BASE_GROUP_NAME,
+        ),
+    ]
+    for service in policies["service_groups"]:
+        groups.append(
+            _with_icon(
+                {
+                    "name": service,
+                    "type": "select",
+                    "proxies": list(policies["service_options"]),
+                },
+                icons,
+                service,
+            )
+        )
+    for region in policies["regions"]:
+        region_filter = filters["regions"][region["name"]]
+        groups.append(
+            _with_icon(
+                {
+                    "name": region["auto_name"],
+                    "type": "url-test",
+                    "include-all-providers": True,
+                    "filter": region_filter,
+                    "url": benchmark["url"],
+                    "interval": benchmark["interval"],
+                    "tolerance": benchmark["tolerance"],
+                    "lazy": benchmark["lazy"],
+                    "timeout": benchmark["timeout"] * 1000,
+                },
+                icons,
+                region["auto_name"],
+            )
+        )
+        groups.append(
+            _with_icon(
+                {
+                    "name": region["manual_name"],
+                    "type": "select",
+                    "include-all-providers": True,
+                    "filter": region_filter,
+                },
+                icons,
+                region["manual_name"],
+            )
+        )
+
+    providers: dict[str, dict[str, Any]] = {}
+    route_rules: list[str] = []
+    for entry in policies["_compiled_rulesets"]:
+        providers[entry.id] = {
+            "type": "http",
+            "behavior": "classical",
+            "format": "text",
+            "url": f"{raw_base}/dist/flclash/{RULES_DIR}/{entry.id}.list",
+            "path": f"./rule_providers/{entry.id}.list",
+            "interval": updates["rule_interval"],
+        }
+        no_resolve = ",no-resolve" if entry.no_resolve else ""
+        route_rules.append(
+            f"RULE-SET,{entry.id},{entry.policy}{no_resolve}"
+        )
+    route_rules.extend(["GEOIP,CN,DIRECT", "MATCH,Final"])
+
+    subscription = {
+        "type": "http",
+        "url": SUBSCRIPTION_PLACEHOLDER,
+        "path": f"./proxy_providers/{STASH_PROVIDER_NAME}.yaml",
+        "interval": updates["node_interval"],
+        "health-check": {
+            "enable": True,
+            "url": benchmark["url"],
+            "interval": benchmark["interval"],
+            "timeout": benchmark["timeout"] * 1000,
+            "lazy": benchmark["lazy"],
+        },
+    }
+    data = {
+        "mode": "rule",
+        "log-level": "warning",
+        "ipv6": False,
+        "allow-lan": False,
+        "unified-delay": True,
+        "tcp-concurrent": True,
+        "profile": {"store-selected": True, "store-fake-ip": True},
+        "dns": {
+            "enable": True,
+            "ipv6": False,
+            "enhanced-mode": "fake-ip",
+            "fake-ip-range": "198.18.0.1/16",
+            "fake-ip-filter": list(REAL_IP_DOMAINS),
+            "default-nameserver": ["223.5.5.5", "119.29.29.29"],
+            "nameserver": [
+                "https://dns.alidns.com/dns-query",
+                "https://doh.pub/dns-query",
+            ],
+        },
+        "proxy-providers": {STASH_PROVIDER_NAME: subscription},
+        "proxy-groups": groups,
+        "rule-providers": providers,
+        "rules": route_rules,
+    }
+    body = _yaml(data)
+    body = body.replace(
+        "proxy-providers:\n",
+        "# 在下面的 url 填写机场提供的 Clash / Mihomo 节点订阅；第一份默认启用。\n"
+        "proxy-providers:\n",
+        1,
+    )
+    second = {
+        "Subscription2": {
+            **subscription,
+            "path": "./proxy_providers/Subscription2.yaml",
+        }
+    }
+    optional_subscription = "".join(
+        f"  # {line}\n" for line in _yaml(second).splitlines()
+    )
+    body = body.replace(
+        "proxy-groups:\n",
+        "  # 多订阅：取消下方 Subscription2 整块注释并填写；更多订阅复制整块，名称与 path 必须唯一。\n"
+        f"  # {NODE_GROUP_NAME} 与地区组使用 include-all-providers，会自动纳入全部订阅，无需修改策略组。\n"
+        + optional_subscription
+        + f"\n# {NODE_GROUP_NAME} 排在 Proxy 前；Proxy 通过它进入全部真实节点。\n"
+        "proxy-groups:\n",
+        1,
+    )
+    body = body.replace(
+        "rule-providers:\n",
+        "# Lane 远程规则：同一逻辑规则集的 Domain 与 IP 使用 classical 格式写在一起。\n"
+        "rule-providers:\n",
+        1,
+    )
+    body = body.replace(
+        "rules:\n",
+        "# 从上到下首匹配；CN IP 不使用 no-resolve，随后由本地 GEOIP,CN 故障兜底。\n"
+        "rules:\n",
+        1,
+    )
+    return PROFILE_HEADER + LOCAL_PROFILE_NOTICE + SERVICE_GROUP_NOTICE + "\n" + body
+
+
 def render_all(
     root: Path,
     project: dict[str, Any],
@@ -953,7 +1129,12 @@ def render_all(
                 content = render_egern_ruleset(ruleset)
             else:
                 for rule in ruleset.rules:
-                    line = render_rule(rule, target, ruleset.no_resolve, ruleset.policy)
+                    # Mihomo applies no-resolve to the RULE-SET reference in the
+                    # main profile, keeping the remote classical payload reusable.
+                    payload_no_resolve = ruleset.no_resolve and target != "flclash"
+                    line = render_rule(
+                        rule, target, payload_no_resolve, ruleset.policy
+                    )
                     if line is None:
                         skipped_count += 1
                     else:
@@ -1021,7 +1202,7 @@ def render_all(
 
     renderers = {
         "stash": _stash_config, "loon": _loon_config, "surge": _surge_config,
-        "qx": _qx_config, "egern": _egern_config,
+        "qx": _qx_config, "egern": _egern_config, "flclash": _flclash_config,
     }
     for target in TARGETS:
         content = (_shadowrocket_config(project, render_policies) if target == "shadowrocket"

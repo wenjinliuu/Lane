@@ -355,6 +355,11 @@ def test_validator_rejects_wrong_cn_policy(target, tmp_path):
             "RULE-SET,apple-cn-domain,DIRECT",
             "RULE-SET,apple-cn-domain,Proxy",
         )
+    elif target == "flclash":
+        text = text.replace(
+            "RULE-SET,apple-cn,DIRECT",
+            "RULE-SET,apple-cn,Proxy",
+        )
     elif target == "egern":
         # Preserve the required header/notice strings when mutating just the rule.
         original = next(rule for rule in text.splitlines() if "apple-cn.yaml" in rule)
@@ -418,7 +423,11 @@ def test_validator_rejects_cn_ip_before_service_rules(target, tmp_path):
     path.write_text(text)
     if target == "loon":
         (tmp_path / "dist/loon/Lane_loon.conf").write_text(text)
-    expected_error = "rule-provider settings|URLs or order" if target == "stash" else "URLs or order"
+    expected_error = (
+        "rule-provider settings|URLs or order"
+        if target in {"stash", "flclash"}
+        else "URLs or order"
+    )
     with pytest.raises(ValidationError, match=expected_error):
         validate_generated(tmp_path, load_project_config(ROOT))
 

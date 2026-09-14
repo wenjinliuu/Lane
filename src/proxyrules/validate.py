@@ -122,6 +122,7 @@ def _validate_subscription_template(target: str, text: str) -> None:
         "loon": f"# Subscription2 = {SUBSCRIPTION_PLACEHOLDER}\n",
         "surge": f"# Subscription2 = select,policy-path={SUBSCRIPTION_PLACEHOLDER},",
         "egern": f"    # - {SUBSCRIPTION_PLACEHOLDER}\n",
+        "flclash": f"  # Subscription2:\n  #   type: http\n  #   url: {SUBSCRIPTION_PLACEHOLDER}\n",
     }
     if optional_templates[target] not in text:
         raise ValidationError(f"{target}: a commented second subscription template is required")
@@ -236,6 +237,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                     f"{target}: compatibility profile differs from preferred profile"
                 )
     stash = yaml.safe_load(texts["stash"])
+    flclash = yaml.safe_load(texts["flclash"])
     expected_groups = (
         {item["name"] for item in config["policies"]["base_groups"]}
         | {item["auto_name"] for item in config["policies"]["regions"]}
@@ -245,6 +247,11 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     stash_groups = {entry["name"] for entry in stash.get("proxy-groups", [])}
     if stash_groups != expected_groups | {NODE_GROUP_NAME}:
         raise ValidationError("Stash strategy groups do not match the policy manifest")
+    flclash_groups = {
+        entry["name"] for entry in flclash.get("proxy-groups", [])
+    }
+    if flclash_groups != expected_groups | {NODE_GROUP_NAME}:
+        raise ValidationError("FlClash strategy groups do not match the policy manifest")
 
     rulesets = config["rulesets"]["rulesets"]
     expected_rule_ids = _active_rule_ids(root, rulesets)
@@ -280,6 +287,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             raise ValidationError(f"{service} must default to PROXY on Shadowrocket")
 
     policies = config["policies"]
+    node_interval = config["project"]["updates"]["node_interval"]
     expected_order = [BASE_GROUP_NAME, *policies["service_groups"], *[
         name for region in policies["regions"]
         for name in (region["auto_name"], region["manual_name"])
@@ -301,7 +309,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                 or int.from_bytes(data[16:20], "big") != 144
                 or int.from_bytes(data[20:24], "big") != 144):
             raise ValidationError(f"Policy icon must be a 144x144 PNG: {path}")
-    for target in ("stash", "loon", "qx", "egern"):
+    for target in ("stash", "loon", "qx", "egern", "flclash"):
         for name, url in icon_urls.items():
             # Loon's 我的节点 is a Remote Filter rather than an icon-capable
             # visible policy group. QX folds raw nodes directly into 代理选择 and
@@ -350,6 +358,72 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     for service in policies["service_groups"]:
         if stash_by_name[service].get("proxies") != options:
             raise ValidationError(f"Stash {service} options differ from the manifest")
+
+    flclash_by_name = {
+        group["name"]: group for group in flclash["proxy-groups"]
+    }
+    if list(flclash_by_name) != stash_order:
+        raise ValidationError(
+            "FlClash groups must be 我的节点, Proxy, services, then regions"
+        )
+    flclash_provider = flclash.get("proxy-providers", {}).get(
+        STASH_PROVIDER_NAME, {}
+    )
+    if (
+        list(flclash.get("proxy-providers", {})) != [STASH_PROVIDER_NAME]
+        or flclash_provider.get("type") != "http"
+        or flclash_provider.get("url") != SUBSCRIPTION_PLACEHOLDER
+        or flclash_provider.get("path")
+        != f"./proxy_providers/{STASH_PROVIDER_NAME}.yaml"
+        or flclash_provider.get("interval") != node_interval
+    ):
+        raise ValidationError(
+            "FlClash must contain one editable HTTP proxy-provider template"
+        )
+    flclash_node_group = flclash_by_name[NODE_GROUP_NAME]
+    if (
+        flclash_node_group.get("type") != "select"
+        or flclash_node_group.get("include-all-providers") is not True
+        or flclash_node_group.get("proxies")
+        or flclash_node_group.get("use")
+    ):
+        raise ValidationError(
+            "FlClash 我的节点 must include every proxy provider"
+        )
+    flclash_proxy_group = flclash_by_name[BASE_GROUP_NAME]
+    if (
+        flclash_proxy_group.get("type") != "select"
+        or flclash_proxy_group.get("proxies")
+        != [NODE_GROUP_NAME, *auto_names]
+        or flclash_proxy_group.get("include-all-providers")
+        or flclash_proxy_group.get("use")
+    ):
+        raise ValidationError(
+            "FlClash Proxy must expose 我的节点 before regional Auto groups"
+        )
+    for name in stash_order:
+        if flclash_by_name[name].get("icon") != icon_urls[name]:
+            raise ValidationError(
+                f"FlClash {name} uses the wrong self-hosted icon"
+            )
+    for service in policies["service_groups"]:
+        if flclash_by_name[service].get("proxies") != options:
+            raise ValidationError(
+                f"FlClash {service} options differ from the manifest"
+            )
+    for region in policies["regions"]:
+        for name, group_type in (
+            (region["auto_name"], "url-test"),
+            (region["manual_name"], "select"),
+        ):
+            group = flclash_by_name[name]
+            if (
+                group.get("type") != group_type
+                or group.get("include-all-providers") is not True
+                or group.get("filter")
+                != filters["regions"][region["name"]]
+            ):
+                raise ValidationError(f"Invalid FlClash region group: {name}")
 
     loon_groups_by_name = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
@@ -405,7 +479,6 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     ]]
     if list(surge_groups) != surge_order:
         raise ValidationError("surge: invalid hidden pool, service or region group order")
-    node_interval = config["project"]["updates"]["node_interval"]
     if surge_groups["Subscription1"] != (
         f"select,policy-path={SUBSCRIPTION_PLACEHOLDER},update-interval={node_interval},hidden=true"
     ):
@@ -580,6 +653,35 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         )
     if stash.get("rule-providers") != expected_stash_providers:
         raise ValidationError("Stash rule-provider settings differ from generated payloads")
+    expected_flclash_providers: dict[str, dict[str, Any]] = {}
+    expected_flclash_routes: list[str] = []
+    for rule_id in expected_rule_ids:
+        entry = entries_by_id[rule_id]
+        expected_flclash_providers[rule_id] = {
+            "type": "http",
+            "behavior": "classical",
+            "format": "text",
+            "url": f"{raw_base}/dist/flclash/{RULES_DIR}/{rule_id}.list",
+            "path": f"./rule_providers/{rule_id}.list",
+            "interval": rule_interval,
+        }
+        no_resolve = ",no-resolve" if entry.get("no_resolve") is True else ""
+        expected_flclash_routes.append(
+            f"RULE-SET,{rule_id},{entry['policy']}{no_resolve}"
+        )
+    if flclash.get("rule-providers") != expected_flclash_providers:
+        raise ValidationError(
+            "FlClash rule-provider settings differ from the manifest"
+        )
+    if flclash.get("rules") != expected_flclash_routes + [
+        "GEOIP,CN,DIRECT", "MATCH,Final"
+    ]:
+        raise ValidationError(
+            "FlClash routing policies or priority differ from the manifest"
+        )
+    cn_ip_index = expected_rule_ids.index("cn-ip")
+    if expected_flclash_routes[cn_ip_index].endswith(",no-resolve"):
+        raise ValidationError("FlClash CN IP must allow DNS resolution")
     for target, text in texts.items():
         _validate_subscription_template(target, text)
         if "# Last updated: " not in text:
@@ -590,6 +692,10 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         ]
         if target == "stash":
             actual_urls = [entry["url"] for entry in stash["rule-providers"].values()]
+        elif target == "flclash":
+            actual_urls = [
+                entry["url"] for entry in flclash["rule-providers"].values()
+            ]
         elif target == "egern":
             actual_urls = [entry["rule_set"]["match"] for entry in egern["rules"] if "rule_set" in entry]
         elif target == "qx":
@@ -617,6 +723,20 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                 "GEOIP,CN,DIRECT", "MATCH,Final"
             ]:
                 raise ValidationError("Stash routing policies or priority differ from the manifest")
+        elif target == "flclash":
+            actual_policies = [
+                line.split(",")[2].strip()
+                for line in flclash["rules"]
+                if line.startswith("RULE-SET,")
+            ]
+            if actual_policies != expected_policy_list:
+                raise ValidationError(
+                    "FlClash routing policies differ from the manifest"
+                )
+            if flclash["rules"][-2:] != [
+                "GEOIP,CN,DIRECT", "MATCH,Final"
+            ]:
+                raise ValidationError("FlClash final routing rules are invalid")
         elif target == "egern":
             actual_policies = [entry["rule_set"]["policy"] for entry in egern["rules"] if "rule_set" in entry]
             if actual_policies != expected_policy_list:

@@ -24,7 +24,9 @@ from proxyrules.validate import ValidationError, _section, validate_generated
 ROOT = Path(__file__).resolve().parents[1]
 
 
-@pytest.mark.parametrize("target", ["stash", "loon", "shadowrocket", "surge"])
+@pytest.mark.parametrize(
+    "target", ["stash", "loon", "shadowrocket", "surge", "flclash"]
+)
 def test_text_rules_preserve_exact_suffix_and_no_resolve(target):
     assert render_rule(Rule("full", "geotest.lbkrs.com"), target) == "DOMAIN,geotest.lbkrs.com"
     assert render_rule(Rule("domain", "skytigris.cn"), target) == "DOMAIN-SUFFIX,skytigris.cn"
@@ -47,6 +49,7 @@ def test_qx_native_rules_have_policies(kind, value, expected):
 def test_regex_is_never_converted_to_url_regex():
     rule = Rule("regexp", r"^example\d+\.com$")
     assert render_rule(rule, "stash") == "DOMAIN-REGEX," + rule.value
+    assert render_rule(rule, "flclash") == "DOMAIN-REGEX," + rule.value
     for target in ("surge", "qx", "loon", "shadowrocket"):
         assert render_rule(rule, target) is None
     ruleset = CompiledRuleset("test", "Test", "Manual", (rule,))
@@ -127,6 +130,63 @@ def test_stash_uses_specialized_payloads_without_changing_rule_semantics(tmp_pat
     ]
 
 
+def test_flclash_keeps_domain_and_ip_in_one_classical_provider(tmp_path):
+    config = load_project_config(ROOT)
+    ruleset = CompiledRuleset(
+        "sample",
+        "Sample",
+        "Brokerage",
+        (
+            Rule("domain", "example.com"),
+            Rule("regexp", r"^edge\d+\.example\.net$"),
+            Rule("ipcidr", "192.0.2.0/24"),
+            Rule("ipcidr6", "2001:db8::/32"),
+        ),
+        True,
+    )
+    render_all(
+        tmp_path,
+        config["project"],
+        config["policies"],
+        config["icons"],
+        [ruleset],
+    )
+    profile = yaml.safe_load(
+        (tmp_path / "dist/flclash/Lane_flclash.yaml").read_text()
+    )
+    assert profile["rule-providers"] == {
+        "sample": {
+            "type": "http",
+            "behavior": "classical",
+            "format": "text",
+            "url": (
+                "https://raw.githubusercontent.com/wenjinliuu/Lane/main/"
+                "dist/flclash/rules/sample.list"
+            ),
+            "path": "./rule_providers/sample.list",
+            "interval": config["project"]["updates"]["rule_interval"],
+        }
+    }
+    assert profile["rules"] == [
+        "RULE-SET,sample,Brokerage,no-resolve",
+        "GEOIP,CN,DIRECT",
+        "MATCH,Final",
+    ]
+    payload = [
+        line
+        for line in (
+            tmp_path / "dist/flclash/rules/sample.list"
+        ).read_text().splitlines()
+        if line and not line.startswith("#")
+    ]
+    assert payload == [
+        "DOMAIN-SUFFIX,example.com",
+        r"DOMAIN-REGEX,^edge\d+\.example\.net$",
+        "IP-CIDR,192.0.2.0/24",
+        "IP-CIDR6,2001:db8::/32",
+    ]
+
+
 def test_shadowrocket_maps_shared_proxy_rule_policy_to_builtin_proxy(tmp_path):
     config = load_project_config(ROOT)
     ruleset = CompiledRuleset(
@@ -195,13 +255,26 @@ def test_subscription_templates_and_local_update_guidance():
     assert not (ROOT / "dist" / "qx" / "server-placeholder.conf").exists()
 
 
-def test_proxy_exposes_regional_auto_groups_and_node_pool_on_five_clients():
+def test_proxy_exposes_regional_auto_groups_and_node_pool_on_supported_clients():
     auto_names = ["US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto"]
 
     stash = yaml.safe_load((ROOT / "dist/stash/Lane_stash.yaml").read_text())
     stash_groups = {group["name"]: group for group in stash["proxy-groups"]}
     assert stash_groups[NODE_GROUP_NAME]["include-all"] is True
     assert stash_groups[BASE_GROUP_NAME]["proxies"] == [NODE_GROUP_NAME, *auto_names]
+
+    flclash = yaml.safe_load(
+        (ROOT / "dist/flclash/Lane_flclash.yaml").read_text()
+    )
+    flclash_groups = {
+        group["name"]: group for group in flclash["proxy-groups"]
+    }
+    assert flclash_groups[NODE_GROUP_NAME]["include-all-providers"] is True
+    assert flclash_groups[BASE_GROUP_NAME]["proxies"] == [
+        NODE_GROUP_NAME, *auto_names
+    ]
+    for name in auto_names:
+        assert flclash_groups[name]["include-all-providers"] is True
 
     loon_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
@@ -397,7 +470,8 @@ def test_validator_rejects_broken_remote_rule_reference(tmp_path):
 
 def test_canonical_names_and_new_repository_urls():
     expected = {"Lane_stash.yaml", "Lane_loon.lcf", "Lane_shadowrocket.conf",
-                "Lane_surge.conf", "Lane_qx.conf", "Lane_egern.yaml"}
+                "Lane_surge.conf", "Lane_qx.conf", "Lane_egern.yaml",
+                "Lane_flclash.yaml"}
     assert set(CONFIG_FILENAMES.values()) == expected
     config = load_project_config(ROOT)
     assert config["project"]["project"]["name"] == "Lane"
@@ -563,6 +637,8 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
     ("surge", "Google_Search.png", "Missing.png", "missing self-hosted icon"),
     ("stash", "  include-all: true\n",
      "  include-all: false\n", "Stash 我的节点"),
+    ("flclash", "  include-all-providers: true\n",
+     "  include-all-providers: false\n", "FlClash 我的节点"),
     ("shadowrocket", "Final = select,PROXY,",
      "Final = select,Proxy,", "must default to PROXY"),
     ("qx", "excluded_routes = 224.0.0.0/4, 239.255.255.250/32",

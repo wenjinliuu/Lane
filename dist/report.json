@@ -42,7 +42,8 @@
       "china": 3,
       "proxy": 158
     },
-    "egern": {}
+    "egern": {},
+    "flclash": {}
   },
   "notes": {
     "stash": "Domain and CIDR payloads use specialized rule-provider behaviors; DOMAIN-REGEX and other non-specialized rules remain classical. A dedicated 我的节点 group includes every provider, while Proxy keeps regional groups visible.",
@@ -50,6 +51,7 @@
     "shadowrocket": "DOMAIN-REGEX is omitted for compatibility. Service groups follow the built-in PROXY policy (the node picked on the home screen) instead of a generated Proxy group; icons are omitted because Shadowrocket has no policy-group icon parameter.",
     "surge": "DOMAIN-REGEX is unsupported and omitted. Region automation uses native Smart groups over the visible 我的节点 pool; visible groups carry icon-url.",
     "qx": "Native host/ip rules with explicit policies. DOMAIN-REGEX is omitted; Surge-style no-resolve is not emitted. QX uses native domain/IP matching priorities. System DNS is used by default, so no server = system entry is emitted. excluded_routes stays IPv4-only. The official complete-profile section skeleton is preserved. server_remote and all unused rewrite, script, HTTP backend, and MitM sections remain empty.",
-    "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support. Proxy reaches raw nodes through the dedicated 我的节点 subscription group."
+    "egern": "Native YAML rule sets preserve domain regex and no_resolve. Requires a current Egern release with urls and flatten support. Proxy reaches raw nodes through the dedicated 我的节点 subscription group.",
+    "flclash": "Native Mihomo YAML for FlClash on Android. A local proxy-provider keeps the private node subscription separate from Lane's remote classical rule-providers. All logical Domain/IP rules stay together in one file per ruleset; Proxy exposes 我的节点 before the five regional Auto groups."
   }
 }

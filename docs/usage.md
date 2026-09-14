@@ -15,6 +15,8 @@ Loon 推荐下载 `.lcf` 完整配置，配置内优先引用 `.lsr` 规则。�
 - Surge 托管配置需要先创建普通本地副本，再填写 `policy-path`。
 - Quantumult X 的 `[server_remote]` 故意保持为空，订阅从 App 的节点资源页面添加。
 - Shadowrocket 直接使用 App 内已有订阅，不在 Lane 配置中提供订阅模板。
+- FlClash 下载 YAML 后，使用文本编辑器替换
+  `proxy-providers → Subscription1 → url` 的占位文字，再导入为本地配置。
 
 ## 添加多份订阅
 
@@ -26,8 +28,10 @@ Loon 推荐下载 `.lcf` 完整配置，配置内优先引用 `.lsr` 规则。�
 | Quantumult X | 在 `设置 → 节点 → 节点资源` 中继续添加 |
 | Egern | 在 `我的节点 → urls` 下逐行追加 |
 | Shadowrocket | 在 App 内继续添加 |
+| FlClash | 取消 `Subscription2` 整块注释并填写 `url`；复制更多订阅时名称和 `path` 必须唯一 |
 
-取消注释时要保留 YAML 缩进，不要把多个订阅地址拼进同一个 URL 字段。Surge 和 Egern
+取消注释时要保留 YAML 缩进，不要把多个订阅地址拼进同一个 URL 字段。FlClash 的
+`我的节点` 与地区组会通过 `include-all-providers` 自动纳入新增订阅，无需修改策略组。Surge 和 Egern
 可能按节点名称去重，多份订阅尽量避免使用完全相同的节点名称。
 
 ## 策略组怎么选
@@ -73,6 +77,13 @@ Lane 在 QX 中使用 `代理选择`，功能与其他客户端的 `Proxy` 对�
 
 通常是远程完整配置覆盖了本地修改。恢复备份后，将完整配置保存为本地副本；日常只更新
 节点订阅和远程规则。Stash 也可以使用 Override 单独添加私人 proxy provider。
+
+### FlClash 应该填写哪种订阅？
+
+填写机场提供的 Clash、Clash Meta 或 Mihomo 节点订阅。下载的 Lane YAML 是本地主配置，
+用户节点由 `proxy-providers` 独立更新；Lane 的 Domain/IP 规则由远程 `rule-providers`
+独立更新。不要把 V2Ray/Base64 专用订阅直接当作 Mihomo Provider，也不要把填写了私人
+Token 的本地配置上传到公开仓库。
 
 ### Surge 出现大量 HTTPS 或 TLS 失败
 

@@ -84,6 +84,46 @@ def test_stash_all_nodes_automatically_includes_every_provider():
         assert group["include-all"] is True
 
 
+def test_flclash_provider_url_is_local_and_rules_remain_remote():
+    text = _profile("flclash")
+    original = yaml.safe_load(text)
+    provider = original["proxy-providers"][STASH_PROVIDER_NAME]
+    assert provider["url"] == SUBSCRIPTION_PLACEHOLDER
+    assert provider["type"] == "http"
+    assert provider["path"] == "./proxy_providers/Subscription1.yaml"
+    assert provider["interval"] == NODE_INTERVAL
+
+    match = re.search(r"(?m)^  # Subscription2:\n(?:  # .*\n)+", text)
+    assert match is not None
+    block = match.group()
+    enabled = "".join(
+        line.replace("  # ", "  ", 1)
+        for line in block.splitlines(keepends=True)
+    ).replace(SUBSCRIPTION_PLACEHOLDER, URLS[1])
+    edited = text.replace(
+        f"url: {SUBSCRIPTION_PLACEHOLDER}", f"url: {URLS[0]}", 1
+    ).replace(block, enabled)
+    parsed = yaml.safe_load(edited)
+    assert list(parsed["proxy-providers"]) == ["Subscription1", "Subscription2"]
+    assert parsed["proxy-providers"]["Subscription1"]["url"] == URLS[0]
+    assert parsed["proxy-providers"]["Subscription2"]["url"] == URLS[1]
+    assert (
+        parsed["proxy-providers"]["Subscription2"]["path"]
+        == "./proxy_providers/Subscription2.yaml"
+    )
+    groups = {group["name"]: group for group in parsed["proxy-groups"]}
+    assert groups[NODE_GROUP_NAME]["include-all-providers"] is True
+    for name in ("US Auto", "JP Auto", "HK Auto", "TW Auto", "SG Auto"):
+        assert groups[name]["include-all-providers"] is True
+    assert all(
+        value["type"] == "http"
+        and value["behavior"] == "classical"
+        and value["format"] == "text"
+        and "/dist/flclash/rules/" in value["url"]
+        for value in parsed["rule-providers"].values()
+    )
+
+
 def test_loon_additional_subscriptions_do_not_require_filter_changes():
     text = _profile("loon")
     assert _section(text, "Remote Proxy") == [f"Subscription1 = {SUBSCRIPTION_PLACEHOLDER}"]

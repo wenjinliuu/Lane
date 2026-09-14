@@ -75,7 +75,7 @@ def audit_rule_redundancy(
     The audit mirrors the relationships that the former profile-residual pass
     attempted to remove, but never mutates a ruleset. Parent-suffix coverage is
     deliberately labelled as a candidate because apex and single-label suffix
-    semantics are not documented equally across all six clients. Keyword,
+    semantics are not documented equally across all seven clients. Keyword,
     regular-expression and IP containment are not inferred.
     """
 

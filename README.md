@@ -1,10 +1,12 @@
 # Lane
 
-一套面向 Stash、Loon、Shadowrocket、Surge、Quantumult X 和 Egern 的分流配置。
-Lane 使用同一份规则清单生成六端配置，提供地区自动选点、服务分类、中国大陆直连与
-IPv4/IPv6 兜底。项目只负责分流，**不提供节点或订阅转换服务**。
+一套同时面向 Apple 与 Android 平台的分流配置。Lane 使用同一份规则清单生成七端配置，
+提供地区自动选点、服务分类、中国大陆直连与 IPv4/IPv6 兜底。项目只负责分流，
+**不提供节点或订阅转换服务**。
 
 ## 下载配置
+
+### iOS / iPadOS
 
 | 客户端 | 配置文件 |
 | --- | --- |
@@ -15,8 +17,15 @@ IPv4/IPv6 兜底。项目只负责分流，**不提供节点或订阅转换服�
 | Quantumult X | [Lane_qx.conf](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/qx/Lane_qx.conf) |
 | Egern | [Lane_egern.yaml](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/egern/Lane_egern.yaml) |
 
+### Android
+
+| 客户端 | 配置文件 |
+| --- | --- |
+| [FlClash](https://github.com/chen08209/FlClash) | [Lane_flclash.yaml](https://raw.githubusercontent.com/wenjinliuu/Lane/main/dist/flclash/Lane_flclash.yaml) |
+
 > 导入前请先保存为本地配置。不要把已经填入私人订阅地址的配置上传到公开仓库。
 > Loon 现主推原生 `.lcf` 配置与 `.lsr` 规则；旧 `.conf` / `.list` 地址继续兼容。
+> FlClash 请下载 YAML 后用文本编辑器替换订阅占位，再作为本地配置导入。
 
 ## 首次使用
 
@@ -32,8 +41,9 @@ IPv4/IPv6 兜底。项目只负责分流，**不提供节点或订阅转换服�
 | Quantumult X | 导入配置后，在 App 的 `设置 → 节点 → 节点资源` 中添加 |
 | Egern | `我的节点 → urls` |
 | Shadowrocket | 直接使用 App 内已有的节点订阅 |
+| FlClash（Android） | `proxy-providers → Subscription1 → url`，填写 Clash / Mihomo 订阅 |
 
-不同客户端支持的订阅格式并不完全相同，同一条订阅链接不保证六端通用。多订阅设置、
+不同客户端支持的订阅格式并不完全相同，同一条订阅链接不保证七端通用。多订阅设置、
 配置升级和常见问题见 [使用指南](docs/usage.md)。
 
 ## 主要功能
@@ -52,7 +62,7 @@ IPv4/IPv6 兜底。项目只负责分流，**不提供节点或订阅转换服�
 
 | 客户端 | 基础代理入口 |
 | --- | --- |
-| Stash / Surge / Egern | `我的节点` 汇总真实节点，`Proxy` 先显示我的节点，再显示地区 Auto |
+| Stash / Surge / Egern / FlClash | `我的节点` 汇总真实节点，`Proxy` 先显示我的节点，再显示地区 Auto |
 | Loon | `Proxy` 组合地区 Auto 与全部节点筛选 |
 | Quantumult X | 使用 `代理选择`；QX 的 `proxy` 是内置保留名，因此不能建立同名 `Proxy` 组 |
 | Shadowrocket | 使用 App 内置 `PROXY`，不额外生成基础代理组 |
@@ -89,7 +99,7 @@ Lane 使用从上到下的首匹配规则。AppleCN、中国域名等已确认�
 
 ### Domain 和 IP 为什么有时分开？
 
-同一逻辑规则集里的 Domain/IP，在 Loon、Surge、Shadowrocket、Quantumult X 和 Egern
+同一逻辑规则集里的 Domain/IP，在 Loon、Surge、Shadowrocket、Quantumult X、Egern 和 FlClash
 可以写在同一个文件；Stash 为使用低占用的 `domain`、`ipcidr`、`classical` provider，
 会生成对应的专用载荷。
 

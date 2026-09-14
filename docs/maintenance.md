@@ -23,8 +23,8 @@
 2. 合并声明的自定义规则和文本 / CIDR 数据源。
 3. 按“规则类型 + 规范值”删除同一逻辑规则集内的精确重复。
 4. 保留父后缀覆盖和跨规则集覆盖候选，只在 `dist/metadata.json` 中报告。
-5. 将同一逻辑规则转换为六个客户端的原生格式，并写入 `dist/<client>/rules/`。
-6. 生成六端主配置、元数据、转换报告和 CN-IP 校验报告。
+5. 将同一逻辑规则转换为七个客户端的原生格式，并写入 `dist/<client>/rules/`。
+6. 生成七端主配置、元数据、转换报告和 CN-IP 校验报告。
 
 Google、Microsoft 等归属主要由 v2fly 上游分类决定。Lane 在 `config/rulesets.yaml` 中选择
 和组合分类、应用 `@cn` 等属性、增加最小补充项，再确定策略与优先顺序；不要凭品牌名称
@@ -123,6 +123,26 @@ AppleCN 保留，因为其大陆 CDN 例外具有独立路由意义。
 
 - 不生成 `我的节点` 或 `Proxy` 基础组；服务组使用 App 内置 `PROXY`。
 - 不写策略组图标参数。
+
+### FlClash（Android）
+
+- 输出原生 Mihomo YAML，不复用或改名 Stash 产物。
+- `Subscription1` 是用户在本地填写的 HTTP `proxy-provider`；订阅地址、Token 和节点不得
+  进入仓库。`我的节点` 与地区组使用 `include-all-providers` 自动纳入全部代理集。
+- `Proxy` 先列 `我的节点`，再列五个地区 Auto；服务组和地区筛选保持共享策略语义。
+- 每个逻辑规则集生成一个 `classical` + `text` 远程 `rule-provider`，Domain/IP 保持在同一
+  文件内；只有 Stash 为专用 behavior 拆分载荷。
+- `no-resolve` 写在主配置的 `RULE-SET` 引用上；LAN 等声明了该语义的规则集保留，CN IP
+  不得添加。末尾保持 `CN IP → GEOIP,CN → MATCH,Final`。
+- 完整 YAML 只作为本地模板。FlClash 尚不能保证远程刷新整份配置时保留用户自行填写的
+  `proxy-providers`，因此 README 不得将其宣传为无损托管配置。
+
+兼容性依据以 [FlClash 官方仓库](https://github.com/chen08209/FlClash) 当前使用的 Mihomo
+内核为准，并对照 Mihomo 官方的
+[`proxy-providers`](https://wiki.metacubex.one/config/proxy-providers/)、
+[`proxy-groups`](https://wiki.metacubex.one/config/proxy-groups/) 和
+[`rule-providers`](https://wiki.metacubex.one/config/rule-providers/) 语法维护。社区模板仅用于
+交叉比较常见写法，不作为 Lane 的语法权威或运行时依赖。
 
 ## 节点与图标
 
