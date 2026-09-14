@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "lane-routing"
 version = "0.2.0"
-description = "Lane: one routing manifest for Stash, Loon, Shadowrocket, Surge, Quantumult X and Egern."
+description = "Lane: one routing manifest for eight Apple, Android and desktop proxy clients."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}

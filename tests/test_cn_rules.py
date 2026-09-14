@@ -16,7 +16,7 @@ from proxyrules.cn_validation import _subtract, compare_cn_coverage
 from proxyrules.compiler import compile_rulesets
 from proxyrules.config import ConfigError, load_project_config, validate_config
 from proxyrules.render import (
-    CONFIG_FILENAMES, RULES_DIR, TARGETS, rule_filename,
+    CONFIG_FILENAMES, MIHOMO_TARGETS, RULES_DIR, TARGETS, rule_filename,
 )
 from proxyrules.text_sources import parse_dnsmasq_domains, parse_text_source
 from proxyrules.upstream import UpstreamError, fetch_text_source
@@ -355,7 +355,7 @@ def test_validator_rejects_wrong_cn_policy(target, tmp_path):
             "RULE-SET,apple-cn-domain,DIRECT",
             "RULE-SET,apple-cn-domain,Proxy",
         )
-    elif target == "flclash":
+    elif target in MIHOMO_TARGETS:
         text = text.replace(
             "RULE-SET,apple-cn,DIRECT",
             "RULE-SET,apple-cn,Proxy",
@@ -425,7 +425,7 @@ def test_validator_rejects_cn_ip_before_service_rules(target, tmp_path):
         (tmp_path / "dist/loon/Lane_loon.conf").write_text(text)
     expected_error = (
         "rule-provider settings|URLs or order"
-        if target in {"stash", "flclash"}
+        if target == "stash" or target in MIHOMO_TARGETS
         else "URLs or order"
     )
     with pytest.raises(ValidationError, match=expected_error):

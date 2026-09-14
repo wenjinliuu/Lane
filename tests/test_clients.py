@@ -13,7 +13,7 @@ from proxyrules.render import (
     BASE_GROUP_NAME, CONFIG_COMPAT_FILENAMES, CONFIG_FILENAMES,
     EGERN_RULE_FIELDS, GENERATED_HEADER,
     LOON_CN_REGION_RULE_CONTENT, LOON_CN_REGION_RULE_ID,
-    NODE_GROUP_NAME, QX_BASE_GROUP_NAME, RULES_DIR, QX_REQUIRED_EMPTY_SECTIONS,
+    MIHOMO_TARGETS, NODE_GROUP_NAME, QX_BASE_GROUP_NAME, RULES_DIR, QX_REQUIRED_EMPTY_SECTIONS,
     QX_REQUIRED_SECTIONS,
     STASH_PROVIDER_NAME, SUBSCRIPTION_PLACEHOLDER, TARGETS,
     render_all, render_egern_ruleset, render_rule, rule_filename, rule_filenames,
@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.mark.parametrize(
-    "target", ["stash", "loon", "shadowrocket", "surge", "flclash"]
+    "target", ["stash", "loon", "shadowrocket", "surge", *MIHOMO_TARGETS]
 )
 def test_text_rules_preserve_exact_suffix_and_no_resolve(target):
     assert render_rule(Rule("full", "geotest.lbkrs.com"), target) == "DOMAIN,geotest.lbkrs.com"
@@ -49,7 +49,8 @@ def test_qx_native_rules_have_policies(kind, value, expected):
 def test_regex_is_never_converted_to_url_regex():
     rule = Rule("regexp", r"^example\d+\.com$")
     assert render_rule(rule, "stash") == "DOMAIN-REGEX," + rule.value
-    assert render_rule(rule, "flclash") == "DOMAIN-REGEX," + rule.value
+    for target in MIHOMO_TARGETS:
+        assert render_rule(rule, target) == "DOMAIN-REGEX," + rule.value
     for target in ("surge", "qx", "loon", "shadowrocket"):
         assert render_rule(rule, target) is None
     ruleset = CompiledRuleset("test", "Test", "Manual", (rule,))
@@ -130,7 +131,10 @@ def test_stash_uses_specialized_payloads_without_changing_rule_semantics(tmp_pat
     ]
 
 
-def test_flclash_keeps_domain_and_ip_in_one_classical_provider(tmp_path):
+@pytest.mark.parametrize("target", MIHOMO_TARGETS)
+def test_mihomo_clients_keep_domain_and_ip_in_one_classical_provider(
+    tmp_path, target
+):
     config = load_project_config(ROOT)
     ruleset = CompiledRuleset(
         "sample",
@@ -152,7 +156,7 @@ def test_flclash_keeps_domain_and_ip_in_one_classical_provider(tmp_path):
         [ruleset],
     )
     profile = yaml.safe_load(
-        (tmp_path / "dist/flclash/Lane_flclash.yaml").read_text()
+        (tmp_path / "dist" / target / CONFIG_FILENAMES[target]).read_text()
     )
     assert profile["rule-providers"] == {
         "sample": {
@@ -161,7 +165,7 @@ def test_flclash_keeps_domain_and_ip_in_one_classical_provider(tmp_path):
             "format": "text",
             "url": (
                 "https://raw.githubusercontent.com/wenjinliuu/Lane/main/"
-                "dist/flclash/rules/sample.list"
+                f"dist/{target}/rules/sample.list"
             ),
             "path": "./rule_providers/sample.list",
             "interval": config["project"]["updates"]["rule_interval"],
@@ -175,7 +179,7 @@ def test_flclash_keeps_domain_and_ip_in_one_classical_provider(tmp_path):
     payload = [
         line
         for line in (
-            tmp_path / "dist/flclash/rules/sample.list"
+            tmp_path / "dist" / target / "rules/sample.list"
         ).read_text().splitlines()
         if line and not line.startswith("#")
     ]
@@ -263,18 +267,15 @@ def test_proxy_exposes_regional_auto_groups_and_node_pool_on_supported_clients()
     assert stash_groups[NODE_GROUP_NAME]["include-all"] is True
     assert stash_groups[BASE_GROUP_NAME]["proxies"] == [NODE_GROUP_NAME, *auto_names]
 
-    flclash = yaml.safe_load(
-        (ROOT / "dist/flclash/Lane_flclash.yaml").read_text()
-    )
-    flclash_groups = {
-        group["name"]: group for group in flclash["proxy-groups"]
-    }
-    assert flclash_groups[NODE_GROUP_NAME]["include-all-providers"] is True
-    assert flclash_groups[BASE_GROUP_NAME]["proxies"] == [
-        NODE_GROUP_NAME, *auto_names
-    ]
-    for name in auto_names:
-        assert flclash_groups[name]["include-all-providers"] is True
+    for target in MIHOMO_TARGETS:
+        profile = yaml.safe_load(
+            (ROOT / "dist" / target / CONFIG_FILENAMES[target]).read_text()
+        )
+        groups = {group["name"]: group for group in profile["proxy-groups"]}
+        assert groups[NODE_GROUP_NAME]["include-all-providers"] is True
+        assert groups[BASE_GROUP_NAME]["proxies"] == [NODE_GROUP_NAME, *auto_names]
+        for name in auto_names:
+            assert groups[name]["include-all-providers"] is True
 
     loon_groups = {
         line.split("=", 1)[0].strip(): line.split("=", 1)[1].strip()
@@ -471,7 +472,7 @@ def test_validator_rejects_broken_remote_rule_reference(tmp_path):
 def test_canonical_names_and_new_repository_urls():
     expected = {"Lane_stash.yaml", "Lane_loon.lcf", "Lane_shadowrocket.conf",
                 "Lane_surge.conf", "Lane_qx.conf", "Lane_egern.yaml",
-                "Lane_flclash.yaml"}
+                "Lane_flclash.yaml", "Lane_clash_verge_rev.yaml"}
     assert set(CONFIG_FILENAMES.values()) == expected
     config = load_project_config(ROOT)
     assert config["project"]["project"]["name"] == "Lane"
@@ -481,6 +482,34 @@ def test_canonical_names_and_new_repository_urls():
         assert "/ProxyRules/" not in text
         assert not (ROOT / "dist" / target / f"{target}.conf").exists()
         assert not (ROOT / "dist" / target / f"{target}.yaml").exists()
+
+
+def test_clash_verge_rev_publishes_one_profile_for_all_desktop_platforms():
+    readme = (ROOT / "README.md").read_text()
+    profile_path = "dist/clash-verge-rev/Lane_clash_verge_rev.yaml"
+    assert readme.count(profile_path) == 1
+    assert "Windows · macOS · Linux" in readme
+    assert "三个桌面系统共用同一份 YAML" in readme
+    for os_specific_name in (
+        "Lane_clash_verge_rev_windows.yaml",
+        "Lane_clash_verge_rev_macos.yaml",
+        "Lane_clash_verge_rev_linux.yaml",
+    ):
+        assert os_specific_name not in readme
+
+
+def test_clash_verge_rev_and_flclash_share_the_mihomo_schema():
+    flclash = yaml.safe_load(
+        (ROOT / "dist/flclash/Lane_flclash.yaml").read_text()
+    )
+    clash_verge = yaml.safe_load(
+        (ROOT / "dist/clash-verge-rev/Lane_clash_verge_rev.yaml").read_text()
+    )
+    for provider in clash_verge["rule-providers"].values():
+        provider["url"] = provider["url"].replace(
+            "/clash-verge-rev/", "/flclash/"
+        )
+    assert clash_verge == flclash
 
 
 def test_loon_preferred_and_compatibility_suffixes_are_published_identically():
@@ -639,6 +668,8 @@ def test_shadowrocket_service_groups_follow_the_built_in_proxy_policy():
      "  include-all: false\n", "Stash 我的节点"),
     ("flclash", "  include-all-providers: true\n",
      "  include-all-providers: false\n", "FlClash 我的节点"),
+    ("clash-verge-rev", "  include-all-providers: true\n",
+     "  include-all-providers: false\n", "Clash Verge Rev 我的节点"),
     ("shadowrocket", "Final = select,PROXY,",
      "Final = select,Proxy,", "must default to PROXY"),
     ("qx", "excluded_routes = 224.0.0.0/4, 239.255.255.250/32",

@@ -14,7 +14,7 @@ validator, tests, and checked-in `dist/` artifacts as one atomic system.
 
 ## Hard constraints
 
-- Preserve seven-client routing semantics while using client-native syntax.
+- Preserve eight-client routing semantics while using client-native syntax.
 - Loon must publish `.lcf`/`.lsr` as preferred artifacts and retain byte-identical
   `.conf`/`.list` compatibility aliases.
 - Loon must keep `GEOIP,CN` in the final `cn-region` remote rule, immediately after
@@ -29,5 +29,7 @@ validator, tests, and checked-in `dist/` artifacts as one atomic system.
   and Egern single-load/flatten behavior must remain intact.
 - FlClash must use native Mihomo YAML with a local editable proxy-provider, remote classical
   rule-providers, combined Domain/IP rule files, and `include-all-providers` node aggregation.
+- Clash Verge Rev must publish one portable native Mihomo YAML for Windows, macOS and Linux;
+  do not fork duplicate profiles by desktop operating system.
 - Keep third-party provenance and license notices when changing upstream data or icons.
 - Do not bypass the CN-IP change breaker without the exact reviewed candidate SHA-256.

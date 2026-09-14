@@ -16,7 +16,7 @@ def _default_root() -> Path:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="lane",
-        description="Generate Lane routing configurations for seven clients.",
+        description="Generate Lane routing configurations for eight clients.",
     )
     parser.add_argument("--root", type=Path, default=_default_root())
     commands = parser.add_subparsers(dest="command", required=True)

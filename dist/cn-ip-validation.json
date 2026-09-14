@@ -9,12 +9,12 @@
       "reference_available": true,
       "equal_coverage": false,
       "primary_rule_count": 6253,
-      "reference_rule_count": 3895,
+      "reference_rule_count": 3894,
       "primary_addresses": "344250880",
-      "reference_addresses": "282469888",
-      "common_addresses": "281909760",
-      "primary_only_cidr_count": 6717,
-      "primary_only_cidrs_sha256": "4adc6961135fda0aadb5388c84bcf7c0f9ef4cb24fa0fe022208666aefcf2b6e",
+      "reference_addresses": "282469632",
+      "common_addresses": "281909504",
+      "primary_only_cidr_count": 6715,
+      "primary_only_cidrs_sha256": "e0e0550625813002c7ce9155c122c1da25e8e88c352aedd1d5e0429aed12b00f",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -261,7 +261,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "4c873ea77e9d4388110151590b6ee51a19985ff9d7c3a730d3e8bdfaead5ce91",
+        "sha256": "79e2e9d4eae58141e9cc7afc61dc75f56bff7bcf8767ba202cbb0b9b447716a8",
         "license": "CC-BY-SA-4.0"
       }
     }

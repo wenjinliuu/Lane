@@ -35,7 +35,7 @@
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "4c873ea77e9d4388110151590b6ee51a19985ff9d7c3a730d3e8bdfaead5ce91",
+      "sha256": "79e2e9d4eae58141e9cc7afc61dc75f56bff7bcf8767ba202cbb0b9b447716a8",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {

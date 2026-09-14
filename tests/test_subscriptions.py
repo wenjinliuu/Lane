@@ -7,7 +7,7 @@ import yaml
 
 from proxyrules.config import load_project_config
 from proxyrules.render import (
-    BASE_GROUP_NAME, CONFIG_FILENAMES, NODE_GROUP_NAME,
+    BASE_GROUP_NAME, CONFIG_FILENAMES, MIHOMO_TARGETS, NODE_GROUP_NAME,
     QX_REQUIRED_EMPTY_SECTIONS, QX_REQUIRED_SECTIONS, STASH_PROVIDER_NAME,
     SUBSCRIPTION_PLACEHOLDER,
 )
@@ -84,8 +84,9 @@ def test_stash_all_nodes_automatically_includes_every_provider():
         assert group["include-all"] is True
 
 
-def test_flclash_provider_url_is_local_and_rules_remain_remote():
-    text = _profile("flclash")
+@pytest.mark.parametrize("target", MIHOMO_TARGETS)
+def test_mihomo_provider_url_is_local_and_rules_remain_remote(target):
+    text = _profile(target)
     original = yaml.safe_load(text)
     provider = original["proxy-providers"][STASH_PROVIDER_NAME]
     assert provider["url"] == SUBSCRIPTION_PLACEHOLDER
@@ -119,7 +120,7 @@ def test_flclash_provider_url_is_local_and_rules_remain_remote():
         value["type"] == "http"
         and value["behavior"] == "classical"
         and value["format"] == "text"
-        and "/dist/flclash/rules/" in value["url"]
+        and f"/dist/{target}/rules/" in value["url"]
         for value in parsed["rule-providers"].values()
     )
 

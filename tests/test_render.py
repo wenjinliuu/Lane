@@ -9,6 +9,7 @@ from proxyrules.render import (
     CONFIG_COMPAT_FILENAMES,
     CONFIG_FILENAMES,
     HIJACK_DNS_SERVERS,
+    MIHOMO_TARGETS,
     MULTICAST_EXCLUDED_ROUTES,
     NODE_GROUP_NAME,
     PROFILE_HEADER,
@@ -30,7 +31,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_rule_rendering_capabilities() -> None:
     regex = Rule("regexp", r"^example\\.com$")
     assert render_rule(regex, "stash") == r"DOMAIN-REGEX,^example\\.com$"
-    assert render_rule(regex, "flclash") == r"DOMAIN-REGEX,^example\\.com$"
+    for target in MIHOMO_TARGETS:
+        assert render_rule(regex, target) == r"DOMAIN-REGEX,^example\\.com$"
     assert render_rule(regex, "loon") is None
     assert render_rule(regex, "shadowrocket") is None
     cidr = Rule("ipcidr", "149.154.160.0/20")
@@ -99,6 +101,7 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
     assert "REJECT" not in main_by_target["stash"].upper()
     assert "REJECT" not in main_by_target["egern"].upper()
     assert "REJECT" not in main_by_target["flclash"].upper()
+    assert "REJECT" not in main_by_target["clash-verge-rev"].upper()
 
     stash = yaml.safe_load(stash_text)
     assert {provider["behavior"] for provider in stash["rule-providers"].values()} == {
@@ -177,7 +180,7 @@ def test_checked_in_outputs_are_valid_and_udp_fallback_is_fail_closed() -> None:
         assert (int.from_bytes(data[16:20], "big"),
                 int.from_bytes(data[20:24], "big")) == (144, 144), name
 
-    for target in ("stash", "loon", "qx", "egern", "flclash"):
+    for target in ("stash", "loon", "qx", "egern", *MIHOMO_TARGETS):
         text = main_by_target[target]
         assert all(
             f"{icon_base}/{relative}" in text
@@ -216,13 +219,16 @@ def test_client_dns_and_multicast_capability_matrix() -> None:
 
     stash = yaml.safe_load(text["stash"])
     assert stash["dns"]["fake-ip-filter"] == list(STASH_REAL_IP_DOMAINS)
-    flclash = yaml.safe_load(text["flclash"])
-    assert flclash["dns"]["fake-ip-filter"] == list(REAL_IP_DOMAINS)
-    assert flclash["dns"]["default-nameserver"] == ["223.5.5.5", "119.29.29.29"]
-    assert flclash["dns"]["nameserver"] == [
-        "https://dns.alidns.com/dns-query",
-        "https://doh.pub/dns-query",
-    ]
+    for target in MIHOMO_TARGETS:
+        mihomo = yaml.safe_load(text[target])
+        assert mihomo["dns"]["fake-ip-filter"] == list(REAL_IP_DOMAINS)
+        assert mihomo["dns"]["default-nameserver"] == [
+            "223.5.5.5", "119.29.29.29"
+        ]
+        assert mihomo["dns"]["nameserver"] == [
+            "https://dns.alidns.com/dns-query",
+            "https://doh.pub/dns-query",
+        ]
     assert f"real-ip = {real_ip_csv}" in text["loon"]
     assert f"always-real-ip = {real_ip_csv}" in text["shadowrocket"]
     assert f"always-real-ip = {real_ip_csv}" in text["surge"]

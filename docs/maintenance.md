@@ -23,8 +23,8 @@
 2. 合并声明的自定义规则和文本 / CIDR 数据源。
 3. 按“规则类型 + 规范值”删除同一逻辑规则集内的精确重复。
 4. 保留父后缀覆盖和跨规则集覆盖候选，只在 `dist/metadata.json` 中报告。
-5. 将同一逻辑规则转换为七个客户端的原生格式，并写入 `dist/<client>/rules/`。
-6. 生成七端主配置、元数据、转换报告和 CN-IP 校验报告。
+5. 将同一逻辑规则转换为八个客户端的原生格式，并写入 `dist/<client>/rules/`。
+6. 生成八端主配置、元数据、转换报告和 CN-IP 校验报告。
 
 Google、Microsoft 等归属主要由 v2fly 上游分类决定。Lane 在 `config/rulesets.yaml` 中选择
 和组合分类、应用 `@cn` 等属性、增加最小补充项，再确定策略与优先顺序；不要凭品牌名称
@@ -143,6 +143,21 @@ AppleCN 保留，因为其大陆 CDN 例外具有独立路由意义。
 [`proxy-groups`](https://wiki.metacubex.one/config/proxy-groups/) 和
 [`rule-providers`](https://wiki.metacubex.one/config/rule-providers/) 语法维护。社区模板仅用于
 交叉比较常见写法，不作为 Lane 的语法权威或运行时依赖。
+
+### Clash Verge Rev（Windows / macOS / Linux）
+
+- Windows、macOS、Linux 版本均内置 Mihomo，使用同一套 YAML 配置结构；Lane 只发布一份
+  `Lane_clash_verge_rev.yaml`，不得按操作系统复制三个入口或三个订阅占位。
+- 与 FlClash 共用 Mihomo 渲染语义：私人节点通过本地可编辑的 HTTP `proxy-provider` 加载，
+  Lane 规则通过远程 `classical` `rule-providers` 独立更新。
+- `我的节点` 与地区组使用 `include-all-providers`；`Proxy` 保持“我的节点在前、五个地区
+  Auto 在后”，完整保留共享服务组与黄金规则顺序。
+- 主配置作为本地文件导入。三个系统的安装包、系统代理和 TUN 权限处理不同，但这些差异
+  不改变 Lane 配置语法，不构成拆分配置的理由。
+- 兼容性依据以 [Clash Verge Rev 官方仓库](https://github.com/clash-verge-rev/clash-verge-rev)、
+  [官方订阅与本地配置说明](https://www.clashverge.dev/guide/profile.html) 和
+  [官方多订阅配置示例](https://www.clashverge.dev/guide/config.html) 为准。其官方仓库明确
+  支持 Windows、macOS、Linux 并内置 Mihomo；社区模板只用于交叉比较。
 
 ## 节点与图标
 
