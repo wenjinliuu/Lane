@@ -150,6 +150,7 @@ DOMAIN-SUFFIX,clojure.org
 DOMAIN-SUFFIX,cnpmjs.org
 DOMAIN-SUFFIX,codeberg.org
 DOMAIN-SUFFIX,codeberg.page
+DOMAIN-SUFFIX,codebuff.com
 DOMAIN-SUFFIX,codeforaliving.io
 DOMAIN-SUFFIX,codethemicrobit.com
 DOMAIN-SUFFIX,collector.github.com
@@ -244,6 +245,7 @@ DOMAIN-SUFFIX,framercanvas.com
 DOMAIN-SUFFIX,framerstatic.com
 DOMAIN-SUFFIX,framerusercontent.com
 DOMAIN-SUFFIX,freebsd.org
+DOMAIN-SUFFIX,freebuff.com
 DOMAIN-SUFFIX,frescolib.org
 DOMAIN-SUFFIX,fury.blog
 DOMAIN-SUFFIX,fury.co

@@ -810,6 +810,7 @@ domain_suffix_set:
 - new.day
 - nexus
 - nomulus.foo
+- notebook.google
 - notebook.google.com
 - notebooklm.google
 - notebooklm.google.com

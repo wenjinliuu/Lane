@@ -8,13 +8,13 @@
     "ipv4": {
       "reference_available": true,
       "equal_coverage": false,
-      "primary_rule_count": 6249,
-      "reference_rule_count": 3894,
-      "primary_addresses": "344043264",
-      "reference_addresses": "282404864",
-      "common_addresses": "281845504",
-      "primary_only_cidr_count": 6691,
-      "primary_only_cidrs_sha256": "9bb3b00d3d7dfbf6b1ad469a02806b5c7b692caf74d16e40b589752529a78a1a",
+      "primary_rule_count": 6250,
+      "reference_rule_count": 3895,
+      "primary_addresses": "344010752",
+      "reference_addresses": "282405120",
+      "common_addresses": "281845760",
+      "primary_only_cidr_count": 6692,
+      "primary_only_cidrs_sha256": "39c6ef73a167af52e3fe7ef53b5c6aeb2a33fba9583630d8b129065564bae6cf",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -242,18 +242,18 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "8f64618d7b13643860df6facd5a710ef0ed8d342",
-        "sha256": "8bb40c076baedb35d56236fad68256d6262b2a64b8ad1400cb950b55ae096905",
+        "revision": "bb1470d68fbcdcb01a7f2905f1d70c219795f1ad",
+        "sha256": "dea8771cef87f551d6c0c7ef607b450d50b35be43305e64f386f48a8db0a80a7",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
         "breaker_percent": 1.0,
         "snapshot_dates": [
+          "2026-09-20",
           "2026-09-19",
           "2026-09-18",
           "2026-09-17",
-          "2026-09-16",
-          "2026-09-15"
+          "2026-09-16"
         ],
         "window_report": "cn-ip-window.json"
       }
@@ -261,7 +261,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "7a379313786a1d5492f9e96d997fc02681452e3a528c888f93796cfafd7a6f86",
+        "sha256": "608497d7dbe27b6459e37c867f6003a58a81c4f21552f9014ba13a49ce63c655",
         "license": "CC-BY-SA-4.0"
       }
     }

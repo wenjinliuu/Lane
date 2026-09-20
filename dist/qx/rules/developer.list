@@ -150,6 +150,7 @@ host-suffix,clojure.org,Developer
 host-suffix,cnpmjs.org,Developer
 host-suffix,codeberg.org,Developer
 host-suffix,codeberg.page,Developer
+host-suffix,codebuff.com,Developer
 host-suffix,codeforaliving.io,Developer
 host-suffix,codethemicrobit.com,Developer
 host-suffix,collector.github.com,Developer
@@ -244,6 +245,7 @@ host-suffix,framercanvas.com,Developer
 host-suffix,framerstatic.com,Developer
 host-suffix,framerusercontent.com,Developer
 host-suffix,freebsd.org,Developer
+host-suffix,freebuff.com,Developer
 host-suffix,frescolib.org,Developer
 host-suffix,fury.blog,Developer
 host-suffix,fury.co,Developer
