@@ -57,9 +57,10 @@ domain_set:
 - download.mlcc.google.com
 - download.tensorflow.google.com
 - firebase-settings.crashlytics.com
-- firebase.google.com
 - firebase.googleapis.com
 - firebaseappcheck.googleapis.com
+- firebaseappdistribution.googleapis.com
+- firebaseapptesters.googleapis.com
 - firebasedynamiclinks-ipv4.googleapis.com
 - firebasedynamiclinks-ipv6.googleapis.com
 - firebasedynamiclinks.googleapis.com
@@ -432,11 +433,14 @@ domain_suffix_set:
 - fflick.com
 - financeleadsonline.com
 - firebase.com
+- firebase.dev
+- firebase.google.com
 - firebase.io
 - firebaseapp.com
 - firebaseio.com
 - fitbit.com
 - flow.google
+- flow.google.com
 - flutter.dev
 - flutterapp.com
 - foofle.com

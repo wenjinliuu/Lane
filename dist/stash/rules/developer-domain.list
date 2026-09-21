@@ -31,9 +31,10 @@ docker-pinata-support.s3.amazonaws.com
 download.visualstudio.microsoft.com
 dtlgalleryint.cloudapp.net
 firebase-settings.crashlytics.com
-firebase.google.com
 firebase.googleapis.com
 firebaseappcheck.googleapis.com
+firebaseappdistribution.googleapis.com
+firebaseapptesters.googleapis.com
 firebasedynamiclinks-ipv4.googleapis.com
 firebasedynamiclinks-ipv6.googleapis.com
 firebasedynamiclinks.googleapis.com
@@ -225,6 +226,8 @@ vsmarketplacebadge.apphb.com
 +.fightforux.com
 +.filezilla-project.org
 +.firebase.com
++.firebase.dev
++.firebase.google.com
 +.firebase.io
 +.firebaseapp.com
 +.firebaseio.com

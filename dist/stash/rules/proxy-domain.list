@@ -454,9 +454,10 @@ favoritescc-hamivideo2.cdn.hinet.net
 fbcdn-a.akamaihd.net
 fides-pol.apple.com
 firebase-settings.crashlytics.com
-firebase.google.com
 firebase.googleapis.com
 firebaseappcheck.googleapis.com
+firebaseappdistribution.googleapis.com
+firebaseapptesters.googleapis.com
 firebasedynamiclinks-ipv4.googleapis.com
 firebasedynamiclinks-ipv6.googleapis.com
 firebasedynamiclinks.googleapis.com
@@ -9793,10 +9794,13 @@ zftksc.launches.appsflyersdk.com
 +.fiotolia.com
 +.fire-emblem-heroes.com
 +.firebase.com
++.firebase.dev
++.firebase.google.com
 +.firebase.io
 +.firebaseapp.com
 +.firebaseio.com
 +.fireemblemawakening.com
++.firefox-portal-detection.com
 +.firefox.com
 +.firefox.hu
 +.firefoxtweetmachine.com
@@ -9873,6 +9877,7 @@ zftksc.launches.appsflyersdk.com
 +.floppy-tits.com
 +.flow.dev
 +.flow.google
++.flow.google.com
 +.flow.org
 +.flowfront.com
 +.flowfront.net
@@ -21969,6 +21974,7 @@ zftksc.launches.appsflyersdk.com
 +.tex-talk.net
 +.texttobuy.org
 +.texture.com
++.tfbnw.net
 +.tferwq.com
 +.tfhub.dev
 +.tfsallin.net

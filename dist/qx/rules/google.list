@@ -56,9 +56,10 @@ host,doubleclick.net,Google
 host,download.mlcc.google.com,Google
 host,download.tensorflow.google.com,Google
 host,firebase-settings.crashlytics.com,Google
-host,firebase.google.com,Google
 host,firebase.googleapis.com,Google
 host,firebaseappcheck.googleapis.com,Google
+host,firebaseappdistribution.googleapis.com,Google
+host,firebaseapptesters.googleapis.com,Google
 host,firebasedynamiclinks-ipv4.googleapis.com,Google
 host,firebasedynamiclinks-ipv6.googleapis.com,Google
 host,firebasedynamiclinks.googleapis.com,Google
@@ -430,11 +431,14 @@ host-suffix,feedburner.com,Google
 host-suffix,fflick.com,Google
 host-suffix,financeleadsonline.com,Google
 host-suffix,firebase.com,Google
+host-suffix,firebase.dev,Google
+host-suffix,firebase.google.com,Google
 host-suffix,firebase.io,Google
 host-suffix,firebaseapp.com,Google
 host-suffix,firebaseio.com,Google
 host-suffix,fitbit.com,Google
 host-suffix,flow.google,Google
+host-suffix,flow.google.com,Google
 host-suffix,flutter.dev,Google
 host-suffix,flutterapp.com,Google
 host-suffix,foofle.com,Google

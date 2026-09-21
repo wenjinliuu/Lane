@@ -454,9 +454,10 @@ DOMAIN,favoritescc-hamivideo2.cdn.hinet.net
 DOMAIN,fbcdn-a.akamaihd.net
 DOMAIN,fides-pol.apple.com
 DOMAIN,firebase-settings.crashlytics.com
-DOMAIN,firebase.google.com
 DOMAIN,firebase.googleapis.com
 DOMAIN,firebaseappcheck.googleapis.com
+DOMAIN,firebaseappdistribution.googleapis.com
+DOMAIN,firebaseapptesters.googleapis.com
 DOMAIN,firebasedynamiclinks-ipv4.googleapis.com
 DOMAIN,firebasedynamiclinks-ipv6.googleapis.com
 DOMAIN,firebasedynamiclinks.googleapis.com
@@ -9793,10 +9794,13 @@ DOMAIN-SUFFIX,finlitsummit.org
 DOMAIN-SUFFIX,fiotolia.com
 DOMAIN-SUFFIX,fire-emblem-heroes.com
 DOMAIN-SUFFIX,firebase.com
+DOMAIN-SUFFIX,firebase.dev
+DOMAIN-SUFFIX,firebase.google.com
 DOMAIN-SUFFIX,firebase.io
 DOMAIN-SUFFIX,firebaseapp.com
 DOMAIN-SUFFIX,firebaseio.com
 DOMAIN-SUFFIX,fireemblemawakening.com
+DOMAIN-SUFFIX,firefox-portal-detection.com
 DOMAIN-SUFFIX,firefox.com
 DOMAIN-SUFFIX,firefox.hu
 DOMAIN-SUFFIX,firefoxtweetmachine.com
@@ -9873,6 +9877,7 @@ DOMAIN-SUFFIX,floorp.app
 DOMAIN-SUFFIX,floppy-tits.com
 DOMAIN-SUFFIX,flow.dev
 DOMAIN-SUFFIX,flow.google
+DOMAIN-SUFFIX,flow.google.com
 DOMAIN-SUFFIX,flow.org
 DOMAIN-SUFFIX,flowfront.com
 DOMAIN-SUFFIX,flowfront.net
@@ -21969,6 +21974,7 @@ DOMAIN-SUFFIX,tettediferro.it
 DOMAIN-SUFFIX,tex-talk.net
 DOMAIN-SUFFIX,texttobuy.org
 DOMAIN-SUFFIX,texture.com
+DOMAIN-SUFFIX,tfbnw.net
 DOMAIN-SUFFIX,tferwq.com
 DOMAIN-SUFFIX,tfhub.dev
 DOMAIN-SUFFIX,tfsallin.net

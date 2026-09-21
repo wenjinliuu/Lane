@@ -31,9 +31,10 @@ host,docker-pinata-support.s3.amazonaws.com,Developer
 host,download.visualstudio.microsoft.com,Developer
 host,dtlgalleryint.cloudapp.net,Developer
 host,firebase-settings.crashlytics.com,Developer
-host,firebase.google.com,Developer
 host,firebase.googleapis.com,Developer
 host,firebaseappcheck.googleapis.com,Developer
+host,firebaseappdistribution.googleapis.com,Developer
+host,firebaseapptesters.googleapis.com,Developer
 host,firebasedynamiclinks-ipv4.googleapis.com,Developer
 host,firebasedynamiclinks-ipv6.googleapis.com,Developer
 host,firebasedynamiclinks.googleapis.com,Developer
@@ -225,6 +226,8 @@ host-suffix,ffmpeg.org,Developer
 host-suffix,fightforux.com,Developer
 host-suffix,filezilla-project.org,Developer
 host-suffix,firebase.com,Developer
+host-suffix,firebase.dev,Developer
+host-suffix,firebase.google.com,Developer
 host-suffix,firebase.io,Developer
 host-suffix,firebaseapp.com,Developer
 host-suffix,firebaseio.com,Developer

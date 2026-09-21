@@ -9,12 +9,12 @@
       "reference_available": true,
       "equal_coverage": false,
       "primary_rule_count": 6250,
-      "reference_rule_count": 3895,
+      "reference_rule_count": 3896,
       "primary_addresses": "344010752",
-      "reference_addresses": "282405120",
-      "common_addresses": "281845760",
+      "reference_addresses": "282406144",
+      "common_addresses": "281846784",
       "primary_only_cidr_count": 6692,
-      "primary_only_cidrs_sha256": "39c6ef73a167af52e3fe7ef53b5c6aeb2a33fba9583630d8b129065564bae6cf",
+      "primary_only_cidrs_sha256": "f0527bf2450632e45e1e5cfeb78bf874b36b91192d2f323094d754eed307ed06",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -229,7 +229,7 @@
       "equal_coverage": null,
       "primary_rule_count": 3411,
       "reference_rule_count": 0,
-      "primary_addresses": "5429583503097495302225282474180608",
+      "primary_addresses": "5429583504306421121839911648886784",
       "reference_addresses": null,
       "common_addresses": null,
       "primary_only_cidrs": null,
@@ -242,18 +242,18 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "bb1470d68fbcdcb01a7f2905f1d70c219795f1ad",
-        "sha256": "dea8771cef87f551d6c0c7ef607b450d50b35be43305e64f386f48a8db0a80a7",
+        "revision": "14607e6ae9fed3b683d6c472bcc053e41e7c0695",
+        "sha256": "738a5c8275ee1c983b4c08e11270e0e8eb13efa2d2379541572406685184b913",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
         "breaker_percent": 1.0,
         "snapshot_dates": [
+          "2026-09-21",
           "2026-09-20",
           "2026-09-19",
           "2026-09-18",
-          "2026-09-17",
-          "2026-09-16"
+          "2026-09-17"
         ],
         "window_report": "cn-ip-window.json"
       }
@@ -261,7 +261,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "608497d7dbe27b6459e37c867f6003a58a81c4f21552f9014ba13a49ce63c655",
+        "sha256": "985e85d1e43f968d4d708356bfee54b104b07a6ba7b6fe2abcf78215fb83855f",
         "license": "CC-BY-SA-4.0"
       }
     }

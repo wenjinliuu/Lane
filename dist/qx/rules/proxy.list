@@ -454,9 +454,10 @@ host,favoritescc-hamivideo2.cdn.hinet.net,Final
 host,fbcdn-a.akamaihd.net,Final
 host,fides-pol.apple.com,Final
 host,firebase-settings.crashlytics.com,Final
-host,firebase.google.com,Final
 host,firebase.googleapis.com,Final
 host,firebaseappcheck.googleapis.com,Final
+host,firebaseappdistribution.googleapis.com,Final
+host,firebaseapptesters.googleapis.com,Final
 host,firebasedynamiclinks-ipv4.googleapis.com,Final
 host,firebasedynamiclinks-ipv6.googleapis.com,Final
 host,firebasedynamiclinks.googleapis.com,Final
@@ -9793,10 +9794,13 @@ host-suffix,finlitsummit.org,Final
 host-suffix,fiotolia.com,Final
 host-suffix,fire-emblem-heroes.com,Final
 host-suffix,firebase.com,Final
+host-suffix,firebase.dev,Final
+host-suffix,firebase.google.com,Final
 host-suffix,firebase.io,Final
 host-suffix,firebaseapp.com,Final
 host-suffix,firebaseio.com,Final
 host-suffix,fireemblemawakening.com,Final
+host-suffix,firefox-portal-detection.com,Final
 host-suffix,firefox.com,Final
 host-suffix,firefox.hu,Final
 host-suffix,firefoxtweetmachine.com,Final
@@ -9873,6 +9877,7 @@ host-suffix,floorp.app,Final
 host-suffix,floppy-tits.com,Final
 host-suffix,flow.dev,Final
 host-suffix,flow.google,Final
+host-suffix,flow.google.com,Final
 host-suffix,flow.org,Final
 host-suffix,flowfront.com,Final
 host-suffix,flowfront.net,Final
@@ -21969,6 +21974,7 @@ host-suffix,tettediferro.it,Final
 host-suffix,tex-talk.net,Final
 host-suffix,texttobuy.org,Final
 host-suffix,texture.com,Final
+host-suffix,tfbnw.net,Final
 host-suffix,tferwq.com,Final
 host-suffix,tfhub.dev,Final
 host-suffix,tfsallin.net,Final
