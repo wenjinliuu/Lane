@@ -3127,7 +3127,7 @@ ip-cidr,146.56.192.0/18,direct
 ip-cidr,147.78.132.0/24,direct
 ip-cidr,147.78.134.0/24,direct
 ip-cidr,148.70.0.0/16,direct
-ip-cidr,149.41.192.0/18,direct
+ip-cidr,149.41.192.0/19,direct
 ip-cidr,149.41.64.0/18,direct
 ip-cidr,150.0.0.0/16,direct
 ip-cidr,150.115.0.0/16,direct
@@ -6189,7 +6189,6 @@ ip-cidr,61.28.0.0/17,direct
 ip-cidr,61.29.128.0/18,direct
 ip-cidr,61.29.192.0/19,direct
 ip-cidr,61.29.224.0/20,direct
-ip-cidr,61.29.251.0/24,direct
 ip-cidr,61.4.176.0/20,direct
 ip-cidr,61.4.80.0/20,direct
 ip-cidr,61.45.128.0/18,direct
@@ -7687,12 +7686,7 @@ ip6-cidr,2403:f8c0::/32,direct
 ip6-cidr,2403:f980::/32,direct
 ip6-cidr,2403:fb00::/32,direct
 ip6-cidr,2403:fb80::/32,direct
-ip6-cidr,2403:fc0:1000::/36,direct
-ip6-cidr,2403:fc0:2000::/35,direct
-ip6-cidr,2403:fc0:4000::/34,direct
-ip6-cidr,2403:fc0:400::/38,direct
-ip6-cidr,2403:fc0:8000::/33,direct
-ip6-cidr,2403:fc0:c00::/38,direct
+ip6-cidr,2403:fc0::/32,direct
 ip6-cidr,2403:fc40::/32,direct
 ip6-cidr,2403:fe40::/32,direct
 ip6-cidr,2403:fe80::/32,direct
