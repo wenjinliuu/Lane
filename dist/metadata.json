@@ -18,24 +18,24 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "8046f18143a4ad0ced43fe5d7e72e0c68ba73ac8",
-      "sha256": "1dad56d32b2dfafd5718f29cabecfdc901ce4a0d99d82ed986e29fb27ea6fe21",
+      "revision": "c6c81f213bf2e8f3bd037ad12e0cb360c87ca230",
+      "sha256": "adf9f9f80b4679bcb52404beb2babfa05148aca981c737f3b3fcc44a2bb9e28a",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
       "breaker_percent": 1.0,
       "snapshot_dates": [
+        "2026-09-24",
         "2026-09-23",
         "2026-09-22",
         "2026-09-21",
-        "2026-09-20",
-        "2026-09-19"
+        "2026-09-20"
       ],
       "window_report": "cn-ip-window.json"
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "f00671b3811afc0e54b0e801767036182b33260adb7653ccce0670e80e60e771",
+      "sha256": "2bbccd679d084e81d8b6a978ea4f14014cfd3b8b486bd3322adb5e064fb7bb15",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -391,10 +391,10 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9655,
+      "rules": 9616,
       "kinds": {
-        "ipcidr": 6249,
-        "ipcidr6": 3406
+        "ipcidr": 6211,
+        "ipcidr6": 3405
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
