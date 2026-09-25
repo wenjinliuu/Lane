@@ -8,13 +8,13 @@
     "ipv4": {
       "reference_available": true,
       "equal_coverage": false,
-      "primary_rule_count": 6211,
-      "reference_rule_count": 3898,
-      "primary_addresses": "343990528",
-      "reference_addresses": "282408960",
-      "common_addresses": "281849600",
-      "primary_only_cidr_count": 6651,
-      "primary_only_cidrs_sha256": "32217e5ee8c740ac2468519091164af455e76c03021a7973448e4ddf8a4d8031",
+      "primary_rule_count": 6206,
+      "reference_rule_count": 3897,
+      "primary_addresses": "343988736",
+      "reference_addresses": "282408704",
+      "common_addresses": "281848320",
+      "primary_only_cidr_count": 6649,
+      "primary_only_cidrs_sha256": "0ee2393545b6fe1518b5f798aefca5a53cb1588941000a249fe720d93b3fce8c",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -119,7 +119,7 @@
         "36.0.16.0/20"
       ],
       "reference_only_cidr_count": 193,
-      "reference_only_cidrs_sha256": "8977d6b1c0170a6dc1c7c4c622773e548288ed0fdaf6ad0cf7bad2a0a48561fe",
+      "reference_only_cidrs_sha256": "0217b28f7067f2114a72b3f4ae10c3b0f8e47b0d04e62ef26e1cb68165997163",
       "reference_only_cidrs_truncated": true,
       "reference_only_cidrs": [
         "1.18.128.0/24",
@@ -207,7 +207,7 @@
         "116.90.192.0/20",
         "117.134.192.0/21",
         "117.134.200.0/22",
-        "117.134.204.0/24",
+        "117.134.204.0/23",
         "117.134.206.0/24",
         "117.134.210.0/23",
         "117.134.214.0/23",
@@ -227,9 +227,9 @@
     "ipv6": {
       "reference_available": false,
       "equal_coverage": null,
-      "primary_rule_count": 3405,
+      "primary_rule_count": 3407,
       "reference_rule_count": 0,
-      "primary_addresses": "5429585978977573872985832272429056",
+      "primary_addresses": "5429506441330049787303170003697664",
       "reference_addresses": null,
       "common_addresses": null,
       "primary_only_cidrs": null,
@@ -242,18 +242,18 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "c6c81f213bf2e8f3bd037ad12e0cb360c87ca230",
-        "sha256": "adf9f9f80b4679bcb52404beb2babfa05148aca981c737f3b3fcc44a2bb9e28a",
+        "revision": "230149b03fcc3b881235cdc1ff4ca4a52d657d98",
+        "sha256": "8454054b35e7d907db4213b56e615483f7e4d822c435a456f7e76ffbd162bea7",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
         "breaker_percent": 1.0,
         "snapshot_dates": [
+          "2026-09-25",
           "2026-09-24",
           "2026-09-23",
           "2026-09-22",
-          "2026-09-21",
-          "2026-09-20"
+          "2026-09-21"
         ],
         "window_report": "cn-ip-window.json"
       }
@@ -261,7 +261,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "2bbccd679d084e81d8b6a978ea4f14014cfd3b8b486bd3322adb5e064fb7bb15",
+        "sha256": "f8bd7025243a3a3cdf3d981a7c7b58664d5a0d8732e203b0485aba9b3a532a07",
         "license": "CC-BY-SA-4.0"
       }
     }
