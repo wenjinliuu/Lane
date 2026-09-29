@@ -32,11 +32,11 @@
       },
       "ipv6": {
         "baseline_available": true,
-        "previous_addresses": "5429585667074712412411505198235648",
-        "current_addresses": "5429585668283638232026134372941824",
-        "added_addresses": "1208925819614629174706176",
-        "removed_addresses": "0",
-        "changed_addresses": "1208925819614629174706176",
+        "previous_addresses": "5429585668283638232026134372941824",
+        "current_addresses": "5429585665865786592796876023529472",
+        "added_addresses": "0",
+        "removed_addresses": "2417851639229258349412352",
+        "changed_addresses": "2417851639229258349412352",
         "changed_percent": 0.0,
         "exceeded": false
       }
@@ -45,6 +45,33 @@
     "approval_sha256": null
   },
   "snapshots": [
+    {
+      "date": "2026-09-29",
+      "revision": "40072d2623be9081541955df52bb85eca2bcdd13",
+      "committed_at": "2026-09-29T09:09:30Z",
+      "files": {
+        "ipv4": {
+          "path": "china.txt",
+          "sha256": "ef0edf64a1f5398f1bf07dff27b46c59ae430698ce1749585cabc9e26b3c63c7",
+          "rules": 6207
+        },
+        "ipv6": {
+          "path": "china6.txt",
+          "sha256": "4eb28b4181a6843e182cc3efd00c17943f059ddefa7b5a6f428016c3dc019b97",
+          "rules": 3414
+        }
+      },
+      "coverage": {
+        "ipv4": {
+          "rule_count": 6207,
+          "addresses": "343989248"
+        },
+        "ipv6": {
+          "rule_count": 3414,
+          "addresses": "5429585664656860773182246848823296"
+        }
+      }
+    },
     {
       "date": "2026-09-28",
       "revision": "f48129aed66460865e9ed40dd5ccdaf954a34c4b",
@@ -152,45 +179,18 @@
           "addresses": "5429585667074712412411505198235648"
         }
       }
-    },
-    {
-      "date": "2026-09-24",
-      "revision": "c6c81f213bf2e8f3bd037ad12e0cb360c87ca230",
-      "committed_at": "2026-09-24T07:53:49Z",
-      "files": {
-        "ipv4": {
-          "path": "china.txt",
-          "sha256": "7f90b59e39e431162022d0534d8a9d4936ca68c6d8afc92e281e087d8e1b94d0",
-          "rules": 6207
-        },
-        "ipv6": {
-          "path": "china6.txt",
-          "sha256": "32d19ee5b75f325dffbcdc056905a1417cc5aadb6037aedbafcfeb6afc82adcf",
-          "rules": 3407
-        }
-      },
-      "coverage": {
-        "ipv4": {
-          "rule_count": 6207,
-          "addresses": "343989248"
-        },
-        "ipv6": {
-          "rule_count": 3407,
-          "addresses": "5429506441330049787303170003697664"
-        }
-      }
     }
   ],
   "output": {
-    "sha256": "48ff952b2f67ffa13c9154dfef81b899ea7237be6910069af21eb63d317da36c",
+    "sha256": "1674456b9b14c55062762200d659f871be4ff9d039d3efb31ee09ef6b914499c",
     "coverage": {
       "ipv4": {
         "rule_count": 6207,
         "addresses": "343989248"
       },
       "ipv6": {
-        "rule_count": 3410,
-        "addresses": "5429585668283638232026134372941824"
+        "rule_count": 3415,
+        "addresses": "5429585665865786592796876023529472"
       }
     }
   }
