@@ -13,6 +13,8 @@ host,copilot-telemetry.githubusercontent.com,AI
 host,copilot-workspace.githubnext.com,AI
 host,copilotprodattachments.blob.core.windows.net,AI
 host,daily-cloudcode-pa.googleapis.com,AI
+host,geminiweb-pa.clients.google.com,AI
+host,geminiweb-pa.clients6.google.com,AI
 host,notebooklm-pa.googleapis.com,AI
 host,notebooklm.googleapis.com,AI
 host,o33249.ingest.sentry.io,AI
@@ -121,6 +123,7 @@ host-suffix,kimi.ai,AI
 host-suffix,kiro.dev,AI
 host-suffix,labs.google,AI
 host-suffix,labs.google.com,AI
+host-suffix,labstailwind.pa.googleapis.com,AI
 host-suffix,langchain.com,AI
 host-suffix,liveperson.net,AI
 host-suffix,lmstudio.ai,AI
@@ -131,11 +134,13 @@ host-suffix,manus.im,AI
 host-suffix,manuscdn.com,AI
 host-suffix,marscode.com,AI
 host-suffix,meta.ai,AI
+host-suffix,metaaivm.com,AI
 host-suffix,midjourney.com,AI
 host-suffix,minimax.io,AI
 host-suffix,mistral.ai,AI
 host-suffix,moonshot.ai,AI
 host-suffix,mozilla.ai,AI
+host-suffix,muse.ai,AI
 host-suffix,notebook.google,AI
 host-suffix,notebook.google.com,AI
 host-suffix,notebooklm.google,AI
@@ -152,6 +157,7 @@ host-suffix,openai.com,AI
 host-suffix,openai.com.cdn.cloudflare.net,AI
 host-suffix,openart.ai,AI
 host-suffix,openclaw.ai,AI
+host-suffix,opencode.ai,AI
 host-suffix,openrouter.ai,AI
 host-suffix,openspec.dev,AI
 host-suffix,oystermercury.top,AI

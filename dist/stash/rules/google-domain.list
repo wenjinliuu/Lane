@@ -76,6 +76,8 @@ g0.gstatic.com
 g1.gstatic.com
 g2.gstatic.com
 g3.gstatic.com
+geminiweb-pa.clients.google.com
+geminiweb-pa.clients6.google.com
 gonglchuangl.net
 gongyichuangyi.net
 google-analytics-cn.com
@@ -794,6 +796,7 @@ yt3.googleusercontent.com
 +.keytransparency.org
 +.labs.google
 +.labs.google.com
++.labstailwind.pa.googleapis.com
 +.lanternal.com
 +.like.com
 +.madewithcode.com

@@ -2088,6 +2088,7 @@ host-suffix,cn-shanghai.aliyuncs.com,direct
 host-suffix,cn.pool.ntp.org,direct
 host-suffix,cnanzhi.com,direct
 host-suffix,cnb.cool,direct
+host-suffix,cnb.space,direct
 host-suffix,cnbksy.com,direct
 host-suffix,cnblogs.com,direct
 host-suffix,cnblogs.vip,direct

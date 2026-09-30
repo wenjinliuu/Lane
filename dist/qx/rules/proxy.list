@@ -483,6 +483,8 @@ host,g3.gstatic.com,Final
 host,gamedownloads-rockstargames-com.akamaized.net,Final
 host,gamer-cds.cdn.hinet.net,Final
 host,gamer2-cds.cdn.hinet.net,Final
+host,geminiweb-pa.clients.google.com,Final
+host,geminiweb-pa.clients6.google.com,Final
 host,gigabyte2.azureedge.net,Final
 host,github-api.arkoselabs.com,Final
 host,github-cloud.s3.amazonaws.com,Final
@@ -12323,6 +12325,7 @@ host-suffix,huangse.love,Final
 host-suffix,huanyuju.com,Final
 host-suffix,huarenav.com,Final
 host-suffix,huarenporn.com,Final
+host-suffix,huarun.win,Final
 host-suffix,huashundg.com,Final
 host-suffix,huati.cc,Final
 host-suffix,huaxin-lls.xyz,Final
@@ -14308,6 +14311,7 @@ host-suffix,la-mama.ru,Final
 host-suffix,labo.wovs.tk,Final
 host-suffix,labs.google,Final
 host-suffix,labs.google.com,Final
+host-suffix,labstailwind.pa.googleapis.com,Final
 host-suffix,lacomics.org,Final
 host-suffix,ladies.com,Final
 host-suffix,ladsp.com,Final
@@ -15339,6 +15343,7 @@ host-suffix,mesu.apple.com,Final
 host-suffix,met-nude.com,Final
 host-suffix,meta.ai,Final
 host-suffix,meta.com,Final
+host-suffix,metaaivm.com,Final
 host-suffix,metabora.io,Final
 host-suffix,metabrainz.org,Final
 host-suffix,metacloud.com,Final
@@ -16318,6 +16323,7 @@ host-suffix,musashinobank.co.jp,Final
 host-suffix,muscache.com,Final
 host-suffix,muscdn.com,Final
 host-suffix,musclegirlflix.com,Final
+host-suffix,muse.ai,Final
 host-suffix,mushroomtrack.com,Final
 host-suffix,mushymush.tv,Final
 host-suffix,music.apple.com,Final
@@ -17709,6 +17715,7 @@ host-suffix,openart.ai,Final
 host-suffix,openbook.org.tw,Final
 host-suffix,opencas.io,Final
 host-suffix,openclaw.ai,Final
+host-suffix,opencode.ai,Final
 host-suffix,opencollective.com,Final
 host-suffix,opencreate.org,Final
 host-suffix,opendns.com,Final

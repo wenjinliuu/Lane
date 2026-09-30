@@ -9,7 +9,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "bcea25493ed28c387660fe49ce1ceb242d2efca0"
+      "revision": "2d71342eea1720da57261b55663c9d55619e9b1c"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -18,24 +18,24 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "40072d2623be9081541955df52bb85eca2bcdd13",
-      "sha256": "1674456b9b14c55062762200d659f871be4ff9d039d3efb31ee09ef6b914499c",
+      "revision": "f6964fff9fe550efffe21001856664a02bce8d6b",
+      "sha256": "357b6546eb985f5a890fbfd0664141495a5c6e1ead50dd874648dda2d61885e5",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
       "breaker_percent": 1.0,
       "snapshot_dates": [
+        "2026-09-30",
         "2026-09-29",
         "2026-09-28",
         "2026-09-27",
-        "2026-09-26",
-        "2026-09-25"
+        "2026-09-26"
       ],
       "window_report": "cn-ip-window.json"
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "049a850e33ecc95bfa0ecb0eed3b48345307c6f59b305715ad54e0c5377f9b86",
+      "sha256": "c7d77f3d7faaa11bb2d52f9304afa7529da229bd021c3ace1f8c93bcf9fe654a",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -83,10 +83,10 @@
     {
       "id": "ai",
       "policy": "AI",
-      "rules": 182,
+      "rules": 188,
       "kinds": {
-        "domain": 153,
-        "full": 28,
+        "domain": 157,
+        "full": 30,
         "regexp": 1
       },
       "exact_duplicates_removed": 0,
@@ -277,18 +277,18 @@
     {
       "id": "google",
       "policy": "Google",
-      "rules": 1119,
+      "rules": 1122,
       "kinds": {
-        "domain": 883,
-        "full": 234,
+        "domain": 884,
+        "full": 236,
         "regexp": 2
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
-        "within_parent_suffix_candidates": 270,
+        "within_parent_suffix_candidates": 273,
         "previous_ruleset_exact_candidates": 203,
         "previous_ruleset_parent_suffix_candidates": 0,
-        "total_candidates": 473
+        "total_candidates": 476
       }
     },
     {
@@ -341,9 +341,9 @@
     {
       "id": "china",
       "policy": "DIRECT",
-      "rules": 8363,
+      "rules": 8364,
       "kinds": {
-        "domain": 8293,
+        "domain": 8294,
         "full": 67,
         "regexp": 3
       },
@@ -358,18 +358,18 @@
     {
       "id": "proxy",
       "policy": "Final",
-      "rules": 25925,
+      "rules": 25932,
       "kinds": {
-        "domain": 24352,
-        "full": 1415,
+        "domain": 24357,
+        "full": 1417,
         "regexp": 158
       },
       "exact_duplicates_removed": 3,
       "redundancy_audit": {
-        "within_parent_suffix_candidates": 1651,
-        "previous_ruleset_exact_candidates": 5484,
+        "within_parent_suffix_candidates": 1654,
+        "previous_ruleset_exact_candidates": 5487,
         "previous_ruleset_parent_suffix_candidates": 323,
-        "total_candidates": 7458
+        "total_candidates": 7464
       }
     },
     {
@@ -391,9 +391,9 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9622,
+      "rules": 9621,
       "kinds": {
-        "ipcidr": 6207,
+        "ipcidr": 6206,
         "ipcidr6": 3415
       },
       "exact_duplicates_removed": 0,
@@ -415,10 +415,10 @@
   },
   "redundancy_audit": {
     "mode": "report-only",
-    "within_parent_suffix_candidates": 4787,
-    "previous_ruleset_exact_candidates": 5947,
+    "within_parent_suffix_candidates": 4793,
+    "previous_ruleset_exact_candidates": 5950,
     "previous_ruleset_parent_suffix_candidates": 364,
-    "total_candidates": 11098,
+    "total_candidates": 11107,
     "note": "Candidates are retained in every published ruleset; this audit does not change routing payloads."
   },
   "cross_validation": {

@@ -76,6 +76,8 @@ host,g0.gstatic.com,Google
 host,g1.gstatic.com,Google
 host,g2.gstatic.com,Google
 host,g3.gstatic.com,Google
+host,geminiweb-pa.clients.google.com,Google
+host,geminiweb-pa.clients6.google.com,Google
 host,gonglchuangl.net,Google
 host,gongyichuangyi.net,Google
 host,google-analytics-cn.com,Google
@@ -794,6 +796,7 @@ host-suffix,keytransparency.foo,Google
 host-suffix,keytransparency.org,Google
 host-suffix,labs.google,Google
 host-suffix,labs.google.com,Google
+host-suffix,labstailwind.pa.googleapis.com,Google
 host-suffix,lanternal.com,Google
 host-suffix,like.com,Google
 host-suffix,madewithcode.com,Google

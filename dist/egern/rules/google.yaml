@@ -77,6 +77,8 @@ domain_set:
 - g1.gstatic.com
 - g2.gstatic.com
 - g3.gstatic.com
+- geminiweb-pa.clients.google.com
+- geminiweb-pa.clients6.google.com
 - gonglchuangl.net
 - gongyichuangyi.net
 - google-analytics-cn.com
@@ -796,6 +798,7 @@ domain_suffix_set:
 - keytransparency.org
 - labs.google
 - labs.google.com
+- labstailwind.pa.googleapis.com
 - lanternal.com
 - like.com
 - madewithcode.com
