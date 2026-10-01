@@ -8970,7 +8970,6 @@ ip6-cidr,2406:840:fee0::/45,direct
 ip6-cidr,2406:840:fee8::/46,direct
 ip6-cidr,2406:840:feec::/48,direct
 ip6-cidr,2406:840:feee::/47,direct
-ip6-cidr,2406:840:fef1::/48,direct
 ip6-cidr,2406:840:ff00::/40,direct
 ip6-cidr,2406:8480::/32,direct
 ip6-cidr,2406:8500::/32,direct
