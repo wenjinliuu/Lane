@@ -9,7 +9,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "2d71342eea1720da57261b55663c9d55619e9b1c"
+      "revision": "2c892a618f4e23c549d28edd0f3f75407521b1aa"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -18,24 +18,24 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "f2f403fed817d4ff4f30618ed347b85596767a15",
-      "sha256": "1deb144fc8ff4eb69405e48eede0b0ee663faed326396f64dcf4877a582ea24c",
+      "revision": "d0b41caab13e4d80fbeca47d73839489d92a1a48",
+      "sha256": "94044350f2a4831e9968428036e9130e57e3c97d5d2302291856d6e1486631a0",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
       "breaker_percent": 1.0,
       "snapshot_dates": [
+        "2026-10-02",
         "2026-10-01",
         "2026-09-30",
         "2026-09-29",
-        "2026-09-28",
-        "2026-09-27"
+        "2026-09-28"
       ],
       "window_report": "cn-ip-window.json"
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "1b0d64950dc764160ab948c6d78958dfac7cc8ad1b90827c94e0b008d263127e",
+      "sha256": "fecd33077d9a70c495318c336badd3bdf4151a537a91a9aad5c7b3a0a1870e07",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -83,9 +83,9 @@
     {
       "id": "ai",
       "policy": "AI",
-      "rules": 188,
+      "rules": 189,
       "kinds": {
-        "domain": 157,
+        "domain": 158,
         "full": 30,
         "regexp": 1
       },
@@ -358,18 +358,18 @@
     {
       "id": "proxy",
       "policy": "Final",
-      "rules": 25932,
+      "rules": 25933,
       "kinds": {
-        "domain": 24357,
+        "domain": 24358,
         "full": 1417,
         "regexp": 158
       },
       "exact_duplicates_removed": 3,
       "redundancy_audit": {
         "within_parent_suffix_candidates": 1654,
-        "previous_ruleset_exact_candidates": 5487,
+        "previous_ruleset_exact_candidates": 5488,
         "previous_ruleset_parent_suffix_candidates": 323,
-        "total_candidates": 7464
+        "total_candidates": 7465
       }
     },
     {
@@ -391,10 +391,10 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9620,
+      "rules": 9648,
       "kinds": {
-        "ipcidr": 6206,
-        "ipcidr6": 3414
+        "ipcidr": 6205,
+        "ipcidr6": 3443
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
@@ -416,9 +416,9 @@
   "redundancy_audit": {
     "mode": "report-only",
     "within_parent_suffix_candidates": 4793,
-    "previous_ruleset_exact_candidates": 5950,
+    "previous_ruleset_exact_candidates": 5951,
     "previous_ruleset_parent_suffix_candidates": 364,
-    "total_candidates": 11107,
+    "total_candidates": 11108,
     "note": "Candidates are retained in every published ruleset; this audit does not change routing payloads."
   },
   "cross_validation": {
