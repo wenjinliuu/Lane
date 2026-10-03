@@ -5605,6 +5605,7 @@ ip-cidr,43.240.68.0/22,direct
 ip-cidr,43.240.72.0/21,direct
 ip-cidr,43.240.84.0/22,direct
 ip-cidr,43.241.0.0/20,direct
+ip-cidr,43.241.100.0/23,direct
 ip-cidr,43.241.112.0/22,direct
 ip-cidr,43.241.16.0/21,direct
 ip-cidr,43.241.168.0/21,direct
