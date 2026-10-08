@@ -6160,7 +6160,6 @@ ip-cidr,61.87.192.0/18,direct
 ip-cidr,62.234.0.0/16,direct
 ip-cidr,63.140.0.0/24,direct
 ip-cidr,63.140.3.0/24,direct
-ip-cidr,65.111.16.0/22,direct
 ip-cidr,66.102.240.0/21,direct
 ip-cidr,66.102.248.0/23,direct
 ip-cidr,66.102.251.0/24,direct
