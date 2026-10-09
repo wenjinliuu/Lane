@@ -441,7 +441,6 @@ host,ereg.wip1.adobe.com,Final
 host,ereg.wip2.adobe.com,Final
 host,ereg.wip3.adobe.com,Final
 host,ereg.wip4.adobe.com,Final
-host,error-tracking.megamarket.tech,Final
 host,eset-prod-ca48648d0ce7cadf.elb.eu-central-1.amazonaws.com,Final
 host,espn.api.edge.bamgrid.com,Final
 host,espn.hb.omtrdc.net,Final
@@ -680,7 +679,6 @@ host,mesu-cdn.apple.com.akadns.net,Final
 host,mesu-china.apple.com.akadns.net,Final
 host,mesu.apple.com,Final
 host,metacubex.github.io,Final
-host,metrics.21-school.ru,Final
 host,misa-prod.s3.ap-northeast-1.amazonaws.com,Final
 host,misc-assets.itunes.apple.com,Final
 host,ml.cdn-apple.com,Final
@@ -954,7 +952,6 @@ host,s5.mzstatic.com,Final
 host,sa78gs.wpc.edgecastcdn.net,Final
 host,safebrowsing-cache.google.com,Final
 host,safebrowsing.googleapis.com,Final
-host,sberpro.vedomosti.ru,Final
 host,scc-hamivideo.cdn.hinet.net,Final
 host,scc.ott.hinet.net,Final
 host,scholar.google.ae,Final
@@ -1050,7 +1047,6 @@ host,sentry.ozon.ru,Final
 host,sentry.popmechanic.ru,Final
 host,sentry.ppy.sh,Final
 host,sentry.rustore.ru,Final
-host,sentry.sberauto.com,Final
 host,sentry.viqeo.tv,Final
 host,sentry.wb.ru,Final
 host,sequoia.apple.com,Final
@@ -1194,7 +1190,6 @@ host,tmdb-image-prod.b-cdn.net,Final
 host,tmdb-web-image-prod.b-cdn.net,Final
 host,tools.google.com,Final
 host,top-staging.mail.ru,Final
-host,tracing-http.megamarket.tech,Final
 host,trojan-gfw.github.io,Final
 host,tv.applemusic.com,Final
 host,tvcastlive-hamivideo.cdn.hinet.net,Final
@@ -1612,7 +1607,6 @@ host-suffix,20thcenturystudios.com.au,Final
 host-suffix,20thcenturystudios.com.br,Final
 host-suffix,20thcenturystudios.jp,Final
 host-suffix,20yearsoffea.com,Final
-host-suffix,21-school.ru,Final
 host-suffix,21centuryaccess.com,Final
 host-suffix,21heise360dh.cc,Final
 host-suffix,21hub.com,Final
@@ -2041,7 +2035,6 @@ host-suffix,accbusiness.com,Final
 host-suffix,accdn.com.cn,Final
 host-suffix,acces-vod.com,Final
 host-suffix,accessfacebookfromschool.com,Final
-host-suffix,accesspoint.uz,Final
 host-suffix,accomable.com,Final
 host-suffix,account-paypal.info,Final
 host-suffix,account-paypal.net,Final
@@ -2382,7 +2375,6 @@ host-suffix,affinity-lessons.s3.amazonaws.com,Final
 host-suffix,affinity.api.serifservices.com,Final
 host-suffix,affinity.studio,Final
 host-suffix,affirmtrust.com,Final
-host-suffix,afisha.ru,Final
 host-suffix,afkv28.com,Final
 host-suffix,aflamporn.com,Final
 host-suffix,aflamsex.net,Final
@@ -2406,6 +2398,7 @@ host-suffix,agilebits.com,Final
 host-suffix,agrd.eu,Final
 host-suffix,agrd.io,Final
 host-suffix,agri-bank.com,Final
+host-suffix,agroros.ru,Final
 host-suffix,agu.org,Final
 host-suffix,agzy1.com,Final
 host-suffix,ah-me.com,Final
@@ -2425,6 +2418,7 @@ host-suffix,ahtops.com,Final
 host-suffix,ahtranny.com,Final
 host-suffix,ahvideosexe.com,Final
 host-suffix,ahxxx.club,Final
+host-suffix,ai-bank.ru,Final
 host-suffix,ai-robotics.gmo,Final
 host-suffix,ai-sdk.dev,Final
 host-suffix,ai-web3.gmo,Final
@@ -2661,12 +2655,15 @@ host-suffix,akastream.net,Final
 host-suffix,akatns.net,Final
 host-suffix,akbars.ru,Final
 host-suffix,akcdn.com.cn,Final
+host-suffix,akcept.ru,Final
 host-suffix,akiba-online.com,Final
 host-suffix,akiba-souken.com,Final
+host-suffix,akibank.ru,Final
 host-suffix,akita-bank.co.jp,Final
 host-suffix,akstat.io,Final
 host-suffix,akthelp.com,Final
 host-suffix,albagals.com,Final
+host-suffix,albank.ru,Final
 host-suffix,albastudio.co,Final
 host-suffix,albeats.com,Final
 host-suffix,alchemysynth.com,Final
@@ -3194,6 +3191,7 @@ host-suffix,apihub-internal.cn,Final
 host-suffix,apina.biz,Final
 host-suffix,apiok.ru,Final
 host-suffix,apisof.net,Final
+host-suffix,apkbank.ru,Final
 host-suffix,apkcombo.com,Final
 host-suffix,apkmirror.com,Final
 host-suffix,apkpure.com,Final
@@ -3646,6 +3644,7 @@ host-suffix,arctic.ru,Final
 host-suffix,area120.com,Final
 host-suffix,area51.to,Final
 host-suffix,arena.ai,Final
+host-suffix,aresbank.ru,Final
 host-suffix,arewereadyyet.com,Final
 host-suffix,areyoucreditwise.com,Final
 host-suffix,argo-bdp.com,Final
@@ -3984,6 +3983,7 @@ host-suffix,autodeskworkshop.net,Final
 host-suffix,autodraw.com,Final
 host-suffix,autoesporte.com,Final
 host-suffix,autoesporte.com.br,Final
+host-suffix,autofinancebank.ru,Final
 host-suffix,autokreditbank.ru,Final
 host-suffix,automaton-media.com,Final
 host-suffix,automobile.fr,Final
@@ -4310,6 +4310,7 @@ host-suffix,bamtoki.com,Final
 host-suffix,banan.tv,Final
 host-suffix,bananacall.ru,Final
 host-suffix,banatfun.com,Final
+host-suffix,bancaintesa.ru,Final
 host-suffix,band.us,Final
 host-suffix,bandag.cc,Final
 host-suffix,bandag.com,Final
@@ -4327,13 +4328,20 @@ host-suffix,bangumi.tv,Final
 host-suffix,bangyourwife.com,Final
 host-suffix,bank-arzamas.ru,Final
 host-suffix,bank-credit-suisse-moscow.ru,Final
+host-suffix,bank-hlynov.ru,Final
 host-suffix,bank-maskan.ir,Final
+host-suffix,bank.yandex.ru,Final
 host-suffix,bank131.com,Final
+host-suffix,bank131.ru,Final
 host-suffix,bankermak.ru,Final
 host-suffix,bankline.ru,Final
 host-suffix,bankmellat.ir,Final
+host-suffix,bankofkazan.ru,Final
+host-suffix,bankperm.ru,Final
 host-suffix,banksepah.ir,Final
+host-suffix,bankstavr.ru,Final
 host-suffix,banksy.tokyo,Final
+host-suffix,bankvl.ru,Final
 host-suffix,banned.video,Final
 host-suffix,bannedbook.net,Final
 host-suffix,bannedbook.org,Final
@@ -4754,6 +4762,7 @@ host-suffix,berizaryad.ru,Final
 host-suffix,berkanawireless.com,Final
 host-suffix,berkeley.edu,Final
 host-suffix,berlincompanions.com,Final
+host-suffix,beru.ru,Final
 host-suffix,best-sex-games.com,Final
 host-suffix,best2pay.net,Final
 host-suffix,best4bim.com,Final
@@ -5528,6 +5537,7 @@ host-suffix,bmwarchiv.de,Final
 host-suffix,bmwartjourney.com,Final
 host-suffix,bmwasia.com,Final
 host-suffix,bmwauslieferungszentrum.com,Final
+host-suffix,bmwbank.ru,Final
 host-suffix,bmwbikes.com,Final
 host-suffix,bmwbkk.de,Final
 host-suffix,bmwccrc.ca,Final
@@ -5630,6 +5640,7 @@ host-suffix,boboporn.net,Final
 host-suffix,bobovip.cc,Final
 host-suffix,bobs-tube.com,Final
 host-suffix,bobvoyeur.com,Final
+host-suffix,boc.ru,Final
 host-suffix,bocici.buzz,Final
 host-suffix,bodgirls.com,Final
 host-suffix,bodyandsoul.com.au,Final
@@ -5665,6 +5676,7 @@ host-suffix,booking-tec.ru,Final
 host-suffix,booking.cn,Final
 host-suffix,booking.com,Final
 host-suffix,bookmark.xxx,Final
+host-suffix,bookmate.ru,Final
 host-suffix,bookmybridgestonetyre.com,Final
 host-suffix,bookonsky.net,Final
 host-suffix,books.com.tw,Final
@@ -6023,6 +6035,7 @@ host-suffix,byjhd.com,Final
 host-suffix,bymj.io,Final
 host-suffix,bypasscensorship.org,Final
 host-suffix,byspotify.com,Final
+host-suffix,bystrobank.ru,Final
 host-suffix,bystys.tech,Final
 host-suffix,bytedapm.com,Final
 host-suffix,bytick.com,Final
@@ -6378,6 +6391,7 @@ host-suffix,centraluniversity.ru,Final
 host-suffix,centralvalidation.com,Final
 host-suffix,centrino.com,Final
 host-suffix,centrino.net,Final
+host-suffix,centrinvest.ru,Final
 host-suffix,ceosummit.ru,Final
 host-suffix,cepacol.ca,Final
 host-suffix,cepacol.com,Final
@@ -6503,6 +6517,8 @@ host-suffix,cheerwholesale.us,Final
 host-suffix,chef.io,Final
 host-suffix,chegg.com,Final
 host-suffix,cheggcdn.com,Final
+host-suffix,chelindbank.ru,Final
+host-suffix,chelinvest.ru,Final
 host-suffix,chemequations.com,Final
 host-suffix,chemnetbase.com,Final
 host-suffix,chengjuanseo.com,Final
@@ -6595,10 +6611,12 @@ host-suffix,cian.ru,Final
 host-suffix,cian.site,Final
 host-suffix,ciangroup.ru,Final
 host-suffix,ciattackers.com,Final
+host-suffix,cibank.ru,Final
 host-suffix,cici.com,Final
 host-suffix,ciciai.com,Final
 host-suffix,ciciaicdn.com,Final
 host-suffix,ciciq.net,Final
+host-suffix,cifra-bank.ru,Final
 host-suffix,cilk.com,Final
 host-suffix,cilk.net,Final
 host-suffix,cindymovies.com,Final
@@ -6654,7 +6672,6 @@ host-suffix,citizenlab.ca,Final
 host-suffix,citizenlab.org,Final
 host-suffix,citrixandautodesk.com,Final
 host-suffix,city-hentai.com,Final
-host-suffix,citydrive.ru,Final
 host-suffix,cityheaven.net,Final
 host-suffix,citylab.com,Final
 host-suffix,cityoflove.com,Final
@@ -6726,7 +6743,6 @@ host-suffix,clipsex.asia,Final
 host-suffix,clitgames.com,Final
 host-suffix,clock.isc.org,Final
 host-suffix,clojure.org,Final
-host-suffix,cloud.ru,Final
 host-suffix,cloudapp.net,Final
 host-suffix,cloudappsecurity.com,Final
 host-suffix,cloudburstresearch.com,Final
@@ -6802,7 +6818,6 @@ host-suffix,cloudlock.com,Final
 host-suffix,cloudn.me,Final
 host-suffix,cloudproxy.app,Final
 host-suffix,cloudrobotics.com,Final
-host-suffix,cloudru.cn,Final
 host-suffix,cloudvolumes.com,Final
 host-suffix,cloudyzgirl.com,Final
 host-suffix,cloupia.com,Final
@@ -6820,6 +6835,7 @@ host-suffix,cm.expert,Final
 host-suffix,cmhalq.com,Final
 host-suffix,cmmedia.com.tw,Final
 host-suffix,cmpaas.com,Final
+host-suffix,cmrbank.ru,Final
 host-suffix,cms-twdigitalassets.com,Final
 host-suffix,cmu.edu,Final
 host-suffix,cn-cdn1.skymansion.net,Final
@@ -6856,6 +6872,7 @@ host-suffix,cnpmjs.org,Final
 host-suffix,cnshopin.com,Final
 host-suffix,cnyes.com,Final
 host-suffix,cnzjp.xyz,Final
+host-suffix,coalmetbank.ru,Final
 host-suffix,cobatt.com,Final
 host-suffix,cobrasearch.com,Final
 host-suffix,cochranelibrary.com,Final
@@ -7109,7 +7126,9 @@ host-suffix,creatwhatsnext.com,Final
 host-suffix,crececonebay.com,Final
 host-suffix,credit-zenit.ru,Final
 host-suffix,creditcardsbay.com,Final
+host-suffix,crediteurope.ru,Final
 host-suffix,creditkarma.com,Final
+host-suffix,creditural.ru,Final
 host-suffix,crewai.com,Final
 host-suffix,cricketcountry.com,Final
 host-suffix,crit-staging.com,Final
@@ -7340,6 +7359,7 @@ host-suffix,dastanhisexy.cc,Final
 host-suffix,dat.foundation,Final
 host-suffix,data-tscbank.ru,Final
 host-suffix,data.com,Final
+host-suffix,databank.ru,Final
 host-suffix,datacloudmy.com,Final
 host-suffix,dataframeworks.com,Final
 host-suffix,dataliberation.org,Final
@@ -7369,6 +7389,7 @@ host-suffix,db.tt,Final
 host-suffix,dba.dk,Final
 host-suffix,dbmoscow.ru,Final
 host-suffix,dbo-dengi.online,Final
+host-suffix,dcapital.ru,Final
 host-suffix,dcard.cc,Final
 host-suffix,dcard.io,Final
 host-suffix,dcard.link,Final
@@ -7441,6 +7462,7 @@ host-suffix,delcamuniversity.com,Final
 host-suffix,delcamusa.com,Final
 host-suffix,delets.online,Final
 host-suffix,delicious.com.au,Final
+host-suffix,delivery-club.ru,Final
 host-suffix,dell,Final
 host-suffix,dell-alw.com,Final
 host-suffix,dell-brand.com,Final
@@ -7629,6 +7651,7 @@ host-suffix,derpibooru.org,Final
 host-suffix,dert.online,Final
 host-suffix,dert.site,Final
 host-suffix,dert.tech,Final
+host-suffix,derzhava.ru,Final
 host-suffix,desertbmw.com,Final
 host-suffix,design-ledrev.com,Final
 host-suffix,design-ledrevolution.com,Final
@@ -8368,6 +8391,7 @@ host-suffix,durexusa.com,Final
 host-suffix,dutrai.com,Final
 host-suffix,duyaoss.com,Final
 host-suffix,duyaossr.com,Final
+host-suffix,dvbank.ru,Final
 host-suffix,dvdstudiopro.biz,Final
 host-suffix,dvdstudiopro.com,Final
 host-suffix,dvdstudiopro.info,Final
@@ -8434,8 +8458,6 @@ host-suffix,eamythic.com,Final
 host-suffix,eamythic.net,Final
 host-suffix,eanordic.com,Final
 host-suffix,eaplay.com,Final
-host-suffix,eaptechka.online,Final
-host-suffix,eapteka.ru,Final
 host-suffix,earngeek.com,Final
 host-suffix,earphonescheapest.com,Final
 host-suffix,earpod.net,Final
@@ -8695,6 +8717,7 @@ host-suffix,ecr.aws,Final
 host-suffix,ecscad.com,Final
 host-suffix,ecspublisher.com,Final
 host-suffix,ecuatorianas.best,Final
+host-suffix,edadeal.ru,Final
 host-suffix,edbi.ir,Final
 host-suffix,edcity.hk,Final
 host-suffix,edengay.net,Final
@@ -8719,6 +8742,7 @@ host-suffix,edx-cdn.org,Final
 host-suffix,edx.org,Final
 host-suffix,eebay.com,Final
 host-suffix,eenike.com,Final
+host-suffix,efbank.ru,Final
 host-suffix,eff.org,Final
 host-suffix,efproject.net,Final
 host-suffix,eft-store.com,Final
@@ -8784,6 +8808,7 @@ host-suffix,elsevier.io,Final
 host-suffix,emac.co.in,Final
 host-suffix,emac.in,Final
 host-suffix,emagic.de,Final
+host-suffix,emb.ru,Final
 host-suffix,embark-studios.com,Final
 host-suffix,embark.games,Final
 host-suffix,embase.com,Final
@@ -8829,6 +8854,8 @@ host-suffix,enemarotica.com,Final
 host-suffix,enemas4fun.com,Final
 host-suffix,enemasexfetish.com,Final
 host-suffix,enematube.com,Final
+host-suffix,energobank.ru,Final
+host-suffix,energotransbank.com,Final
 host-suffix,energystarbuildings.com,Final
 host-suffix,enf-cmnf.com,Final
 host-suffix,enfa.co.id,Final
@@ -9123,6 +9150,7 @@ host-suffix,evise.com,Final
 host-suffix,evolver.com,Final
 host-suffix,evolver3d.com,Final
 host-suffix,evolverpro.com,Final
+host-suffix,evrofinance.ru,Final
 host-suffix,evropaelire.org,Final
 host-suffix,evsecure-aia.verisign.com,Final
 host-suffix,evsecure-crl.verisign.com,Final
@@ -9140,6 +9168,7 @@ host-suffix,exeporn.net,Final
 host-suffix,exgfvideos.xxx,Final
 host-suffix,exgirlfriendmarket.com,Final
 host-suffix,exhentai.org,Final
+host-suffix,eximbank.ru,Final
 host-suffix,exiporn.com,Final
 host-suffix,exoav.com,Final
 host-suffix,exotic-ghana.com,Final
@@ -9153,6 +9182,7 @@ host-suffix,exploitedcollegegirls.com,Final
 host-suffix,exploitedteensasia.com,Final
 host-suffix,exploreintel.com,Final
 host-suffix,explorespanking.com,Final
+host-suffix,expobank.ru,Final
 host-suffix,exporntoons.net,Final
 host-suffix,exposedlatinas.com,Final
 host-suffix,expresswifi.com,Final
@@ -9734,6 +9764,7 @@ host-suffix,filtercams.com,Final
 host-suffix,fimfiction.net,Final
 host-suffix,finalcutpro.com,Final
 host-suffix,finambank.ru,Final
+host-suffix,finance.ozon.ru,Final
 host-suffix,financeleadsonline.com,Final
 host-suffix,financialadvisoriq.com,Final
 host-suffix,financialsoccer.ca,Final
@@ -9796,6 +9827,7 @@ host-suffix,finishinfo.se,Final
 host-suffix,finishkilpailu.fi,Final
 host-suffix,finishwin.be,Final
 host-suffix,finlitsummit.org,Final
+host-suffix,finstarbank.ru,Final
 host-suffix,fiotolia.com,Final
 host-suffix,fire-emblem-heroes.com,Final
 host-suffix,firebase.com,Final
@@ -9921,11 +9953,13 @@ host-suffix,fonts.com,Final
 host-suffix,fonts.net,Final
 host-suffix,fontshop.com,Final
 host-suffix,fontsinuse.com,Final
+host-suffix,foodfox.ru,Final
 host-suffix,foofle.com,Final
 host-suffix,footprintdns.com,Final
 host-suffix,footseen.com,Final
 host-suffix,footstockings.com,Final
 host-suffix,footwear-cadcam.com,Final
+host-suffix,forabank.ru,Final
 host-suffix,forbes.com,Final
 host-suffix,forbesimg.com,Final
 host-suffix,forbiddenasian.com,Final
@@ -10539,6 +10573,7 @@ host-suffix,gazounabi.com,Final
 host-suffix,gazprombank.com,Final
 host-suffix,gazprombank.investments,Final
 host-suffix,gazprombank.ru,Final
+host-suffix,gaztransbank.ru,Final
 host-suffix,gb.ru,Final
 host-suffix,gbank.com.mm,Final
 host-suffix,gbiz,Final
@@ -10561,6 +10596,7 @@ host-suffix,gdsrx888.com,Final
 host-suffix,gears5.com,Final
 host-suffix,gearspop.com,Final
 host-suffix,gearstactics.com,Final
+host-suffix,gebank.ru,Final
 host-suffix,geceguby.ru,Final
 host-suffix,geek-squad-support.com,Final
 host-suffix,geek-squad.net,Final
@@ -10600,6 +10636,7 @@ host-suffix,gemini.google.com,Final
 host-suffix,gemini.gstatic.com,Final
 host-suffix,gemini.yahoo.com,Final
 host-suffix,gen.lib.rus.ec,Final
+host-suffix,genbank.ru,Final
 host-suffix,gendai.net,Final
 host-suffix,generativeai.google,Final
 host-suffix,generativelanguage.googleapis.com,Final
@@ -10664,7 +10701,6 @@ host-suffix,getprintersupports.com,Final
 host-suffix,getscorecash.com,Final
 host-suffix,getsentry.com,Final
 host-suffix,getsexgames.com,Final
-host-suffix,getsynapse.io,Final
 host-suffix,gettr.com,Final
 host-suffix,gettyimages.ae,Final
 host-suffix,gettyimages.at,Final
@@ -10734,11 +10770,9 @@ host-suffix,gib-global.com,Final
 host-suffix,gib.sg,Final
 host-suffix,gibdev.net,Final
 host-suffix,gibtds.ru,Final
-host-suffix,gid.ru,Final
 host-suffix,giffgaff.com,Final
 host-suffix,giffgaff.design,Final
 host-suffix,gifnuki.com,Final
-host-suffix,giga.chat,Final
 host-suffix,gigabyte.cn,Final
 host-suffix,gigabyte.com,Final
 host-suffix,gigantits.com,Final
@@ -10809,7 +10843,6 @@ host-suffix,gitstar.com,Final
 host-suffix,gitstar.net,Final
 host-suffix,gittigidiyor.net,Final
 host-suffix,gittigidiyorsikayet.com,Final
-host-suffix,gitverse.ru,Final
 host-suffix,givemebuzzsaw.com,Final
 host-suffix,gizmoxxx.com,Final
 host-suffix,gkecnapps.cn,Final
@@ -11463,6 +11496,7 @@ host-suffix,half.com.cn,Final
 host-suffix,half.tv,Final
 host-suffix,halfcanada.com,Final
 host-suffix,halfjapan.com,Final
+host-suffix,halvacard.ru,Final
 host-suffix,hami-mod.buzz,Final
 host-suffix,hamsterfucktube.com,Final
 host-suffix,hamsterporn.tv,Final
@@ -11964,6 +11998,7 @@ host-suffix,home-made-porn-movies.com,Final
 host-suffix,home-made-videos.com,Final
 host-suffix,home-sex-tapes.com,Final
 host-suffix,home-song.com,Final
+host-suffix,home.bank,Final
 host-suffix,homealonemilfs.com,Final
 host-suffix,homebox.com,Final
 host-suffix,homeboxoffice.com,Final
@@ -12479,6 +12514,7 @@ host-suffix,ibooksauthor.com,Final
 host-suffix,ibradome.com,Final
 host-suffix,ic.ac.uk,Final
 host-suffix,icashpassport.com.mx,Final
+host-suffix,icbcmoscow.ru,Final
 host-suffix,iccf.com,Final
 host-suffix,icegay.tv,Final
 host-suffix,icegaytube.tv,Final
@@ -12575,7 +12611,6 @@ host-suffix,icqtutor.com,Final
 host-suffix,icqvideo.com,Final
 host-suffix,icsd.fiz-karlsruhe.de,Final
 host-suffix,icuminside.com,Final
-host-suffix,id.ru,Final
 host-suffix,idarkdoll.com,Final
 host-suffix,idea-server.com,Final
 host-suffix,ideal-teens.com,Final
@@ -12862,6 +12897,7 @@ host-suffix,imstagram.com,Final
 host-suffix,imtagram.com,Final
 host-suffix,imtintl.com,Final
 host-suffix,imzog.com,Final
+host-suffix,in-bank.ru,Final
 host-suffix,inaporn.com,Final
 host-suffix,inasian.club,Final
 host-suffix,inbox.ru,Final
@@ -12923,6 +12959,7 @@ host-suffix,ingka-system.cn,Final
 host-suffix,ingka.com,Final
 host-suffix,ingka.dev,Final
 host-suffix,ingkacentres.com,Final
+host-suffix,ingobank.ru,Final
 host-suffix,inherd.mom,Final
 host-suffix,inhumanity.com,Final
 host-suffix,inikesneakers.com,Final
@@ -13255,6 +13292,7 @@ host-suffix,inventorfusion.com,Final
 host-suffix,inventorseries.com,Final
 host-suffix,inventorship.com.au,Final
 host-suffix,investorschronicle.co.uk,Final
+host-suffix,investpay.ru,Final
 host-suffix,invity.io,Final
 host-suffix,inxporn.com,Final
 host-suffix,ioe.com,Final
@@ -13425,6 +13463,7 @@ host-suffix,isheppc.com,Final
 host-suffix,isiknowledge.com,Final
 host-suffix,iskoot.com,Final
 host-suffix,islamiccenterofnewlondon.com,Final
+host-suffix,isnbank.ru,Final
 host-suffix,isomorphiclabs.com,Final
 host-suffix,iss138.com,Final
 host-suffix,issitedownrightnow.com,Final
@@ -13441,6 +13480,7 @@ host-suffix,ita-do.com,Final
 host-suffix,itaeromanga.com,Final
 host-suffix,italiabeatsbydrdre.com,Final
 host-suffix,itasoftware.com,Final
+host-suffix,itb.ru,Final
 host-suffix,itcanwait.com,Final
 host-suffix,itcfonts.com,Final
 host-suffix,itch.io,Final
@@ -13779,21 +13819,6 @@ host-suffix,jiuse821.com,Final
 host-suffix,jiuse822.com,Final
 host-suffix,jiuse823.com,Final
 host-suffix,jivara.global,Final
-host-suffix,jivo.chat,Final
-host-suffix,jivo.ru,Final
-host-suffix,jivochat.co.in,Final
-host-suffix,jivochat.co.za,Final
-host-suffix,jivochat.com,Final
-host-suffix,jivochat.com.br,Final
-host-suffix,jivochat.com.co,Final
-host-suffix,jivochat.com.pe,Final
-host-suffix,jivochat.com.tr,Final
-host-suffix,jivochat.de,Final
-host-suffix,jivochat.es,Final
-host-suffix,jivochat.ng,Final
-host-suffix,jivochat.ru,Final
-host-suffix,jivosite.com,Final
-host-suffix,jivosite.ru,Final
 host-suffix,jiyou520.com,Final
 host-suffix,jiyu-kobo.co.jp,Final
 host-suffix,jizzboom.com,Final
@@ -13962,6 +13987,7 @@ host-suffix,jwpltx.com,Final
 host-suffix,jwpsrv.com,Final
 host-suffix,jwt.ms,Final
 host-suffix,jzydh.com,Final
+host-suffix,k-bnk.ru,Final
 host-suffix,k8s.io,Final
 host-suffix,k9vidz.com,Final
 host-suffix,kaamuu.com,Final
@@ -14001,6 +14027,7 @@ host-suffix,kama-nk.ru,Final
 host-suffix,kamababa.com,Final
 host-suffix,kamisama-day.jp,Final
 host-suffix,kamisama-maeda-lab.com,Final
+host-suffix,kamkombank.ru,Final
 host-suffix,kampalaexclusiveescorts.com,Final
 host-suffix,kanav.info,Final
 host-suffix,kannewyork.com,Final
@@ -14063,6 +14090,7 @@ host-suffix,katestube.com,Final
 host-suffix,kavkazr.com,Final
 host-suffix,kawaiikawaii.jp,Final
 host-suffix,kaydara.com,Final
+host-suffix,kbb.ru,Final
 host-suffix,kbzbank.com,Final
 host-suffix,kbzpay.com,Final
 host-suffix,kc3000.shop,Final
@@ -14245,8 +14273,9 @@ host-suffix,konamistyle.jp,Final
 host-suffix,kopfhorergunstigshop.com,Final
 host-suffix,koreanpornmovie.com,Final
 host-suffix,korewaeroi.com,Final
-host-suffix,korona.com,Final
+host-suffix,koronapay.com,Final
 host-suffix,koshelek.app,Final
+host-suffix,koshelev-bank.ru,Final
 host-suffix,kostenlosepornoclips.com,Final
 host-suffix,kotl.in,Final
 host-suffix,kotlinconf.com,Final
@@ -14263,6 +14292,7 @@ host-suffix,kraftonde.com,Final
 host-suffix,kraken.com,Final
 host-suffix,kraken.onl,Final
 host-suffix,krakenjs.com,Final
+host-suffix,kremlinbank.ru,Final
 host-suffix,krhentai.com,Final
 host-suffix,kristenbjorn.com,Final
 host-suffix,krosspictures.com,Final
@@ -14294,9 +14324,9 @@ host-suffix,kumapon.jp,Final
 host-suffix,kumo.com,Final
 host-suffix,kun66.xyz,Final
 host-suffix,kundun1069.com,Final
-host-suffix,kuper.ru,Final
 host-suffix,kusugurizanmai.com,Final
 host-suffix,kutjeporno.com,Final
+host-suffix,kuzbank.ru,Final
 host-suffix,kynogon.com,Final
 host-suffix,kyodo-d.info,Final
 host-suffix,kyodo-d.jp,Final
@@ -14329,6 +14359,7 @@ host-suffix,languagetool.org,Final
 host-suffix,lanik.us,Final
 host-suffix,lanmdh.net,Final
 host-suffix,lanniser-ylo.shop,Final
+host-suffix,lanta.ru,Final
 host-suffix,lantern.io,Final
 host-suffix,lanternal.com,Final
 host-suffix,laohu8.com,Final
@@ -14617,6 +14648,7 @@ host-suffix,localizejs.com,Final
 host-suffix,localizestatus.com,Final
 host-suffix,localpresshk.com,Final
 host-suffix,localxlist.org,Final
+host-suffix,lockobank.ru,Final
 host-suffix,log-upload-os.hoyoverse.com,Final
 host-suffix,log.dzen.ru,Final
 host-suffix,log.rw,Final
@@ -14984,6 +15016,8 @@ host-suffix,mariokart.com.cn,Final
 host-suffix,mariokart7.com,Final
 host-suffix,mariokart8.com,Final
 host-suffix,mariosupersluggers.com,Final
+host-suffix,maritimebank.com,Final
+host-suffix,market.ru,Final
 host-suffix,marketexecutive.net,Final
 host-suffix,marketing-cloud.com,Final
 host-suffix,marketing-nirvana.com,Final
@@ -15191,6 +15225,7 @@ host-suffix,mbheadphone.com,Final
 host-suffix,mc.yandex.ru,Final
 host-suffix,mcafee.com,Final
 host-suffix,mcb.com.mm,Final
+host-suffix,mcbank.ru,Final
 host-suffix,mcchcdn.com,Final
 host-suffix,mcd-holdings.co.jp,Final
 host-suffix,mcd.cn,Final
@@ -15299,8 +15334,6 @@ host-suffix,megafon.com,Final
 host-suffix,megafon.ru,Final
 host-suffix,megafonpro.ru,Final
 host-suffix,megalodon.jp,Final
-host-suffix,megamarket.ru,Final
-host-suffix,megamarket.tech,Final
 host-suffix,megamon.co.kr,Final
 host-suffix,megapay.nz,Final
 host-suffix,megaphone.fm,Final
@@ -15354,6 +15387,7 @@ host-suffix,metacloud.com,Final
 host-suffix,metacpan.org,Final
 host-suffix,metacritic.com,Final
 host-suffix,metacubex.one,Final
+host-suffix,metallinvestbank.ru,Final
 host-suffix,metalpha.finance,Final
 host-suffix,metamask.io,Final
 host-suffix,metamind.io,Final
@@ -15362,6 +15396,7 @@ host-suffix,metart.com,Final
 host-suffix,metartnetwork.com,Final
 host-suffix,metcams.com,Final
 host-suffix,meteum.ai,Final
+host-suffix,metib.ru,Final
 host-suffix,metrics.duolingo.com,Final
 host-suffix,metrics.viqeo.tv,Final
 host-suffix,metrika.yandex.com,Final
@@ -15963,11 +15998,13 @@ host-suffix,modoo.at,Final
 host-suffix,modperl.pl,Final
 host-suffix,modrinth.com,Final
 host-suffix,modular.im,Final
+host-suffix,modulbank.ru,Final
 host-suffix,moedigi.com,Final
 host-suffix,moeero-library.com,Final
 host-suffix,moefuns.co,Final
 host-suffix,moeimg.net,Final
 host-suffix,moepedia.net,Final
+host-suffix,moex.com,Final
 host-suffix,moez-m.com,Final
 host-suffix,mof.kemomi.me,Final
 host-suffix,mofos.com,Final
@@ -16015,6 +16052,7 @@ host-suffix,momtarts3d.com,Final
 host-suffix,momtube.club,Final
 host-suffix,monaitv.me,Final
 host-suffix,monbeats2013.com,Final
+host-suffix,moneta.ru,Final
 host-suffix,money-link.com.tw,Final
 host-suffix,moneywithfacebook.com,Final
 host-suffix,mongodb.com,Final
@@ -16274,6 +16312,7 @@ host-suffix,msocdn.com,Final
 host-suffix,msocsp.com,Final
 host-suffix,msoopent.com,Final
 host-suffix,mspairlift.com,Final
+host-suffix,mspbank.ru,Final
 host-suffix,mspil.cn,Final
 host-suffix,msra.cn,Final
 host-suffix,msropendata.com,Final
@@ -16589,6 +16628,7 @@ host-suffix,nastyvids.com,Final
 host-suffix,nataliefiore.com,Final
 host-suffix,natgeokidsbooks.co.uk,Final
 host-suffix,natgeomaps.com,Final
+host-suffix,nationalclearingcentre.ru,Final
 host-suffix,nationalgeographic.com,Final
 host-suffix,nationalgeographicpartners.com,Final
 host-suffix,nativeincolour.com.au,Final
@@ -16675,7 +16715,6 @@ host-suffix,nenastran.com,Final
 host-suffix,nenitas.club,Final
 host-suffix,nentindo.net,Final
 host-suffix,neoforged.net,Final
-host-suffix,neon.click,Final
 host-suffix,neotokyo.supertop-100.com,Final
 host-suffix,neovim.io,Final
 host-suffix,neow.in,Final
@@ -16895,6 +16934,7 @@ host-suffix,nichost.ru,Final
 host-suffix,nickscipio.com,Final
 host-suffix,nicky.xxx,Final
 host-suffix,nico,Final
+host-suffix,nico-bank.ru,Final
 host-suffix,nico.ms,Final
 host-suffix,nicochannel.jp,Final
 host-suffix,nicodic.jp,Final
@@ -17136,6 +17176,7 @@ host-suffix,nintendoswitchtogether.com,Final
 host-suffix,nintendowii.com,Final
 host-suffix,niosii.com,Final
 host-suffix,niosii.net,Final
+host-suffix,nipbank.ru,Final
 host-suffix,nishinipponbank.co.jp,Final
 host-suffix,nist.gov,Final
 host-suffix,niuc2.com,Final
@@ -17156,6 +17197,7 @@ host-suffix,njav.tv,Final
 host-suffix,njavtv.com,Final
 host-suffix,njpw.co.jp,Final
 host-suffix,njpw1972.com,Final
+host-suffix,nkcbank.ru,Final
 host-suffix,nke6.com,Final
 host-suffix,nlm.io,Final
 host-suffix,nlsexfilmpjes.com,Final
@@ -17192,6 +17234,7 @@ host-suffix,nordstrommedia.com,Final
 host-suffix,nordvpn.com,Final
 host-suffix,norsk.mobi,Final
 host-suffix,norton.com,Final
+host-suffix,norvikbank.ru,Final
 host-suffix,notebook.google,Final
 host-suffix,notebook.google.com,Final
 host-suffix,notebooklm.google,Final
@@ -17210,9 +17253,11 @@ host-suffix,notionusercontent.com,Final
 host-suffix,novelai.net,Final
 host-suffix,noveltrove.com,Final
 host-suffix,novids.com,Final
+host-suffix,novikom.ru,Final
 host-suffix,novinhabucetuda.com,Final
 host-suffix,novinhagostosa10.com,Final
 host-suffix,novinhasdozapzap.com,Final
+host-suffix,novobank.ru,Final
 host-suffix,novojoy.com,Final
 host-suffix,novostrong.com,Final
 host-suffix,now-ashare.com,Final
@@ -17233,10 +17278,13 @@ host-suffix,npr.org,Final
 host-suffix,nptsibinbank.com,Final
 host-suffix,nrdh99.buzz,Final
 host-suffix,nrooms-dh.sbs,Final
+host-suffix,ns-bank.ru,Final
+host-suffix,nsd.ru,Final
 host-suffix,nsfw.xxx,Final
 host-suffix,nsfw247.to,Final
 host-suffix,nsfwmemes.com,Final
 host-suffix,nsimg.net,Final
+host-suffix,nskbl.ru,Final
 host-suffix,nsloon.com,Final
 host-suffix,nspk.ru,Final
 host-suffix,ntc.party,Final
@@ -17563,6 +17611,7 @@ host-suffix,ok.xxx,Final
 host-suffix,okaapps.com,Final
 host-suffix,okazudouga.blog.jp,Final
 host-suffix,okazudouga.tokyo,Final
+host-suffix,okbank.ru,Final
 host-suffix,okcdn.ru,Final
 host-suffix,okex.com,Final
 host-suffix,okinawabank.co.jp,Final
@@ -17776,6 +17825,7 @@ host-suffix,oraclefoundation.org,Final
 host-suffix,oracleimg.com,Final
 host-suffix,oracleinfinity.io,Final
 host-suffix,oranum.com,Final
+host-suffix,orbank.ru,Final
 host-suffix,orbitera.com,Final
 host-suffix,oreil.ly,Final
 host-suffix,oreilly.com,Final
@@ -17821,7 +17871,6 @@ host-suffix,otaku-168.com,Final
 host-suffix,otaku18a.info,Final
 host-suffix,otaku55.xyz,Final
 host-suffix,otbm.com,Final
-host-suffix,otello.ru,Final
 host-suffix,otokonokoland.com,Final
 host-suffix,otpbank.ru,Final
 host-suffix,oudoll.com,Final
@@ -18007,7 +18056,6 @@ host-suffix,pawoo.net,Final
 host-suffix,paxful.com,Final
 host-suffix,paxlicense.org,Final
 host-suffix,paydiant.com,Final
-host-suffix,payecom.ru,Final
 host-suffix,payget.pro,Final
 host-suffix,paygonline.com,Final
 host-suffix,payhulu.com,Final
@@ -18292,6 +18340,7 @@ host-suffix,persiankitty.com,Final
 host-suffix,person.com,Final
 host-suffix,personaltrainermath.com,Final
 host-suffix,personeelsland.com,Final
+host-suffix,pervbank.ru,Final
 host-suffix,pervclips.com,Final
 host-suffix,perverse.sex,Final
 host-suffix,perverttube.com,Final
@@ -18352,6 +18401,7 @@ host-suffix,pieceofplastic.com,Final
 host-suffix,pifpafarabia.com,Final
 host-suffix,pigav.com,Final
 host-suffix,pikabu.monster,Final
+host-suffix,pikhtabank.ru,Final
 host-suffix,pikpak.io,Final
 host-suffix,pikpak.me,Final
 host-suffix,pikpakdrive.com,Final
@@ -18483,7 +18533,6 @@ host-suffix,plasma-mobile.org,Final
 host-suffix,plasticlabs.com,Final
 host-suffix,plastics-cadcam.com,Final
 host-suffix,platform.dell.com,Final
-host-suffix,platiecom.ru,Final
 host-suffix,platinumlinks.org,Final
 host-suffix,platov.co,Final
 host-suffix,play-bmm.shop,Final
@@ -18570,6 +18619,7 @@ host-suffix,pogobeta.com,Final
 host-suffix,poi.icu,Final
 host-suffix,poi.moe,Final
 host-suffix,poi6.net,Final
+host-suffix,poidem.ru,Final
 host-suffix,poihub.com,Final
 host-suffix,pointtown.com,Final
 host-suffix,poisontube.com,Final
@@ -19075,6 +19125,8 @@ host-suffix,printeron.com,Final
 host-suffix,printersetupsupport.com,Final
 host-suffix,printspots.com,Final
 host-suffix,printspots.net,Final
+host-suffix,priobye.ru,Final
+host-suffix,priovtb.com,Final
 host-suffix,prismlauncher.org,Final
 host-suffix,prismlive.com,Final
 host-suffix,privacysandbox.com,Final
@@ -19156,7 +19208,7 @@ host-suffix,pscp.tv,Final
 host-suffix,pse.is,Final
 host-suffix,psiphon.ca,Final
 host-suffix,psiphon3.com,Final
-host-suffix,pskb.ru,Final
+host-suffix,pskb.com,Final
 host-suffix,pstatic.net,Final
 host-suffix,pstorage.space,Final
 host-suffix,psyccareers.com,Final
@@ -19389,7 +19441,6 @@ host-suffix,radiosputnik.ru,Final
 host-suffix,radiosvoboda.org,Final
 host-suffix,radiotavisupleba.ge,Final
 host-suffix,radiyoyacuvoa.com,Final
-host-suffix,raiffeisen-media.ru,Final
 host-suffix,raiffeisen.ru,Final
 host-suffix,rajwaphq.com,Final
 host-suffix,rakuten-bank.co.jp,Final
@@ -19479,6 +19530,7 @@ host-suffix,rbxlabs.com,Final
 host-suffix,rbxtrk.com,Final
 host-suffix,rcl07.xyz,Final
 host-suffix,rclon.com,Final
+host-suffix,rdb.ru,Final
 host-suffix,rdrom.ru,Final
 host-suffix,rds-yes.buzz,Final
 host-suffix,rdtcdn.com,Final
@@ -19665,11 +19717,11 @@ host-suffix,researchkit.org,Final
 host-suffix,researchkit.tv,Final
 host-suffix,resella.jp,Final
 host-suffix,resellablue.com,Final
+host-suffix,resocreditbank.ru,Final
 host-suffix,resonabank.co.jp,Final
 host-suffix,resoubanana.buzz,Final
 host-suffix,resoubang.buzz,Final
 host-suffix,respawnbyrazer.com,Final
-host-suffix,restnproducts.ru,Final
 host-suffix,restream-media.net,Final
 host-suffix,restream.ru,Final
 host-suffix,rethink.net,Final
@@ -19735,6 +19787,7 @@ host-suffix,rk.com,Final
 host-suffix,rlczdo.xyz,Final
 host-suffix,rm2029.com,Final
 host-suffix,rmbl.ws,Final
+host-suffix,rncb.ru,Final
 host-suffix,rncoluminis.ru,Final
 host-suffix,ro-blox.com,Final
 host-suffix,ro89.com,Final
@@ -19801,6 +19854,7 @@ host-suffix,rosbank-credit.com,Final
 host-suffix,rosbank-dom.ru,Final
 host-suffix,rosbank-leasing.ru,Final
 host-suffix,rosbank.ru,Final
+host-suffix,rosdorbank.ru,Final
 host-suffix,rosemarydoll.com,Final
 host-suffix,roshy.tv,Final
 host-suffix,rossiyasegodnya.com,Final
@@ -19832,6 +19886,7 @@ host-suffix,rrs1.xyz,Final
 host-suffix,rrtis.com,Final
 host-suffix,rs1024.com,Final
 host-suffix,rs2022.com,Final
+host-suffix,rsb.ru,Final
 host-suffix,rsc.org,Final
 host-suffix,rsf.org,Final
 host-suffix,rsg.ms,Final
@@ -19941,6 +19996,7 @@ host-suffix,rustore.ru,Final
 host-suffix,rustore.team,Final
 host-suffix,rustore.tv,Final
 host-suffix,rustup.rs,Final
+host-suffix,rutaxi.ru,Final
 host-suffix,ruten.com.tw,Final
 host-suffix,rutor.info,Final
 host-suffix,rutracker.cc,Final
@@ -20020,7 +20076,6 @@ host-suffix,salesforceliveagent.com,Final
 host-suffix,salesforcemarketingcloud.com,Final
 host-suffix,sambaporno.com,Final
 host-suffix,samebags.com,Final
-host-suffix,samokat.ru,Final
 host-suffix,samsung,Final
 host-suffix,samsung.com,Final
 host-suffix,samsung.com.cn,Final
@@ -20112,36 +20167,16 @@ host-suffix,sb.sb,Final
 host-suffix,sb24.com,Final
 host-suffix,sbank.ir,Final
 host-suffix,sber-bank.by,Final
-host-suffix,sber.pro,Final
 host-suffix,sber.ru,Final
-host-suffix,sberauto.com,Final
-host-suffix,sberbank-insurance.ru,Final
-host-suffix,sberbank-tele.com,Final
 host-suffix,sberbank.com,Final
 host-suffix,sberbank.ru,Final
-host-suffix,sberbankaktivno.ru,Final
-host-suffix,sberbankins.ru,Final
-host-suffix,sbercloud.ru,Final
-host-suffix,sbercloud.tech,Final
-host-suffix,sberdevices.ru,Final
-host-suffix,sberdisk.ru,Final
-host-suffix,sberfactoring.ru,Final
-host-suffix,sberhealth.ru,Final
-host-suffix,sberindex.ru,Final
-host-suffix,sberleasing.ru,Final
-host-suffix,sberlogistics.ru,Final
-host-suffix,sbermarketing.ru,Final
-host-suffix,sbermegamarket.ru,Final
-host-suffix,sbermobile.ru,Final
-host-suffix,sberpb.ru,Final
 host-suffix,sberspasibo.ru,Final
-host-suffix,sbertech.ru,Final
-host-suffix,sbertroika.ru,Final
 host-suffix,sbgkstv.shop,Final
 host-suffix,sbibankllc.ru,Final
 host-suffix,sbishinseibank.co.jp,Final
 host-suffix,sbitravelcard.com,Final
 host-suffix,sbnation.com,Final
+host-suffix,sbpvtb.ru,Final
 host-suffix,sbrf.ru,Final
 host-suffix,sbux.com.my,Final
 host-suffix,sbuxcard.com,Final
@@ -20170,6 +20205,7 @@ host-suffix,scatshop.com,Final
 host-suffix,scatsite.com,Final
 host-suffix,scatvids.club,Final
 host-suffix,scatville.com,Final
+host-suffix,scb.ru,Final
 host-suffix,scdn.co,Final
 host-suffix,scene7.com,Final
 host-suffix,scenesource.me,Final
@@ -20228,6 +20264,7 @@ host-suffix,scripts-for-ucoz.ru,Final
 host-suffix,scrolller.com,Final
 host-suffix,sculpoly.com,Final
 host-suffix,sdcountybmw.com,Final
+host-suffix,sdm.ru,Final
 host-suffix,sdnice.one,Final
 host-suffix,sdnitube.buzz,Final
 host-suffix,seagroup.com,Final
@@ -20346,6 +20383,7 @@ host-suffix,sevenbank.co.jp,Final
 host-suffix,severeporn.com,Final
 host-suffix,severreal.org,Final
 host-suffix,sevgikurtulmaz.com,Final
+host-suffix,sevnb.ru,Final
 host-suffix,sex-amateur-clips.com,Final
 host-suffix,sex-av.com,Final
 host-suffix,sex-douga.jp,Final
@@ -20570,6 +20608,8 @@ host-suffix,sharpdaily.tw,Final
 host-suffix,shazam.com,Final
 host-suffix,shdd.ink,Final
 host-suffix,shedevrum.ai,Final
+host-suffix,shedevrum.com,Final
+host-suffix,shedevrum.ru,Final
 host-suffix,sheets.new,Final
 host-suffix,sheflix.com,Final
 host-suffix,shegg.com,Final
@@ -20705,6 +20745,7 @@ host-suffix,shymysex.com,Final
 host-suffix,shywifeswap.com,Final
 host-suffix,siam.org,Final
 host-suffix,sibreal.org,Final
+host-suffix,sibsoc.ru,Final
 host-suffix,sider.ai,Final
 host-suffix,siege-amazon.com,Final
 host-suffix,sierragames.com,Final
@@ -20852,6 +20893,7 @@ host-suffix,slashdot.org,Final
 host-suffix,slavbank.ru,Final
 host-suffix,slavicstar.com,Final
 host-suffix,slayed.com,Final
+host-suffix,slbank.ru,Final
 host-suffix,slc.tl,Final
 host-suffix,sldolls.com,Final
 host-suffix,sleazyneasy.com,Final
@@ -20896,6 +20938,7 @@ host-suffix,smashed.xxx,Final
 host-suffix,smbc.co.jp,Final
 host-suffix,smbcr-bank.ru,Final
 host-suffix,smbctb.co.jp,Final
+host-suffix,smbfin.ru,Final
 host-suffix,smedevelopmentbank.com.mm,Final
 host-suffix,smmsp.xyz,Final
 host-suffix,smokinmovies.com,Final
@@ -20924,10 +20967,12 @@ host-suffix,snapseed.com,Final
 host-suffix,snapstore.io,Final
 host-suffix,snapvolumes.com,Final
 host-suffix,snapwebcams.com,Final
+host-suffix,snbank.ru,Final
 host-suffix,sndcdn.com,Final
 host-suffix,sneaker666.com,Final
 host-suffix,sneakerpage.net,Final
 host-suffix,sneakerskick.com,Final
+host-suffix,sngb.ru,Final
 host-suffix,snjulebu.com,Final
 host-suffix,snk-corp.co.jp,Final
 host-suffix,snk-corp.info,Final
@@ -20951,6 +20996,7 @@ host-suffix,socialcammail.com,Final
 host-suffix,socialkam.com,Final
 host-suffix,socialmediagirls.com,Final
 host-suffix,sociolotron.com,Final
+host-suffix,socium-bank.ru,Final
 host-suffix,socrec.org,Final
 host-suffix,softbank,Final
 host-suffix,softbank-ipo.com,Final
@@ -20981,6 +21027,7 @@ host-suffix,sokmil.com,Final
 host-suffix,sokuresu.ai,Final
 host-suffix,solarcity.com,Final
 host-suffix,solid.ru,Final
+host-suffix,solidbank.ru,Final
 host-suffix,solidifi.app,Final
 host-suffix,solidstate.com,Final
 host-suffix,solostudioksale.com,Final
@@ -21145,6 +21192,7 @@ host-suffix,spasibo.market,Final
 host-suffix,spasibobonus.ru,Final
 host-suffix,spasibosb.ru,Final
 host-suffix,spasibosberbank.ru,Final
+host-suffix,spbexchange.ru,Final
 host-suffix,spcc-sp.com,Final
 host-suffix,spearhead.kr,Final
 host-suffix,specialtyheadphones.com,Final
@@ -21203,6 +21251,7 @@ host-suffix,sputnikglobe.com,Final
 host-suffix,sputnikimages.com,Final
 host-suffix,sputnikmediabank.com,Final
 host-suffix,sputniknews.com,Final
+host-suffix,spvb.ru,Final
 host-suffix,spyjinx.com,Final
 host-suffix,spyrothedragon.com,Final
 host-suffix,sqlite.org,Final
@@ -21609,6 +21658,7 @@ host-suffix,sverigebeatsbydrdre.com,Final
 host-suffix,svipshipin.store,Final
 host-suffix,svoboda.org,Final
 host-suffix,svobodnaevropa.bg,Final
+host-suffix,svoi.ru,Final
 host-suffix,svp-team.com,Final
 host-suffix,svpply.com,Final
 host-suffix,svr-wimax-ocsp.verisign.com,Final
@@ -21713,6 +21763,7 @@ host-suffix,synology.com,Final
 host-suffix,synology.me,Final
 host-suffix,synologydownload.com,Final
 host-suffix,synologyupdate.com,Final
+host-suffix,syntx.ai,Final
 host-suffix,syosetu.com,Final
 host-suffix,sysinternals.com,Final
 host-suffix,system76.com,Final
@@ -22008,6 +22059,7 @@ host-suffix,thanksloyalty.com,Final
 host-suffix,thawte.com,Final
 host-suffix,thawte.de,Final
 host-suffix,thawte.fr,Final
+host-suffix,thbank.ru,Final
 host-suffix,thdh.cc,Final
 host-suffix,the-area.com,Final
 host-suffix,the-japan-news.com,Final
@@ -22115,6 +22167,7 @@ host-suffix,thepornmap.com,Final
 host-suffix,thepornscat.com,Final
 host-suffix,theporntoplist.com,Final
 host-suffix,theporny.com,Final
+host-suffix,thequestion.ru,Final
 host-suffix,thesafeporn.com,Final
 host-suffix,thescottishsun.co.uk,Final
 host-suffix,thesffblog.com,Final
@@ -22254,6 +22307,7 @@ host-suffix,time.gov,Final
 host-suffix,time.nrc.ca,Final
 host-suffix,timefxapp.com,Final
 host-suffix,timelinestoryteller.com,Final
+host-suffix,timerbank.ru,Final
 host-suffix,timesmembership.com,Final
 host-suffix,timestalks.com,Final
 host-suffix,timestamp.apple.com,Final
@@ -22410,6 +22464,7 @@ host-suffix,toy-cadcam.com,Final
 host-suffix,toy-people.com,Final
 host-suffix,toycadcam.com,Final
 host-suffix,toyobank.co.jp,Final
+host-suffix,toyota-bank.ru,Final
 host-suffix,tpension.ru,Final
 host-suffix,tpornstars.com,Final
 host-suffix,tr.com,Final
@@ -22439,6 +22494,7 @@ host-suffix,translatetheweb.com,Final
 host-suffix,translatewiki.net,Final
 host-suffix,translatewiki.org,Final
 host-suffix,transpornsites.com,Final
+host-suffix,transstroybank.ru,Final
 host-suffix,travel-tec.ru,Final
 host-suffix,travelcontroller.com,Final
 host-suffix,travelex.be,Final
@@ -22537,6 +22593,7 @@ host-suffix,tryrating.com,Final
 host-suffix,tryst.link,Final
 host-suffix,ts.la,Final
 host-suffix,ts.net,Final
+host-suffix,tsbnk.ru,Final
 host-suffix,tsescortsdirectory.com,Final
 host-suffix,tsi.ai,Final
 host-suffix,tsmodelstube.com,Final
@@ -22737,6 +22794,7 @@ host-suffix,ubncloud.com,Final
 host-suffix,ubnt.com,Final
 host-suffix,ubnt.com.cn,Final
 host-suffix,ubnw.net,Final
+host-suffix,ubrr.ru,Final
 host-suffix,ubs.com,Final
 host-suffix,ubuntu-touch.io,Final
 host-suffix,ubuntu.com,Final
@@ -22815,6 +22873,7 @@ host-suffix,uma.media,Final
 host-suffix,umagazine.com.hk,Final
 host-suffix,umamusume.akamaized.net,Final
 host-suffix,umass.edu,Final
+host-suffix,umbank.ru,Final
 host-suffix,umbrella.com,Final
 host-suffix,umschool.net,Final
 host-suffix,umsoplaneta.com,Final
@@ -22830,10 +22889,13 @@ host-suffix,unext-info.jp,Final
 host-suffix,unext.co.jp,Final
 host-suffix,unext.jp,Final
 host-suffix,unfiltered.news,Final
+host-suffix,unicredit.ru,Final
+host-suffix,unicreditbank.ru,Final
 host-suffix,unidraw.io,Final
 host-suffix,uninhibitedcomix.com,Final
 host-suffix,unisat.io,Final
 host-suffix,uniswap.org,Final
+host-suffix,united.ru,Final
 host-suffix,unity.com,Final
 host-suffix,unity3d.com,Final
 host-suffix,unityads.unity3d.com,Final
@@ -22876,6 +22938,8 @@ host-suffix,uporno.xxx,Final
 host-suffix,uproxy.org,Final
 host-suffix,uptodown.com,Final
 host-suffix,ura-akiba.jp,Final
+host-suffix,uralfd.ru,Final
+host-suffix,uralprombank.ru,Final
 host-suffix,uralsib.ru,Final
 host-suffix,urasma.com,Final
 host-suffix,urchin.com,Final
@@ -23022,12 +23086,14 @@ host-suffix,vaultproject.io,Final
 host-suffix,vbcdn.com,Final
 host-suffix,vbcdn.net,Final
 host-suffix,vbejeyv.shop,Final
+host-suffix,vbrr.ru,Final
 host-suffix,vcanedge.com,Final
 host-suffix,vce.com,Final
 host-suffix,vcloudair.net,Final
 host-suffix,vct.news,Final
 host-suffix,vday.io,Final
 host-suffix,vdoav.com,Final
+host-suffix,veb.ru,Final
 host-suffix,vecchiescopate.casa,Final
 host-suffix,vector.im,Final
 host-suffix,veet.at,Final
@@ -23085,6 +23151,7 @@ host-suffix,velkaepocha.cz,Final
 host-suffix,velocloud.com,Final
 host-suffix,velostrata.com,Final
 host-suffix,vendu.com,Final
+host-suffix,venets-bank.ru,Final
 host-suffix,venezporn.com,Final
 host-suffix,venmo-touch.com,Final
 host-suffix,venmo.com,Final
@@ -23159,7 +23226,9 @@ host-suffix,vervesex.com,Final
 host-suffix,verygoodnike.com,Final
 host-suffix,veryladyboy.com,Final
 host-suffix,veryshortintroductions.com,Final
+host-suffix,vezet.ru,Final
 host-suffix,vfabric.net,Final
+host-suffix,vfbank.ru,Final
 host-suffix,vfsco.at,Final
 host-suffix,vfsco.be,Final
 host-suffix,vfsco.bg,Final
@@ -23529,6 +23598,7 @@ host-suffix,vkvideo.ru,Final
 host-suffix,vkworkspace.kz,Final
 host-suffix,vl4x.net,Final
 host-suffix,vlb100.ru,Final
+host-suffix,vlbb.ru,Final
 host-suffix,vmailru.net,Final
 host-suffix,vmglobal.net,Final
 host-suffix,vmmark.com,Final
@@ -23837,7 +23907,9 @@ host-suffix,vsphere.com,Final
 host-suffix,vsphere.net,Final
 host-suffix,vtb-direct.com,Final
 host-suffix,vtb-grants.fut.ru,Final
+host-suffix,vtb.com,Final
 host-suffix,vtb.ru,Final
+host-suffix,vtbbo.ru,Final
 host-suffix,vtbglobalperspectives.com,Final
 host-suffix,vtrahe.page,Final
 host-suffix,vtsociety.org,Final
@@ -24632,6 +24704,7 @@ host-suffix,xn--80arpq.xn--p1ai,Final
 host-suffix,xn--80asgb.xn--p1ai,Final
 host-suffix,xn--8uq428d76d.tokyo,Final
 host-suffix,xn--90ab.com,Final
+host-suffix,xn--90ab2c.xn--p1ai,Final
 host-suffix,xn--90absjljw3g.xn--p1ai,Final
 host-suffix,xn--90aifd0az.shop,Final
 host-suffix,xn--90aifd0azb.xn--p1acf,Final
@@ -24648,7 +24721,6 @@ host-suffix,xn--cg4bki,Final
 host-suffix,xn--czrs0t4phtr3a.cn,Final
 host-suffix,xn--d1abkf4ap.fun,Final
 host-suffix,xn--d1acpjx3f.xn--p1ai,Final
-host-suffix,xn--d1aqf.xn--p1ai,Final
 host-suffix,xn--d4ty0ojsqzfd.com,Final
 host-suffix,xn--e1adjldbbpv.xn--90ais,Final
 host-suffix,xn--e1aigb.xn--p1ai,Final
@@ -25002,8 +25074,8 @@ host-suffix,xzxxporn.com,Final
 host-suffix,xzxxtube.com,Final
 host-suffix,ya.cc,Final
 host-suffix,ya.ru,Final
-host-suffix,yabs.yandex.ru,Final
 host-suffix,yaddal.tv,Final
+host-suffix,yadi.sk,Final
 host-suffix,yadori.club,Final
 host-suffix,yads.tech,Final
 host-suffix,yaeby.info,Final
@@ -25179,8 +25251,10 @@ host-suffix,yammer.com,Final
 host-suffix,yamoon.club,Final
 host-suffix,yande.re,Final
 host-suffix,yandex,Final
+host-suffix,yandex-ad.cn,Final
 host-suffix,yandex-bank.net,Final
 host-suffix,yandex-metrica.ru,Final
+host-suffix,yandex-team.com,Final
 host-suffix,yandex-team.ru,Final
 host-suffix,yandex.aero,Final
 host-suffix,yandex.asia,Final
@@ -25205,22 +25279,29 @@ host-suffix,yandex.kg,Final
 host-suffix,yandex.kz,Final
 host-suffix,yandex.lt,Final
 host-suffix,yandex.lv,Final
+host-suffix,yandex.market,Final
 host-suffix,yandex.md,Final
 host-suffix,yandex.mobi,Final
 host-suffix,yandex.net,Final
+host-suffix,yandex.net.ru,Final
 host-suffix,yandex.org,Final
 host-suffix,yandex.pl,Final
+host-suffix,yandex.pro,Final
 host-suffix,yandex.ru,Final
 host-suffix,yandex.st,Final
 host-suffix,yandex.sx,Final
+host-suffix,yandex.taxi,Final
 host-suffix,yandex.tj,Final
 host-suffix,yandex.tm,Final
 host-suffix,yandex.tr,Final
+host-suffix,yandex.travel,Final
 host-suffix,yandex.ua,Final
 host-suffix,yandex.uz,Final
 host-suffix,yandexadexchange.net,Final
 host-suffix,yandexcloud.net,Final
 host-suffix,yandexcom.net,Final
+host-suffix,yandexdataschool.com,Final
+host-suffix,yandexdataschool.ru,Final
 host-suffix,yandexgo.com,Final
 host-suffix,yandexlyceum.ru,Final
 host-suffix,yandexmetrica.com,Final
@@ -25261,6 +25342,7 @@ host-suffix,yazhouse8.com,Final
 host-suffix,yccdn.ru,Final
 host-suffix,yclients.com,Final
 host-suffix,ycombinator.com,Final
+host-suffix,ydb.tech,Final
 host-suffix,ydn.com.tw,Final
 host-suffix,yeonda.com,Final
 host-suffix,yepporn.com,Final
@@ -25312,6 +25394,8 @@ host-suffix,yomiuri-shimbun.pressreader.com,Final
 host-suffix,yomiuri-systec.co.jp,Final
 host-suffix,yomiuri.co.jp,Final
 host-suffix,yoobusiness.ru,Final
+host-suffix,yookassa.ru,Final
+host-suffix,yoomoney.ru,Final
 host-suffix,yopornshop.com,Final
 host-suffix,yorozoonews.jp,Final
 host-suffix,yoshisnewisland.com,Final
@@ -25760,8 +25844,6 @@ host-suffix,zuckerberg.com,Final
 host-suffix,zuckerberg.net,Final
 host-suffix,zukunftswerkstatt.de,Final
 host-suffix,zunked.com,Final
-host-suffix,zvuk-b2b.com,Final
-host-suffix,zvuk.com,Final
 host-suffix,zweiporn.com,Final
 host-suffix,zwtvusa.com,Final
 host-suffix,zynga.com,Final
