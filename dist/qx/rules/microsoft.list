@@ -28,7 +28,6 @@ host,dreamspark.download.prss.microsoft.com,Microsoft
 host,dreamsparkuat.download.prss.microsoft.com,Microsoft
 host,dtlgalleryint.cloudapp.net,Microsoft
 host,f.c2r.ts.cdn.office.net,Microsoft
-host,flightsimulator.azureedge.net,Microsoft
 host,github-api.arkoselabs.com,Microsoft
 host,github-cloud.s3.amazonaws.com,Microsoft
 host,github-production-release-asset-2e65be.s3.amazonaws.com,Microsoft
@@ -132,7 +131,6 @@ host-suffix,applicationinsights.io,Microsoft
 host-suffix,applicationinsights.net,Microsoft
 host-suffix,appserviceenvironment.cn,Microsoft
 host-suffix,aria.ms,Microsoft
-host-suffix,asobostudio.com,Microsoft
 host-suffix,asp.net,Microsoft
 host-suffix,aspnetcdn.com,Microsoft
 host-suffix,atom.io,Microsoft
@@ -309,7 +307,6 @@ host-suffix,engkoo.com,Microsoft
 host-suffix,exp-tas.com,Microsoft
 host-suffix,fasttrackreadysupport.com,Microsoft
 host-suffix,femalefounderscomp.com,Microsoft
-host-suffix,flightsimulator.com,Microsoft
 host-suffix,flipwithsurface.com,Microsoft
 host-suffix,fluidpreview.com,Microsoft
 host-suffix,footprintdns.com,Microsoft

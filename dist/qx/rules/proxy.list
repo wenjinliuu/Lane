@@ -335,6 +335,7 @@ host,d2vjef5jvl6bfs.cloudfront.net,Final
 host,d2xmjdvx03ij56.cloudfront.net,Final
 host,d31dormfno8pk4.cloudfront.net,Final
 host,d33wubrfki0l68.cloudfront.net,Final
+host,d348twzf7a8p5.cloudfront.net,Final
 host,d36nr0u3xmc4mm.cloudfront.net,Final
 host,d3aqoihi2n8ty8.cloudfront.net,Final
 host,d3c27h4odz752x.cloudfront.net,Final
@@ -367,6 +368,7 @@ host,deribit.cdn.prismic.io,Final
 host,deutschewelle.h-cdn.com,Final
 host,developer.microsoft.com,Final
 host,developers.facebook.com,Final
+host,devforum-uploads.s3.dualstack.us-east-2.amazonaws.com,Final
 host,devimages-cdn.apple.com,Final
 host,devstreaming-cdn.apple.com,Final
 host,dfp6rglgjqszk.cloudfront.net,Final
@@ -412,6 +414,7 @@ host,download.mlcc.google.com,Final
 host,download.tensorflow.google.com,Final
 host,download.visualstudio.microsoft.com,Final
 host,downloaddispatch.itunes.apple.com,Final
+host,doy2mn9upadnk.cloudfront.net,Final
 host,dqd0jw5gvbchn.cloudfront.net,Final
 host,dqrpb9wgowsf5.cloudfront.net,Final
 host,dreamspark.download.prss.microsoft.com,Final
@@ -468,7 +471,6 @@ host,firebaselogging.googleapis.com,Final
 host,firebaseperusertopics-pa.googleapis.com,Final
 host,firebaseremoteconfig.googleapis.com,Final
 host,firstsearch.oclc.org,Final
-host,flightsimulator.azureedge.net,Final
 host,fontfiles.googleapis.com,Final
 host,fonts.googleapis.com,Final
 host,fonts.gstatic.com,Final
@@ -618,6 +620,8 @@ host,itunesconnect.apple.com,Final
 host,izattime.qcomgeo2.com,Final
 host,js-cdn.music.apple.com,Final
 host,km.support.apple.com,Final
+host,kp-config-smart-tv.akamaized.net,Final
+host,kp-configs-smart-tv.s3.eu-central-1.amazonaws.com,Final
 host,ksn-cinfo-geo.kaspersky-labs.com,Final
 host,ksn-cinfo.geoksn.kaspersky.com,Final
 host,ksn-crypto-info-geo.kaspersky-labs.com,Final
@@ -3732,7 +3736,6 @@ host-suffix,asminternational.org,Final
 host-suffix,asmr.gay,Final
 host-suffix,asmrbuluo.com,Final
 host-suffix,asn-online.org,Final
-host-suffix,asobostudio.com,Final
 host-suffix,asp-cc.com,Final
 host-suffix,asp.net,Final
 host-suffix,aspbjournals.org,Final
@@ -4734,8 +4737,15 @@ host-suffix,beescrm.ru,Final
 host-suffix,beforeigners.com,Final
 host-suffix,befuck.com,Final
 host-suffix,befuck.net,Final
+host-suffix,beget.app,Final
+host-suffix,beget.cloud,Final
 host-suffix,beget.com,Final
+host-suffix,beget.de,Final
+host-suffix,beget.hosting,Final
+host-suffix,beget.pro,Final
 host-suffix,beget.ru,Final
+host-suffix,beget.tech,Final
+host-suffix,begetcdn.cloud,Final
 host-suffix,begin-trade.com,Final
 host-suffix,behance.net,Final
 host-suffix,behindthescreenz.com,Final
@@ -4763,6 +4773,7 @@ host-suffix,berkanawireless.com,Final
 host-suffix,berkeley.edu,Final
 host-suffix,berlincompanions.com,Final
 host-suffix,beru.ru,Final
+host-suffix,beserver.ru,Final
 host-suffix,best-sex-games.com,Final
 host-suffix,best2pay.net,Final
 host-suffix,best4bim.com,Final
@@ -4859,6 +4870,7 @@ host-suffix,beyondcore.com,Final
 host-suffix,bfa.ru,Final
 host-suffix,bfads.net,Final
 host-suffix,bffshd.com,Final
+host-suffix,bget.ru,Final
 host-suffix,bgicdn.com,Final
 host-suffix,bgm.tv,Final
 host-suffix,bgov.com,Final
@@ -7234,6 +7246,7 @@ host-suffix,cursor-cdn.com,Final
 host-suffix,cursor.com,Final
 host-suffix,cursor.sh,Final
 host-suffix,cursorapi.com,Final
+host-suffix,cursorvm.com,Final
 host-suffix,curve.fi,Final
 host-suffix,curvybbwwives.com,Final
 host-suffix,curvyerotic.com,Final
@@ -9901,7 +9914,6 @@ host-suffix,flic.kr,Final
 host-suffix,flickr,Final
 host-suffix,flickr.com,Final
 host-suffix,flickr.net,Final
-host-suffix,flightsimulator.com,Final
 host-suffix,flipfap.com,Final
 host-suffix,flipnotestudio.com,Final
 host-suffix,flipshare.com,Final
@@ -14283,6 +14295,7 @@ host-suffix,kotlinlang.org,Final
 host-suffix,koubaibu.jp,Final
 host-suffix,koukoku.jp,Final
 host-suffix,kouwobb.com,Final
+host-suffix,kp.yandex.net,Final
 host-suffix,kpacg.com,Final
 host-suffix,kphimsex.net,Final
 host-suffix,kpht85.com,Final
@@ -14909,6 +14922,7 @@ host-suffix,magentomobile.com,Final
 host-suffix,magestic.com,Final
 host-suffix,magicalmirai.com,Final
 host-suffix,magicmovies.com,Final
+host-suffix,magnific.com,Final
 host-suffix,magnoliaav.com.cn,Final
 host-suffix,mahajantech.com,Final
 host-suffix,maidonanews.jp,Final
@@ -16323,6 +16337,7 @@ host-suffix,msys2.org,Final
 host-suffix,mt.lv,Final
 host-suffix,mt0011.site,Final
 host-suffix,mtao.fun,Final
+host-suffix,mts-link.ru,Final
 host-suffix,mts-ws.net,Final
 host-suffix,mts.ru,Final
 host-suffix,mtsbank.ru,Final
@@ -17761,6 +17776,7 @@ host-suffix,opal.google,Final
 host-suffix,opal.google.com,Final
 host-suffix,openai.com,Final
 host-suffix,openai.com.cdn.cloudflare.net,Final
+host-suffix,openai.org,Final
 host-suffix,openamt.com,Final
 host-suffix,openapiplatform.com,Final
 host-suffix,openapiservice.com,Final
@@ -18577,6 +18593,7 @@ host-suffix,playshowtv.com,Final
 host-suffix,playstation,Final
 host-suffix,playstation.com,Final
 host-suffix,playstation.net,Final
+host-suffix,playstationnetwork.com,Final
 host-suffix,playvalorant.com,Final
 host-suffix,playvids.com,Final
 host-suffix,playwarcraft3.com,Final
@@ -19017,6 +19034,7 @@ host-suffix,postgresql.org,Final
 host-suffix,postimages.org,Final
 host-suffix,postimg.cc,Final
 host-suffix,postini.com,Final
+host-suffix,postman.com,Final
 host-suffix,posty.kr,Final
 host-suffix,postyourgirls.ws,Final
 host-suffix,potenza.jp,Final
@@ -19260,6 +19278,7 @@ host-suffix,pussyspace.com,Final
 host-suffix,pussyspace.net,Final
 host-suffix,putinho.net,Final
 host-suffix,putty.org,Final
+host-suffix,pv-cdn.net,Final
 host-suffix,pvp.net,Final
 host-suffix,pvp.tv,Final
 host-suffix,pvt.sexy,Final
@@ -20207,6 +20226,7 @@ host-suffix,scatvids.club,Final
 host-suffix,scatville.com,Final
 host-suffix,scb.ru,Final
 host-suffix,scdn.co,Final
+host-suffix,scea.com,Final
 host-suffix,scene7.com,Final
 host-suffix,scenesource.me,Final
 host-suffix,scharferporno.com,Final
@@ -20218,6 +20238,7 @@ host-suffix,schwab.com,Final
 host-suffix,schwab.com.hk,Final
 host-suffix,schwab.com.sg,Final
 host-suffix,schwabassetmanagement.com,Final
+host-suffix,schwabcdn.com,Final
 host-suffix,schwabplan.com,Final
 host-suffix,sci-hub.ee,Final
 host-suffix,sci-hub.it.nf,Final
@@ -21081,6 +21102,7 @@ host-suffix,sony.com.ni,Final
 host-suffix,sony.com.pa,Final
 host-suffix,sony.com.pe,Final
 host-suffix,sony.com.ph,Final
+host-suffix,sony.com.py,Final
 host-suffix,sony.com.sg,Final
 host-suffix,sony.com.sv,Final
 host-suffix,sony.com.tr,Final
@@ -21124,8 +21146,10 @@ host-suffix,sonydesign.com,Final
 host-suffix,sonydna.com,Final
 host-suffix,sonyentertainmentnetwork.com,Final
 host-suffix,sonyglobalsolutions.jp,Final
+host-suffix,sonyinteractive.com,Final
 host-suffix,sonykigyo.jp,Final
 host-suffix,sonylatvija.com,Final
+host-suffix,sonymusic.com.hk,Final
 host-suffix,sonynetwork.co.jp,Final
 host-suffix,sonypcl.jp,Final
 host-suffix,sonypictures.com,Final
@@ -21246,6 +21270,7 @@ host-suffix,springer.com,Final
 host-suffix,springerlink.com,Final
 host-suffix,springernature.com,Final
 host-suffix,sprinklesapp.com,Final
+host-suffix,sprut.io,Final
 host-suffix,sptvbroadcast.com,Final
 host-suffix,sputnikglobe.com,Final
 host-suffix,sputnikimages.com,Final
@@ -22313,6 +22338,8 @@ host-suffix,timestalks.com,Final
 host-suffix,timestamp.apple.com,Final
 host-suffix,timeweb.cloud,Final
 host-suffix,timeweb.com,Final
+host-suffix,timeweb.tech,Final
+host-suffix,timewebcloud.kz,Final
 host-suffix,timi1.me,Final
 host-suffix,timo0.com,Final
 host-suffix,ting53.xyz,Final
@@ -22771,6 +22798,7 @@ host-suffix,typeisbeautiful.com,Final
 host-suffix,typekit.com,Final
 host-suffix,typekit.net,Final
 host-suffix,typenetwork.com,Final
+host-suffix,typesafe.ai,Final
 host-suffix,typesquare.com,Final
 host-suffix,typography.com,Final
 host-suffix,tyre-cadcam.com,Final
@@ -24706,6 +24734,7 @@ host-suffix,xn--8uq428d76d.tokyo,Final
 host-suffix,xn--90ab.com,Final
 host-suffix,xn--90ab2c.xn--p1ai,Final
 host-suffix,xn--90absjljw3g.xn--p1ai,Final
+host-suffix,xn--90aefb9d.xn--p1ai,Final
 host-suffix,xn--90aifd0az.shop,Final
 host-suffix,xn--90aifd0azb.xn--p1acf,Final
 host-suffix,xn--90wwvt03e.com,Final

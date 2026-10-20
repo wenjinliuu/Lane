@@ -17,13 +17,15 @@ host,c.ppy.sh,Gaming
 host,cdngarenanow-a.akamaihd.net,Gaming
 host,cloudsync-prod.s3.amazonaws.com,Gaming
 host,d1unuk07s6td74.cloudfront.net,Gaming
+host,d348twzf7a8p5.cloudfront.net,Gaming
 host,datarouter.apps.netherrealm.com,Gaming
+host,devforum-uploads.s3.dualstack.us-east-2.amazonaws.com,Gaming
 host,dlgarenanow-a.akamaihd.net,Gaming
 host,dlmobilegarena-a.akamaihd.net,Gaming
+host,doy2mn9upadnk.cloudfront.net,Gaming
 host,ea.tt.omtrdc.net,Gaming
 host,eaassets-a.akamaihd.net,Gaming
 host,f3b7q2p3.ssl.hwcdn.net,Gaming
-host,flightsimulator.azureedge.net,Gaming
 host,gamedownloads-rockstargames-com.akamaized.net,Gaming
 host,gog-cdn-lumen.secure2.footprint.net,Gaming
 host,gog-cdn.akamaized.net,Gaming
@@ -120,7 +122,6 @@ host-suffix,armaplatform.com,Gaming
 host-suffix,artstation.com,Gaming
 host-suffix,artstationmedia.com,Gaming
 host-suffix,artstorm.com,Gaming
-host-suffix,asobostudio.com,Gaming
 host-suffix,awayoutgame.com,Gaming
 host-suffix,ayudanintendo.com,Gaming
 host-suffix,battle.net,Gaming
@@ -282,7 +283,6 @@ host-suffix,fire-emblem-heroes.com,Gaming
 host-suffix,fireemblemawakening.com,Gaming
 host-suffix,firesidegatherings.com,Gaming
 host-suffix,fitgirl-repacks.site,Gaming
-host-suffix,flightsimulator.com,Gaming
 host-suffix,flipnotestudio.com,Gaming
 host-suffix,forgecdn.net,Gaming
 host-suffix,fortnite-vod.akamaized.net,Gaming
@@ -546,6 +546,7 @@ host-suffix,playparagon.com,Gaming
 host-suffix,playstation,Gaming
 host-suffix,playstation.com,Gaming
 host-suffix,playstation.net,Gaming
+host-suffix,playstationnetwork.com,Gaming
 host-suffix,playvalorant.com,Gaming
 host-suffix,playwarcraft3.com,Gaming
 host-suffix,pogo.com,Gaming

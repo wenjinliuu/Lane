@@ -22,7 +22,10 @@ sources:
     window_days: 5
     minimum_presence_days: 3
     history_depth: 32
-    breaker_percent: 1
+    breaker_percent: 1 # observation trigger, never a permanent publication stop
+    confirmation_days: 7
+    maximum_snapshot_age_days: 3
+    minimum_coverage_ratio: 0.5
     license: MIT
   cn_ipv4_reference:
     kind: text

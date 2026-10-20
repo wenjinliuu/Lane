@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 import hashlib
 import json
 import os
@@ -12,11 +12,11 @@ import warnings
 from pathlib import Path
 from typing import Any
 
+from .cn_validation import _addresses, _coverage
 from .cn_window import (
     canonical_cidr_text,
-    coverage_change,
     coverage_stats,
-    stable_window_rules,
+    select_family_update,
 )
 from .model import Rule
 from .text_sources import parse_text_source
@@ -45,8 +45,9 @@ def _run(command: list[str], cwd: Path | None = None) -> str:
             text=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            timeout=120,
         )
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         detail = getattr(exc, "stderr", "") or str(exc)
         raise UpstreamError(f"Command failed: {' '.join(command)}\n{detail.strip()}") from exc
     return result.stdout.strip()
@@ -175,9 +176,12 @@ def _load_history_cache(
         raise UpstreamError(f"Invalid cached history source identity for {source_id}")
     if (metadata.get("repository") != source.get("repository")
             or metadata.get("ref") != source.get("ref", "master")
-            or metadata.get("window_days") != source.get("window_days", 7)
-            or metadata.get("minimum_presence_days") != source.get("minimum_presence_days", 5)
-            or metadata.get("breaker_percent") != float(source.get("breaker_percent", 1))):
+            or metadata.get("window_days") != source.get("window_days", 5)
+            or metadata.get("minimum_presence_days") != source.get("minimum_presence_days", 3)
+            or metadata.get("breaker_percent") != float(source.get("breaker_percent", 1))
+            or metadata.get("confirmation_days") != source.get("confirmation_days", 7)
+            or metadata.get("maximum_snapshot_age_days") != source.get("maximum_snapshot_age_days", 3)
+            or metadata.get("minimum_coverage_ratio") != source.get("minimum_coverage_ratio", 0.5)):
         raise UpstreamError(f"Cached history parameters differ for {source_id}")
     if (not isinstance(content, str)
             or hashlib.sha256(content.encode("utf-8")).hexdigest() != digest):
@@ -218,10 +222,7 @@ def _daily_revisions(
         )
         if len(revisions) == window_days:
             return revisions
-    raise UpstreamError(
-        f"Git history contains only {len(revisions)} distinct snapshot days; "
-        f"{window_days} are required"
-    )
+    return revisions
 
 
 def prepare_cidr_history_source(
@@ -231,225 +232,168 @@ def prepare_cidr_history_source(
     refresh: bool,
     offline: bool,
     previous_rules: tuple[Rule, ...] | None = None,
-    accept_breaker_sha256: str | None = None,
+    previous_metadata: dict[str, Any] | None = None,
+    today: date | None = None,
+    reference_rules: tuple[Rule, ...] | None = None,
 ) -> PreparedHistorySource:
-    """Build a stable CIDR source from validated daily git snapshots.
+    """Rebuild observations from Git; isolate unhealthy IP families from publishing.
 
-    The repository is cloned into a temporary staging directory. Only after all
-    snapshots, both address families, the stable window, and the breaker pass is
-    a single cache artifact atomically replaced. A failed candidate therefore
-    cannot poison the last-known-good cache.
+    Only a validated final build commits the staged cache. Fresh CI runners use
+    checked-in dist as the baseline, never an ephemeral observation counter.
     """
-
     target = cache_dir / "history" / f"{source_id}.json"
-    if accept_breaker_sha256 is not None:
-        accept_breaker_sha256 = accept_breaker_sha256.lower()
-        if (len(accept_breaker_sha256) != 64
-                or any(character not in "0123456789abcdef"
-                       for character in accept_breaker_sha256)):
-            raise UpstreamError("CN-IP approval must be an exact SHA256 digest")
-    if offline:
+    if offline or (target.exists() and not refresh):
         if not target.exists():
             raise UpstreamError(f"No cached history source for {source_id} in offline mode")
         return _load_history_cache(target, source_id, source)
-    if target.exists() and not refresh:
-        return _load_history_cache(target, source_id, source)
 
-    repository_url = source["repository"]
-    ref = source.get("ref", "master")
-    window_days = int(source.get("window_days", 7))
-    minimum_days = int(source.get("minimum_presence_days", 5))
-    history_depth = int(source.get("history_depth", max(32, window_days * 4)))
-    threshold = source.get("breaker_percent", 1)
+    today = today or datetime.now(timezone.utc).date()
+    window_days = int(source.get("window_days", 5))
+    minimum_days = int(source.get("minimum_presence_days", 3))
+    confirmation_days = int(source.get("confirmation_days", 7))
+    history_depth = int(source.get("history_depth", 32))
+    threshold = float(source.get("breaker_percent", 1))
+    max_age = int(source.get("maximum_snapshot_age_days", 3))
+    minimum_ratio = float(source.get("minimum_coverage_ratio", 0.5))
+    if not (1 <= minimum_days <= window_days <= confirmation_days <= history_depth
+            and threshold > 0 and max_age > 0 and 0 < minimum_ratio < 1):
+        raise UpstreamError("Invalid CN-IP observation parameters")
     files = source.get("files", {})
     if files != {"ipv4": "china.txt", "ipv6": "china6.txt"}:
         raise UpstreamError(f"Unexpected CN-IP history files for {source_id}")
-    if history_depth < window_days:
-        raise UpstreamError("CN-IP history depth must cover the full window")
 
+    previous_metadata = previous_metadata or {}
+    snapshots: dict[int, list[tuple[Rule, ...]]] = {4: [], 6: []}
+    dates: dict[int, list[str]] = {4: [], 6: []}
+    errors: dict[int, list[dict[str, str]]] = {4: [], 6: []}
+    snapshot_metadata: list[dict[str, Any]] = []
+    revisions: list[dict[str, str]] = []
+    source_error = None
     staging_root = cache_dir / "staging"
     staging_root.mkdir(parents=True, exist_ok=True)
     try:
-        with tempfile.TemporaryDirectory(
-            dir=staging_root, prefix=f"{source_id}-"
-        ) as temporary_name:
-            repository = Path(temporary_name) / "repository"
-            try:
-                _run(
-                    [
-                        "git",
-                        "clone",
-                        "--branch",
-                        ref,
-                        "--single-branch",
-                        "--depth",
-                        str(history_depth),
-                        repository_url,
-                        str(repository),
-                    ]
-                )
-            except UpstreamError:
-                if not target.exists():
-                    raise
-                warnings.warn(
-                    f"Unable to refresh {source_id}; using its cached stable window",
-                    stacklevel=2,
-                )
-                return _load_history_cache(target, source_id, source)
-
-            revisions = _daily_revisions(
-                repository,
-                [files["ipv4"], files["ipv6"]],
-                window_days,
-            )
-            snapshots: list[tuple[Rule, ...]] = []
-            snapshot_metadata: list[dict[str, Any]] = []
+        with tempfile.TemporaryDirectory(dir=staging_root, prefix=f"{source_id}-") as temporary:
+            repository = Path(temporary) / "repository"
+            _run(["git", "clone", "--branch", source.get("ref", "master"),
+                  "--single-branch", "--depth", str(history_depth),
+                  source["repository"], str(repository)])
+            revisions = _daily_revisions(repository, list(files.values()), history_depth)
             for item in revisions:
-                snapshot_rules: list[Rule] = []
-                file_metadata: dict[str, Any] = {}
-                for family, version in (("ipv4", 4), ("ipv6", 6)):
-                    path = files[family]
-                    content = _run(
-                        ["git", "show", f"{item['revision']}:{path}"],
-                        cwd=repository,
-                    )
+                metadata: dict[str, Any] = {**item, "files": {}}
+                for version in (4, 6):
+                    family = f"ipv{version}"
                     try:
-                        parsed = parse_text_source(
-                            content,
-                            f"{source_id}@{item['date']}:{family}",
+                        content = _run(["git", "show", f"{item['revision']}:{files[family]}"],
+                                       cwd=repository)
+                        parsed = tuple(parse_text_source(
+                            content, f"{source_id}@{item['date']}:{family}",
                             {"format": "cidr", "ip_version": version},
-                        )
-                    except ValueError as exc:
-                        raise UpstreamError(
-                            f"Invalid {family} snapshot for {source_id} on {item['date']}: {exc}"
-                        ) from exc
-                    snapshot_rules.extend(parsed)
-                    file_metadata[family] = {
-                        "path": path,
-                        "sha256": hashlib.sha256(content.encode("utf-8")).hexdigest(),
-                        "rules": len(parsed),
+                        ))
+                        addresses = _addresses(_coverage(parsed, version))
+                        old_addresses = (_addresses(_coverage(previous_rules, version))
+                                         if previous_rules else 0)
+                        # Syntactically valid truncated downloads are still unsafe.
+                        if old_addresses and addresses < old_addresses * minimum_ratio:
+                            raise ValueError("coverage below completeness floor")
+                        age = (today - date.fromisoformat(item["date"])).days
+                        if age < 0:
+                            raise ValueError("snapshot is dated in the future")
+                    except (UpstreamError, ValueError) as exc:
+                        reason = str(exc)
+                        errors[version].append({"date": item["date"], "reason": reason})
+                        metadata["files"][family] = {"path": files[family], "error": reason}
+                        continue
+                    if len(snapshots[version]) < confirmation_days:
+                        snapshots[version].append(parsed)
+                        dates[version].append(item["date"])
+                    metadata["files"][family] = {
+                        "path": files[family],
+                        "sha256": hashlib.sha256(content.encode()).hexdigest(),
+                        "rules": len(parsed), "addresses": str(addresses),
                     }
-                snapshot = tuple(snapshot_rules)
-                snapshots.append(snapshot)
-                snapshot_metadata.append(
-                    {
-                        **item,
-                        "files": file_metadata,
-                        "coverage": coverage_stats(snapshot),
-                    }
-                )
+                snapshot_metadata.append(metadata)
+                # Invalid dates never count; search farther back for valid evidence.
+                if all(len(snapshots[v]) >= confirmation_days for v in (4, 6)):
+                    break
+    except (UpstreamError, OSError) as exc:
+        source_error = str(exc)
 
+    output: list[Rule] = []
+    families: dict[str, Any] = {}
+    for version, kind in ((4, "ipcidr"), (6, "ipcidr6")):
+        previous = (tuple(rule for rule in previous_rules if rule.kind == kind)
+                    if previous_rules is not None else None)
+        reason = source_error
+        if not reason and not revisions:
+            reason = "No dated upstream snapshots"
+        if not reason and errors[version] and errors[version][0]["date"] == revisions[0]["date"]:
+            reason = "Latest snapshot is invalid: " + errors[version][0]["reason"]
+        if not reason and dates[version] and (
+                today - date.fromisoformat(dates[version][0])).days > max_age:
+            reason = "Latest valid snapshot is stale"
+        if not reason:
             try:
-                stable = stable_window_rules(snapshots, minimum_days, source_id)
-                content = canonical_cidr_text(stable)
-                parse_text_source(content, source_id, source)
-                change = coverage_change(previous_rules, stable, threshold)
+                selected, decision = select_family_update(
+                    previous, snapshots[version], version=version, source=source_id,
+                    window_days=window_days, minimum_days=minimum_days,
+                    confirmation_days=confirmation_days, threshold_percent=threshold,
+                    reference=reference_rules if version == 4 else None,
+                )
             except ValueError as exc:
-                raise UpstreamError(f"Invalid stable window for {source_id}: {exc}") from exc
-            digest = hashlib.sha256(content.encode("utf-8")).hexdigest()
-            accepted = bool(
-                change["exceeded"] and accept_breaker_sha256 == digest
-            )
-            change["accepted"] = accepted
-            change["approval_sha256"] = digest if accepted else None
-            report = {
-                "schema": 1,
-                "source": {
-                    "id": source_id,
-                    "repository": repository_url,
-                    "ref": ref,
-                    "files": files,
-                    "license": source.get("license"),
-                },
-                "window": {
-                    "snapshot_days": window_days,
-                    "minimum_presence_days": minimum_days,
-                    "selection": "latest commit for each distinct UTC date",
-                },
-                "breaker": change,
-                "snapshots": snapshot_metadata,
-                "output": {
-                    "sha256": digest,
-                    "coverage": coverage_stats(stable),
-                },
-            }
-            if change["exceeded"] and not accepted:
-                failed = ", ".join(
-                    f"{family}={details['changed_percent']}%"
-                    for family, details in change["families"].items()
-                    if details["exceeded"]
-                )
-                diagnostic = {
-                    "schema": 1,
-                    "status": "blocked",
-                    "reason": "cn-ip-breaker",
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "published_sha256": (
-                        hashlib.sha256(
-                            canonical_cidr_text(previous_rules).encode("utf-8")
-                        ).hexdigest()
-                        if previous_rules is not None else None
-                    ),
-                    "candidate_sha256": digest,
-                    "approval_sha256": accept_breaker_sha256,
-                    "source": {
-                        "id": source_id,
-                        "repository": repository_url,
-                        "ref": ref,
-                        "newest_revision": revisions[0]["revision"],
-                        "oldest_revision": revisions[-1]["revision"],
-                    },
-                    "breaker": change,
-                    "candidate_report": report,
-                }
-                diagnostics = cache_dir / "diagnostics"
-                _atomic_write_bytes(
-                    diagnostics / "lane-update-report.json",
-                    json.dumps(diagnostic, ensure_ascii=False, indent=2).encode("utf-8") + b"\n",
-                )
-                _atomic_write_bytes(
-                    diagnostics / f"cn-ip-candidate-{digest}.json",
-                    json.dumps(
-                        {"report": report, "content": content},
-                        ensure_ascii=False,
-                        indent=2,
-                    ).encode("utf-8") + b"\n",
-                )
-                raise UpstreamError(
-                    f"CN-IP breaker exceeded {change['threshold_percent']}% ({failed}); "
-                    f"candidate SHA256 is {digest}; last-known-good output was preserved"
-                )
-            metadata = {
-                "repository": repository_url,
-                "ref": ref,
-                "revision": revisions[0]["revision"],
-                "sha256": digest,
-                "license": source.get("license"),
-                "window_days": window_days,
-                "minimum_presence_days": minimum_days,
-                "breaker_percent": float(change["threshold_percent"]),
-                "snapshot_dates": [item["date"] for item in revisions],
-                "window_report": "cn-ip-window.json",
-            }
-            artifact = {
-                "schema": 1,
-                "source_id": source_id,
-                "content": content,
-                "sha256": digest,
-                "metadata": metadata,
-                "report": report,
-            }
-            encoded = (
-                json.dumps(artifact, ensure_ascii=False, indent=2).encode("utf-8")
-                + b"\n"
-            )
-            return PreparedHistorySource(
-                content,
-                digest,
-                metadata,
-                report,
-                cache_target=target,
-                cache_content=encoded,
-            )
-    except OSError as exc:
-        raise UpstreamError(f"Unable to stage {source_id}: {exc}") from exc
+                reason = str(exc)
+        if reason:
+            if not previous:
+                raise UpstreamError(f"No valid baseline for IPv{version}: {reason}")
+            selected = previous
+            decision = {"status": "retained", "reason": reason,
+                        "threshold_exceeded": False}
+            warnings.warn(f"CN IPv{version} retained; {reason}", stacklevel=2)
+        if not selected:
+            raise UpstreamError(f"No output for CN IPv{version}")
+        decision.update({
+            "observation_dates": dates[version],
+            "invalid_snapshots": errors[version],
+            "baseline_sha256": (hashlib.sha256(canonical_cidr_text(previous).encode()).hexdigest()
+                                if previous else None),
+            "baseline_revision": previous_metadata.get("revision"),
+            "output_sha256": hashlib.sha256(canonical_cidr_text(selected).encode()).hexdigest(),
+        })
+        families[f"ipv{version}"] = decision
+        output.extend(selected)
+
+    content = canonical_cidr_text(output)
+    parse_text_source(content, source_id, source)
+    digest = hashlib.sha256(content.encode()).hexdigest()
+    partial = any(item["status"] in {"observing", "retained"} for item in families.values())
+    report = {
+        "schema": 2,
+        "status": "partial" if partial else "updated",
+        "source": {"id": source_id, "repository": source["repository"],
+                   "ref": source.get("ref", "master"), "files": files,
+                   "license": source.get("license")},
+        "window": {"snapshot_days": window_days, "minimum_presence_days": minimum_days,
+                   "selection": "latest commit for each distinct UTC date"},
+        "recovery": {"confirmation_days": confirmation_days,
+                     "threshold_percent": threshold,
+                     "maximum_snapshot_age_days": max_age,
+                     "minimum_coverage_ratio": minimum_ratio,
+                     "families": families},
+        "snapshots": snapshot_metadata,
+        "output": {"sha256": digest, "coverage": coverage_stats(output)},
+    }
+    metadata = {
+        "repository": source["repository"], "ref": source.get("ref", "master"),
+        "revision": revisions[0]["revision"] if revisions else previous_metadata.get("revision"),
+        "sha256": digest, "license": source.get("license"),
+        "window_days": window_days, "minimum_presence_days": minimum_days,
+        "breaker_percent": threshold, "confirmation_days": confirmation_days,
+        "maximum_snapshot_age_days": max_age, "minimum_coverage_ratio": minimum_ratio,
+        "snapshot_dates": [item["date"] for item in snapshot_metadata],
+        "window_report": "cn-ip-window.json", "update_status": report["status"],
+    }
+    artifact = {"schema": 1, "source_id": source_id, "content": content,
+                "sha256": digest, "metadata": metadata, "report": report}
+    return PreparedHistorySource(
+        content, digest, metadata, report, cache_target=target,
+        cache_content=json.dumps(artifact, ensure_ascii=False, indent=2).encode() + b"\n",
+    )

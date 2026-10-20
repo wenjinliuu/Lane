@@ -29,7 +29,6 @@ domain_set:
 - dreamsparkuat.download.prss.microsoft.com
 - dtlgalleryint.cloudapp.net
 - f.c2r.ts.cdn.office.net
-- flightsimulator.azureedge.net
 - github-api.arkoselabs.com
 - github-cloud.s3.amazonaws.com
 - github-production-release-asset-2e65be.s3.amazonaws.com
@@ -134,7 +133,6 @@ domain_suffix_set:
 - applicationinsights.net
 - appserviceenvironment.cn
 - aria.ms
-- asobostudio.com
 - asp.net
 - aspnetcdn.com
 - atom.io
@@ -311,7 +309,6 @@ domain_suffix_set:
 - exp-tas.com
 - fasttrackreadysupport.com
 - femalefounderscomp.com
-- flightsimulator.com
 - flipwithsurface.com
 - fluidpreview.com
 - footprintdns.com

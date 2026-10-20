@@ -335,6 +335,7 @@ DOMAIN,d2vjef5jvl6bfs.cloudfront.net
 DOMAIN,d2xmjdvx03ij56.cloudfront.net
 DOMAIN,d31dormfno8pk4.cloudfront.net
 DOMAIN,d33wubrfki0l68.cloudfront.net
+DOMAIN,d348twzf7a8p5.cloudfront.net
 DOMAIN,d36nr0u3xmc4mm.cloudfront.net
 DOMAIN,d3aqoihi2n8ty8.cloudfront.net
 DOMAIN,d3c27h4odz752x.cloudfront.net
@@ -367,6 +368,7 @@ DOMAIN,deribit.cdn.prismic.io
 DOMAIN,deutschewelle.h-cdn.com
 DOMAIN,developer.microsoft.com
 DOMAIN,developers.facebook.com
+DOMAIN,devforum-uploads.s3.dualstack.us-east-2.amazonaws.com
 DOMAIN,devimages-cdn.apple.com
 DOMAIN,devstreaming-cdn.apple.com
 DOMAIN,dfp6rglgjqszk.cloudfront.net
@@ -412,6 +414,7 @@ DOMAIN,download.mlcc.google.com
 DOMAIN,download.tensorflow.google.com
 DOMAIN,download.visualstudio.microsoft.com
 DOMAIN,downloaddispatch.itunes.apple.com
+DOMAIN,doy2mn9upadnk.cloudfront.net
 DOMAIN,dqd0jw5gvbchn.cloudfront.net
 DOMAIN,dqrpb9wgowsf5.cloudfront.net
 DOMAIN,dreamspark.download.prss.microsoft.com
@@ -468,7 +471,6 @@ DOMAIN,firebaselogging.googleapis.com
 DOMAIN,firebaseperusertopics-pa.googleapis.com
 DOMAIN,firebaseremoteconfig.googleapis.com
 DOMAIN,firstsearch.oclc.org
-DOMAIN,flightsimulator.azureedge.net
 DOMAIN,fontfiles.googleapis.com
 DOMAIN,fonts.googleapis.com
 DOMAIN,fonts.gstatic.com
@@ -618,6 +620,8 @@ DOMAIN,itunesconnect.apple.com
 DOMAIN,izattime.qcomgeo2.com
 DOMAIN,js-cdn.music.apple.com
 DOMAIN,km.support.apple.com
+DOMAIN,kp-config-smart-tv.akamaized.net
+DOMAIN,kp-configs-smart-tv.s3.eu-central-1.amazonaws.com
 DOMAIN,ksn-cinfo-geo.kaspersky-labs.com
 DOMAIN,ksn-cinfo.geoksn.kaspersky.com
 DOMAIN,ksn-crypto-info-geo.kaspersky-labs.com
@@ -3732,7 +3736,6 @@ DOMAIN-SUFFIX,asminternational.org
 DOMAIN-SUFFIX,asmr.gay
 DOMAIN-SUFFIX,asmrbuluo.com
 DOMAIN-SUFFIX,asn-online.org
-DOMAIN-SUFFIX,asobostudio.com
 DOMAIN-SUFFIX,asp-cc.com
 DOMAIN-SUFFIX,asp.net
 DOMAIN-SUFFIX,aspbjournals.org
@@ -4734,8 +4737,15 @@ DOMAIN-SUFFIX,beescrm.ru
 DOMAIN-SUFFIX,beforeigners.com
 DOMAIN-SUFFIX,befuck.com
 DOMAIN-SUFFIX,befuck.net
+DOMAIN-SUFFIX,beget.app
+DOMAIN-SUFFIX,beget.cloud
 DOMAIN-SUFFIX,beget.com
+DOMAIN-SUFFIX,beget.de
+DOMAIN-SUFFIX,beget.hosting
+DOMAIN-SUFFIX,beget.pro
 DOMAIN-SUFFIX,beget.ru
+DOMAIN-SUFFIX,beget.tech
+DOMAIN-SUFFIX,begetcdn.cloud
 DOMAIN-SUFFIX,begin-trade.com
 DOMAIN-SUFFIX,behance.net
 DOMAIN-SUFFIX,behindthescreenz.com
@@ -4763,6 +4773,7 @@ DOMAIN-SUFFIX,berkanawireless.com
 DOMAIN-SUFFIX,berkeley.edu
 DOMAIN-SUFFIX,berlincompanions.com
 DOMAIN-SUFFIX,beru.ru
+DOMAIN-SUFFIX,beserver.ru
 DOMAIN-SUFFIX,best-sex-games.com
 DOMAIN-SUFFIX,best2pay.net
 DOMAIN-SUFFIX,best4bim.com
@@ -4859,6 +4870,7 @@ DOMAIN-SUFFIX,beyondcore.com
 DOMAIN-SUFFIX,bfa.ru
 DOMAIN-SUFFIX,bfads.net
 DOMAIN-SUFFIX,bffshd.com
+DOMAIN-SUFFIX,bget.ru
 DOMAIN-SUFFIX,bgicdn.com
 DOMAIN-SUFFIX,bgm.tv
 DOMAIN-SUFFIX,bgov.com
@@ -7234,6 +7246,7 @@ DOMAIN-SUFFIX,cursor-cdn.com
 DOMAIN-SUFFIX,cursor.com
 DOMAIN-SUFFIX,cursor.sh
 DOMAIN-SUFFIX,cursorapi.com
+DOMAIN-SUFFIX,cursorvm.com
 DOMAIN-SUFFIX,curve.fi
 DOMAIN-SUFFIX,curvybbwwives.com
 DOMAIN-SUFFIX,curvyerotic.com
@@ -9901,7 +9914,6 @@ DOMAIN-SUFFIX,flic.kr
 DOMAIN-SUFFIX,flickr
 DOMAIN-SUFFIX,flickr.com
 DOMAIN-SUFFIX,flickr.net
-DOMAIN-SUFFIX,flightsimulator.com
 DOMAIN-SUFFIX,flipfap.com
 DOMAIN-SUFFIX,flipnotestudio.com
 DOMAIN-SUFFIX,flipshare.com
@@ -14283,6 +14295,7 @@ DOMAIN-SUFFIX,kotlinlang.org
 DOMAIN-SUFFIX,koubaibu.jp
 DOMAIN-SUFFIX,koukoku.jp
 DOMAIN-SUFFIX,kouwobb.com
+DOMAIN-SUFFIX,kp.yandex.net
 DOMAIN-SUFFIX,kpacg.com
 DOMAIN-SUFFIX,kphimsex.net
 DOMAIN-SUFFIX,kpht85.com
@@ -14909,6 +14922,7 @@ DOMAIN-SUFFIX,magentomobile.com
 DOMAIN-SUFFIX,magestic.com
 DOMAIN-SUFFIX,magicalmirai.com
 DOMAIN-SUFFIX,magicmovies.com
+DOMAIN-SUFFIX,magnific.com
 DOMAIN-SUFFIX,magnoliaav.com.cn
 DOMAIN-SUFFIX,mahajantech.com
 DOMAIN-SUFFIX,maidonanews.jp
@@ -16323,6 +16337,7 @@ DOMAIN-SUFFIX,msys2.org
 DOMAIN-SUFFIX,mt.lv
 DOMAIN-SUFFIX,mt0011.site
 DOMAIN-SUFFIX,mtao.fun
+DOMAIN-SUFFIX,mts-link.ru
 DOMAIN-SUFFIX,mts-ws.net
 DOMAIN-SUFFIX,mts.ru
 DOMAIN-SUFFIX,mtsbank.ru
@@ -17761,6 +17776,7 @@ DOMAIN-SUFFIX,opal.google
 DOMAIN-SUFFIX,opal.google.com
 DOMAIN-SUFFIX,openai.com
 DOMAIN-SUFFIX,openai.com.cdn.cloudflare.net
+DOMAIN-SUFFIX,openai.org
 DOMAIN-SUFFIX,openamt.com
 DOMAIN-SUFFIX,openapiplatform.com
 DOMAIN-SUFFIX,openapiservice.com
@@ -18577,6 +18593,7 @@ DOMAIN-SUFFIX,playshowtv.com
 DOMAIN-SUFFIX,playstation
 DOMAIN-SUFFIX,playstation.com
 DOMAIN-SUFFIX,playstation.net
+DOMAIN-SUFFIX,playstationnetwork.com
 DOMAIN-SUFFIX,playvalorant.com
 DOMAIN-SUFFIX,playvids.com
 DOMAIN-SUFFIX,playwarcraft3.com
@@ -19017,6 +19034,7 @@ DOMAIN-SUFFIX,postgresql.org
 DOMAIN-SUFFIX,postimages.org
 DOMAIN-SUFFIX,postimg.cc
 DOMAIN-SUFFIX,postini.com
+DOMAIN-SUFFIX,postman.com
 DOMAIN-SUFFIX,posty.kr
 DOMAIN-SUFFIX,postyourgirls.ws
 DOMAIN-SUFFIX,potenza.jp
@@ -19260,6 +19278,7 @@ DOMAIN-SUFFIX,pussyspace.com
 DOMAIN-SUFFIX,pussyspace.net
 DOMAIN-SUFFIX,putinho.net
 DOMAIN-SUFFIX,putty.org
+DOMAIN-SUFFIX,pv-cdn.net
 DOMAIN-SUFFIX,pvp.net
 DOMAIN-SUFFIX,pvp.tv
 DOMAIN-SUFFIX,pvt.sexy
@@ -20207,6 +20226,7 @@ DOMAIN-SUFFIX,scatvids.club
 DOMAIN-SUFFIX,scatville.com
 DOMAIN-SUFFIX,scb.ru
 DOMAIN-SUFFIX,scdn.co
+DOMAIN-SUFFIX,scea.com
 DOMAIN-SUFFIX,scene7.com
 DOMAIN-SUFFIX,scenesource.me
 DOMAIN-SUFFIX,scharferporno.com
@@ -20218,6 +20238,7 @@ DOMAIN-SUFFIX,schwab.com
 DOMAIN-SUFFIX,schwab.com.hk
 DOMAIN-SUFFIX,schwab.com.sg
 DOMAIN-SUFFIX,schwabassetmanagement.com
+DOMAIN-SUFFIX,schwabcdn.com
 DOMAIN-SUFFIX,schwabplan.com
 DOMAIN-SUFFIX,sci-hub.ee
 DOMAIN-SUFFIX,sci-hub.it.nf
@@ -21081,6 +21102,7 @@ DOMAIN-SUFFIX,sony.com.ni
 DOMAIN-SUFFIX,sony.com.pa
 DOMAIN-SUFFIX,sony.com.pe
 DOMAIN-SUFFIX,sony.com.ph
+DOMAIN-SUFFIX,sony.com.py
 DOMAIN-SUFFIX,sony.com.sg
 DOMAIN-SUFFIX,sony.com.sv
 DOMAIN-SUFFIX,sony.com.tr
@@ -21124,8 +21146,10 @@ DOMAIN-SUFFIX,sonydesign.com
 DOMAIN-SUFFIX,sonydna.com
 DOMAIN-SUFFIX,sonyentertainmentnetwork.com
 DOMAIN-SUFFIX,sonyglobalsolutions.jp
+DOMAIN-SUFFIX,sonyinteractive.com
 DOMAIN-SUFFIX,sonykigyo.jp
 DOMAIN-SUFFIX,sonylatvija.com
+DOMAIN-SUFFIX,sonymusic.com.hk
 DOMAIN-SUFFIX,sonynetwork.co.jp
 DOMAIN-SUFFIX,sonypcl.jp
 DOMAIN-SUFFIX,sonypictures.com
@@ -21246,6 +21270,7 @@ DOMAIN-SUFFIX,springer.com
 DOMAIN-SUFFIX,springerlink.com
 DOMAIN-SUFFIX,springernature.com
 DOMAIN-SUFFIX,sprinklesapp.com
+DOMAIN-SUFFIX,sprut.io
 DOMAIN-SUFFIX,sptvbroadcast.com
 DOMAIN-SUFFIX,sputnikglobe.com
 DOMAIN-SUFFIX,sputnikimages.com
@@ -22313,6 +22338,8 @@ DOMAIN-SUFFIX,timestalks.com
 DOMAIN-SUFFIX,timestamp.apple.com
 DOMAIN-SUFFIX,timeweb.cloud
 DOMAIN-SUFFIX,timeweb.com
+DOMAIN-SUFFIX,timeweb.tech
+DOMAIN-SUFFIX,timewebcloud.kz
 DOMAIN-SUFFIX,timi1.me
 DOMAIN-SUFFIX,timo0.com
 DOMAIN-SUFFIX,ting53.xyz
@@ -22771,6 +22798,7 @@ DOMAIN-SUFFIX,typeisbeautiful.com
 DOMAIN-SUFFIX,typekit.com
 DOMAIN-SUFFIX,typekit.net
 DOMAIN-SUFFIX,typenetwork.com
+DOMAIN-SUFFIX,typesafe.ai
 DOMAIN-SUFFIX,typesquare.com
 DOMAIN-SUFFIX,typography.com
 DOMAIN-SUFFIX,tyre-cadcam.com
@@ -24706,6 +24734,7 @@ DOMAIN-SUFFIX,xn--8uq428d76d.tokyo
 DOMAIN-SUFFIX,xn--90ab.com
 DOMAIN-SUFFIX,xn--90ab2c.xn--p1ai
 DOMAIN-SUFFIX,xn--90absjljw3g.xn--p1ai
+DOMAIN-SUFFIX,xn--90aefb9d.xn--p1ai
 DOMAIN-SUFFIX,xn--90aifd0az.shop
 DOMAIN-SUFFIX,xn--90aifd0azb.xn--p1acf
 DOMAIN-SUFFIX,xn--90wwvt03e.com

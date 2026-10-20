@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from collections import defaultdict
 from decimal import Decimal
 from typing import Any, Iterable, Sequence
@@ -29,6 +30,7 @@ def stable_window_rules(
     snapshots: Sequence[Iterable[Rule]],
     minimum_days: int,
     source: str,
+    versions: tuple[int, ...] = (4, 6),
 ) -> tuple[Rule, ...]:
     """Return address space present in at least ``minimum_days`` snapshots.
 
@@ -41,6 +43,8 @@ def stable_window_rules(
     snapshots = tuple(tuple(snapshot) for snapshot in snapshots)
     output: list[Rule] = []
     for version, kind in ((4, "ipcidr"), (6, "ipcidr6")):
+        if version not in versions:
+            continue
         events: dict[int, int] = defaultdict(int)
         for snapshot in snapshots:
             intervals = _coverage(snapshot, version)
@@ -70,6 +74,91 @@ def stable_window_rules(
     if not output:
         raise ValueError("CN-IP stable window produced no routes")
     return tuple(sorted(output, key=lambda rule: rule.sort_key))
+
+
+def select_family_update(
+    previous: tuple[Rule, ...] | None,
+    snapshots: Sequence[tuple[Rule, ...]],
+    *,
+    version: int,
+    source: str,
+    window_days: int = 5,
+    minimum_days: int = 3,
+    confirmation_days: int = 7,
+    threshold_percent: float = 1,
+    reference: tuple[Rule, ...] | None = None,
+) -> tuple[tuple[Rule, ...], dict[str, Any]]:
+    """Publish ordinary consensus, or only individually confirmed large changes.
+
+    Snapshots must be newest first, validated, and from distinct UTC dates.
+    Interval operations deliberately ignore CIDR spelling and file hashes.
+    """
+    if len(snapshots) < window_days:
+        raise ValueError("Not enough valid daily snapshots for normal consensus")
+    candidate = stable_window_rules(
+        snapshots[:window_days], minimum_days, source, versions=(version,)
+    )
+    new = _coverage(candidate, version)
+    old = _coverage(previous, version) if previous is not None else None
+    changed_percent = (
+        float(Decimal((_addresses(_subtract(new, old))
+                       + _addresses(_subtract(old, new))) * 100)
+              / Decimal(_addresses(old))) if old else None
+    )
+    exceeded = changed_percent is not None and changed_percent > threshold_percent
+    selected = candidate
+    if exceeded:
+        selected = previous
+        if len(snapshots) >= confirmation_days:
+            # Retain old addresses seen on any observation day. Add addresses
+            # seen on every day. Thus unrelated small churn cannot reset a
+            # long-lived change, and unconfirmed deletions remain protected.
+            all_days = _coverage(stable_window_rules(
+                snapshots[:confirmation_days], confirmation_days, source,
+                versions=(version,),
+            ), version)
+            any_day = _coverage(stable_window_rules(
+                snapshots[:confirmation_days], 1, source, versions=(version,),
+            ), version)
+            removed = _subtract(old, any_day)
+            retained = _subtract(old, removed)
+            kind = "ipcidr" if version == 4 else "ipcidr6"
+            merged = _coverage(
+                [Rule(kind, cidr, source=source)
+                 for cidr in _cidrs(retained, version) + _cidrs(all_days, version)],
+                version,
+            )
+            selected = tuple(Rule(kind, cidr, source=source)
+                             for cidr in _cidrs(merged, version))
+            if not selected:
+                raise ValueError("Confirmation must not empty an IP family")
+    output = _coverage(selected, version)
+    reference_check: dict[str, Any] = {"available": reference is not None, "role": "advisory-only"}
+    if reference is not None:
+        reference_space = _coverage(reference, version)
+        added = _subtract(new, old) if old else new
+        removed = _subtract(old, new) if old else []
+        reference_check.update({
+            "candidate_added_addresses": str(_addresses(added)),
+            "added_addresses_supported": str(_addresses(added) - _addresses(_subtract(added, reference_space))),
+            "candidate_removed_addresses": str(_addresses(removed)),
+            "removed_addresses_supported": str(_addresses(_subtract(removed, reference_space))),
+        })
+    pending_added = _subtract(new, output)
+    pending_removed = _subtract(output, new)
+    return tuple(selected), {
+        "status": ("observing" if pending_added or pending_removed else
+                   "confirmed" if exceeded else "normal"),
+        "threshold_exceeded": exceeded,
+        "reference_check": reference_check,
+        "candidate_changed_percent": changed_percent,
+        "candidate_sha256": hashlib.sha256(
+            canonical_cidr_text(candidate).encode()).hexdigest(),
+        "published_added_addresses": str(_addresses(_subtract(output, old))) if old else "0",
+        "published_removed_addresses": str(_addresses(_subtract(old, output))) if old else "0",
+        "pending_added_addresses": str(_addresses(pending_added)),
+        "pending_removed_addresses": str(_addresses(pending_removed)),
+    }
 
 
 def coverage_change(

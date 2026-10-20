@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 import json
 import os
 from pathlib import Path
@@ -8,7 +9,7 @@ import subprocess
 import pytest
 
 from proxyrules.build import _previous_cn_window_rules
-from proxyrules.cn_window import coverage_change, stable_window_rules
+from proxyrules.cn_window import coverage_change, stable_window_rules, select_family_update
 from proxyrules.text_sources import parse_text_source
 from proxyrules.upstream import (
     UpstreamError,
@@ -162,84 +163,190 @@ def _source(repository: Path) -> dict[str, object]:
     }
 
 
-def test_history_source_stages_validates_and_preserves_cache(tmp_path: Path) -> None:
+def test_history_source_stages_and_automatically_recovers_without_cache(tmp_path: Path) -> None:
     repository = tmp_path / "upstream"
     cache = tmp_path / "cache"
     _history_repository(repository)
     source = _source(repository)
-
+    baseline = tuple(_rules("10.0.1.0/24", "2001:db8:1::/120"))
     prepared = prepare_cidr_history_source(
-        "cn_ip_primary", source, cache, refresh=True, offline=False
+        "cn_ip_primary", source, cache, refresh=True, offline=False,
+        previous_rules=baseline, today=date(2026, 8, 7),
     )
-    target = cache / "history" / "cn_ip_primary.json"
+    target = cache / "history/cn_ip_primary.json"
     assert not target.exists()
+    assert prepared.report["status"] == "updated"
+    assert all(f["status"] == "confirmed"
+               for f in prepared.report["recovery"]["families"].values())
     commit_history_source_cache(prepared)
-    assert prepared.report["window"]["minimum_presence_days"] == 3
-    assert [item["date"] for item in prepared.report["snapshots"]] == [
-        "2026-08-07",
-        "2026-08-06",
-        "2026-08-05",
-        "2026-08-04",
-        "2026-08-03",
-    ]
-    last_known_good = target.read_bytes()
-
-    reviewed_baseline = tuple(_rules("10.0.1.0/24", "2001:db8:1::/120"))
-    with pytest.raises(UpstreamError, match="breaker exceeded"):
-        prepare_cidr_history_source(
-            "cn_ip_primary",
-            source,
-            cache,
-            refresh=True,
-            offline=False,
-            previous_rules=reviewed_baseline,
-        )
-    assert target.read_bytes() == last_known_good
-    diagnostic = json.loads(
-        (cache / "diagnostics/lane-update-report.json").read_text()
-    )
-    candidate_digest = diagnostic["candidate_sha256"]
-    assert diagnostic["published_sha256"] != candidate_digest
-    with pytest.raises(UpstreamError, match="candidate SHA256"):
-        prepare_cidr_history_source(
-            "cn_ip_primary",
-            source,
-            cache,
-            refresh=True,
-            offline=False,
-            previous_rules=reviewed_baseline,
-            accept_breaker_sha256="0" * 64,
-        )
-    accepted = prepare_cidr_history_source(
-        "cn_ip_primary",
-        source,
-        cache,
-        refresh=True,
-        offline=False,
-        previous_rules=reviewed_baseline,
-        accept_breaker_sha256=candidate_digest,
-    )
-    assert accepted.report["breaker"]["exceeded"] is True
-    assert accepted.report["breaker"]["accepted"] is True
-    assert accepted.report["breaker"]["approval_sha256"] == candidate_digest
-    commit_history_source_cache(accepted)
-    last_known_good = target.read_bytes()
-
-    (repository / "china6.txt").write_text("not-a-cidr\n", encoding="utf-8")
-    _git(repository, "add", "china6.txt")
-    environment = os.environ | {
-        "GIT_AUTHOR_DATE": "2026-08-08T04:00:00Z",
-        "GIT_COMMITTER_DATE": "2026-08-08T04:00:00Z",
-    }
-    _git(repository, "commit", "-m", "invalid day", environment=environment)
-
-    with pytest.raises(UpstreamError, match="Invalid ipv6 snapshot"):
-        prepare_cidr_history_source(
-            "cn_ip_primary", source, cache, refresh=True, offline=False
-        )
-    assert target.read_bytes() == last_known_good
-
     cached = prepare_cidr_history_source(
-        "cn_ip_primary", source, cache, refresh=False, offline=True
+        "cn_ip_primary", source, cache, refresh=False, offline=True,
     )
     assert cached.digest == prepared.digest
+    assert cached.report == prepared.report
+
+
+def _append_snapshot(repository: Path, day: int, ipv4: str, ipv6: str) -> None:
+    (repository / "china.txt").write_text(f"# day {day}\n{ipv4}\n")
+    (repository / "china6.txt").write_text(f"# day {day}\n{ipv6}\n")
+    _git(repository, "add", "china.txt", "china6.txt")
+    environment = os.environ | {
+        "GIT_AUTHOR_DATE": f"2026-08-{day:02d}T04:00:00Z",
+        "GIT_COMMITTER_DATE": f"2026-08-{day:02d}T04:00:00Z",
+    }
+    _git(repository, "commit", "-m", f"day {day}", environment=environment)
+
+
+def test_invalid_family_retained_while_other_family_updates(tmp_path: Path) -> None:
+    repository = tmp_path / "upstream"
+    _history_repository(repository)
+    baseline = tuple(_rules("10.0.0.0/24", "2001:db8::/120"))
+    for day in range(8, 15):
+        _append_snapshot(repository, day, "10.0.1.0/24", "not-a-cidr")
+    prepared = prepare_cidr_history_source(
+        "cn_ip_primary", _source(repository), tmp_path / "cache", True, False,
+        previous_rules=baseline, today=date(2026, 8, 14),
+    )
+    assert {r.value for r in _rules(*prepared.content.splitlines())} == {
+        "10.0.1.0/24", "2001:db8::/120",
+    }
+    families = prepared.report["recovery"]["families"]
+    assert families["ipv4"]["status"] == "confirmed"
+    assert families["ipv6"]["status"] == "retained"
+    assert prepared.report["status"] == "partial"
+    # An invalid date is excluded from observations and never poisons cached CIDRs.
+    assert all(d < "2026-08-08" for d in families["ipv6"]["observation_dates"])
+    commit_history_source_cache(prepared)
+    cached = prepare_cidr_history_source(
+        "cn_ip_primary", _source(repository), tmp_path / "cache", False, True,
+    )
+    assert cached.content == prepared.content
+
+
+def test_network_failure_keeps_published_baseline_on_fresh_runner(tmp_path, monkeypatch):
+    def fail(*args, **kwargs):
+        raise UpstreamError("network unavailable")
+    monkeypatch.setattr("proxyrules.upstream._run", fail)
+    baseline = tuple(_rules("10.0.0.0/24", "2001:db8::/120"))
+    prepared = prepare_cidr_history_source(
+        "cn_ip_primary", _source(tmp_path / "missing"), tmp_path / "cache", True, False,
+        previous_rules=baseline,
+    )
+    assert {r.value for r in _rules(*prepared.content.splitlines())} == {r.value for r in baseline}
+    assert all(f["status"] == "retained"
+               for f in prepared.report["recovery"]["families"].values())
+    with pytest.raises(UpstreamError, match="No valid baseline"):
+        prepare_cidr_history_source(
+            "cn_ip_primary", _source(tmp_path / "missing"), tmp_path / "empty", True, False,
+        )
+
+
+def test_stale_or_truncated_snapshot_retains_family(tmp_path):
+    repository = tmp_path / "upstream"
+    _history_repository(repository)
+    baseline = tuple(_rules("10.0.0.0/24", "2001:db8::/120"))
+    source = _source(repository)
+    stale = prepare_cidr_history_source(
+        "cn_ip_primary", source, tmp_path / "stale", True, False,
+        previous_rules=baseline, today=date(2026, 8, 20),
+    )
+    assert all(f["status"] == "retained"
+               for f in stale.report["recovery"]["families"].values())
+    _append_snapshot(repository, 8, "10.0.0.0/28", "2001:db8::/120")
+    truncated = prepare_cidr_history_source(
+        "cn_ip_primary", source, tmp_path / "truncated", True, False,
+        previous_rules=baseline, today=date(2026, 8, 8),
+    )
+    assert truncated.report["recovery"]["families"]["ipv4"]["status"] == "retained"
+    assert truncated.report["recovery"]["families"]["ipv6"]["status"] == "normal"
+
+
+def _v4(*cidrs):
+    return tuple(parse_text_source("\n".join(cidrs), "test", {"format": "cidr", "ip_version": 4}))
+
+
+def test_large_change_waits_until_seventh_observation_and_updates_baseline():
+    previous = _v4("10.0.0.0/24")
+    candidate = _v4("10.0.1.0/24")
+    for days in (5, 6):
+        selected, report = select_family_update(previous, [candidate] * days, version=4, source="cn")
+        assert selected == previous
+        assert report["status"] == "observing"
+    selected, report = select_family_update(previous, [candidate] * 7, version=4, source="cn")
+    assert {r.value for r in selected} == {"10.0.1.0/24"}
+    assert report["status"] == "confirmed"
+    again, report = select_family_update(selected, [candidate] * 7, version=4, source="cn")
+    assert again == selected
+    assert report["status"] == "normal"
+
+
+def test_confirmed_ranges_publish_even_when_files_keep_changing():
+    previous = _v4("10.0.0.0/24", "10.0.2.0/24")
+    # .2 is consistently removed; .1 consistently added; .3 oscillates;
+    # .0 remains present but the upstream spelling changes each day.
+    snapshots = [
+        _v4(*(["10.0.0.0/24"] if day % 2 else ["10.0.0.0/25", "10.0.0.128/25"]),
+            "10.0.1.0/24", *(["10.0.3.0/24"] if day < 3 else []))
+        for day in range(7)
+    ]
+    selected, report = select_family_update(previous, snapshots, version=4, source="cn")
+    assert {r.value for r in selected} == {"10.0.0.0/23"}
+    assert report["status"] == "observing"
+    assert report["published_added_addresses"] == "256"
+    assert report["published_removed_addresses"] == "256"
+    assert report["pending_added_addresses"] == "256"
+
+
+def test_single_day_absence_prevents_deletion_and_small_change_is_normal():
+    previous = _v4("10.0.0.0/24", "10.0.2.0/24")
+    changed = _v4("10.0.0.0/24")
+    selected, report = select_family_update(previous, [changed] * 6 + [previous], version=4, source="cn")
+    assert {r.value for r in selected} == {r.value for r in previous}
+    assert report["pending_removed_addresses"] == "256"
+    small = _v4("10.0.0.0/24", "10.0.2.0/24", "10.0.3.1/32")
+    selected, report = select_family_update(previous, [small] * 5, version=4, source="cn")
+    assert {r.value for r in selected} == {r.value for r in small}
+    assert report["status"] == "normal"
+
+
+def test_multiple_commits_on_one_day_never_count_as_multiple_observations(tmp_path):
+    repository = tmp_path / "upstream"
+    _history_repository(repository)
+    # Only one distinct day of a new change, despite many commits.
+    for index in range(10):
+        _append_snapshot(repository, 8, f"10.0.1.0/24\n# run {index}", "2001:db8::/120")
+    prepared = prepare_cidr_history_source(
+        "cn_ip_primary", _source(repository), tmp_path / "cache", True, False,
+        previous_rules=tuple(_rules("10.0.0.0/24", "2001:db8::/120")),
+        today=date(2026, 8, 8),
+    )
+    assert "10.0.1.0/24" not in prepared.content
+    assert len(prepared.report["recovery"]["families"]["ipv4"]["observation_dates"]) == 7
+
+
+def test_reference_disagreement_is_reported_without_blocking_stable_changes():
+    previous = _v4("10.0.0.0/24")
+    candidate = _v4("10.0.1.0/24")
+    selected, report = select_family_update(
+        previous, [candidate] * 7, version=4, source="cn", reference=previous,
+    )
+    assert {rule.value for rule in selected} == {"10.0.1.0/24"}
+    assert report["reference_check"]["added_addresses_supported"] == "0"
+    assert report["status"] == "confirmed"
+
+
+def test_interval_confirmation_matches_address_sets_with_random_churn():
+    import ipaddress
+    import random
+    generator = random.Random(20261020)
+    for _ in range(50):
+        # Keep one shared address so no family becomes empty.
+        old = {0} | {i for i in range(1, 32) if generator.randrange(2)}
+        days = [{0} | {i for i in range(1, 32) if generator.randrange(2)} for _ in range(7)]
+        rules = lambda values: _v4(*(f"10.0.0.{i}/32" for i in sorted(values)))
+        selected, _ = select_family_update(
+            rules(old), [rules(day) for day in days], version=4, source="cn",
+        )
+        actual = {int(address) % 256 for rule in selected
+                  for address in ipaddress.ip_network(rule.value)}
+        assert actual == (old & set.union(*days)) | set.intersection(*days)

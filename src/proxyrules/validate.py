@@ -875,7 +875,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
     window = json.loads((dist / "cn-ip-window.json").read_text())
     comparison = json.loads((dist / "cn-ip-validation.json").read_text())
     if (comparison.get("primary_ruleset") != "cn-ip" or comparison.get("independent") is not True
-            or comparison.get("status") not in {"match", "differs"}):
+            or comparison.get("status") not in {"match", "differs", "unavailable"}):
         raise ValidationError("Invalid CN IP comparison report")
     comparison_sources = comparison.get("sources", {})
     for role, source_ids in (("primary", ["cn_ip_primary"]),
@@ -884,7 +884,7 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
             raise ValidationError("CN IP comparison source digests differ from build metadata")
     primary_metadata = metadata["sources"]["cn_ip_primary"]
     snapshots = window.get("snapshots", [])
-    breaker = window.get("breaker", {})
+    recovery = window.get("recovery", {})
     try:
         published_values = [
             line.split(",", 2)[1]
@@ -902,13 +902,49 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
         canonical_cidr_text(published_rules).encode("utf-8")
     ).hexdigest()
     window_output = window.get("output", {})
-    breaker_state_valid = (
-        (breaker.get("exceeded") is False
-         and breaker.get("accepted") is False
-         and breaker.get("approval_sha256") is None)
-        or (breaker.get("exceeded") is True
-            and breaker.get("accepted") is True
-            and breaker.get("approval_sha256") == window_output.get("sha256"))
+    recovery_valid = (
+        window.get("schema") == 2
+        and recovery.get("confirmation_days") == 7
+        and recovery.get("threshold_percent") == 1.0
+        and recovery.get("maximum_snapshot_age_days") == 3
+        and recovery.get("minimum_coverage_ratio") == 0.5
+    )
+    partial = False
+    observed_files = {item["date"]: item.get("files", {}) for item in snapshots}
+    for version, kind in ((4, "ipcidr"), (6, "ipcidr6")):
+        family = recovery.get("families", {}).get(f"ipv{version}", {})
+        status = family.get("status")
+        dates = family.get("observation_dates", [])
+        family_rules = tuple(rule for rule in published_rules if rule.kind == kind)
+        family_digest = hashlib.sha256(canonical_cidr_text(family_rules).encode()).hexdigest()
+        recovery_valid = recovery_valid and (
+            status in {"normal", "confirmed", "observing", "retained"}
+            and isinstance(dates, list) and len(dates) == len(set(dates))
+            and dates == sorted(dates, reverse=True) and len(dates) <= 7
+            and family.get("output_sha256") == family_digest
+            and all(observed_files.get(day, {}).get(f"ipv{version}", {}).get("sha256")
+                    and "error" not in observed_files[day][f"ipv{version}"] for day in dates)
+        )
+        if status == "retained":
+            recovery_valid = recovery_valid and bool(family.get("reason")) and (
+                family.get("baseline_sha256") == family_digest)
+        else:
+            recovery_valid = recovery_valid and len(dates) >= 5
+            if status in {"observing", "confirmed"}:
+                recovery_valid = recovery_valid and family.get("threshold_exceeded") is True
+            if status == "confirmed":
+                recovery_valid = recovery_valid and len(dates) == 7
+            if status == "normal":
+                recovery_valid = recovery_valid and family.get("threshold_exceeded") is False
+            if status in {"normal", "confirmed"}:
+                recovery_valid = recovery_valid and family.get("candidate_sha256") == family_digest
+        partial = partial or status in {"observing", "retained"}
+    recovery_valid = recovery_valid and (
+        window.get("status") == ("partial" if partial else "updated")
+        and primary_metadata.get("update_status") == window.get("status")
+        and primary_metadata.get("confirmation_days") == 7
+        and primary_metadata.get("maximum_snapshot_age_days") == 3
+        and primary_metadata.get("minimum_coverage_ratio") == 0.5
     )
     metadata_ids = [entry.get("id") for entry in metadata.get("rulesets", [])]
     exact_removed_total = sum(
@@ -970,20 +1006,20 @@ def validate_generated(root: Path, config: dict[str, Any]) -> None:
                 "minimum_presence_days": 3,
                 "selection": "latest commit for each distinct UTC date",
             }
-            or len(snapshots) != 5
-            or len({snapshot.get("date") for snapshot in snapshots}) != 5
+            or len(snapshots) > 32
+            or len({snapshot.get("date") for snapshot in snapshots}) != len(snapshots)
+            or primary_metadata.get("snapshot_dates") != [item.get("date") for item in snapshots]
             or window_output.get("sha256") != primary_metadata.get("sha256")
             or window_output.get("sha256") != published_digest
             or window_output.get("coverage") != coverage_stats(published_rules)
             or primary_metadata.get("window_report") != "cn-ip-window.json"
-            or breaker.get("threshold_percent") != 1.0
-            or not breaker_state_valid):
+            or not recovery_valid):
         raise ValidationError("Invalid CN IP stable-window report")
     cn_metadata = next(entry for entry in metadata["rulesets"] if entry["id"] == "cn-ip")
     for version, kind in ((4, "ipcidr"), (6, "ipcidr6")):
         family = comparison.get("families", {}).get(f"ipv{version}", {})
         if not family.get("primary_rule_count") or family["primary_rule_count"] != cn_metadata["kinds"].get(kind):
             raise ValidationError(f"CN IPv{version} rules differ from the comparison report")
-        expected_reference = version == 4
+        expected_reference = version == 4 and comparison.get("status") != "unavailable"
         if family.get("reference_available") is not expected_reference:
             raise ValidationError(f"Invalid CN IPv{version} reference availability")

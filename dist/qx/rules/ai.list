@@ -79,6 +79,7 @@ host-suffix,cursor-cdn.com,AI
 host-suffix,cursor.com,AI
 host-suffix,cursor.sh,AI
 host-suffix,cursorapi.com,AI
+host-suffix,cursorvm.com,AI
 host-suffix,deepmind.com,AI
 host-suffix,deepmind.google,AI
 host-suffix,deepwiki.com,AI
@@ -130,6 +131,7 @@ host-suffix,liveperson.net,AI
 host-suffix,lmstudio.ai,AI
 host-suffix,lovart.ai,AI
 host-suffix,lpsnmedia.net,AI
+host-suffix,magnific.com,AI
 host-suffix,makersuite.google.com,AI
 host-suffix,manus.im,AI
 host-suffix,manuscdn.com,AI
@@ -156,6 +158,7 @@ host-suffix,opal.google,AI
 host-suffix,opal.google.com,AI
 host-suffix,openai.com,AI
 host-suffix,openai.com.cdn.cloudflare.net,AI
+host-suffix,openai.org,AI
 host-suffix,openart.ai,AI
 host-suffix,openclaw.ai,AI
 host-suffix,opencode.ai,AI
@@ -182,6 +185,7 @@ host-suffix,themeforest.net,AI
 host-suffix,trae.ai,AI
 host-suffix,tripo3d.ai,AI
 host-suffix,turn.livekit.cloud,AI
+host-suffix,typesafe.ai,AI
 host-suffix,windsurf.build,AI
 host-suffix,windsurf.com,AI
 host-suffix,x.ai,AI

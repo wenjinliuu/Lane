@@ -96,7 +96,6 @@ def build_project(
     upstream_dir: Path | None = None,
     refresh: bool = False,
     offline: bool = False,
-    accept_cn_ip_sha256: str | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     cache_dir = (cache_dir or root / ".cache").resolve()
@@ -116,15 +115,22 @@ def build_project(
     history_reports: dict[str, dict[str, Any]] = {}
     prepared_history_sources: list[PreparedHistorySource] = []
     previous_cn_rules = _previous_cn_window_rules(root)
-    for source_id, source in sources.items():
+    # Fetch the independent reference before making CN-IP publication decisions.
+    ordered_sources = sorted(sources.items(), key=lambda item: item[1].get("kind") == "git-history-cidr")
+    for source_id, source in ordered_sources:
         if source.get("kind") == "text":
-            content, digest = fetch_text_source(
-                source_id,
-                source,
-                cache_dir,
-                refresh=refresh,
-                offline=offline,
-            )
+            try:
+                content, digest = fetch_text_source(
+                    source_id, source, cache_dir, refresh=refresh, offline=offline,
+                )
+            except (UpstreamError, ValueError) as exc:
+                if source.get("role") != "validation-only":
+                    raise
+                warnings.warn(f"Independent CN-IP reference unavailable: {exc}", stacklevel=2)
+                text_sources[source_id] = ""
+                text_metadata[source_id] = {"url": source["url"], "available": False,
+                                            "error": str(exc), "license": source.get("license")}
+                continue
             text_sources[source_id] = content
             text_metadata[source_id] = {
                 "url": source["url"],
@@ -142,7 +148,13 @@ def build_project(
                 previous_rules=(
                     previous_cn_rules if source_id == "cn_ip_primary" else None
                 ),
-                accept_breaker_sha256=accept_cn_ip_sha256,
+                reference_rules=tuple(parse_text_source(
+                    text_sources["cn_ipv4_reference"], "cn_ipv4_reference",
+                    sources["cn_ipv4_reference"],
+                )) if text_sources["cn_ipv4_reference"] else None,
+                previous_metadata=(json.loads((root / "dist/metadata.json").read_text())
+                                   .get("sources", {}).get(source_id, {})
+                                   if (root / "dist/metadata.json").exists() else None),
             )
             text_sources[source_id] = prepared.content
             text_metadata[source_id] = prepared.metadata
@@ -164,9 +176,11 @@ def build_project(
         ruleset for ruleset in rulesets if ruleset.id == check["ruleset"]
     )
     reference = [rule for key in reference_ids
-                 for rule in parse_text_source(text_sources[key], key, sources[key])]
+                 for rule in (parse_text_source(text_sources[key], key, sources[key])
+                              if text_sources[key] else [])]
     reference_versions = tuple(
-        sorted({sources[source_id]["ip_version"] for source_id in reference_ids})
+        sorted({sources[source_id]["ip_version"] for source_id in reference_ids
+                if text_sources[source_id]})
     )
     cn_validation = compare_cn_coverage(
         primary.rules,
@@ -174,6 +188,8 @@ def build_project(
         reference_versions=reference_versions,
         independent=bool(check["independent"]),
     )
+    if not reference_versions:
+        cn_validation["status"] = "unavailable"
     primary_entry = next(
         entry
         for entry in config["rulesets"]["rulesets"]

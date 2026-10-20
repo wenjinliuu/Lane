@@ -32,4 +32,6 @@ validator, tests, and checked-in `dist/` artifacts as one atomic system.
 - Clash Verge Rev must publish one portable native Mihomo YAML for Windows, macOS and Linux;
   do not fork duplicate profiles by desktop operating system.
 - Keep third-party provenance and license notices when changing upstream data or icons.
-- Do not bypass the CN-IP change breaker without the exact reviewed candidate SHA-256.
+- CN-IP changes above 1% must use per-family seven-date confirmation; never bypass observations
+  or restore a hard breaker requiring routine manual approval. Invalid or stale families retain their
+  published baseline without blocking other rule updates. See docs/maintenance.md.

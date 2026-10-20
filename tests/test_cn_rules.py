@@ -464,20 +464,23 @@ def test_validator_binds_window_digest_to_published_cn_ip(tmp_path):
         validate_generated(tmp_path, load_project_config(ROOT))
 
 
-def test_validator_requires_explicit_breaker_acceptance(tmp_path):
+@pytest.mark.parametrize("damage", ["confirmation", "digest", "dates", "status"])
+def test_validator_rejects_invalid_automatic_confirmation(tmp_path, damage):
     shutil.copytree(ROOT / "dist", tmp_path / "dist")
     shutil.copytree(ROOT / "rules", tmp_path / "rules")
     shutil.copytree(ROOT / "assets/icons", tmp_path / "assets/icons")
     path = tmp_path / "dist/cn-ip-window.json"
     data = json.loads(path.read_text())
-    data["breaker"]["exceeded"] = True
-    data["breaker"]["accepted"] = False
-    data["breaker"]["approval_sha256"] = None
+    family = data["recovery"]["families"]["ipv4"]
+    if damage == "confirmation":
+        family["status"] = "confirmed"
+        family["observation_dates"] = family["observation_dates"][:5]
+    elif damage == "digest":
+        family["output_sha256"] = "0" * 64
+    elif damage == "dates":
+        family["observation_dates"] = ["2026-10-10"] * 7
+    else:
+        family["status"] = "manually-approved"
     path.write_text(json.dumps(data))
     with pytest.raises(ValidationError, match="stable-window"):
         validate_generated(tmp_path, load_project_config(ROOT))
-
-    data["breaker"]["accepted"] = True
-    data["breaker"]["approval_sha256"] = data["output"]["sha256"]
-    path.write_text(json.dumps(data))
-    validate_generated(tmp_path, load_project_config(ROOT))

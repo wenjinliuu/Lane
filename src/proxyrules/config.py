@@ -205,6 +205,9 @@ def validate_config(config: dict[str, Any]) -> None:
             or primary_spec.get("files") != {"ipv4": "china.txt", "ipv6": "china6.txt"}
             or primary_spec.get("window_days") != 5
             or primary_spec.get("minimum_presence_days") != 3
+            or primary_spec.get("confirmation_days") != 7
+            or primary_spec.get("maximum_snapshot_age_days") != 3
+            or primary_spec.get("minimum_coverage_ratio") != 0.5
             or primary_spec.get("breaker_percent") != 1
             or primary_spec.get("license") != "MIT"):
         raise ConfigError("Primary CN IP source must be gaoyifan's 3-of-5 dual-stack window")

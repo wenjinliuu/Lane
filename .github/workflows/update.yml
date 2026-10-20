@@ -1,6 +1,12 @@
 name: Update upstream rules
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "config/**"
+      - ".github/workflows/update.yml"
   schedule:
     - cron: "23 4 * * *"
   workflow_dispatch:
@@ -15,6 +21,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -75,22 +82,32 @@ jobs:
           from pathlib import Path
 
           target = Path(".cache/diagnostics/lane-update-report.json")
+          window = Path("dist/cn-ip-window.json")
           if target.exists():
               report = json.loads(target.read_text())
-              lines = [
-                  "## Lane update blocked or failed",
-                  f"- Status: {report.get('status')}",
-                  f"- Reason: {report.get('reason')}",
-              ]
-              if report.get("candidate_sha256"):
-                  lines.append(f"- Candidate SHA256: `{report['candidate_sha256']}`")
+              lines = ["## Lane update failed", f"- Reason: {report.get('reason')}"]
+          elif "${{ job.status }}" != "success":
+              lines = ["## Lane update failed", "- See workflow logs for the failed step."]
+          elif window.exists():
+              report = json.loads(window.read_text())
+              lines = ["## Lane update", f"- Status: {report.get('status')}"]
+              for family, item in report.get("recovery", {}).get("families", {}).items():
+                  lines.append(f"- {family}: {item['status']}; valid observation days: "
+                               f"{len(item.get('observation_dates', []))}")
+                  if item.get("reason"):
+                      lines.append(f"  - {item['reason']}")
+                  if item.get("status") == "observing":
+                      lines.append(f"  - Pending addresses: +{item['pending_added_addresses']} "
+                                   f"/-{item['pending_removed_addresses']}; retry automatically.")
+              if report.get("status") == "partial":
+                  lines.append("- Other rule updates proceed; retained/pending CN IP retries automatically.")
           else:
-              lines = ["## Lane update", "- Build and validation completed successfully."]
+              lines = ["## Lane update", "- No CN-IP report was generated."]
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as handle:
               handle.write("\n".join(lines) + "\n")
           PY
-      - name: Upload AI diagnostic
-        if: failure()
+      - name: Upload update reports and diagnostic
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lane-update-diagnostic-${{ github.run_id }}
@@ -98,6 +115,9 @@ jobs:
             .cache/diagnostics/
             lane-build.log
             lane-test.log
+            dist/cn-ip-window.json
+            dist/cn-ip-validation.json
+          include-hidden-files: true
           if-no-files-found: warn
           retention-days: 30
       - name: Commit changed outputs

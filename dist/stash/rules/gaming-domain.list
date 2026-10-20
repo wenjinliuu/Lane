@@ -17,13 +17,15 @@ c.ppy.sh
 cdngarenanow-a.akamaihd.net
 cloudsync-prod.s3.amazonaws.com
 d1unuk07s6td74.cloudfront.net
+d348twzf7a8p5.cloudfront.net
 datarouter.apps.netherrealm.com
+devforum-uploads.s3.dualstack.us-east-2.amazonaws.com
 dlgarenanow-a.akamaihd.net
 dlmobilegarena-a.akamaihd.net
+doy2mn9upadnk.cloudfront.net
 ea.tt.omtrdc.net
 eaassets-a.akamaihd.net
 f3b7q2p3.ssl.hwcdn.net
-flightsimulator.azureedge.net
 gamedownloads-rockstargames-com.akamaized.net
 gog-cdn-lumen.secure2.footprint.net
 gog-cdn.akamaized.net
@@ -120,7 +122,6 @@ xz.pphimalayanrt.com
 +.artstation.com
 +.artstationmedia.com
 +.artstorm.com
-+.asobostudio.com
 +.awayoutgame.com
 +.ayudanintendo.com
 +.battle.net
@@ -282,7 +283,6 @@ xz.pphimalayanrt.com
 +.fireemblemawakening.com
 +.firesidegatherings.com
 +.fitgirl-repacks.site
-+.flightsimulator.com
 +.flipnotestudio.com
 +.forgecdn.net
 +.fortnite-vod.akamaized.net
@@ -546,6 +546,7 @@ xz.pphimalayanrt.com
 +.playstation
 +.playstation.com
 +.playstation.net
++.playstationnetwork.com
 +.playvalorant.com
 +.playwarcraft3.com
 +.pogo.com

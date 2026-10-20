@@ -81,6 +81,7 @@ domain_suffix_set:
 - cursor.com
 - cursor.sh
 - cursorapi.com
+- cursorvm.com
 - deepmind.com
 - deepmind.google
 - deepwiki.com
@@ -132,6 +133,7 @@ domain_suffix_set:
 - lmstudio.ai
 - lovart.ai
 - lpsnmedia.net
+- magnific.com
 - makersuite.google.com
 - manus.im
 - manuscdn.com
@@ -158,6 +160,7 @@ domain_suffix_set:
 - opal.google.com
 - openai.com
 - openai.com.cdn.cloudflare.net
+- openai.org
 - openart.ai
 - openclaw.ai
 - opencode.ai
@@ -184,6 +187,7 @@ domain_suffix_set:
 - trae.ai
 - tripo3d.ai
 - turn.livekit.cloud
+- typesafe.ai
 - windsurf.build
 - windsurf.com
 - x.ai
