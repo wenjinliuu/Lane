@@ -29,7 +29,7 @@
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
       "revision": "d5b6e937175c73deeda076aaaea2182822cba5a3",
-      "sha256": "2e865d9cee86356dc3af0b9df5550df98faad19a6d68f20373b85ef75afec6ed",
+      "sha256": "6aa5588bc7242c37bddfb23f41ee8674df1b55a2f12fe16437e2920bbd3bcf5d",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
@@ -47,7 +47,7 @@
         "2026-10-13"
       ],
       "window_report": "cn-ip-window.json",
-      "update_status": "partial"
+      "update_status": "updated"
     }
   },
   "rulesets": [
@@ -397,9 +397,9 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 10006,
+      "rules": 10013,
       "kinds": {
-        "ipcidr": 6520,
+        "ipcidr": 6527,
         "ipcidr6": 3486
       },
       "exact_duplicates_removed": 0,

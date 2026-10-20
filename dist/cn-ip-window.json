@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "status": "partial",
+  "status": "updated",
   "source": {
     "id": "cn_ip_primary",
     "repository": "https://github.com/gaoyifan/china-operator-ip.git",
@@ -23,47 +23,20 @@
     "minimum_coverage_ratio": 0.5,
     "families": {
       "ipv4": {
-        "status": "observing",
-        "threshold_exceeded": true,
-        "reference_check": {
-          "available": true,
-          "role": "advisory-only",
-          "candidate_added_addresses": "5596164",
-          "added_addresses_supported": "0",
-          "candidate_removed_addresses": "8960",
-          "removed_addresses_supported": "7936"
-        },
-        "candidate_changed_percent": 1.628924956793903,
-        "candidate_sha256": "d494dc4166f1dcb8176a52abf35115ab3eceed34c60f256c25da677828016d00",
-        "published_added_addresses": "5590016",
-        "published_removed_addresses": "5376",
-        "pending_added_addresses": "6148",
-        "pending_removed_addresses": "3584",
-        "observation_dates": [
-          "2026-10-19",
-          "2026-10-18",
-          "2026-10-17",
-          "2026-10-16",
-          "2026-10-15",
-          "2026-10-14",
-          "2026-10-13"
-        ],
-        "invalid_snapshots": [],
-        "baseline_sha256": "2cf1f5430d5e405153e1e3d09f217c3c2c7fa8dc55b75eece65613c2c9424f78",
-        "baseline_revision": "f977b1c75a73b3146d65c2f5f25cd0c3353dede4",
-        "output_sha256": "cdd659858dbf24c87025443e6df863426c0095fd885067bbf85c15f895db2dcf"
-      },
-      "ipv6": {
         "status": "normal",
         "threshold_exceeded": false,
         "reference_check": {
-          "available": false,
-          "role": "advisory-only"
+          "available": true,
+          "role": "advisory-only",
+          "candidate_added_addresses": "6148",
+          "added_addresses_supported": "0",
+          "candidate_removed_addresses": "3584",
+          "removed_addresses_supported": "2560"
         },
-        "candidate_changed_percent": 0.04053160979371335,
-        "candidate_sha256": "112345597b5fc3f6e762cba01dea0780dc5c8e0050bd8320f2f740b0b705edc9",
-        "published_added_addresses": "2199669543008488534478080180224",
-        "published_removed_addresses": "1269372110595360633441484800",
+        "candidate_changed_percent": 0.0027830823731985117,
+        "candidate_sha256": "d494dc4166f1dcb8176a52abf35115ab3eceed34c60f256c25da677828016d00",
+        "published_added_addresses": "6148",
+        "published_removed_addresses": "3584",
         "pending_added_addresses": "0",
         "pending_removed_addresses": "0",
         "observation_dates": [
@@ -76,8 +49,35 @@
           "2026-10-13"
         ],
         "invalid_snapshots": [],
-        "baseline_sha256": "93be8816d7b7ad46f57f23ca8f337d74bfc27afff26b7046b210d29b96d5bc26",
-        "baseline_revision": "f977b1c75a73b3146d65c2f5f25cd0c3353dede4",
+        "baseline_sha256": "cdd659858dbf24c87025443e6df863426c0095fd885067bbf85c15f895db2dcf",
+        "baseline_revision": "d5b6e937175c73deeda076aaaea2182822cba5a3",
+        "output_sha256": "d494dc4166f1dcb8176a52abf35115ab3eceed34c60f256c25da677828016d00"
+      },
+      "ipv6": {
+        "status": "normal",
+        "threshold_exceeded": false,
+        "reference_check": {
+          "available": false,
+          "role": "advisory-only"
+        },
+        "candidate_changed_percent": 0.0,
+        "candidate_sha256": "112345597b5fc3f6e762cba01dea0780dc5c8e0050bd8320f2f740b0b705edc9",
+        "published_added_addresses": "0",
+        "published_removed_addresses": "0",
+        "pending_added_addresses": "0",
+        "pending_removed_addresses": "0",
+        "observation_dates": [
+          "2026-10-19",
+          "2026-10-18",
+          "2026-10-17",
+          "2026-10-16",
+          "2026-10-15",
+          "2026-10-14",
+          "2026-10-13"
+        ],
+        "invalid_snapshots": [],
+        "baseline_sha256": "112345597b5fc3f6e762cba01dea0780dc5c8e0050bd8320f2f740b0b705edc9",
+        "baseline_revision": "d5b6e937175c73deeda076aaaea2182822cba5a3",
         "output_sha256": "112345597b5fc3f6e762cba01dea0780dc5c8e0050bd8320f2f740b0b705edc9"
       }
     }
@@ -218,11 +218,11 @@
     }
   ],
   "output": {
-    "sha256": "2e865d9cee86356dc3af0b9df5550df98faad19a6d68f20373b85ef75afec6ed",
+    "sha256": "6aa5588bc7242c37bddfb23f41ee8674df1b55a2f12fe16437e2920bbd3bcf5d",
     "coverage": {
       "ipv4": {
-        "rule_count": 6520,
-        "addresses": "349684224"
+        "rule_count": 6527,
+        "addresses": "349686788"
       },
       "ipv6": {
         "rule_count": 3486,

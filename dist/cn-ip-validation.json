@@ -8,13 +8,13 @@
     "ipv4": {
       "reference_available": true,
       "equal_coverage": false,
-      "primary_rule_count": 6520,
+      "primary_rule_count": 6527,
       "reference_rule_count": 3879,
-      "primary_addresses": "349684224",
+      "primary_addresses": "349686788",
       "reference_addresses": "282383104",
-      "common_addresses": "281818624",
-      "primary_only_cidr_count": 7010,
-      "primary_only_cidrs_sha256": "56941af0b3173a96cc637348ff63750f896a0dfa1ef5838698adcbd3ee44d046",
+      "common_addresses": "281817600",
+      "primary_only_cidr_count": 7015,
+      "primary_only_cidrs_sha256": "61ba9f98598b2d58fa5aeace601b5ba63c0e502d5afa87dc281d6047e74775b1",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -118,8 +118,8 @@
         "8.212.160.0/20",
         "8.212.176.0/21"
       ],
-      "reference_only_cidr_count": 187,
-      "reference_only_cidrs_sha256": "54c9b16c8b5b3ae860e4420a207770888d1f35c1ab8901482f403d4e507e7775",
+      "reference_only_cidr_count": 190,
+      "reference_only_cidrs_sha256": "2db25ca22182196eef68019f108fac44408d632f876c974b66f5a9a21d8b2af1",
       "reference_only_cidrs_truncated": true,
       "reference_only_cidrs": [
         "1.18.128.0/24",
@@ -243,7 +243,7 @@
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
         "revision": "d5b6e937175c73deeda076aaaea2182822cba5a3",
-        "sha256": "2e865d9cee86356dc3af0b9df5550df98faad19a6d68f20373b85ef75afec6ed",
+        "sha256": "6aa5588bc7242c37bddfb23f41ee8674df1b55a2f12fe16437e2920bbd3bcf5d",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
@@ -261,7 +261,7 @@
           "2026-10-13"
         ],
         "window_report": "cn-ip-window.json",
-        "update_status": "partial"
+        "update_status": "updated"
       }
     },
     "reference": {
