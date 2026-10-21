@@ -40,17 +40,17 @@
         "pending_added_addresses": "0",
         "pending_removed_addresses": "0",
         "observation_dates": [
+          "2026-10-21",
           "2026-10-20",
           "2026-10-19",
           "2026-10-18",
           "2026-10-17",
           "2026-10-16",
-          "2026-10-15",
-          "2026-10-14"
+          "2026-10-15"
         ],
         "invalid_snapshots": [],
         "baseline_sha256": "d494dc4166f1dcb8176a52abf35115ab3eceed34c60f256c25da677828016d00",
-        "baseline_revision": "d5b6e937175c73deeda076aaaea2182822cba5a3",
+        "baseline_revision": "d72c0234fe25498f88e617a5a42ceb350f0dd078",
         "output_sha256": "d494dc4166f1dcb8176a52abf35115ab3eceed34c60f256c25da677828016d00"
       },
       "ipv6": {
@@ -60,29 +60,48 @@
           "available": false,
           "role": "advisory-only"
         },
-        "candidate_changed_percent": 0.0,
-        "candidate_sha256": "112345597b5fc3f6e762cba01dea0780dc5c8e0050bd8320f2f740b0b705edc9",
+        "candidate_changed_percent": 2.225408429971355e-08,
+        "candidate_sha256": "c26c8fc672899a10c8b5e159c2ad13b74d95d5a4c0047dee90cec9c5aba629c2",
         "published_added_addresses": "0",
-        "published_removed_addresses": "0",
+        "published_removed_addresses": "1208925819614629174706176",
         "pending_added_addresses": "0",
         "pending_removed_addresses": "0",
         "observation_dates": [
+          "2026-10-21",
           "2026-10-20",
           "2026-10-19",
           "2026-10-18",
           "2026-10-17",
           "2026-10-16",
-          "2026-10-15",
-          "2026-10-14"
+          "2026-10-15"
         ],
         "invalid_snapshots": [],
         "baseline_sha256": "112345597b5fc3f6e762cba01dea0780dc5c8e0050bd8320f2f740b0b705edc9",
-        "baseline_revision": "d5b6e937175c73deeda076aaaea2182822cba5a3",
-        "output_sha256": "112345597b5fc3f6e762cba01dea0780dc5c8e0050bd8320f2f740b0b705edc9"
+        "baseline_revision": "d72c0234fe25498f88e617a5a42ceb350f0dd078",
+        "output_sha256": "c26c8fc672899a10c8b5e159c2ad13b74d95d5a4c0047dee90cec9c5aba629c2"
       }
     }
   },
   "snapshots": [
+    {
+      "date": "2026-10-21",
+      "revision": "c71fe73f6f4ab528b6462d82da162170f4ea8cfa",
+      "committed_at": "2026-10-21T08:06:12Z",
+      "files": {
+        "ipv4": {
+          "path": "china.txt",
+          "sha256": "2d8cc64d67c2b4c9d314ded3f4ab59c8e05809910ab2da49217535b8607328b9",
+          "rules": 6525,
+          "addresses": "349676548"
+        },
+        "ipv6": {
+          "path": "china6.txt",
+          "sha256": "f4b10edf5defa5409cd15c92a6af0e8afb30ca217eca46a3e5832ed9c180e9b9",
+          "rules": 3488,
+          "addresses": "5432377277473888647204344759844864"
+        }
+      }
+    },
     {
       "date": "2026-10-20",
       "revision": "d72c0234fe25498f88e617a5a42ceb350f0dd078",
@@ -196,37 +215,18 @@
           "addresses": "5432299287251413668247026115018752"
         }
       }
-    },
-    {
-      "date": "2026-10-14",
-      "revision": "ca55cb421c4a3928a35b67e0c7936a603abd9aa5",
-      "committed_at": "2026-10-14T08:07:59Z",
-      "files": {
-        "ipv4": {
-          "path": "china.txt",
-          "sha256": "ce73c9840030d2da076d743a3704c15c61e515a03182f80b8b5a499d47c5da12",
-          "rules": 6526,
-          "addresses": "349684740"
-        },
-        "ipv6": {
-          "path": "china6.txt",
-          "sha256": "9e30ab3bee71c91c3bddadb6b77200eb3ab8591985e2a6336da989df0d59c8f5",
-          "rules": 3482,
-          "addresses": "5432299287251413668247026115018752"
-        }
-      }
     }
   ],
   "output": {
-    "sha256": "6aa5588bc7242c37bddfb23f41ee8674df1b55a2f12fe16437e2920bbd3bcf5d",
+    "sha256": "c26be91d441cf7b5d2eae41ef6a22c16e05bb4e48a9e0f5865d67b3cb4d5cfa5",
     "coverage": {
       "ipv4": {
         "rule_count": 6527,
         "addresses": "349686788"
       },
       "ipv6": {
-        "rule_count": 3486,
-        "addresses": "5432377281100666106048232283963392"
+        "rule_count": 3489,
+        "addresses": "5432377279891740286433603109257216"
       }
     }
   }
