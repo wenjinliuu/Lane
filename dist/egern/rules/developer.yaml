@@ -266,6 +266,7 @@ domain_suffix_set:
 - getcomposer.org
 - getfedora.org
 - getpaint.net
+- getsafety.com
 - getsentry.com
 - getzola.org
 - gh.io
@@ -502,6 +503,7 @@ domain_suffix_set:
 - pyrobot.org
 - python.org
 - pythonhosted.org
+- pyup.io
 - qt-project.org
 - qt.io
 - quay.io
@@ -543,6 +545,7 @@ domain_suffix_set:
 - rubygems.org
 - rust-lang.org
 - rustup.rs
+- safetycli.com
 - sankie.net
 - scala-lang.org
 - scala-sbt.org
@@ -592,6 +595,7 @@ domain_suffix_set:
 - system76.com
 - talkingkotlin.com
 - tampermonkey.net
+- templatemonster.com
 - termius.com
 - termux.com
 - termux.dev
@@ -608,6 +612,7 @@ domain_suffix_set:
 - tildacdn.net
 - timelinestoryteller.com
 - timestamp.apple.com
+- tmimgcdn.com
 - topcoder.com
 - ubuntu-touch.io
 - ubuntu.com

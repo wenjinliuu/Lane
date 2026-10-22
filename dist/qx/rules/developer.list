@@ -264,6 +264,7 @@ host-suffix,getbootstrap.com,Developer
 host-suffix,getcomposer.org,Developer
 host-suffix,getfedora.org,Developer
 host-suffix,getpaint.net,Developer
+host-suffix,getsafety.com,Developer
 host-suffix,getsentry.com,Developer
 host-suffix,getzola.org,Developer
 host-suffix,gh.io,Developer
@@ -500,6 +501,7 @@ host-suffix,pypi.org,Developer
 host-suffix,pyrobot.org,Developer
 host-suffix,python.org,Developer
 host-suffix,pythonhosted.org,Developer
+host-suffix,pyup.io,Developer
 host-suffix,qt-project.org,Developer
 host-suffix,qt.io,Developer
 host-suffix,quay.io,Developer
@@ -541,6 +543,7 @@ host-suffix,ruby-lang.org,Developer
 host-suffix,rubygems.org,Developer
 host-suffix,rust-lang.org,Developer
 host-suffix,rustup.rs,Developer
+host-suffix,safetycli.com,Developer
 host-suffix,sankie.net,Developer
 host-suffix,scala-lang.org,Developer
 host-suffix,scala-sbt.org,Developer
@@ -590,6 +593,7 @@ host-suffix,swiftui.com.cn,Developer
 host-suffix,system76.com,Developer
 host-suffix,talkingkotlin.com,Developer
 host-suffix,tampermonkey.net,Developer
+host-suffix,templatemonster.com,Developer
 host-suffix,termius.com,Developer
 host-suffix,termux.com,Developer
 host-suffix,termux.dev,Developer
@@ -606,6 +610,7 @@ host-suffix,tildacdn.com,Developer
 host-suffix,tildacdn.net,Developer
 host-suffix,timelinestoryteller.com,Developer
 host-suffix,timestamp.apple.com,Developer
+host-suffix,tmimgcdn.com,Developer
 host-suffix,topcoder.com,Developer
 host-suffix,ubuntu-touch.io,Developer
 host-suffix,ubuntu.com,Developer
