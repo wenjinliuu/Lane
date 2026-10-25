@@ -8,6 +8,7 @@ host,ai.zhaomi.cn,direct
 host,api.alibabacloud.com,direct
 host,api.blipsandchitz.me,direct
 host,apilog-web.acfun.cn,direct
+host,app.moegirl.org.cn,direct
 host,cn.alibabacloud.com,direct
 host,ctdsb.clouddiffuse.xyz,direct
 host,cueme-api.quark.cn,direct
@@ -59,6 +60,7 @@ host,rtlog5-applog-hl.fqnovel.com,direct
 host,rtlog5-applog.fqnovel.com,direct
 host,ss.bjmu.edu.cn,direct
 host,status.alibabacloud.com,direct
+host,storage.moegirl.org.cn,direct
 host,study.163.com,direct
 host,time.amazonaws.cn,direct
 host,time.izatcloud.net,direct
@@ -541,6 +543,7 @@ host-suffix,a2z.org.cn,direct
 host-suffix,a9vg.com,direct
 host-suffix,aadcloud.cn,direct
 host-suffix,aadcloud.com,direct
+host-suffix,aaej.cn,direct
 host-suffix,aaic.com.cn,direct
 host-suffix,aaid.umeng.com,direct
 host-suffix,aamgame.com,direct
@@ -1203,6 +1206,7 @@ host-suffix,biaoda.me,direct
 host-suffix,bibaodao.com,direct
 host-suffix,bidchance.com,direct
 host-suffix,biddingx.com,direct
+host-suffix,bigdatacq.com,direct
 host-suffix,bigfun.cn,direct
 host-suffix,bigfunapp.cn,direct
 host-suffix,bigmodel.cn,direct
@@ -1283,6 +1287,7 @@ host-suffix,bocamchina.com,direct
 host-suffix,bocaviation.com,direct
 host-suffix,boccfc.cc,direct
 host-suffix,boccfc.cn,direct
+host-suffix,bocd.com.cn,direct
 host-suffix,boce.com,direct
 host-suffix,bocfullertonbank.com,direct
 host-suffix,bocgi.com,direct
@@ -1707,6 +1712,8 @@ host-suffix,cdntips.net,direct
 host-suffix,cdnv1.cn,direct
 host-suffix,cdnv2.cn,direct
 host-suffix,cdnv3.cn,direct
+host-suffix,cdrcb.com,direct
+host-suffix,cdrcbank.com,direct
 host-suffix,cdut.top,direct
 host-suffix,ce.cn,direct
 host-suffix,ceair.com,direct
@@ -1939,6 +1946,7 @@ host-suffix,clangcn.com,direct
 host-suffix,clawhub-mirror.com,direct
 host-suffix,clawhubmirror.com,direct
 host-suffix,clawsentry.cn,direct
+host-suffix,cldisk.com,direct
 host-suffix,cleargrass.com,direct
 host-suffix,clewm.net,direct
 host-suffix,cli.im,direct
@@ -2206,13 +2214,17 @@ host-suffix,cpu.baidu.com,direct
 host-suffix,cqcb.com,direct
 host-suffix,cqccn.com,direct
 host-suffix,cqctyiptv.cn,direct
+host-suffix,cqdcg.com,direct
+host-suffix,cqge.com.cn,direct
 host-suffix,cqhlw.cn,direct
 host-suffix,cqliving.com,direct
 host-suffix,cqn.com.cn,direct
 host-suffix,cqnews.net,direct
+host-suffix,cqsdlys.cn,direct
 host-suffix,cqsjb.com,direct
 host-suffix,cqtk.com.cn,direct
 host-suffix,cqvip.com,direct
+host-suffix,cqyyxc.com,direct
 host-suffix,cr-cts.com,direct
 host-suffix,cr173.com,direct
 host-suffix,crash.163.com,direct
@@ -2500,6 +2512,7 @@ host-suffix,didichuxing.com,direct
 host-suffix,didistatic.com,direct
 host-suffix,diditaxi.com.cn,direct
 host-suffix,dig.bdurl.net,direct
+host-suffix,digitalcnzz.com,direct
 host-suffix,digitaling.com,direct
 host-suffix,diiing.cn,direct
 host-suffix,dili360.com,direct
@@ -2736,6 +2749,7 @@ host-suffix,e.stat.ykimg.com,direct
 host-suffix,e0n.cn,direct
 host-suffix,eagsen.com,direct
 host-suffix,easec.com.cn,direct
+host-suffix,easemob.com,direct
 host-suffix,easesale.com,direct
 host-suffix,easiu.com,direct
 host-suffix,eastday.com,direct
@@ -3314,6 +3328,7 @@ host-suffix,govwza.cn,direct
 host-suffix,gowinamc.com,direct
 host-suffix,gpall.cn,direct
 host-suffix,gpall.net,direct
+host-suffix,gpzshq.cn,direct
 host-suffix,gracg.com,direct
 host-suffix,greatwallwine.com.cn,direct
 host-suffix,gree.cn,direct
@@ -3823,6 +3838,7 @@ host-suffix,iadmusicmat.music.126.net,direct
 host-suffix,iadmusicmatvideo.music.126.net,direct
 host-suffix,ialicdn.com,direct
 host-suffix,iask.com,direct
+host-suffix,ibangbank.com,direct
 host-suffix,ibaotu.com,direct
 host-suffix,ibcet.org,direct
 host-suffix,ibdxiguaimg.com,direct
@@ -3984,6 +4000,7 @@ host-suffix,ioppo.com.cn,direct
 host-suffix,ioppo.net,direct
 host-suffix,iot-tencent.com,direct
 host-suffix,iotronic.tech,direct
+host-suffix,ip.cn,direct
 host-suffix,ip138.com,direct
 host-suffix,ipanda.cn,direct
 host-suffix,ipanda.com,direct
@@ -4018,6 +4035,8 @@ host-suffix,isealsuite.com,direct
 host-suffix,ishijue.com,direct
 host-suffix,ishumei.com,direct
 host-suffix,ishuqi.com,direct
+host-suffix,isigning.cn,direct
+host-suffix,isigning.com,direct
 host-suffix,ispqcloud.com,direct
 host-suffix,istoreos.com,direct
 host-suffix,istv.cn,direct
@@ -5156,8 +5175,6 @@ host-suffix,modelers.cn,direct
 host-suffix,modernjs.cn,direct
 host-suffix,modex.com.cn,direct
 host-suffix,moedu.com,direct
-host-suffix,moegirl.org,direct
-host-suffix,moegirl.org.cn,direct
 host-suffix,moer.cn,direct
 host-suffix,mofang.com,direct
 host-suffix,mofazhu.com,direct
@@ -5298,6 +5315,7 @@ host-suffix,naixuecha.com,direct
 host-suffix,nalrer.cn,direct
 host-suffix,namiso.com,direct
 host-suffix,nanhaicorp.com,direct
+host-suffix,nanocorechip.com,direct
 host-suffix,nanyuenews.com,direct
 host-suffix,narwal.com,direct
 host-suffix,narwaltech.com,direct
@@ -7820,6 +7838,7 @@ host-suffix,xuexi365.com,direct
 host-suffix,xuexi365.com.cn,direct
 host-suffix,xuexi365.net,direct
 host-suffix,xuexicha.com,direct
+host-suffix,xuexitong.com,direct
 host-suffix,xundupdf.com,direct
 host-suffix,xunfei.cn,direct
 host-suffix,xunfeixxj.com,direct
