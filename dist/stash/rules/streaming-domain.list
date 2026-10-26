@@ -57,12 +57,10 @@ js-cdn.music.apple.com
 msh.amazon.co.uk
 music.apple.com
 musicstatus.music.apple.com
-netflix.com.edgesuite.net
 np-edge.itunes.apple.com
 play-edge.itunes.apple.com
 play.music.apple.com
 speedysub.music.apple.com
-spotify.com.edgesuite.net
 spotify.map.fastly.net
 spotify.map.fastlylb.net
 static.siege-amazon.com
@@ -343,6 +341,7 @@ uts-api.itunes.apple.com
 +.nationalgeographicpartners.com
 +.netflix.ca
 +.netflix.com
++.netflix.com.edgesuite.net
 +.netflix.net
 +.netflixdnstest0.com
 +.netflixdnstest1.com
@@ -390,6 +389,7 @@ uts-api.itunes.apple.com
 +.spoti.fi
 +.spotify-everywhere.com
 +.spotify.com
++.spotify.com.edgesuite.net
 +.spotify.design
 +.spotify.link
 +.spotifycdn.com

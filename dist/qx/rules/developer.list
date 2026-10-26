@@ -23,6 +23,7 @@ host,copilot-workspace.githubnext.com,Developer
 host,copilotprodattachments.blob.core.windows.net,Developer
 host,crashlyticsreports-pa.googleapis.com,Developer
 host,d29vzk4ow07wi7.cloudfront.net,Developer
+host,dc.services.visualstudio.com,Developer
 host,default.exp-tas.com,Developer
 host,developer.microsoft.com,Developer
 host,developers.facebook.com,Developer
@@ -82,6 +83,7 @@ host,productionresultssa9.blob.core.windows.net,Developer
 host,psg-int-centralus.cloudapp.net,Developer
 host,psg-int-eastus.cloudapp.net,Developer
 host,rink.hockeyapp.net,Developer
+host,rt.services.visualstudio.com,Developer
 host,update.crashlytics.com,Developer
 host,vscode-sync-insiders.trafficmanager.net,Developer
 host,vscode-sync.trafficmanager.net,Developer

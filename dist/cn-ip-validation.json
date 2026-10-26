@@ -10,11 +10,11 @@
       "equal_coverage": false,
       "primary_rule_count": 6526,
       "reference_rule_count": 3881,
-      "primary_addresses": "349676292",
+      "primary_addresses": "349676036",
       "reference_addresses": "282384640",
       "common_addresses": "281817600",
       "primary_only_cidr_count": 7019,
-      "primary_only_cidrs_sha256": "d0661798dabeae3738b82626d4b4d0aa72ebf4b7e21cfba0b60e781e3a0feaf6",
+      "primary_only_cidrs_sha256": "ffbdc34adb70022ae1790738ba00715b7df0ba66961aa17f3cdd56b79209d2dc",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -242,8 +242,8 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "ca7016c1712529bfa118efb993fc576e5f0d26ed",
-        "sha256": "9b2c84f1e7e7ad4d4f584413675b74934f0ae8d3f4bb8409e4da6815d79dbe57",
+        "revision": "375060e2299aa6344a87f309568ac3d748baf0cc",
+        "sha256": "30f975e4405d6d59407386c7981cd3c779672b1862b496f6c70ec946f701d3c5",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
@@ -252,13 +252,13 @@
         "maximum_snapshot_age_days": 3,
         "minimum_coverage_ratio": 0.5,
         "snapshot_dates": [
+          "2026-10-26",
           "2026-10-25",
           "2026-10-24",
           "2026-10-23",
           "2026-10-22",
           "2026-10-21",
-          "2026-10-20",
-          "2026-10-19"
+          "2026-10-20"
         ],
         "window_report": "cn-ip-window.json",
         "update_status": "updated"
@@ -267,7 +267,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "ab563d55450aec769ccaa09399403eec565ed5261ec9ae3d1907eb4ea295612a",
+        "sha256": "ff518b1ed61dc4177123ce9614cfd706fa8e7d4e6b20b620f6b61264bb27d660",
         "license": "CC-BY-SA-4.0"
       }
     }

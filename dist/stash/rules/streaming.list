@@ -57,12 +57,10 @@ DOMAIN,js-cdn.music.apple.com
 DOMAIN,msh.amazon.co.uk
 DOMAIN,music.apple.com
 DOMAIN,musicstatus.music.apple.com
-DOMAIN,netflix.com.edgesuite.net
 DOMAIN,np-edge.itunes.apple.com
 DOMAIN,play-edge.itunes.apple.com
 DOMAIN,play.music.apple.com
 DOMAIN,speedysub.music.apple.com
-DOMAIN,spotify.com.edgesuite.net
 DOMAIN,spotify.map.fastly.net
 DOMAIN,spotify.map.fastlylb.net
 DOMAIN,static.siege-amazon.com
@@ -343,6 +341,7 @@ DOMAIN-SUFFIX,nationalgeographic.com
 DOMAIN-SUFFIX,nationalgeographicpartners.com
 DOMAIN-SUFFIX,netflix.ca
 DOMAIN-SUFFIX,netflix.com
+DOMAIN-SUFFIX,netflix.com.edgesuite.net
 DOMAIN-SUFFIX,netflix.net
 DOMAIN-SUFFIX,netflixdnstest0.com
 DOMAIN-SUFFIX,netflixdnstest1.com
@@ -390,6 +389,7 @@ DOMAIN-SUFFIX,spaindisney.com
 DOMAIN-SUFFIX,spoti.fi
 DOMAIN-SUFFIX,spotify-everywhere.com
 DOMAIN-SUFFIX,spotify.com
+DOMAIN-SUFFIX,spotify.com.edgesuite.net
 DOMAIN-SUFFIX,spotify.design
 DOMAIN-SUFFIX,spotify.link
 DOMAIN-SUFFIX,spotifycdn.com

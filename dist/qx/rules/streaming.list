@@ -57,12 +57,10 @@ host,js-cdn.music.apple.com,Streaming
 host,msh.amazon.co.uk,Streaming
 host,music.apple.com,Streaming
 host,musicstatus.music.apple.com,Streaming
-host,netflix.com.edgesuite.net,Streaming
 host,np-edge.itunes.apple.com,Streaming
 host,play-edge.itunes.apple.com,Streaming
 host,play.music.apple.com,Streaming
 host,speedysub.music.apple.com,Streaming
-host,spotify.com.edgesuite.net,Streaming
 host,spotify.map.fastly.net,Streaming
 host,spotify.map.fastlylb.net,Streaming
 host,static.siege-amazon.com,Streaming
@@ -343,6 +341,7 @@ host-suffix,nationalgeographic.com,Streaming
 host-suffix,nationalgeographicpartners.com,Streaming
 host-suffix,netflix.ca,Streaming
 host-suffix,netflix.com,Streaming
+host-suffix,netflix.com.edgesuite.net,Streaming
 host-suffix,netflix.net,Streaming
 host-suffix,netflixdnstest0.com,Streaming
 host-suffix,netflixdnstest1.com,Streaming
@@ -390,6 +389,7 @@ host-suffix,spaindisney.com,Streaming
 host-suffix,spoti.fi,Streaming
 host-suffix,spotify-everywhere.com,Streaming
 host-suffix,spotify.com,Streaming
+host-suffix,spotify.com.edgesuite.net,Streaming
 host-suffix,spotify.design,Streaming
 host-suffix,spotify.link,Streaming
 host-suffix,spotifycdn.com,Streaming

@@ -20,6 +20,8 @@ copilot-workspace.githubnext.com
 copilotprodattachments.blob.core.windows.net
 crl.microsoft.com
 ctldl.windowsupdate.com
+dc.applicationinsights.azure.com
+dc.services.visualstudio.com
 default.exp-tas.com
 developer.microsoft.com
 download.microsoft.com
@@ -41,6 +43,7 @@ itacademy.download.prss.microsoft.com
 itacademyuat.download.prss.microsoft.com
 lex.download.prss.microsoft.com
 lexuat.download.prss.microsoft.com
+live.applicationinsights.azure.com
 location.microsoft.com
 mbs.download.prss.microsoft.com
 mpnbenefits.download.prss.microsoft.com
@@ -88,6 +91,7 @@ psg-int-centralus.cloudapp.net
 psg-int-eastus.cloudapp.net
 rink.hockeyapp.net
 rsm.download.prss.microsoft.com
+rt.services.visualstudio.com
 sdx.microsoft.com
 shell.cdn.office.net
 software.download.prss.microsoft.com
@@ -288,6 +292,7 @@ www.microsoft.com
 +.crmdynint-gcc.com
 +.crmdynint.com
 +.crossborderexpansion.com
++.data.microsoft.com
 +.dcg.microsoft.com
 +.dependabot.com
 +.devopsassessment.net
@@ -359,6 +364,7 @@ www.microsoft.com
 +.ie8.co
 +.ie9.com
 +.imaginecup.pl
++.in.applicationinsights.azure.com
 +.ingads.com
 +.insiderdevtour.com
 +.internetexplorer.co
@@ -676,6 +682,7 @@ www.microsoft.com
 +.t-msedge.net
 +.tailwindtraders.com
 +.techhub.ms
++.telemetry.microsoft.com
 +.tellmewhygame.com
 +.tfsallin.net
 +.th.bing.com

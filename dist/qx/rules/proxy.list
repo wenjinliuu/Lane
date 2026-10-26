@@ -353,6 +353,8 @@ host,dartsearch-cn.net,Final
 host,databank.worldbank.org,Final
 host,database.asahi.com,Final
 host,datarouter.apps.netherrealm.com,Final
+host,dc.applicationinsights.azure.com,Final
+host,dc.services.visualstudio.com,Final
 host,dc1-cert.ksn.kaspersky-labs.com,Final
 host,dc1-file.ksn.kaspersky-labs.com,Final
 host,dc1-pp.ksn.kaspersky-labs.com,Final
@@ -661,6 +663,7 @@ host,linear-abematv.akamaized.net,Final
 host,link.theplatform.com,Final
 host,linkedin.sc.omtrdc.net,Final
 host,live-patreon-marketing.pantheonsite.io,Final
+host,live.applicationinsights.azure.com,Final
 host,lm.licenses.adobe.com,Final
 host,lmlicenses.wip4.adobe.com,Final
 host,location.microsoft.com,Final
@@ -713,7 +716,6 @@ host,myapp.itunes.apple.com,Final
 host,myvs.download.prss.microsoft.com,Final
 host,na1r.services.adobe.com,Final
 host,nbbb1bb7.pmhcjk.com,Final
-host,netflix.com.edgesuite.net,Final
 host,new-adv.ozon.ru,Final
 host,nix-community.github.io,Final
 host,notary-submissions-prod.s3-accelerate.amazonaws.com,Final
@@ -930,6 +932,7 @@ host,rsshub.rssforever.com,Final
 host,rsshub.umzzz.com,Final
 host,rsshub.woodland.cafe,Final
 host,rsshub2.asailor.org,Final
+host,rt.services.visualstudio.com,Final
 host,rtm.tnt-ea.com,Final
 host,s.mzstatic.com,Final
 host,s00.upd.kaspersky.com,Final
@@ -1070,7 +1073,6 @@ host,software.download.prss.microsoft.com,Final
 host,sp.itunes.apple.com,Final
 host,spectator.ppy.sh,Final
 host,speedysub.music.apple.com,Final
-host,spotify.com.edgesuite.net,Final
 host,spotify.map.fastly.net,Final
 host,spotify.map.fastlylb.net,Final
 host,srch-telemeter10.g.smailru.net,Final
@@ -3041,7 +3043,6 @@ host-suffix,ampproject.net,Final
 host-suffix,ampproject.org,Final
 host-suffix,ams.org,Final
 host-suffix,ams02.space,Final
-host-suffix,ams2.test-ipv6.com,Final
 host-suffix,amsterdamhotescort.com,Final
 host-suffix,amsterdamluxescort.com,Final
 host-suffix,amytele.com,Final
@@ -7401,6 +7402,7 @@ host-suffix,dastanhisexy.cc,Final
 host-suffix,dat.foundation,Final
 host-suffix,data-tscbank.ru,Final
 host-suffix,data.com,Final
+host-suffix,data.microsoft.com,Final
 host-suffix,databank.ru,Final
 host-suffix,datacloudmy.com,Final
 host-suffix,dataframeworks.com,Final
@@ -10234,7 +10236,6 @@ host-suffix,fpo.xxx,Final
 host-suffix,fptolia.com,Final
 host-suffix,fqcebook.com,Final
 host-suffix,fr-beatsbydrestore.com,Final
-host-suffix,fra.test-ipv6.com,Final
 host-suffix,fracebook.com,Final
 host-suffix,fragment.com,Final
 host-suffix,fragrancebay.com,Final
@@ -12962,6 +12963,7 @@ host-suffix,imtagram.com,Final
 host-suffix,imtintl.com,Final
 host-suffix,imzog.com,Final
 host-suffix,in-bank.ru,Final
+host-suffix,in.applicationinsights.azure.com,Final
 host-suffix,inaporn.com,Final
 host-suffix,inasian.club,Final
 host-suffix,inbox.ru,Final
@@ -14557,6 +14559,7 @@ host-suffix,liboggirls.net,Final
 host-suffix,library.lol,Final
 host-suffix,librarylovefest.com,Final
 host-suffix,libraryofthumbs.com,Final
+host-suffix,librewolf.dev,Final
 host-suffix,librewolf.net,Final
 host-suffix,libsolutions.app,Final
 host-suffix,libsolutions.domains,Final
@@ -16812,6 +16815,7 @@ host-suffix,netflav1.com,Final
 host-suffix,netflav5.com,Final
 host-suffix,netflix.ca,Final
 host-suffix,netflix.com,Final
+host-suffix,netflix.com.edgesuite.net,Final
 host-suffix,netflix.net,Final
 host-suffix,netflixdnstest0.com,Final
 host-suffix,netflixdnstest1.com,Final
@@ -20910,7 +20914,6 @@ host-suffix,siteripz.com,Final
 host-suffix,siteripz.net,Final
 host-suffix,situero.com,Final
 host-suffix,six9dy.pw,Final
-host-suffix,sixte.st,Final
 host-suffix,sjcollect.com,Final
 host-suffix,sjhsp1.buzz,Final
 host-suffix,skate2.com,Final
@@ -21314,6 +21317,7 @@ host-suffix,sportswomenoftheyear.co.uk,Final
 host-suffix,spoti.fi,Final
 host-suffix,spotify-everywhere.com,Final
 host-suffix,spotify.com,Final
+host-suffix,spotify.com.edgesuite.net,Final
 host-suffix,spotify.design,Final
 host-suffix,spotify.link,Final
 host-suffix,spotifycdn.com,Final
@@ -22047,6 +22051,7 @@ host-suffix,telegram.org,Final
 host-suffix,telegram.space,Final
 host-suffix,telekom.com,Final
 host-suffix,telekom.de,Final
+host-suffix,telemetry.microsoft.com,Final
 host-suffix,telerik.com,Final
 host-suffix,telesco.pe,Final
 host-suffix,telesec.de,Final
@@ -22092,30 +22097,6 @@ host-suffix,teslamotors.cn,Final
 host-suffix,teslamotors.com,Final
 host-suffix,teslamotors.com.cn,Final
 host-suffix,teslazta.net,Final
-host-suffix,test-ipv6.alpinedc.ch,Final
-host-suffix,test-ipv6.arauc.br,Final
-host-suffix,test-ipv6.belwue.net,Final
-host-suffix,test-ipv6.carnet.hr,Final
-host-suffix,test-ipv6.cl,Final
-host-suffix,test-ipv6.com,Final
-host-suffix,test-ipv6.cs.umd.edu,Final
-host-suffix,test-ipv6.csclub.uwaterloo.ca,Final
-host-suffix,test-ipv6.cz,Final
-host-suffix,test-ipv6.epic.network,Final
-host-suffix,test-ipv6.fratec.net,Final
-host-suffix,test-ipv6.freerangecloud.com,Final
-host-suffix,test-ipv6.go6.si,Final
-host-suffix,test-ipv6.hu,Final
-host-suffix,test-ipv6.is,Final
-host-suffix,test-ipv6.iu13.net,Final
-host-suffix,test-ipv6.ke.liquidtelecom.net,Final
-host-suffix,test-ipv6.noroutetohost.net,Final
-host-suffix,test-ipv6.roedu.net,Final
-host-suffix,test-ipv6.se,Final
-host-suffix,test-ipv6.sin.vr.org,Final
-host-suffix,test-ipv6.ttk.ru,Final
-host-suffix,testipv6.cn,Final
-host-suffix,testipv6.de,Final
 host-suffix,testonfox.com,Final
 host-suffix,tetrika-school.ru,Final
 host-suffix,tettediferro.it,Final

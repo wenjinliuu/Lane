@@ -23,6 +23,7 @@ copilot-workspace.githubnext.com
 copilotprodattachments.blob.core.windows.net
 crashlyticsreports-pa.googleapis.com
 d29vzk4ow07wi7.cloudfront.net
+dc.services.visualstudio.com
 default.exp-tas.com
 developer.microsoft.com
 developers.facebook.com
@@ -82,6 +83,7 @@ productionresultssa9.blob.core.windows.net
 psg-int-centralus.cloudapp.net
 psg-int-eastus.cloudapp.net
 rink.hockeyapp.net
+rt.services.visualstudio.com
 update.crashlytics.com
 vscode-sync-insiders.trafficmanager.net
 vscode-sync.trafficmanager.net

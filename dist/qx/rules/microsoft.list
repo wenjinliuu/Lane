@@ -20,6 +20,8 @@ host,copilot-workspace.githubnext.com,Microsoft
 host,copilotprodattachments.blob.core.windows.net,Microsoft
 host,crl.microsoft.com,Microsoft
 host,ctldl.windowsupdate.com,Microsoft
+host,dc.applicationinsights.azure.com,Microsoft
+host,dc.services.visualstudio.com,Microsoft
 host,default.exp-tas.com,Microsoft
 host,developer.microsoft.com,Microsoft
 host,download.microsoft.com,Microsoft
@@ -41,6 +43,7 @@ host,itacademy.download.prss.microsoft.com,Microsoft
 host,itacademyuat.download.prss.microsoft.com,Microsoft
 host,lex.download.prss.microsoft.com,Microsoft
 host,lexuat.download.prss.microsoft.com,Microsoft
+host,live.applicationinsights.azure.com,Microsoft
 host,location.microsoft.com,Microsoft
 host,mbs.download.prss.microsoft.com,Microsoft
 host,mpnbenefits.download.prss.microsoft.com,Microsoft
@@ -88,6 +91,7 @@ host,psg-int-centralus.cloudapp.net,Microsoft
 host,psg-int-eastus.cloudapp.net,Microsoft
 host,rink.hockeyapp.net,Microsoft
 host,rsm.download.prss.microsoft.com,Microsoft
+host,rt.services.visualstudio.com,Microsoft
 host,sdx.microsoft.com,Microsoft
 host,shell.cdn.office.net,Microsoft
 host,software.download.prss.microsoft.com,Microsoft
@@ -288,6 +292,7 @@ host-suffix,cosmosdb.net,Microsoft
 host-suffix,crmdynint-gcc.com,Microsoft
 host-suffix,crmdynint.com,Microsoft
 host-suffix,crossborderexpansion.com,Microsoft
+host-suffix,data.microsoft.com,Microsoft
 host-suffix,dcg.microsoft.com,Microsoft
 host-suffix,dependabot.com,Microsoft
 host-suffix,devopsassessment.net,Microsoft
@@ -359,6 +364,7 @@ host-suffix,ie11.com,Microsoft
 host-suffix,ie8.co,Microsoft
 host-suffix,ie9.com,Microsoft
 host-suffix,imaginecup.pl,Microsoft
+host-suffix,in.applicationinsights.azure.com,Microsoft
 host-suffix,ingads.com,Microsoft
 host-suffix,insiderdevtour.com,Microsoft
 host-suffix,internetexplorer.co,Microsoft
@@ -676,6 +682,7 @@ host-suffix,sysinternals.com,Microsoft
 host-suffix,t-msedge.net,Microsoft
 host-suffix,tailwindtraders.com,Microsoft
 host-suffix,techhub.ms,Microsoft
+host-suffix,telemetry.microsoft.com,Microsoft
 host-suffix,tellmewhygame.com,Microsoft
 host-suffix,tfsallin.net,Microsoft
 host-suffix,th.bing.com,Microsoft
