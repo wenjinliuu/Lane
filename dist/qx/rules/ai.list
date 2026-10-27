@@ -4,6 +4,9 @@ host,alkalicore-pa.clients6.google.com,AI
 host,alkalimakersuite-pa.clients6.google.com,AI
 host,antigravity-pa.googleapis.com,AI
 host,antigravity.googleapis.com,AI
+host,appsgenaiserver-pa.clients.google.com,AI
+host,appsgenaiserver-pa.clients6.google.com,AI
+host,appsgenaiserver-pa.googleapis.com,AI
 host,browser-intake-datadoghq.com,AI
 host,cloudaicompanion.googleapis.com,AI
 host,cloudcode-pa.googleapis.com,AI
@@ -44,6 +47,7 @@ host-suffix,antigravity.google,AI
 host-suffix,antspace.dev,AI
 host-suffix,anythingllm.com,AI
 host-suffix,arena.ai,AI
+host-suffix,artificialanalysis.ai,AI
 host-suffix,bard.google.com,AI
 host-suffix,cerebras.ai,AI
 host-suffix,chat.com,AI
@@ -69,6 +73,7 @@ host-suffix,claudepages.dev,AI
 host-suffix,claudestudio.com,AI
 host-suffix,claudeusercontent.com,AI
 host-suffix,clawhub.ai,AI
+host-suffix,cline.bot,AI
 host-suffix,clipdrop.co,AI
 host-suffix,codeium.com,AI
 host-suffix,codeiumdata.com,AI
@@ -79,6 +84,8 @@ host-suffix,cohere.com,AI
 host-suffix,comfy.org,AI
 host-suffix,comfyci.org,AI
 host-suffix,comfyregistry.org,AI
+host-suffix,commandcode.ai,AI
+host-suffix,context7.com,AI
 host-suffix,copilot-stg.com,AI
 host-suffix,copilot.cloud.microsoft,AI
 host-suffix,copilot.com,AI
@@ -148,6 +155,7 @@ host-suffix,manus.im,AI
 host-suffix,manuscdn.com,AI
 host-suffix,marscode.com,AI
 host-suffix,meta.ai,AI
+host-suffix,metaaiusercontent.com,AI
 host-suffix,metaaivm.com,AI
 host-suffix,midjourney.com,AI
 host-suffix,minimax.io,AI
@@ -160,6 +168,7 @@ host-suffix,notebook.google.com,AI
 host-suffix,notebooklm.google,AI
 host-suffix,notebooklm.google.com,AI
 host-suffix,notegpt.io,AI
+host-suffix,nousresearch.com,AI
 host-suffix,novelai.net,AI
 host-suffix,oaistatic.com,AI
 host-suffix,oaistatsig.com,AI

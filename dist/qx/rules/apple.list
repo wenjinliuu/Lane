@@ -196,7 +196,9 @@ host,seed-swallow.siri.apple.com,Apple
 host,seed.siri.apple.com,Apple
 host,sequoia.apple.com,Apple
 host,sf-api-token-service.itunes.apple.com,Apple
+host,sh-pod1-smp-device.apple.com,Apple
 host,sh-pod2-smp-device.apple.com,Apple
+host,sh-pod3-smp-device.apple.com,Apple
 host,shazam-insights.cdn-apple.com,Apple
 host,smp-device-content.apple.com,Apple
 host,sp.itunes.apple.com,Apple

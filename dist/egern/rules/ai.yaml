@@ -5,6 +5,9 @@ domain_set:
 - alkalimakersuite-pa.clients6.google.com
 - antigravity-pa.googleapis.com
 - antigravity.googleapis.com
+- appsgenaiserver-pa.clients.google.com
+- appsgenaiserver-pa.clients6.google.com
+- appsgenaiserver-pa.googleapis.com
 - browser-intake-datadoghq.com
 - cloudaicompanion.googleapis.com
 - cloudcode-pa.googleapis.com
@@ -46,6 +49,7 @@ domain_suffix_set:
 - antspace.dev
 - anythingllm.com
 - arena.ai
+- artificialanalysis.ai
 - bard.google.com
 - cerebras.ai
 - chat.com
@@ -71,6 +75,7 @@ domain_suffix_set:
 - claudestudio.com
 - claudeusercontent.com
 - clawhub.ai
+- cline.bot
 - clipdrop.co
 - codeium.com
 - codeiumdata.com
@@ -81,6 +86,8 @@ domain_suffix_set:
 - comfy.org
 - comfyci.org
 - comfyregistry.org
+- commandcode.ai
+- context7.com
 - copilot-stg.com
 - copilot.cloud.microsoft
 - copilot.com
@@ -150,6 +157,7 @@ domain_suffix_set:
 - manuscdn.com
 - marscode.com
 - meta.ai
+- metaaiusercontent.com
 - metaaivm.com
 - midjourney.com
 - minimax.io
@@ -162,6 +170,7 @@ domain_suffix_set:
 - notebooklm.google
 - notebooklm.google.com
 - notegpt.io
+- nousresearch.com
 - novelai.net
 - oaistatic.com
 - oaistatsig.com

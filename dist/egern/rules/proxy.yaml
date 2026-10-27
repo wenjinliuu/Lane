@@ -155,6 +155,9 @@ domain_set:
 - appleworldwidedeveloper.sc.omtrdc.net
 - apps.mzstatic.com
 - apps5.oingo.com
+- appsgenaiserver-pa.clients.google.com
+- appsgenaiserver-pa.clients6.google.com
+- appsgenaiserver-pa.googleapis.com
 - apptrailers.itunes.apple.com
 - as-dash-uk-live.akamaized.net
 - as-hls-uk-live.akamaized.net
@@ -1065,7 +1068,9 @@ domain_set:
 - servd-anthropic-website.b-cdn.net
 - service.urchin.com
 - sf-api-token-service.itunes.apple.com
+- sh-pod1-smp-device.apple.com
 - sh-pod2-smp-device.apple.com
+- sh-pod3-smp-device.apple.com
 - shazam-insights.cdn-apple.com
 - shell.cdn.office.net
 - smp-device-content.apple.com
@@ -3685,6 +3690,7 @@ domain_suffix_set:
 - artel.watch
 - arteldoc.com
 - arteldoc.tv
+- artificialanalysis.ai
 - artixlinux.org
 - artnudegalleries.com
 - artoferotica.info
@@ -6768,6 +6774,7 @@ domain_suffix_set:
 - client-update.queniuqe.com
 - climate-server.com
 - climateone.blogspot.co.id
+- cline.bot
 - clinical-videos.com
 - clinicalkey.com
 - clip16.com
@@ -6997,6 +7004,7 @@ domain_suffix_set:
 - comixzilla.com
 - comm-verse.com
 - commandandconquer.com
+- commandcode.ai
 - comments.app
 - commerceos.com
 - commerzbank.ru
@@ -7050,6 +7058,7 @@ domain_suffix_set:
 - content-ause1-ur-discovery1.uplynk.com
 - contentful.com
 - contest.com
+- context7.com
 - convrgencegame.com
 - cookiebot.com
 - cookiechoices.org
@@ -9924,6 +9933,7 @@ domain_suffix_set:
 - firstns.cc
 - firstpelvicexam.com
 - firstprivatebank.com.mm
+- firstrade.com
 - fishmpegs.com
 - fitbit.com
 - fitgirl-repacks.site
@@ -15453,6 +15463,7 @@ domain_suffix_set:
 - met-nude.com
 - meta.ai
 - meta.com
+- metaaiusercontent.com
 - metaaivm.com
 - metabora.io
 - metabrainz.org
@@ -17325,6 +17336,7 @@ domain_suffix_set:
 - notion.site
 - notion.so
 - notionusercontent.com
+- nousresearch.com
 - novelai.net
 - noveltrove.com
 - novids.com
@@ -22274,6 +22286,7 @@ domain_suffix_set:
 - thinkboxsoftware.com
 - thinkdifferent.us
 - thinkofliving.com
+- thinkorswim.com
 - thinkquarterly.co.uk
 - thinkquarterly.com
 - thinkwithgoogle.com

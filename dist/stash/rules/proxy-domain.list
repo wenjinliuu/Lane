@@ -154,6 +154,9 @@ appleworldwidedeveloper.hb-api.omtrdc.net
 appleworldwidedeveloper.sc.omtrdc.net
 apps.mzstatic.com
 apps5.oingo.com
+appsgenaiserver-pa.clients.google.com
+appsgenaiserver-pa.clients6.google.com
+appsgenaiserver-pa.googleapis.com
 apptrailers.itunes.apple.com
 as-dash-uk-live.akamaized.net
 as-hls-uk-live.akamaized.net
@@ -1064,7 +1067,9 @@ sequoia.apple.com
 servd-anthropic-website.b-cdn.net
 service.urchin.com
 sf-api-token-service.itunes.apple.com
+sh-pod1-smp-device.apple.com
 sh-pod2-smp-device.apple.com
+sh-pod3-smp-device.apple.com
 shazam-insights.cdn-apple.com
 shell.cdn.office.net
 smp-device-content.apple.com
@@ -3683,6 +3688,7 @@ zftksc.launches.appsflyersdk.com
 +.artel.watch
 +.arteldoc.com
 +.arteldoc.tv
++.artificialanalysis.ai
 +.artixlinux.org
 +.artnudegalleries.com
 +.artoferotica.info
@@ -6766,6 +6772,7 @@ zftksc.launches.appsflyersdk.com
 +.client-update.queniuqe.com
 +.climate-server.com
 +.climateone.blogspot.co.id
++.cline.bot
 +.clinical-videos.com
 +.clinicalkey.com
 +.clip16.com
@@ -6995,6 +7002,7 @@ zftksc.launches.appsflyersdk.com
 +.comixzilla.com
 +.comm-verse.com
 +.commandandconquer.com
++.commandcode.ai
 +.comments.app
 +.commerceos.com
 +.commerzbank.ru
@@ -7048,6 +7056,7 @@ zftksc.launches.appsflyersdk.com
 +.content-ause1-ur-discovery1.uplynk.com
 +.contentful.com
 +.contest.com
++.context7.com
 +.convrgencegame.com
 +.cookiebot.com
 +.cookiechoices.org
@@ -9922,6 +9931,7 @@ zftksc.launches.appsflyersdk.com
 +.firstns.cc
 +.firstpelvicexam.com
 +.firstprivatebank.com.mm
++.firstrade.com
 +.fishmpegs.com
 +.fitbit.com
 +.fitgirl-repacks.site
@@ -15451,6 +15461,7 @@ zftksc.launches.appsflyersdk.com
 +.met-nude.com
 +.meta.ai
 +.meta.com
++.metaaiusercontent.com
 +.metaaivm.com
 +.metabora.io
 +.metabrainz.org
@@ -17323,6 +17334,7 @@ zftksc.launches.appsflyersdk.com
 +.notion.site
 +.notion.so
 +.notionusercontent.com
++.nousresearch.com
 +.novelai.net
 +.noveltrove.com
 +.novids.com
@@ -22272,6 +22284,7 @@ zftksc.launches.appsflyersdk.com
 +.thinkboxsoftware.com
 +.thinkdifferent.us
 +.thinkofliving.com
++.thinkorswim.com
 +.thinkquarterly.co.uk
 +.thinkquarterly.com
 +.thinkwithgoogle.com

@@ -154,6 +154,9 @@ host,appleworldwidedeveloper.hb-api.omtrdc.net,Final
 host,appleworldwidedeveloper.sc.omtrdc.net,Final
 host,apps.mzstatic.com,Final
 host,apps5.oingo.com,Final
+host,appsgenaiserver-pa.clients.google.com,Final
+host,appsgenaiserver-pa.clients6.google.com,Final
+host,appsgenaiserver-pa.googleapis.com,Final
 host,apptrailers.itunes.apple.com,Final
 host,as-dash-uk-live.akamaized.net,Final
 host,as-hls-uk-live.akamaized.net,Final
@@ -1064,7 +1067,9 @@ host,sequoia.apple.com,Final
 host,servd-anthropic-website.b-cdn.net,Final
 host,service.urchin.com,Final
 host,sf-api-token-service.itunes.apple.com,Final
+host,sh-pod1-smp-device.apple.com,Final
 host,sh-pod2-smp-device.apple.com,Final
+host,sh-pod3-smp-device.apple.com,Final
 host,shazam-insights.cdn-apple.com,Final
 host,shell.cdn.office.net,Final
 host,smp-device-content.apple.com,Final
@@ -3683,6 +3688,7 @@ host-suffix,artcampro.com,Final
 host-suffix,artel.watch,Final
 host-suffix,arteldoc.com,Final
 host-suffix,arteldoc.tv,Final
+host-suffix,artificialanalysis.ai,Final
 host-suffix,artixlinux.org,Final
 host-suffix,artnudegalleries.com,Final
 host-suffix,artoferotica.info,Final
@@ -6766,6 +6772,7 @@ host-suffix,clickstream.sberbank.ru,Final
 host-suffix,client-update.queniuqe.com,Final
 host-suffix,climate-server.com,Final
 host-suffix,climateone.blogspot.co.id,Final
+host-suffix,cline.bot,Final
 host-suffix,clinical-videos.com,Final
 host-suffix,clinicalkey.com,Final
 host-suffix,clip16.com,Final
@@ -6995,6 +7002,7 @@ host-suffix,comicuniverse.org,Final
 host-suffix,comixzilla.com,Final
 host-suffix,comm-verse.com,Final
 host-suffix,commandandconquer.com,Final
+host-suffix,commandcode.ai,Final
 host-suffix,comments.app,Final
 host-suffix,commerceos.com,Final
 host-suffix,commerzbank.ru,Final
@@ -7048,6 +7056,7 @@ host-suffix,contechacademy.com,Final
 host-suffix,content-ause1-ur-discovery1.uplynk.com,Final
 host-suffix,contentful.com,Final
 host-suffix,contest.com,Final
+host-suffix,context7.com,Final
 host-suffix,convrgencegame.com,Final
 host-suffix,cookiebot.com,Final
 host-suffix,cookiechoices.org,Final
@@ -9922,6 +9931,7 @@ host-suffix,firstgynexam.com,Final
 host-suffix,firstns.cc,Final
 host-suffix,firstpelvicexam.com,Final
 host-suffix,firstprivatebank.com.mm,Final
+host-suffix,firstrade.com,Final
 host-suffix,fishmpegs.com,Final
 host-suffix,fitbit.com,Final
 host-suffix,fitgirl-repacks.site,Final
@@ -15451,6 +15461,7 @@ host-suffix,mesu.apple.com,Final
 host-suffix,met-nude.com,Final
 host-suffix,meta.ai,Final
 host-suffix,meta.com,Final
+host-suffix,metaaiusercontent.com,Final
 host-suffix,metaaivm.com,Final
 host-suffix,metabora.io,Final
 host-suffix,metabrainz.org,Final
@@ -17323,6 +17334,7 @@ host-suffix,notion.new,Final
 host-suffix,notion.site,Final
 host-suffix,notion.so,Final
 host-suffix,notionusercontent.com,Final
+host-suffix,nousresearch.com,Final
 host-suffix,novelai.net,Final
 host-suffix,noveltrove.com,Final
 host-suffix,novids.com,Final
@@ -22272,6 +22284,7 @@ host-suffix,thieme.de,Final
 host-suffix,thinkboxsoftware.com,Final
 host-suffix,thinkdifferent.us,Final
 host-suffix,thinkofliving.com,Final
+host-suffix,thinkorswim.com,Final
 host-suffix,thinkquarterly.co.uk,Final
 host-suffix,thinkquarterly.com,Final
 host-suffix,thinkwithgoogle.com,Final

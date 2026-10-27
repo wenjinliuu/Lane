@@ -9,7 +9,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "8ba15e5d51b3cbc44853f78bd2ff29162cc110ba"
+      "revision": "1b81d3cd34096e5d8cac6bca5935e80f30e990f0"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -17,7 +17,7 @@
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "ff518b1ed61dc4177123ce9614cfd706fa8e7d4e6b20b620f6b61264bb27d660",
+      "sha256": "130ad6b9f2e3153e69488ee2d7875dfbc1d32ec5e114b347bd21ad5871f9e9f5",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -28,8 +28,8 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "375060e2299aa6344a87f309568ac3d748baf0cc",
-      "sha256": "30f975e4405d6d59407386c7981cd3c779672b1862b496f6c70ec946f701d3c5",
+      "revision": "55f71e3bec7653638f39d504d27dc2a8de3b3abf",
+      "sha256": "1a945c35b3fa11d117fa9b29980f18dd20fd1887f90da88a516e37721df3357f",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
@@ -38,13 +38,13 @@
       "maximum_snapshot_age_days": 3,
       "minimum_coverage_ratio": 0.5,
       "snapshot_dates": [
+        "2026-10-27",
         "2026-10-26",
         "2026-10-25",
         "2026-10-24",
         "2026-10-23",
         "2026-10-22",
-        "2026-10-21",
-        "2026-10-20"
+        "2026-10-21"
       ],
       "window_report": "cn-ip-window.json",
       "update_status": "updated"
@@ -73,10 +73,10 @@
     {
       "id": "apple-cn",
       "policy": "DIRECT",
-      "rules": 460,
+      "rules": 462,
       "kinds": {
         "domain": 226,
-        "full": 234
+        "full": 236
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
@@ -89,10 +89,10 @@
     {
       "id": "ai",
       "policy": "AI",
-      "rules": 205,
+      "rules": 214,
       "kinds": {
-        "domain": 173,
-        "full": 31,
+        "domain": 179,
+        "full": 34,
         "regexp": 1
       },
       "exact_duplicates_removed": 0,
@@ -106,9 +106,9 @@
     {
       "id": "schwab",
       "policy": "Brokerage",
-      "rules": 9,
+      "rules": 10,
       "kinds": {
-        "domain": 9
+        "domain": 10
       },
       "exact_duplicates_removed": 4,
       "redundancy_audit": {
@@ -283,18 +283,18 @@
     {
       "id": "google",
       "policy": "Google",
-      "rules": 1122,
+      "rules": 1125,
       "kinds": {
         "domain": 884,
-        "full": 236,
+        "full": 239,
         "regexp": 2
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
-        "within_parent_suffix_candidates": 273,
+        "within_parent_suffix_candidates": 276,
         "previous_ruleset_exact_candidates": 203,
         "previous_ruleset_parent_suffix_candidates": 0,
-        "total_candidates": 476
+        "total_candidates": 479
       }
     },
     {
@@ -316,17 +316,17 @@
     {
       "id": "apple",
       "policy": "Apple",
-      "rules": 1824,
+      "rules": 1826,
       "kinds": {
         "domain": 1575,
-        "full": 249
+        "full": 251
       },
       "exact_duplicates_removed": 2,
       "redundancy_audit": {
-        "within_parent_suffix_candidates": 240,
+        "within_parent_suffix_candidates": 242,
         "previous_ruleset_exact_candidates": 103,
         "previous_ruleset_parent_suffix_candidates": 34,
-        "total_candidates": 377
+        "total_candidates": 379
       }
     },
     {
@@ -364,18 +364,18 @@
     {
       "id": "proxy",
       "policy": "Final",
-      "rules": 26087,
+      "rules": 26100,
       "kinds": {
-        "domain": 24507,
-        "full": 1422,
+        "domain": 24515,
+        "full": 1427,
         "regexp": 158
       },
       "exact_duplicates_removed": 3,
       "redundancy_audit": {
-        "within_parent_suffix_candidates": 1664,
-        "previous_ruleset_exact_candidates": 5523,
+        "within_parent_suffix_candidates": 1669,
+        "previous_ruleset_exact_candidates": 5530,
         "previous_ruleset_parent_suffix_candidates": 322,
-        "total_candidates": 7509
+        "total_candidates": 7521
       }
     },
     {
@@ -397,9 +397,9 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 10015,
+      "rules": 10014,
       "kinds": {
-        "ipcidr": 6526,
+        "ipcidr": 6525,
         "ipcidr6": 3489
       },
       "exact_duplicates_removed": 0,
@@ -421,10 +421,10 @@
   },
   "redundancy_audit": {
     "mode": "report-only",
-    "within_parent_suffix_candidates": 4819,
-    "previous_ruleset_exact_candidates": 5983,
+    "within_parent_suffix_candidates": 4829,
+    "previous_ruleset_exact_candidates": 5990,
     "previous_ruleset_parent_suffix_candidates": 363,
-    "total_candidates": 11165,
+    "total_candidates": 11182,
     "note": "Candidates are retained in every published ruleset; this audit does not change routing payloads."
   },
   "cross_validation": {

@@ -187,7 +187,9 @@ host,seed-swallow.siri.apple.com,direct
 host,seed.siri.apple.com,direct
 host,sequoia.apple.com,direct
 host,sf-api-token-service.itunes.apple.com,direct
+host,sh-pod1-smp-device.apple.com,direct
 host,sh-pod2-smp-device.apple.com,direct
+host,sh-pod3-smp-device.apple.com,direct
 host,shazam-insights.cdn-apple.com,direct
 host,smp-device-content.apple.com,direct
 host,sp.itunes.apple.com,direct

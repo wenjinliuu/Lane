@@ -22,6 +22,9 @@ host,app-analytics-services.com,Google
 host,app-measurement-cn.com,Google
 host,app-measurement.com,Google
 host,apps5.oingo.com,Google
+host,appsgenaiserver-pa.clients.google.com,Google
+host,appsgenaiserver-pa.clients6.google.com,Google
+host,appsgenaiserver-pa.googleapis.com,Google
 host,avail.googleflights.net,Google
 host,beacons.gcp.gvt2.com,Google
 host,beacons.gvt2.com,Google
