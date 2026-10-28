@@ -9,12 +9,12 @@
       "reference_available": true,
       "equal_coverage": false,
       "primary_rule_count": 6525,
-      "reference_rule_count": 3882,
-      "primary_addresses": "349675780",
-      "reference_addresses": "282383360",
-      "common_addresses": "281816320",
-      "primary_only_cidr_count": 7020,
-      "primary_only_cidrs_sha256": "f2e920fec6b6c697539147643a5526a4a2812f8058d3d35399bd9f8e1c1ac5f1",
+      "reference_rule_count": 3886,
+      "primary_addresses": "349670660",
+      "reference_addresses": "282384384",
+      "common_addresses": "281816576",
+      "primary_only_cidr_count": 7019,
+      "primary_only_cidrs_sha256": "f6478c870d28d2b18c67f6c1f915719eb4748c92f6d5c15e478ff0c7dd2beaeb",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -118,8 +118,8 @@
         "8.212.160.0/20",
         "8.212.176.0/21"
       ],
-      "reference_only_cidr_count": 192,
-      "reference_only_cidrs_sha256": "2053fbfd3a60d4cf3ba907744b1bc3400c3f68c5ebcf4c93cbad26494f2d3e9c",
+      "reference_only_cidr_count": 195,
+      "reference_only_cidrs_sha256": "11df140db50c3f347cb94144efcd2c43b8042b2502889a226ac2dae0d0bb62d0",
       "reference_only_cidrs_truncated": true,
       "reference_only_cidrs": [
         "1.18.128.0/24",
@@ -227,9 +227,9 @@
     "ipv6": {
       "reference_available": false,
       "equal_coverage": null,
-      "primary_rule_count": 3489,
+      "primary_rule_count": 3488,
       "reference_rule_count": 0,
-      "primary_addresses": "5432377276264962827589715585138688",
+      "primary_addresses": "5432377275056037007975086410432512",
       "reference_addresses": null,
       "common_addresses": null,
       "primary_only_cidrs": null,
@@ -242,8 +242,8 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "55f71e3bec7653638f39d504d27dc2a8de3b3abf",
-        "sha256": "1a945c35b3fa11d117fa9b29980f18dd20fd1887f90da88a516e37721df3357f",
+        "revision": "a0ba32e3b743fc89662cc3e6e9173f7d39838945",
+        "sha256": "e30b7258b20b008009cdadb8e5108330f8eeac39160506cd6dc59e50f9f6dd61",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
@@ -252,13 +252,13 @@
         "maximum_snapshot_age_days": 3,
         "minimum_coverage_ratio": 0.5,
         "snapshot_dates": [
+          "2026-10-28",
           "2026-10-27",
           "2026-10-26",
           "2026-10-25",
           "2026-10-24",
           "2026-10-23",
-          "2026-10-22",
-          "2026-10-21"
+          "2026-10-22"
         ],
         "window_report": "cn-ip-window.json",
         "update_status": "updated"
@@ -267,7 +267,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "130ad6b9f2e3153e69488ee2d7875dfbc1d32ec5e114b347bd21ad5871f9e9f5",
+        "sha256": "1bb6b5c8a7b66e6e803a5e20883e03f42a4e4e2629687f922c09c19758a2dce7",
         "license": "CC-BY-SA-4.0"
       }
     }
