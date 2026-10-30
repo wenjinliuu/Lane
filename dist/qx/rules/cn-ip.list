@@ -687,7 +687,8 @@ ip-cidr,103.186.4.0/23,direct
 ip-cidr,103.189.152.0/22,direct
 ip-cidr,103.189.92.0/23,direct
 ip-cidr,103.19.12.0/22,direct
-ip-cidr,103.19.232.0/22,direct
+ip-cidr,103.19.233.0/24,direct
+ip-cidr,103.19.234.0/23,direct
 ip-cidr,103.19.40.0/21,direct
 ip-cidr,103.19.64.0/21,direct
 ip-cidr,103.19.72.0/22,direct
@@ -9312,6 +9313,7 @@ ip6-cidr,2406:840:fee0::/45,direct
 ip6-cidr,2406:840:fee8::/46,direct
 ip6-cidr,2406:840:feec::/48,direct
 ip6-cidr,2406:840:feee::/47,direct
+ip6-cidr,2406:840:feff::/48,direct
 ip6-cidr,2406:840:ff00::/40,direct
 ip6-cidr,2406:8480::/32,direct
 ip6-cidr,2406:8500::/32,direct
