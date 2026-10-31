@@ -688,7 +688,7 @@ ip-cidr,103.189.152.0/22,direct
 ip-cidr,103.189.92.0/23,direct
 ip-cidr,103.19.12.0/22,direct
 ip-cidr,103.19.233.0/24,direct
-ip-cidr,103.19.234.0/23,direct
+ip-cidr,103.19.235.0/24,direct
 ip-cidr,103.19.40.0/21,direct
 ip-cidr,103.19.64.0/21,direct
 ip-cidr,103.19.72.0/22,direct
@@ -1529,7 +1529,8 @@ ip-cidr,103.52.72.0/21,direct
 ip-cidr,103.52.80.0/21,direct
 ip-cidr,103.52.96.0/21,direct
 ip-cidr,103.53.100.0/22,direct
-ip-cidr,103.53.124.0/22,direct
+ip-cidr,103.53.124.0/23,direct
+ip-cidr,103.53.126.0/24,direct
 ip-cidr,103.53.128.0/20,direct
 ip-cidr,103.53.144.0/22,direct
 ip-cidr,103.53.180.0/22,direct
@@ -2996,7 +2997,14 @@ ip-cidr,140.143.0.0/16,direct
 ip-cidr,140.179.0.0/16,direct
 ip-cidr,140.205.0.0/16,direct
 ip-cidr,140.206.0.0/15,direct
-ip-cidr,140.210.0.0/16,direct
+ip-cidr,140.210.0.0/20,direct
+ip-cidr,140.210.128.0/17,direct
+ip-cidr,140.210.16.0/23,direct
+ip-cidr,140.210.18.0/24,direct
+ip-cidr,140.210.20.0/22,direct
+ip-cidr,140.210.24.0/21,direct
+ip-cidr,140.210.32.0/19,direct
+ip-cidr,140.210.64.0/18,direct
 ip-cidr,140.224.0.0/16,direct
 ip-cidr,140.237.0.0/16,direct
 ip-cidr,140.240.0.0/16,direct
@@ -3267,6 +3275,7 @@ ip-cidr,163.223.124.0/23,direct
 ip-cidr,163.223.222.0/23,direct
 ip-cidr,163.223.28.0/23,direct
 ip-cidr,163.223.32.0/23,direct
+ip-cidr,163.223.72.0/23,direct
 ip-cidr,163.227.34.0/23,direct
 ip-cidr,163.227.40.0/23,direct
 ip-cidr,163.227.74.0/23,direct
@@ -5331,6 +5340,7 @@ ip-cidr,27.54.152.0/21,direct
 ip-cidr,27.54.192.0/18,direct
 ip-cidr,27.54.72.0/21,direct
 ip-cidr,27.8.0.0/13,direct
+ip-cidr,27.98.202.0/23,direct
 ip-cidr,27.98.208.0/20,direct
 ip-cidr,27.98.224.0/19,direct
 ip-cidr,27.99.128.0/17,direct
@@ -5861,7 +5871,9 @@ ip-cidr,45.113.16.0/20,direct
 ip-cidr,45.113.168.0/22,direct
 ip-cidr,45.113.176.0/22,direct
 ip-cidr,45.113.184.0/22,direct
-ip-cidr,45.113.200.0/21,direct
+ip-cidr,45.113.200.0/23,direct
+ip-cidr,45.113.202.0/24,direct
+ip-cidr,45.113.204.0/22,direct
 ip-cidr,45.113.208.0/20,direct
 ip-cidr,45.113.240.0/22,direct
 ip-cidr,45.113.252.0/22,direct
@@ -9902,7 +9914,6 @@ ip6-cidr,2a0a:d685:1f0::/45,direct
 ip6-cidr,2a0a:d685:1f8::/47,direct
 ip6-cidr,2a0a:d685:1fa::/48,direct
 ip6-cidr,2a0a:d685:2000::/35,direct
-ip6-cidr,2a0a:d685:200::/48,direct
 ip6-cidr,2a0a:d685:202::/47,direct
 ip6-cidr,2a0a:d685:204::/46,direct
 ip6-cidr,2a0a:d685:208::/45,direct

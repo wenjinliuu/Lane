@@ -1533,6 +1533,7 @@ host-suffix,18comic-god.club,Final
 host-suffix,18comic-god.xyz,Final
 host-suffix,18comic.cc,Final
 host-suffix,18comic.company,Final
+host-suffix,18comic.ink,Final
 host-suffix,18comic.org,Final
 host-suffix,18comic.vip,Final
 host-suffix,18commic.com,Final
@@ -5023,6 +5024,7 @@ host-suffix,bingapistatistics.com,Final
 host-suffix,bingoporno.com,Final
 host-suffix,bingparachute.com,Final
 host-suffix,bingsandbox.com,Final
+host-suffix,bingstatic.com,Final
 host-suffix,bingvisualsearch.com,Final
 host-suffix,bingworld.com,Final
 host-suffix,bingx.com,Final
@@ -10901,6 +10903,7 @@ host-suffix,githubapp.com,Final
 host-suffix,githubassets.com,Final
 host-suffix,githubcopilot.com,Final
 host-suffix,githubhackathon.com,Final
+host-suffix,githubhelp.com,Final
 host-suffix,githubnext.com,Final
 host-suffix,githubpreview.dev,Final
 host-suffix,githubstatus.com,Final
@@ -16372,6 +16375,7 @@ host-suffix,msftconnecttest.com,Final
 host-suffix,msfteducation.ca,Final
 host-suffix,msftncsi.com,Final
 host-suffix,msftnet.org,Final
+host-suffix,msftstatic.com,Final
 host-suffix,msgamesresearch.com,Final
 host-suffix,msgamestudios.com,Final
 host-suffix,mshome.net,Final
@@ -22372,11 +22376,14 @@ host-suffix,tiktokeu-cdn.com,Final
 host-suffix,tiktokglobalshopv.com,Final
 host-suffix,tiktokminis.us,Final
 host-suffix,tiktokrow-cdn.com,Final
+host-suffix,tiktokshop.com,Final
+host-suffix,tiktokstaticb.com,Final
 host-suffix,tiktokv.com,Final
 host-suffix,tiktokv.com.edgekey.net,Final
 host-suffix,tiktokv.com.edgesuite.net,Final
 host-suffix,tiktokv.eu,Final
 host-suffix,tiktokv.us,Final
+host-suffix,tiktokvapp.com,Final
 host-suffix,tiktokw.eu,Final
 host-suffix,tiktokw.us,Final
 host-suffix,tilda.cc,Final

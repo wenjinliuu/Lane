@@ -249,6 +249,7 @@ host-suffix,bingapis.com,Microsoft
 host-suffix,bingapistatistics.com,Microsoft
 host-suffix,bingparachute.com,Microsoft
 host-suffix,bingsandbox.com,Microsoft
+host-suffix,bingstatic.com,Microsoft
 host-suffix,bingvisualsearch.com,Microsoft
 host-suffix,bingworld.com,Microsoft
 host-suffix,blazor.net,Microsoft
@@ -552,6 +553,7 @@ host-suffix,msftconnecttest.com,Microsoft
 host-suffix,msfteducation.ca,Microsoft
 host-suffix,msftncsi.com,Microsoft
 host-suffix,msftnet.org,Microsoft
+host-suffix,msftstatic.com,Microsoft
 host-suffix,msgamesresearch.com,Microsoft
 host-suffix,msgamestudios.com,Microsoft
 host-suffix,mshome.net,Microsoft
