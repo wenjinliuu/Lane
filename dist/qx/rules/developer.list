@@ -130,6 +130,8 @@ host-suffix,bintray.com,Developer
 host-suffix,bitvise.com,Developer
 host-suffix,blazor.net,Developer
 host-suffix,blogoverflow.com,Developer
+host-suffix,bmonkeys.net,Developer
+host-suffix,boldgrid.com,Developer
 host-suffix,bootstrapcdn.com,Developer
 host-suffix,botframework.com,Developer
 host-suffix,botorch.org,Developer
@@ -151,6 +153,7 @@ host-suffix,centos.org,Developer
 host-suffix,chocolatey.org,Developer
 host-suffix,clearlinux.org,Developer
 host-suffix,clojure.org,Developer
+host-suffix,cloudwp.dev,Developer
 host-suffix,cnpmjs.org,Developer
 host-suffix,codeberg.org,Developer
 host-suffix,codeberg.page,Developer
@@ -197,6 +200,7 @@ host-suffix,dot.net,Developer
 host-suffix,dotdeb.org,Developer
 host-suffix,draftjs.org,Developer
 host-suffix,ecr.aws,Developer
+host-suffix,editorx.com,Developer
 host-suffix,electronjs.org,Developer
 host-suffix,elegantthemes.com,Developer
 host-suffix,elementary.io,Developer
@@ -474,6 +478,7 @@ host-suffix,packagecloud.io,Developer
 host-suffix,packagist.org,Developer
 host-suffix,packer.io,Developer
 host-suffix,paint.net,Developer
+host-suffix,parastorage.com,Developer
 host-suffix,parse.com,Developer
 host-suffix,pcre.org,Developer
 host-suffix,perf-events.cloud.unity3d.com,Developer
@@ -651,12 +656,22 @@ host-suffix,vscodeedu.com,Developer
 host-suffix,w.org,Developer
 host-suffix,wapm.io,Developer
 host-suffix,wasmer.io,Developer
+host-suffix,webflow-ext.com,Developer
 host-suffix,webflow.com,Developer
+host-suffix,webflow.io,Developer
 host-suffix,webkit.org,Developer
 host-suffix,webkitgtk.org,Developer
 host-suffix,weblate.org,Developer
 host-suffix,webobjects.com,Developer
+host-suffix,website-files.com,Developer
 host-suffix,wireshark.org,Developer
+host-suffix,wix-code.com,Developer
+host-suffix,wix.com,Developer
+host-suffix,wixanswers.com,Developer
+host-suffix,wixapps.net,Developer
+host-suffix,wixmp.com,Developer
+host-suffix,wixsite.com,Developer
+host-suffix,wixstatic.com,Developer
 host-suffix,wordcamp.org,Developer
 host-suffix,wordpress.com,Developer
 host-suffix,wordpress.net,Developer

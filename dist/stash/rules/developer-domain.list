@@ -130,6 +130,8 @@ vsmarketplacebadge.apphb.com
 +.bitvise.com
 +.blazor.net
 +.blogoverflow.com
++.bmonkeys.net
++.boldgrid.com
 +.bootstrapcdn.com
 +.botframework.com
 +.botorch.org
@@ -151,6 +153,7 @@ vsmarketplacebadge.apphb.com
 +.chocolatey.org
 +.clearlinux.org
 +.clojure.org
++.cloudwp.dev
 +.cnpmjs.org
 +.codeberg.org
 +.codeberg.page
@@ -197,6 +200,7 @@ vsmarketplacebadge.apphb.com
 +.dotdeb.org
 +.draftjs.org
 +.ecr.aws
++.editorx.com
 +.electronjs.org
 +.elegantthemes.com
 +.elementary.io
@@ -474,6 +478,7 @@ vsmarketplacebadge.apphb.com
 +.packagist.org
 +.packer.io
 +.paint.net
++.parastorage.com
 +.parse.com
 +.pcre.org
 +.perf-events.cloud.unity3d.com
@@ -651,12 +656,22 @@ vsmarketplacebadge.apphb.com
 +.w.org
 +.wapm.io
 +.wasmer.io
++.webflow-ext.com
 +.webflow.com
++.webflow.io
 +.webkit.org
 +.webkitgtk.org
 +.weblate.org
 +.webobjects.com
++.website-files.com
 +.wireshark.org
++.wix-code.com
++.wix.com
++.wixanswers.com
++.wixapps.net
++.wixmp.com
++.wixsite.com
++.wixstatic.com
 +.wordcamp.org
 +.wordpress.com
 +.wordpress.net
