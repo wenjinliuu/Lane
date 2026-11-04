@@ -9,12 +9,12 @@
       "reference_available": true,
       "equal_coverage": false,
       "primary_rule_count": 6536,
-      "reference_rule_count": 3880,
+      "reference_rule_count": 3881,
       "primary_addresses": "349666052",
-      "reference_addresses": "282569984",
-      "common_addresses": "281869824",
-      "primary_only_cidr_count": 7019,
-      "primary_only_cidrs_sha256": "a750f122c0bb13fc9875d0828bc210a5a3f28448063c33489a8b364bdae25e81",
+      "reference_addresses": "282565888",
+      "common_addresses": "281865728",
+      "primary_only_cidr_count": 7027,
+      "primary_only_cidrs_sha256": "90e3c5fadf3c0a38a893f40752286809222c499d09ce03866ca35baa9fc5c7dc",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -227,9 +227,9 @@
     "ipv6": {
       "reference_available": false,
       "equal_coverage": null,
-      "primary_rule_count": 3479,
+      "primary_rule_count": 3480,
       "reference_rule_count": 0,
-      "primary_addresses": "5430376663611708805436627925073920",
+      "primary_addresses": "5430376661193857166207369575661568",
       "reference_addresses": null,
       "common_addresses": null,
       "primary_only_cidrs": null,
@@ -242,8 +242,8 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "f4ba11e444944490754931e77fd4ad2b5338d15c",
-        "sha256": "468a04d78048e1f4bc1e3df8f5084a313c6af8a2a74aad34af22a0e561f5b65b",
+        "revision": "99fb1487aed145d76835bd559ee50cb401fa7842",
+        "sha256": "a72ae4564e17edc1629648714ff912ef929e12006a35416a6a34eb7e4ce2ee9f",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
@@ -252,13 +252,13 @@
         "maximum_snapshot_age_days": 3,
         "minimum_coverage_ratio": 0.5,
         "snapshot_dates": [
+          "2026-11-04",
           "2026-11-03",
           "2026-11-02",
           "2026-11-01",
           "2026-10-31",
           "2026-10-30",
-          "2026-10-29",
-          "2026-10-28"
+          "2026-10-29"
         ],
         "window_report": "cn-ip-window.json",
         "update_status": "partial"
@@ -267,7 +267,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "115d65626433e2ee70cbe012395f14c42adc1067fddb3794dcc1f67463e784f6",
+        "sha256": "95a6eb0dda30a7d28604b06912d23847d4befbef0e78d5204dadc7a6ba950521",
         "license": "CC-BY-SA-4.0"
       }
     }
