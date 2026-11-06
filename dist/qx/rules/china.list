@@ -841,6 +841,7 @@ host-suffix,aliyunpds.com,direct
 host-suffix,alizhaopin.com,direct
 host-suffix,allawnfs.com,direct
 host-suffix,allawno.com,direct
+host-suffix,allawnofs.com,direct
 host-suffix,allawntech.com,direct
 host-suffix,allday.work,direct
 host-suffix,allflow.cn,direct
@@ -3984,7 +3985,6 @@ host-suffix,imp.go.sohu.com,direct
 host-suffix,imqq.com,direct
 host-suffix,imsyy.com,direct
 host-suffix,imweb.io,direct
-host-suffix,in.th,direct
 host-suffix,inanguapi.cn,direct
 host-suffix,inanguapi.com,direct
 host-suffix,incopat.com,direct

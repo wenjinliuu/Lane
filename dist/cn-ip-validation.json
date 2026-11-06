@@ -8,13 +8,13 @@
     "ipv4": {
       "reference_available": true,
       "equal_coverage": false,
-      "primary_rule_count": 6174,
-      "reference_rule_count": 3883,
-      "primary_addresses": "344076032",
-      "reference_addresses": "282566144",
-      "common_addresses": "281866240",
-      "primary_only_cidr_count": 6652,
-      "primary_only_cidrs_sha256": "2baf915cf7e75c058ee6dedd52e1197362e923fe2a3a263c39d161129a098485",
+      "primary_rule_count": 6190,
+      "reference_rule_count": 3880,
+      "primary_addresses": "344366336",
+      "reference_addresses": "282568704",
+      "common_addresses": "282066944",
+      "primary_only_cidr_count": 6668,
+      "primary_only_cidrs_sha256": "166649ede00c259e8280c5a5b4fa938e5785118723be66a4ca95e357395c1e90",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -118,8 +118,8 @@
         "36.0.0.0/22",
         "36.0.8.0/21"
       ],
-      "reference_only_cidr_count": 202,
-      "reference_only_cidrs_sha256": "052b6daec269d38da7bfe5f72530ffe3a6c2183dbb06225519f6f7f6d62a11f7",
+      "reference_only_cidr_count": 190,
+      "reference_only_cidrs_sha256": "826556419fe626606ca3ec4218460cfaeac674fa139f1b1723a18c7ad1cd7670",
       "reference_only_cidrs_truncated": true,
       "reference_only_cidrs": [
         "1.18.128.0/24",
@@ -127,7 +127,6 @@
         "2.58.242.0/24",
         "2.59.151.0/24",
         "5.181.219.0/24",
-        "8.170.0.0/15",
         "14.167.176.0/20",
         "14.241.232.0/21",
         "14.255.16.0/24",
@@ -206,6 +205,7 @@
         "107.148.6.0/24",
         "107.151.212.0/24",
         "107.190.229.0/24",
+        "110.42.17.0/24",
         "110.79.78.0/24",
         "111.223.8.0/22",
         "116.90.192.0/20",
@@ -215,21 +215,21 @@
         "117.134.216.0/23",
         "117.134.220.0/23",
         "117.134.224.0/21",
-        "124.172.0.0/18",
-        "124.172.64.0/20",
-        "124.172.80.0/22",
-        "124.172.84.0/23",
-        "124.172.86.0/24",
-        "124.172.90.0/24",
-        "124.172.92.0/24"
+        "125.93.24.0/22",
+        "128.107.24.0/23",
+        "130.36.146.0/23",
+        "131.228.96.0/23",
+        "133.226.32.0/20",
+        "139.189.127.0/24",
+        "140.210.16.0/24"
       ]
     },
     "ipv6": {
       "reference_available": false,
       "equal_coverage": null,
-      "primary_rule_count": 3459,
+      "primary_rule_count": 3460,
       "reference_rule_count": 0,
-      "primary_addresses": "5430376976723496085625584173973504",
+      "primary_addresses": "5430376940455721497186708932788224",
       "reference_addresses": null,
       "common_addresses": null,
       "primary_only_cidrs": null,
@@ -242,8 +242,8 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "4c4d0daafaa7f8d4ec9e59f841b12d300fa47bf0",
-        "sha256": "fef9e6689fa3b81fb3cfc13ae367e021714dd36950961a30defb22b9d7fee865",
+        "revision": "f162630c8cdad6ced5ef59e606cc93919123ac57",
+        "sha256": "31fbecbf662ab9264dabafa289ebcdf6274fc5e98fbc029a92bbde5f9853fbc2",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
@@ -252,22 +252,22 @@
         "maximum_snapshot_age_days": 3,
         "minimum_coverage_ratio": 0.5,
         "snapshot_dates": [
+          "2026-11-06",
           "2026-11-05",
           "2026-11-04",
           "2026-11-03",
           "2026-11-02",
           "2026-11-01",
-          "2026-10-31",
-          "2026-10-30"
+          "2026-10-31"
         ],
         "window_report": "cn-ip-window.json",
-        "update_status": "partial"
+        "update_status": "updated"
       }
     },
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "7eb4c3eb6a2db596da801ae3949b8cdd3a277a330c615a408ae68b18e2580893",
+        "sha256": "bf5959c86146e6a984b6108bc60e772be78f514d9dd5bc971fb537cf9d60bb58",
         "license": "CC-BY-SA-4.0"
       }
     }
