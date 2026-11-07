@@ -572,6 +572,7 @@ DOMAIN,holoxx.f5.si
 DOMAIN,homebrew.bintray.com
 DOMAIN,hpefonts.s3.amazonaws.com
 DOMAIN,hpstore.corpmerchandise.com
+DOMAIN,http-intake.logs.us5.datadoghq.com
 DOMAIN,hub.slarker.me
 DOMAIN,hulu.playback.edge.bamgrid.com
 DOMAIN,i.jeded.com
@@ -771,6 +772,7 @@ DOMAIN,nurofensk-prod-env.eu-west-1.elasticbeanstalk.com
 DOMAIN,nvidia.custhelp.com
 DOMAIN,nvidia.tt.omtrdc.net
 DOMAIN,o.pki.goog
+DOMAIN,o1158394.ingest.us.sentry.io
 DOMAIN,o33249.ingest.sentry.io
 DOMAIN,o33249.ingest.us.sentry.io
 DOMAIN,o4504926511693824.ingest.sentry.io
@@ -893,6 +895,7 @@ DOMAIN,r0.mail.ru
 DOMAIN,r0.mradx.net
 DOMAIN,r1.mail.ru
 DOMAIN,rabbit-hole-1.gitbook.io
+DOMAIN,radio.itunes.apple.com
 DOMAIN,recaptcha-cn.net
 DOMAIN,recaptcha.net
 DOMAIN,redirector.bdn.dev

@@ -18,8 +18,10 @@ host,copilotprodattachments.blob.core.windows.net,AI
 host,daily-cloudcode-pa.googleapis.com,AI
 host,geminiweb-pa.clients.google.com,AI
 host,geminiweb-pa.clients6.google.com,AI
+host,http-intake.logs.us5.datadoghq.com,AI
 host,notebooklm-pa.googleapis.com,AI
 host,notebooklm.googleapis.com,AI
+host,o1158394.ingest.us.sentry.io,AI
 host,o33249.ingest.sentry.io,AI
 host,o33249.ingest.us.sentry.io,AI
 host,openai.qualtrics.com,AI

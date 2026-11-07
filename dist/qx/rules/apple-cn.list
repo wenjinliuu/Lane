@@ -173,6 +173,7 @@ host,podcasts.itunes.apple.com,direct
 host,probe.siri.apple.com,direct
 host,prod-support.apple-support.akadns.net,direct
 host,publicassets.cdn-apple.com,direct
+host,radio.itunes.apple.com,direct
 host,s.mzstatic.com,direct
 host,s1.mzstatic.com,direct
 host,s2.mzstatic.com,direct

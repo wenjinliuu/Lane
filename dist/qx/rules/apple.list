@@ -182,6 +182,7 @@ host,probe.siri.apple.com,Apple
 host,prod-support.apple-support.akadns.net,Apple
 host,publicassets.cdn-apple.com,Apple
 host,push-apple.com.akadns.net,Apple
+host,radio.itunes.apple.com,Apple
 host,s.mzstatic.com,Apple
 host,s1.mzstatic.com,Apple
 host,s2.mzstatic.com,Apple

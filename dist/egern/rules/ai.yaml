@@ -19,8 +19,10 @@ domain_set:
 - daily-cloudcode-pa.googleapis.com
 - geminiweb-pa.clients.google.com
 - geminiweb-pa.clients6.google.com
+- http-intake.logs.us5.datadoghq.com
 - notebooklm-pa.googleapis.com
 - notebooklm.googleapis.com
+- o1158394.ingest.us.sentry.io
 - o33249.ingest.sentry.io
 - o33249.ingest.us.sentry.io
 - openai.qualtrics.com

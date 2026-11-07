@@ -572,6 +572,7 @@ host,holoxx.f5.si,Final
 host,homebrew.bintray.com,Final
 host,hpefonts.s3.amazonaws.com,Final
 host,hpstore.corpmerchandise.com,Final
+host,http-intake.logs.us5.datadoghq.com,Final
 host,hub.slarker.me,Final
 host,hulu.playback.edge.bamgrid.com,Final
 host,i.jeded.com,Final
@@ -771,6 +772,7 @@ host,nurofensk-prod-env.eu-west-1.elasticbeanstalk.com,Final
 host,nvidia.custhelp.com,Final
 host,nvidia.tt.omtrdc.net,Final
 host,o.pki.goog,Final
+host,o1158394.ingest.us.sentry.io,Final
 host,o33249.ingest.sentry.io,Final
 host,o33249.ingest.us.sentry.io,Final
 host,o4504926511693824.ingest.sentry.io,Final
@@ -893,6 +895,7 @@ host,r0.mail.ru,Final
 host,r0.mradx.net,Final
 host,r1.mail.ru,Final
 host,rabbit-hole-1.gitbook.io,Final
+host,radio.itunes.apple.com,Final
 host,recaptcha-cn.net,Final
 host,recaptcha.net,Final
 host,redirector.bdn.dev,Final
