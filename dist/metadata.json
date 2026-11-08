@@ -9,7 +9,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "6766d09f4a951f4f11d822891a9736606cd910ac"
+      "revision": "e8d7a10a15bf662c927a40a3aa680bae86379608"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -17,7 +17,7 @@
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "c822a6c0ef658bc2a6cf63df8f7c45cd9550dcc6267054ebb7b5fdd51341f861",
+      "sha256": "87411938dc8637568638f4f003933018324b66125a70058a1d1ac725ea4cced7",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -89,10 +89,10 @@
     {
       "id": "ai",
       "policy": "AI",
-      "rules": 216,
+      "rules": 218,
       "kinds": {
-        "domain": 179,
-        "full": 36,
+        "domain": 180,
+        "full": 37,
         "regexp": 1
       },
       "exact_duplicates_removed": 0,
@@ -266,18 +266,18 @@
     {
       "id": "developer",
       "policy": "Developer",
-      "rules": 693,
+      "rules": 694,
       "kinds": {
         "domain": 601,
-        "full": 91,
+        "full": 92,
         "regexp": 1
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
         "within_parent_suffix_candidates": 36,
-        "previous_ruleset_exact_candidates": 10,
+        "previous_ruleset_exact_candidates": 11,
         "previous_ruleset_parent_suffix_candidates": 1,
-        "total_candidates": 47
+        "total_candidates": 48
       }
     },
     {
@@ -300,17 +300,17 @@
     {
       "id": "microsoft",
       "policy": "Microsoft",
-      "rules": 760,
+      "rules": 761,
       "kinds": {
         "domain": 644,
-        "full": 116
+        "full": 117
       },
       "exact_duplicates_removed": 1,
       "redundancy_audit": {
-        "within_parent_suffix_candidates": 120,
+        "within_parent_suffix_candidates": 121,
         "previous_ruleset_exact_candidates": 141,
         "previous_ruleset_parent_suffix_candidates": 0,
-        "total_candidates": 261
+        "total_candidates": 262
       }
     },
     {
@@ -364,18 +364,18 @@
     {
       "id": "proxy",
       "policy": "Final",
-      "rules": 26126,
+      "rules": 26128,
       "kinds": {
-        "domain": 24538,
-        "full": 1430,
+        "domain": 24539,
+        "full": 1431,
         "regexp": 158
       },
       "exact_duplicates_removed": 3,
       "redundancy_audit": {
-        "within_parent_suffix_candidates": 1671,
-        "previous_ruleset_exact_candidates": 5558,
+        "within_parent_suffix_candidates": 1672,
+        "previous_ruleset_exact_candidates": 5559,
         "previous_ruleset_parent_suffix_candidates": 322,
-        "total_candidates": 7551
+        "total_candidates": 7553
       }
     },
     {
@@ -421,10 +421,10 @@
   },
   "redundancy_audit": {
     "mode": "report-only",
-    "within_parent_suffix_candidates": 4889,
-    "previous_ruleset_exact_candidates": 6018,
+    "within_parent_suffix_candidates": 4891,
+    "previous_ruleset_exact_candidates": 6020,
     "previous_ruleset_parent_suffix_candidates": 363,
-    "total_candidates": 11270,
+    "total_candidates": 11274,
     "note": "Candidates are retained in every published ruleset; this audit does not change routing payloads."
   },
   "cross_validation": {

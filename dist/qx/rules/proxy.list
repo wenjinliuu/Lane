@@ -856,6 +856,7 @@ host,prod-databe.floonet.goog,Final
 host,prod-support.apple-support.akadns.net,Final
 host,prod.databe.floonet.goog,Final
 host,prodforza.blob.core.windows.net,Final
+host,production-copilot-host-westus.webpubsub.azure.com,Final
 host,production-openaicom-storage.azureedge.net,Final
 host,productionresultssa0.blob.core.windows.net,Final
 host,productionresultssa1.blob.core.windows.net,Final
@@ -11448,6 +11449,7 @@ host-suffix,greginhollywood.com,Final
 host-suffix,gridaware.app,Final
 host-suffix,grok.com,Final
 host-suffix,grok.x.com,Final
+host-suffix,grokbot.com,Final
 host-suffix,grokipedia.com,Final
 host-suffix,grooby.com,Final
 host-suffix,groq.com,Final

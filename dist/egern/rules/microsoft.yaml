@@ -68,6 +68,7 @@ domain_set:
 - packages.microsoft.com
 - poshtestgallery.cloudapp.net
 - prodforza.blob.core.windows.net
+- production-copilot-host-westus.webpubsub.azure.com
 - productionresultssa0.blob.core.windows.net
 - productionresultssa1.blob.core.windows.net
 - productionresultssa10.blob.core.windows.net

@@ -32,6 +32,7 @@ host,openaicom.imgix.net,AI
 host,openaicomproductionae4b.blob.core.windows.net,AI
 host,ppl-ai-file-upload.s3.amazonaws.com,AI
 host,pplx-res.cloudinary.com,AI
+host,production-copilot-host-westus.webpubsub.azure.com,AI
 host,production-openaicom-storage.azureedge.net,AI
 host,servd-anthropic-website.b-cdn.net,AI
 host,webchannel-alkalimakersuite-pa.clients6.google.com,AI
@@ -130,6 +131,7 @@ host-suffix,grazie.ai,AI
 host-suffix,grazie.aws.intellij.net,AI
 host-suffix,grok.com,AI
 host-suffix,grok.x.com,AI
+host-suffix,grokbot.com,AI
 host-suffix,grokipedia.com,AI
 host-suffix,groq.com,AI
 host-suffix,h2o.ai,AI

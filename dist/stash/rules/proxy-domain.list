@@ -856,6 +856,7 @@ prod-databe.floonet.goog
 prod-support.apple-support.akadns.net
 prod.databe.floonet.goog
 prodforza.blob.core.windows.net
+production-copilot-host-westus.webpubsub.azure.com
 production-openaicom-storage.azureedge.net
 productionresultssa0.blob.core.windows.net
 productionresultssa1.blob.core.windows.net
@@ -11448,6 +11449,7 @@ zftksc.launches.appsflyersdk.com
 +.gridaware.app
 +.grok.com
 +.grok.x.com
++.grokbot.com
 +.grokipedia.com
 +.grooby.com
 +.groq.com

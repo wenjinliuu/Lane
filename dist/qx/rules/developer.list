@@ -60,6 +60,7 @@ host,notary-submissions-prod.s3.us-west-2.amazonaws.com,Developer
 host,p-events-delivery.akamaized.net,Developer
 host,packages.microsoft.com,Developer
 host,poshtestgallery.cloudapp.net,Developer
+host,production-copilot-host-westus.webpubsub.azure.com,Developer
 host,productionresultssa0.blob.core.windows.net,Developer
 host,productionresultssa1.blob.core.windows.net,Developer
 host,productionresultssa10.blob.core.windows.net,Developer

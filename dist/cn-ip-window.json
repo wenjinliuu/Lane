@@ -28,15 +28,15 @@
         "reference_check": {
           "available": true,
           "role": "advisory-only",
-          "candidate_added_addresses": "256",
-          "added_addresses_supported": "256",
-          "candidate_removed_addresses": "5634",
-          "removed_addresses_supported": "5120"
+          "candidate_added_addresses": "0",
+          "added_addresses_supported": "0",
+          "candidate_removed_addresses": "0",
+          "removed_addresses_supported": "0"
         },
-        "candidate_changed_percent": 0.0017103878585855731,
+        "candidate_changed_percent": 0.0,
         "candidate_sha256": "dfd801cd870c38457c8c5caca00f6e58dfbfa5d7b56d2c25f200b7d66430635f",
-        "published_added_addresses": "256",
-        "published_removed_addresses": "5634",
+        "published_added_addresses": "0",
+        "published_removed_addresses": "0",
         "pending_added_addresses": "0",
         "pending_removed_addresses": "0",
         "observation_dates": [
@@ -49,8 +49,8 @@
           "2026-11-01"
         ],
         "invalid_snapshots": [],
-        "baseline_sha256": "8c22cca82f9746537e38503cf180b7c960d6a16691521fa7dc8fdcdca1fe5a2b",
-        "baseline_revision": "f162630c8cdad6ced5ef59e606cc93919123ac57",
+        "baseline_sha256": "dfd801cd870c38457c8c5caca00f6e58dfbfa5d7b56d2c25f200b7d66430635f",
+        "baseline_revision": "62bc1fc8b015bece77271b568e10d6337915bc96",
         "output_sha256": "dfd801cd870c38457c8c5caca00f6e58dfbfa5d7b56d2c25f200b7d66430635f"
       },
       "ipv6": {
@@ -60,10 +60,10 @@
           "available": false,
           "role": "advisory-only"
         },
-        "candidate_changed_percent": 4.452456368574573e-08,
+        "candidate_changed_percent": 0.0,
         "candidate_sha256": "2cd055aaad82a30f7a89bd4efd5091e66f32c9d120069da8fe8391e4fe7908ec",
-        "published_added_addresses": "1208925819614629174706176",
-        "published_removed_addresses": "1208925819614629174706176",
+        "published_added_addresses": "0",
+        "published_removed_addresses": "0",
         "pending_added_addresses": "0",
         "pending_removed_addresses": "0",
         "observation_dates": [
@@ -76,8 +76,8 @@
           "2026-11-01"
         ],
         "invalid_snapshots": [],
-        "baseline_sha256": "c94afd2dd245274ec1c6c5e2bb1ae495305f4601ae8e4756fe67f1e99d9ef52a",
-        "baseline_revision": "f162630c8cdad6ced5ef59e606cc93919123ac57",
+        "baseline_sha256": "2cd055aaad82a30f7a89bd4efd5091e66f32c9d120069da8fe8391e4fe7908ec",
+        "baseline_revision": "62bc1fc8b015bece77271b568e10d6337915bc96",
         "output_sha256": "2cd055aaad82a30f7a89bd4efd5091e66f32c9d120069da8fe8391e4fe7908ec"
       }
     }

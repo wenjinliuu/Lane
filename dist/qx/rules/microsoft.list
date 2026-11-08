@@ -67,6 +67,7 @@ host,osrelease.download.prss.microsoft.com,Microsoft
 host,packages.microsoft.com,Microsoft
 host,poshtestgallery.cloudapp.net,Microsoft
 host,prodforza.blob.core.windows.net,Microsoft
+host,production-copilot-host-westus.webpubsub.azure.com,Microsoft
 host,productionresultssa0.blob.core.windows.net,Microsoft
 host,productionresultssa1.blob.core.windows.net,Microsoft
 host,productionresultssa10.blob.core.windows.net,Microsoft
