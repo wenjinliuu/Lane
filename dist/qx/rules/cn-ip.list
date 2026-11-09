@@ -3026,7 +3026,7 @@ ip-cidr,140.249.0.0/16,direct
 ip-cidr,140.250.0.0/16,direct
 ip-cidr,140.255.0.0/16,direct
 ip-cidr,140.75.0.0/16,direct
-ip-cidr,142.86.200.0/21,direct
+ip-cidr,142.86.204.0/22,direct
 ip-cidr,142.86.208.0/20,direct
 ip-cidr,142.86.224.0/20,direct
 ip-cidr,142.86.240.0/21,direct
@@ -7436,7 +7436,7 @@ ip6-cidr,2403:6380:2000::/35,direct
 ip6-cidr,2403:6380:200::/39,direct
 ip6-cidr,2403:6380:20::/44,direct
 ip6-cidr,2403:6380:33::/48,direct
-ip6-cidr,2403:6380:36::/47,direct
+ip6-cidr,2403:6380:37::/48,direct
 ip6-cidr,2403:6380:38::/45,direct
 ip6-cidr,2403:6380:4000::/34,direct
 ip6-cidr,2403:6380:400::/38,direct
