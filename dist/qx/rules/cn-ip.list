@@ -9532,7 +9532,11 @@ ip6-cidr,2a0a:d685:508::/48,direct
 ip6-cidr,2a0a:d685:50a::/47,direct
 ip6-cidr,2a0a:d685:50c::/46,direct
 ip6-cidr,2a0a:d685:510::/44,direct
-ip6-cidr,2a0a:d685:520::/43,direct
+ip6-cidr,2a0a:d685:520::/44,direct
+ip6-cidr,2a0a:d685:530::/45,direct
+ip6-cidr,2a0a:d685:538::/46,direct
+ip6-cidr,2a0a:d685:53c::/48,direct
+ip6-cidr,2a0a:d685:53e::/47,direct
 ip6-cidr,2a0a:d685:540::/42,direct
 ip6-cidr,2a0a:d685:580::/41,direct
 ip6-cidr,2a0a:d685:600::/39,direct

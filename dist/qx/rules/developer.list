@@ -315,6 +315,8 @@ host-suffix,godoc.org,Developer
 host-suffix,golang.com,Developer
 host-suffix,golang.net,Developer
 host-suffix,golang.org,Developer
+host-suffix,grafana.com,Developer
+host-suffix,grafana.net,Developer
 host-suffix,graphengine.io,Developer
 host-suffix,grazie.ai,Developer
 host-suffix,grazie.aws.intellij.net,Developer
