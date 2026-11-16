@@ -68,6 +68,7 @@ host,cn-smp-paymentservices.apple.com,direct
 host,communities.apple.com,direct
 host,configuration.apple.com,direct
 host,configuration.apple.com.akadns.net,direct
+host,configuration.ls.apple.com,direct
 host,crl-lb.apple.com.akadns.net,direct
 host,crl.apple.com,direct
 host,cstat.apple.com,direct
@@ -151,9 +152,11 @@ host,mesu.apple.com,direct
 host,misc-assets.itunes.apple.com,direct
 host,ml.cdn-apple.com,direct
 host,music.apple.com,direct
+host,musicstatus.itunes.apple.com,direct
 host,musicstatus.music.apple.com,direct
 host,mvod.itunes.apple.com,direct
 host,myapp.itunes.apple.com,direct
+host,mzstorekit.itunes.apple.com,direct
 host,np-edge.itunes.apple.com,direct
 host,ocsp.apple.com,direct
 host,ocsp2.apple.com,direct
@@ -290,6 +293,7 @@ host-suffix,beats4.cn,direct
 host-suffix,beatsbydre.com,direct
 host-suffix,beatsbydre.com.cn,direct
 host-suffix,beatsep.cn,direct
+host-suffix,captive.apple.com,direct
 host-suffix,cdn-cn1.apple-mapkit.com,direct
 host-suffix,cdn-cn2.apple-mapkit.com,direct
 host-suffix,cdn-cn3.apple-mapkit.com,direct

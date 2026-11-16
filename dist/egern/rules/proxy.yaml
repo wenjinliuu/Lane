@@ -204,6 +204,7 @@ domain_set:
 - brightcove.imgix.net
 - browser-intake-datadoghq.com
 - bs.mail.ru
+- builds.dotnet.microsoft.com
 - bybit-exchange.github.io
 - bybit.ada.support
 - c.admob.com
@@ -283,6 +284,7 @@ domain_set:
 - configuration-lb.ls-apple.com.akadns.net
 - configuration.apple.com
 - configuration.apple.com.akadns.net
+- configuration.ls.apple.com
 - connectivitycheck.gstatic.com
 - copilot-proxy.githubusercontent.com
 - copilot-telemetry-service.githubusercontent.com
@@ -413,6 +415,7 @@ domain_set:
 - dnl-19.geo.kaspersky.com
 - docker-images-prod.6aa30f8b08e16409b46e0173d6de2f56.r2.cloudflarestorage.com
 - docker-pinata-support.s3.amazonaws.com
+- dotnetcli.trafficmanager.net
 - doubleclick-cn.net
 - doubleclick.net
 - download.developer.apple.com
@@ -714,11 +717,13 @@ domain_set:
 - mtalk4.google.com
 - muse.jhu.edu
 - music.apple.com
+- musicstatus.itunes.apple.com
 - musicstatus.music.apple.com
 - mvod.itunes.apple.com
 - mwf-service.akamaized.net
 - myapp.itunes.apple.com
 - myvs.download.prss.microsoft.com
+- mzstorekit.itunes.apple.com
 - na1r.services.adobe.com
 - nbbb1bb7.pmhcjk.com
 - new-adv.ozon.ru
@@ -1138,6 +1143,7 @@ domain_set:
 - straitsx-826709081262441084-b790f87a2ae6fd417434295.freshchat.com
 - streamingaudio.itunes.apple.com
 - su.itunes.apple.com
+- sundry-star-net-geo.trafficmanager.net
 - supercell.helpshift.com
 - supercell.zendesk.com
 - support-china.apple-support.akadns.net
@@ -6270,6 +6276,7 @@ domain_suffix_set:
 - capitalgames.com
 - capitaliq.com
 - capitalt.ru
+- captive.apple.com
 - capturingreality.com
 - carbon.com
 - carcare-and-tireshop.jp
@@ -7332,6 +7339,7 @@ domain_suffix_set:
 - cybertrust.ne.jp
 - cyberx.com
 - cygames.co.jp
+- cygames.com
 - cygames.jp
 - cygwin.com
 - cylink.pro
@@ -7485,6 +7493,7 @@ domain_suffix_set:
 - deasians.com
 - debank.com
 - debian.org
+- debot.ai
 - debug.com
 - debugproject.com
 - decentr.net
@@ -19801,6 +19810,7 @@ domain_suffix_set:
 - relap.mail.ru
 - relateiq.com
 - remirepo.net
+- remna.dev
 - remna.st
 - rencapbank.ru
 - renchead.com
@@ -25454,6 +25464,7 @@ domain_suffix_set:
 - yaya.cyou
 - yayadizhi.xyz
 - yazhouse8.com
+- yb-payment.ru
 - yccdn.ru
 - yclients.com
 - ycombinator.com

@@ -963,6 +963,8 @@ host-suffix,arcaea.cn,direct
 host-suffix,arco.design,direct
 host-suffix,ark-doc-resources.cn,direct
 host-suffix,ark.letv.com,direct
+host-suffix,arknights.com,direct
+host-suffix,arknights.com.cn,direct
 host-suffix,arpun.com,direct
 host-suffix,arrow.cn,direct
 host-suffix,asczwa.com,direct
@@ -3587,6 +3589,7 @@ host-suffix,hffunds.cn,direct
 host-suffix,hftfund.com,direct
 host-suffix,hfx.net,direct
 host-suffix,hfzq.com.cn,direct
+host-suffix,hgto.cc,direct
 host-suffix,hhtravel.com,direct
 host-suffix,hi-butterfly.cn,direct
 host-suffix,hiaiabc.com,direct
@@ -3873,9 +3876,15 @@ host-suffix,hxnews.com,direct
 host-suffix,hxsd.com,direct
 host-suffix,hxzq.cn,direct
 host-suffix,hybiome.com,direct
+host-suffix,hycdn.cn,direct
+host-suffix,hycdn.com,direct
 host-suffix,hydun.com,direct
 host-suffix,hypercachenet.com,direct
 host-suffix,hypercachenode.com,direct
+host-suffix,hypergryph.cn,direct
+host-suffix,hypergryph.com,direct
+host-suffix,hypergryph.com.cn,direct
+host-suffix,hypergryph.net,direct
 host-suffix,hytung.cn,direct
 host-suffix,hzchengdun.com,direct
 host-suffix,hzchengdun.net,direct
@@ -5538,6 +5547,7 @@ host-suffix,oc.umeng.com,direct
 host-suffix,oceancloudapi.com,direct
 host-suffix,oceanengine.com,direct
 host-suffix,ocfund.cn,direct
+host-suffix,octavedge.com,direct
 host-suffix,ocwms.com,direct
 host-suffix,oeeee.com,direct
 host-suffix,oend.net,direct
@@ -6378,6 +6388,8 @@ host-suffix,sjfls6.com,direct
 host-suffix,sjwyx.com,direct
 host-suffix,skillhub.cn,direct
 host-suffix,skimit.net,direct
+host-suffix,skland.com,direct
+host-suffix,skland.net,direct
 host-suffix,sksight.com,direct
 host-suffix,skycn.com,direct
 host-suffix,skydweller.cn,direct

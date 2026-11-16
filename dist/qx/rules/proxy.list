@@ -203,6 +203,7 @@ host,bookkeeper.itunes.apple.com,Final
 host,brightcove.imgix.net,Final
 host,browser-intake-datadoghq.com,Final
 host,bs.mail.ru,Final
+host,builds.dotnet.microsoft.com,Final
 host,bybit-exchange.github.io,Final
 host,bybit.ada.support,Final
 host,c.admob.com,Final
@@ -282,6 +283,7 @@ host,communities.apple.com,Final
 host,configuration-lb.ls-apple.com.akadns.net,Final
 host,configuration.apple.com,Final
 host,configuration.apple.com.akadns.net,Final
+host,configuration.ls.apple.com,Final
 host,connectivitycheck.gstatic.com,Final
 host,copilot-proxy.githubusercontent.com,Final
 host,copilot-telemetry-service.githubusercontent.com,Final
@@ -412,6 +414,7 @@ host,dnl-18.geo.kaspersky.com,Final
 host,dnl-19.geo.kaspersky.com,Final
 host,docker-images-prod.6aa30f8b08e16409b46e0173d6de2f56.r2.cloudflarestorage.com,Final
 host,docker-pinata-support.s3.amazonaws.com,Final
+host,dotnetcli.trafficmanager.net,Final
 host,doubleclick-cn.net,Final
 host,doubleclick.net,Final
 host,download.developer.apple.com,Final
@@ -713,11 +716,13 @@ host,mtalk.google.com,Final
 host,mtalk4.google.com,Final
 host,muse.jhu.edu,Final
 host,music.apple.com,Final
+host,musicstatus.itunes.apple.com,Final
 host,musicstatus.music.apple.com,Final
 host,mvod.itunes.apple.com,Final
 host,mwf-service.akamaized.net,Final
 host,myapp.itunes.apple.com,Final
 host,myvs.download.prss.microsoft.com,Final
+host,mzstorekit.itunes.apple.com,Final
 host,na1r.services.adobe.com,Final
 host,nbbb1bb7.pmhcjk.com,Final
 host,new-adv.ozon.ru,Final
@@ -1137,6 +1142,7 @@ host,storeedgefd.dsx.mp.microsoft.com,Final
 host,straitsx-826709081262441084-b790f87a2ae6fd417434295.freshchat.com,Final
 host,streamingaudio.itunes.apple.com,Final
 host,su.itunes.apple.com,Final
+host,sundry-star-net-geo.trafficmanager.net,Final
 host,supercell.helpshift.com,Final
 host,supercell.zendesk.com,Final
 host,support-china.apple-support.akadns.net,Final
@@ -6268,6 +6274,7 @@ host-suffix,capitalg.com,Final
 host-suffix,capitalgames.com,Final
 host-suffix,capitaliq.com,Final
 host-suffix,capitalt.ru,Final
+host-suffix,captive.apple.com,Final
 host-suffix,capturingreality.com,Final
 host-suffix,carbon.com,Final
 host-suffix,carcare-and-tireshop.jp,Final
@@ -7330,6 +7337,7 @@ host-suffix,cybertrust.co.jp,Final
 host-suffix,cybertrust.ne.jp,Final
 host-suffix,cyberx.com,Final
 host-suffix,cygames.co.jp,Final
+host-suffix,cygames.com,Final
 host-suffix,cygames.jp,Final
 host-suffix,cygwin.com,Final
 host-suffix,cylink.pro,Final
@@ -7483,6 +7491,7 @@ host-suffix,dealtree.org,Final
 host-suffix,deasians.com,Final
 host-suffix,debank.com,Final
 host-suffix,debian.org,Final
+host-suffix,debot.ai,Final
 host-suffix,debug.com,Final
 host-suffix,debugproject.com,Final
 host-suffix,decentr.net,Final
@@ -19799,6 +19808,7 @@ host-suffix,reiporno.com,Final
 host-suffix,relap.mail.ru,Final
 host-suffix,relateiq.com,Final
 host-suffix,remirepo.net,Final
+host-suffix,remna.dev,Final
 host-suffix,remna.st,Final
 host-suffix,rencapbank.ru,Final
 host-suffix,renchead.com,Final
@@ -25452,6 +25462,7 @@ host-suffix,yavtube.com,Final
 host-suffix,yaya.cyou,Final
 host-suffix,yayadizhi.xyz,Final
 host-suffix,yazhouse8.com,Final
+host-suffix,yb-payment.ru,Final
 host-suffix,yccdn.ru,Final
 host-suffix,yclients.com,Final
 host-suffix,ycombinator.com,Final

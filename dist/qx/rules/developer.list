@@ -5,6 +5,7 @@ host,appleworldwidedeveloper.hb-api.omtrdc.net,Developer
 host,appleworldwidedeveloper.sc.omtrdc.net,Developer
 host,az764295.vo.msecnd.net,Developer
 host,bingsettingssearch.trafficmanager.net,Developer
+host,builds.dotnet.microsoft.com,Developer
 host,cdn-cn.apple-mapkit.com,Developer
 host,cdn-cn1.apple-mapkit.com,Developer
 host,cdn-cn2.apple-mapkit.com,Developer
@@ -29,6 +30,7 @@ host,developer.microsoft.com,Developer
 host,developers.facebook.com,Developer
 host,docker-images-prod.6aa30f8b08e16409b46e0173d6de2f56.r2.cloudflarestorage.com,Developer
 host,docker-pinata-support.s3.amazonaws.com,Developer
+host,dotnetcli.trafficmanager.net,Developer
 host,download.visualstudio.microsoft.com,Developer
 host,dtlgalleryint.cloudapp.net,Developer
 host,firebase-settings.crashlytics.com,Developer
@@ -85,10 +87,12 @@ host,psg-int-centralus.cloudapp.net,Developer
 host,psg-int-eastus.cloudapp.net,Developer
 host,rink.hockeyapp.net,Developer
 host,rt.services.visualstudio.com,Developer
+host,sundry-star-net-geo.trafficmanager.net,Developer
 host,update.crashlytics.com,Developer
 host,vscode-sync-insiders.trafficmanager.net,Developer
 host,vscode-sync.trafficmanager.net,Developer
 host,vscode.blob.core.windows.net,Developer
+host,vscode.download.prss.microsoft.com,Developer
 host,vscode.search.windows.net,Developer
 host,vsmarketplacebadge.apphb.com,Developer
 host-suffix,01.org,Developer

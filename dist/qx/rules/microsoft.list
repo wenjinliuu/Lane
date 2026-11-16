@@ -9,6 +9,7 @@ host,azurestackhubuat.download.prss.microsoft.com,Microsoft
 host,b.c2r.ts.cdn.office.net,Microsoft
 host,bingsettingssearch.trafficmanager.net,Microsoft
 host,bj1.api.bing.com,Microsoft
+host,builds.dotnet.microsoft.com,Microsoft
 host,cbdstest.download.prss.microsoft.com,Microsoft
 host,cn.windowssearch.com,Microsoft
 host,collaborate.download.prss.microsoft.com,Microsoft
@@ -24,6 +25,7 @@ host,dc.applicationinsights.azure.com,Microsoft
 host,dc.services.visualstudio.com,Microsoft
 host,default.exp-tas.com,Microsoft
 host,developer.microsoft.com,Microsoft
+host,dotnetcli.trafficmanager.net,Microsoft
 host,download.microsoft.com,Microsoft
 host,download.visualstudio.microsoft.com,Microsoft
 host,dreamspark.download.prss.microsoft.com,Microsoft
@@ -103,6 +105,7 @@ host,statics.teams.cdn.office.net,Microsoft
 host,storecorefulfillment.download.prss.microsoft.com,Microsoft
 host,storeedge.microsoft.com,Microsoft
 host,storeedgefd.dsx.mp.microsoft.com,Microsoft
+host,sundry-star-net-geo.trafficmanager.net,Microsoft
 host,surface.download.prss.microsoft.com,Microsoft
 host,surface.downloads.prss.microsoft.com,Microsoft
 host,vlportal.download.prss.microsoft.com,Microsoft

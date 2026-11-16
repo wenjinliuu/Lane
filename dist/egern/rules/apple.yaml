@@ -72,6 +72,7 @@ domain_set:
 - configuration-lb.ls-apple.com.akadns.net
 - configuration.apple.com
 - configuration.apple.com.akadns.net
+- configuration.ls.apple.com
 - crl-lb.apple.com.akadns.net
 - crl.apple.com
 - cstat.apple.com
@@ -157,9 +158,11 @@ domain_set:
 - misc-assets.itunes.apple.com
 - ml.cdn-apple.com
 - music.apple.com
+- musicstatus.itunes.apple.com
 - musicstatus.music.apple.com
 - mvod.itunes.apple.com
 - myapp.itunes.apple.com
+- mzstorekit.itunes.apple.com
 - notary-submissions-prod.s3-accelerate.amazonaws.com
 - notary-submissions-prod.s3.us-west-2.amazonaws.com
 - np-edge.itunes.apple.com
@@ -984,6 +987,7 @@ domain_suffix_set:
 - camelphat.com
 - camelspaceeffect.com
 - canada-beatsbydre.com
+- captive.apple.com
 - carbon.com
 - carekit.org
 - casque-fr.com

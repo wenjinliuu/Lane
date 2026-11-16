@@ -68,6 +68,7 @@ cn-smp-paymentservices.apple.com
 communities.apple.com
 configuration.apple.com
 configuration.apple.com.akadns.net
+configuration.ls.apple.com
 crl-lb.apple.com.akadns.net
 crl.apple.com
 cstat.apple.com
@@ -151,9 +152,11 @@ mesu.apple.com
 misc-assets.itunes.apple.com
 ml.cdn-apple.com
 music.apple.com
+musicstatus.itunes.apple.com
 musicstatus.music.apple.com
 mvod.itunes.apple.com
 myapp.itunes.apple.com
+mzstorekit.itunes.apple.com
 np-edge.itunes.apple.com
 ocsp.apple.com
 ocsp2.apple.com
@@ -290,6 +293,7 @@ xp.apple.com
 +.beatsbydre.com
 +.beatsbydre.com.cn
 +.beatsep.cn
++.captive.apple.com
 +.cdn-cn1.apple-mapkit.com
 +.cdn-cn2.apple-mapkit.com
 +.cdn-cn3.apple-mapkit.com

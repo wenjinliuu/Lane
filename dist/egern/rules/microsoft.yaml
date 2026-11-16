@@ -10,6 +10,7 @@ domain_set:
 - b.c2r.ts.cdn.office.net
 - bingsettingssearch.trafficmanager.net
 - bj1.api.bing.com
+- builds.dotnet.microsoft.com
 - cbdstest.download.prss.microsoft.com
 - cn.windowssearch.com
 - collaborate.download.prss.microsoft.com
@@ -25,6 +26,7 @@ domain_set:
 - dc.services.visualstudio.com
 - default.exp-tas.com
 - developer.microsoft.com
+- dotnetcli.trafficmanager.net
 - download.microsoft.com
 - download.visualstudio.microsoft.com
 - dreamspark.download.prss.microsoft.com
@@ -104,6 +106,7 @@ domain_set:
 - storecorefulfillment.download.prss.microsoft.com
 - storeedge.microsoft.com
 - storeedgefd.dsx.mp.microsoft.com
+- sundry-star-net-geo.trafficmanager.net
 - surface.download.prss.microsoft.com
 - surface.downloads.prss.microsoft.com
 - vlportal.download.prss.microsoft.com

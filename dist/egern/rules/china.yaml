@@ -965,6 +965,8 @@ domain_suffix_set:
 - arco.design
 - ark-doc-resources.cn
 - ark.letv.com
+- arknights.com
+- arknights.com.cn
 - arpun.com
 - arrow.cn
 - asczwa.com
@@ -3589,6 +3591,7 @@ domain_suffix_set:
 - hftfund.com
 - hfx.net
 - hfzq.com.cn
+- hgto.cc
 - hhtravel.com
 - hi-butterfly.cn
 - hiaiabc.com
@@ -3875,9 +3878,15 @@ domain_suffix_set:
 - hxsd.com
 - hxzq.cn
 - hybiome.com
+- hycdn.cn
+- hycdn.com
 - hydun.com
 - hypercachenet.com
 - hypercachenode.com
+- hypergryph.cn
+- hypergryph.com
+- hypergryph.com.cn
+- hypergryph.net
 - hytung.cn
 - hzchengdun.com
 - hzchengdun.net
@@ -5540,6 +5549,7 @@ domain_suffix_set:
 - oceancloudapi.com
 - oceanengine.com
 - ocfund.cn
+- octavedge.com
 - ocwms.com
 - oeeee.com
 - oend.net
@@ -6380,6 +6390,8 @@ domain_suffix_set:
 - sjwyx.com
 - skillhub.cn
 - skimit.net
+- skland.com
+- skland.net
 - sksight.com
 - skycn.com
 - skydweller.cn

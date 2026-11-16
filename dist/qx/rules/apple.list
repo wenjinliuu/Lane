@@ -71,6 +71,7 @@ host,communities.apple.com,Apple
 host,configuration-lb.ls-apple.com.akadns.net,Apple
 host,configuration.apple.com,Apple
 host,configuration.apple.com.akadns.net,Apple
+host,configuration.ls.apple.com,Apple
 host,crl-lb.apple.com.akadns.net,Apple
 host,crl.apple.com,Apple
 host,cstat.apple.com,Apple
@@ -156,9 +157,11 @@ host,mesu.apple.com,Apple
 host,misc-assets.itunes.apple.com,Apple
 host,ml.cdn-apple.com,Apple
 host,music.apple.com,Apple
+host,musicstatus.itunes.apple.com,Apple
 host,musicstatus.music.apple.com,Apple
 host,mvod.itunes.apple.com,Apple
 host,myapp.itunes.apple.com,Apple
+host,mzstorekit.itunes.apple.com,Apple
 host,notary-submissions-prod.s3-accelerate.amazonaws.com,Apple
 host,notary-submissions-prod.s3.us-west-2.amazonaws.com,Apple
 host,np-edge.itunes.apple.com,Apple
@@ -982,6 +985,7 @@ host-suffix,calendarserver.org,Apple
 host-suffix,camelphat.com,Apple
 host-suffix,camelspaceeffect.com,Apple
 host-suffix,canada-beatsbydre.com,Apple
+host-suffix,captive.apple.com,Apple
 host-suffix,carbon.com,Apple
 host-suffix,carekit.org,Apple
 host-suffix,casque-fr.com,Apple

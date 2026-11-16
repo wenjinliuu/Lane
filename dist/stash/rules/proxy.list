@@ -203,6 +203,7 @@ DOMAIN,bookkeeper.itunes.apple.com
 DOMAIN,brightcove.imgix.net
 DOMAIN,browser-intake-datadoghq.com
 DOMAIN,bs.mail.ru
+DOMAIN,builds.dotnet.microsoft.com
 DOMAIN,bybit-exchange.github.io
 DOMAIN,bybit.ada.support
 DOMAIN,c.admob.com
@@ -282,6 +283,7 @@ DOMAIN,communities.apple.com
 DOMAIN,configuration-lb.ls-apple.com.akadns.net
 DOMAIN,configuration.apple.com
 DOMAIN,configuration.apple.com.akadns.net
+DOMAIN,configuration.ls.apple.com
 DOMAIN,connectivitycheck.gstatic.com
 DOMAIN,copilot-proxy.githubusercontent.com
 DOMAIN,copilot-telemetry-service.githubusercontent.com
@@ -412,6 +414,7 @@ DOMAIN,dnl-18.geo.kaspersky.com
 DOMAIN,dnl-19.geo.kaspersky.com
 DOMAIN,docker-images-prod.6aa30f8b08e16409b46e0173d6de2f56.r2.cloudflarestorage.com
 DOMAIN,docker-pinata-support.s3.amazonaws.com
+DOMAIN,dotnetcli.trafficmanager.net
 DOMAIN,doubleclick-cn.net
 DOMAIN,doubleclick.net
 DOMAIN,download.developer.apple.com
@@ -713,11 +716,13 @@ DOMAIN,mtalk.google.com
 DOMAIN,mtalk4.google.com
 DOMAIN,muse.jhu.edu
 DOMAIN,music.apple.com
+DOMAIN,musicstatus.itunes.apple.com
 DOMAIN,musicstatus.music.apple.com
 DOMAIN,mvod.itunes.apple.com
 DOMAIN,mwf-service.akamaized.net
 DOMAIN,myapp.itunes.apple.com
 DOMAIN,myvs.download.prss.microsoft.com
+DOMAIN,mzstorekit.itunes.apple.com
 DOMAIN,na1r.services.adobe.com
 DOMAIN,nbbb1bb7.pmhcjk.com
 DOMAIN,new-adv.ozon.ru
@@ -1137,6 +1142,7 @@ DOMAIN,storeedgefd.dsx.mp.microsoft.com
 DOMAIN,straitsx-826709081262441084-b790f87a2ae6fd417434295.freshchat.com
 DOMAIN,streamingaudio.itunes.apple.com
 DOMAIN,su.itunes.apple.com
+DOMAIN,sundry-star-net-geo.trafficmanager.net
 DOMAIN,supercell.helpshift.com
 DOMAIN,supercell.zendesk.com
 DOMAIN,support-china.apple-support.akadns.net
@@ -6268,6 +6274,7 @@ DOMAIN-SUFFIX,capitalg.com
 DOMAIN-SUFFIX,capitalgames.com
 DOMAIN-SUFFIX,capitaliq.com
 DOMAIN-SUFFIX,capitalt.ru
+DOMAIN-SUFFIX,captive.apple.com
 DOMAIN-SUFFIX,capturingreality.com
 DOMAIN-SUFFIX,carbon.com
 DOMAIN-SUFFIX,carcare-and-tireshop.jp
@@ -7330,6 +7337,7 @@ DOMAIN-SUFFIX,cybertrust.co.jp
 DOMAIN-SUFFIX,cybertrust.ne.jp
 DOMAIN-SUFFIX,cyberx.com
 DOMAIN-SUFFIX,cygames.co.jp
+DOMAIN-SUFFIX,cygames.com
 DOMAIN-SUFFIX,cygames.jp
 DOMAIN-SUFFIX,cygwin.com
 DOMAIN-SUFFIX,cylink.pro
@@ -7483,6 +7491,7 @@ DOMAIN-SUFFIX,dealtree.org
 DOMAIN-SUFFIX,deasians.com
 DOMAIN-SUFFIX,debank.com
 DOMAIN-SUFFIX,debian.org
+DOMAIN-SUFFIX,debot.ai
 DOMAIN-SUFFIX,debug.com
 DOMAIN-SUFFIX,debugproject.com
 DOMAIN-SUFFIX,decentr.net
@@ -19799,6 +19808,7 @@ DOMAIN-SUFFIX,reiporno.com
 DOMAIN-SUFFIX,relap.mail.ru
 DOMAIN-SUFFIX,relateiq.com
 DOMAIN-SUFFIX,remirepo.net
+DOMAIN-SUFFIX,remna.dev
 DOMAIN-SUFFIX,remna.st
 DOMAIN-SUFFIX,rencapbank.ru
 DOMAIN-SUFFIX,renchead.com
@@ -25452,6 +25462,7 @@ DOMAIN-SUFFIX,yavtube.com
 DOMAIN-SUFFIX,yaya.cyou
 DOMAIN-SUFFIX,yayadizhi.xyz
 DOMAIN-SUFFIX,yazhouse8.com
+DOMAIN-SUFFIX,yb-payment.ru
 DOMAIN-SUFFIX,yccdn.ru
 DOMAIN-SUFFIX,yclients.com
 DOMAIN-SUFFIX,ycombinator.com
