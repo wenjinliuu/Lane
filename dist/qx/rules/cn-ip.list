@@ -3129,7 +3129,7 @@ ip-cidr,150.242.92.0/22,direct
 ip-cidr,150.242.96.0/22,direct
 ip-cidr,150.248.0.0/16,direct
 ip-cidr,150.255.0.0/16,direct
-ip-cidr,151.158.122.0/23,direct
+ip-cidr,151.158.123.0/24,direct
 ip-cidr,151.158.78.0/23,direct
 ip-cidr,151.158.80.0/23,direct
 ip-cidr,152.104.128.0/17,direct
@@ -8659,9 +8659,7 @@ ip6-cidr,2406:840:e0ce::/48,direct
 ip6-cidr,2406:840:e0d0::/44,direct
 ip6-cidr,2406:840:e0e4::/48,direct
 ip6-cidr,2406:840:e0e6::/47,direct
-ip6-cidr,2406:840:e0e9::/48,direct
-ip6-cidr,2406:840:e0ea::/47,direct
-ip6-cidr,2406:840:e0ec::/46,direct
+ip6-cidr,2406:840:e0e8::/45,direct
 ip6-cidr,2406:840:e0f0::/44,direct
 ip6-cidr,2406:840:e100::/45,direct
 ip6-cidr,2406:840:e108::/46,direct
@@ -9428,6 +9426,7 @@ ip6-cidr,2605:9d80:9033::/48,direct
 ip6-cidr,2605:9d80:9042::/48,direct
 ip6-cidr,2605:9d80:9071::/48,direct
 ip6-cidr,2605:9d80:9092::/48,direct
+ip6-cidr,2620:57:4004::/47,direct
 ip6-cidr,2a03:f900::/29,direct
 ip6-cidr,2a04:3e00:1001::/48,direct
 ip6-cidr,2a04:3e00:1002::/47,direct
@@ -9658,6 +9657,7 @@ ip6-cidr,2a13:1802:d000::/36,direct
 ip6-cidr,2a13:1802:e000::/35,direct
 ip6-cidr,2a13:1803::/32,direct
 ip6-cidr,2a13:1804::/30,direct
+ip6-cidr,2a13:7100::/29,direct
 ip6-cidr,2a13:8b40::/29,direct
 ip6-cidr,2c0f:f7a8:8011::/48,direct
 ip6-cidr,2c0f:f7a8:8050::/48,direct
