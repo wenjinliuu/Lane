@@ -2828,6 +2828,7 @@ host-suffix,ebscn.com,direct
 host-suffix,ebtrust.com,direct
 host-suffix,eceshi.com,direct
 host-suffix,echargenet.com,direct
+host-suffix,echooai.com,direct
 host-suffix,ecitic.com,direct
 host-suffix,ecjobhome.com,direct
 host-suffix,eckwai.com,direct
@@ -2971,8 +2972,10 @@ host-suffix,fastcom.com.cn,direct
 host-suffix,favonis.cloud,direct
 host-suffix,favonis.com,direct
 host-suffix,favonis.space,direct
+host-suffix,faw-vw.com,direct
 host-suffix,faw.cn,direct
 host-suffix,faxingbao.com,direct
+host-suffix,fazhipro.com,direct
 host-suffix,fbank.com,direct
 host-suffix,fbstatic.cn,direct
 host-suffix,fcapp.run,direct
@@ -6172,6 +6175,7 @@ host-suffix,s.so.360.cn,direct
 host-suffix,s.union.360.cn,direct
 host-suffix,s0n.cn,direct
 host-suffix,sa.sina.cn,direct
+host-suffix,saasfz.com,direct
 host-suffix,saasops.tech,direct
 host-suffix,saayaa.com,direct
 host-suffix,saduck.top,direct

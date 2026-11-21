@@ -8,13 +8,13 @@
     "ipv4": {
       "reference_available": true,
       "equal_coverage": false,
-      "primary_rule_count": 6221,
-      "reference_rule_count": 3906,
-      "primary_addresses": "344334845",
-      "reference_addresses": "282338560",
-      "common_addresses": "281810429",
-      "primary_only_cidr_count": 6693,
-      "primary_only_cidrs_sha256": "8529e844dbd061ed886f7aa390c06a9a7b376d960f6b10110bc995144a724213",
+      "primary_rule_count": 6224,
+      "reference_rule_count": 3905,
+      "primary_addresses": "344347901",
+      "reference_addresses": "282329344",
+      "common_addresses": "281810941",
+      "primary_only_cidr_count": 6708,
+      "primary_only_cidrs_sha256": "b0630bdb344dd92cce4c94f95b21ff383fc71612ea5c78f9ee793a67df90fc8a",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -118,8 +118,8 @@
         "36.0.0.0/22",
         "36.0.8.0/21"
       ],
-      "reference_only_cidr_count": 205,
-      "reference_only_cidrs_sha256": "43ced5770cb33b55c9e98d4d6565c3dede9e7155180d7e999ca8fd93a324a2a1",
+      "reference_only_cidr_count": 198,
+      "reference_only_cidrs_sha256": "9f1d4679dbca3f0f77cdae3ed36b9f54255c549f4e5f63341b20e417fa383f6d",
       "reference_only_cidrs_truncated": true,
       "reference_only_cidrs": [
         "1.18.128.0/24",
@@ -158,7 +158,6 @@
         "45.61.226.0/24",
         "45.67.223.0/24",
         "45.81.34.0/24",
-        "45.113.203.0/24",
         "45.123.117.0/24",
         "45.150.236.0/23",
         "50.114.187.0/24",
@@ -181,8 +180,6 @@
         "93.183.18.0/24",
         "102.141.200.0/24",
         "102.220.90.0/24",
-        "103.19.232.0/24",
-        "103.19.234.0/24",
         "103.24.248.0/22",
         "103.28.147.0/24",
         "103.30.51.0/24",
@@ -191,7 +188,6 @@
         "103.37.4.0/24",
         "103.43.188.0/22",
         "103.50.91.0/24",
-        "103.53.127.0/24",
         "103.57.203.0/24",
         "103.60.32.0/22",
         "103.81.72.0/22",
@@ -215,21 +211,25 @@
         "110.52.202.232/32",
         "110.79.78.0/24",
         "111.223.8.0/22",
-        "112.73.96.0/19",
         "116.90.192.0/20",
         "117.134.192.0/20",
         "117.134.208.0/22",
         "117.134.214.0/23",
         "117.134.216.0/23",
-        "117.134.220.0/23"
+        "117.134.220.0/23",
+        "117.134.224.0/21",
+        "125.93.24.0/22",
+        "128.107.24.0/23",
+        "130.36.146.0/23",
+        "131.228.96.0/23"
       ]
     },
     "ipv6": {
       "reference_available": false,
       "equal_coverage": null,
-      "primary_rule_count": 3443,
+      "primary_rule_count": 3444,
       "reference_rule_count": 0,
-      "primary_addresses": "5431088791037159359669021995696128",
+      "primary_addresses": "5431088789828233540054392820989952",
       "reference_addresses": null,
       "common_addresses": null,
       "primary_only_cidrs": null,
@@ -242,8 +242,8 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "7e2773a184d01285feec0ab9cd6387533ede04c4",
-        "sha256": "ded09b211fff76e0ac60062edb3e0daf6bcf857e8e10ca34c2ad632167e8a558",
+        "revision": "5b9aaa3515a9991eb17c39a9c0d3070312bd5e9a",
+        "sha256": "6e83e8bff4565d921f0be9c228576d485e026f974d5d7c2ee86179815234d837",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
@@ -252,13 +252,13 @@
         "maximum_snapshot_age_days": 3,
         "minimum_coverage_ratio": 0.5,
         "snapshot_dates": [
+          "2026-11-21",
           "2026-11-20",
           "2026-11-19",
           "2026-11-18",
           "2026-11-17",
           "2026-11-16",
-          "2026-11-15",
-          "2026-11-14"
+          "2026-11-15"
         ],
         "window_report": "cn-ip-window.json",
         "update_status": "updated"
@@ -267,7 +267,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "f27276b733d8354e7956c79a31c79b9a15c7746d3fad276f0ddc9cbcada0fbe4",
+        "sha256": "72e632128c0926214ada6df8ea9e42e9f15b83c97006cafd063a5960e3a575f1",
         "license": "CC-BY-SA-4.0"
       }
     }
