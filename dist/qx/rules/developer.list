@@ -540,6 +540,7 @@ host-suffix,registry.gitlab.com,Developer
 host-suffix,registry.k8s.io,Developer
 host-suffix,remirepo.net,Developer
 host-suffix,renderingtoolkit.org,Developer
+host-suffix,replit.com,Developer
 host-suffix,repo.new,Developer
 host-suffix,researchandcare.org,Developer
 host-suffix,researchkit.cn,Developer
@@ -626,6 +627,7 @@ host-suffix,timelinestoryteller.com,Developer
 host-suffix,timestamp.apple.com,Developer
 host-suffix,tmimgcdn.com,Developer
 host-suffix,topcoder.com,Developer
+host-suffix,tortoisegit.org,Developer
 host-suffix,ubuntu-touch.io,Developer
 host-suffix,ubuntu.com,Developer
 host-suffix,ubuntu.net,Developer
