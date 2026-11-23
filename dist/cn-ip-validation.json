@@ -8,13 +8,13 @@
     "ipv4": {
       "reference_available": true,
       "equal_coverage": false,
-      "primary_rule_count": 6223,
-      "reference_rule_count": 3904,
-      "primary_addresses": "344347645",
-      "reference_addresses": "282337024",
-      "common_addresses": "281811965",
-      "primary_only_cidr_count": 6706,
-      "primary_only_cidrs_sha256": "494ced3ff02215443bfa8c568f3a55e330b1e6a30833d5e2026eabca62d6edd0",
+      "primary_rule_count": 6219,
+      "reference_rule_count": 3901,
+      "primary_addresses": "344347133",
+      "reference_addresses": "282325248",
+      "common_addresses": "281809149",
+      "primary_only_cidr_count": 6705,
+      "primary_only_cidrs_sha256": "5d88333e6cb35154508dcefb94d602e1414cfd55457d180abfcd05aa042b7c07",
       "primary_only_cidrs_truncated": true,
       "primary_only_cidrs": [
         "1.0.1.0/24",
@@ -119,7 +119,7 @@
         "36.0.8.0/21"
       ],
       "reference_only_cidr_count": 197,
-      "reference_only_cidrs_sha256": "0763558cc0c894ee58a082c29840450b3e8c6ef25869fb926c2bff7db6fd577d",
+      "reference_only_cidrs_sha256": "a70d579d20e8e2d8c37167d219eb9a35d8eb56dff32e01820db0aeb6908659e2",
       "reference_only_cidrs_truncated": true,
       "reference_only_cidrs": [
         "1.18.128.0/24",
@@ -132,7 +132,6 @@
         "14.226.168.0/21",
         "14.227.96.0/20",
         "14.227.192.0/20",
-        "14.241.232.0/21",
         "14.255.16.0/24",
         "14.255.238.0/24",
         "14.255.254.0/24",
@@ -211,7 +210,6 @@
         "110.52.202.232/32",
         "110.79.78.0/24",
         "111.223.8.0/22",
-        "112.73.96.0/19",
         "116.90.192.0/20",
         "117.134.192.0/20",
         "117.134.208.0/22",
@@ -221,7 +219,9 @@
         "117.134.224.0/21",
         "125.93.24.0/22",
         "130.36.146.0/23",
-        "131.228.96.0/23"
+        "131.228.96.0/23",
+        "133.226.32.0/20",
+        "135.84.80.0/23"
       ]
     },
     "ipv6": {
@@ -242,8 +242,8 @@
       "cn_ip_primary": {
         "repository": "https://github.com/gaoyifan/china-operator-ip.git",
         "ref": "ip-lists",
-        "revision": "52525c4efacf9a708232866e4f9cafc8212bad8d",
-        "sha256": "f260e3c00c7beeab1c6b15fe0a3b6ac6c7d077761ccb50dd416f2b8e1aeed26a",
+        "revision": "a1214434b6211eca49508ef42989daaa83fa5436",
+        "sha256": "639fb5129d800d1e4cb6c2ca4b3dc29ce2fb2a203465efcaf83f31bef23038a0",
         "license": "MIT",
         "window_days": 5,
         "minimum_presence_days": 3,
@@ -252,13 +252,13 @@
         "maximum_snapshot_age_days": 3,
         "minimum_coverage_ratio": 0.5,
         "snapshot_dates": [
+          "2026-11-23",
           "2026-11-22",
           "2026-11-21",
           "2026-11-20",
           "2026-11-19",
           "2026-11-18",
-          "2026-11-17",
-          "2026-11-16"
+          "2026-11-17"
         ],
         "window_report": "cn-ip-window.json",
         "update_status": "updated"
@@ -267,7 +267,7 @@
     "reference": {
       "cn_ipv4_reference": {
         "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-        "sha256": "afa2365aafec4f2b0f005967f81f7212989985cc2b07ededcb2239e8c90dd68f",
+        "sha256": "595165ef30302b6c23b675510e2801bda0c0d3fbf446de3cf08a2f7038a41408",
         "license": "CC-BY-SA-4.0"
       }
     }

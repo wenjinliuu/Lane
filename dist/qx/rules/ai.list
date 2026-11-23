@@ -125,6 +125,7 @@ host-suffix,geller-pa.googleapis.com,AI
 host-suffix,gemini.google,AI
 host-suffix,gemini.google.com,AI
 host-suffix,gemini.gstatic.com,AI
+host-suffix,gemma.ai,AI
 host-suffix,generativeai.google,AI
 host-suffix,generativelanguage.googleapis.com,AI
 host-suffix,githubcopilot.com,AI
