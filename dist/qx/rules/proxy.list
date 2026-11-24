@@ -290,6 +290,7 @@ host,copilot-telemetry-service.githubusercontent.com,Final
 host,copilot-telemetry.githubusercontent.com,Final
 host,copilot-workspace.githubnext.com,Final
 host,copilotprodattachments.blob.core.windows.net,Final
+host,courses.myecnu.org,Final
 host,crashlyticsreports-pa.googleapis.com,Final
 host,crl-lb.apple.com.akadns.net,Final
 host,crl.apple.com,Final
@@ -6077,6 +6078,7 @@ host-suffix,cableav.tv,Final
 host-suffix,cableav.xyz,Final
 host-suffix,cabletv.com.hk,Final
 host-suffix,cabletvdirectv.com,Final
+host-suffix,cachix.org,Final
 host-suffix,cad-mep.com,Final
 host-suffix,cadcamsystemsinc.com,Final
 host-suffix,cadduct.com,Final
@@ -7456,6 +7458,7 @@ host-suffix,dealtime.com,Final
 host-suffix,dealtree.org,Final
 host-suffix,deasians.com,Final
 host-suffix,debank.com,Final
+host-suffix,debian.map.fastlydns.net,Final
 host-suffix,debian.org,Final
 host-suffix,debot.ai,Final
 host-suffix,debug.com,Final
@@ -9642,10 +9645,12 @@ host-suffix,fastindianporn.com,Final
 host-suffix,fastlane.ci,Final
 host-suffix,fastlane.tools,Final
 host-suffix,fastly-edge.com,Final
+host-suffix,fastly-insights.com,Final
 host-suffix,fastly-terrarium.com,Final
 host-suffix,fastly.com,Final
 host-suffix,fastly.io,Final
 host-suffix,fastly.net,Final
+host-suffix,fastlydns.net,Final
 host-suffix,fastlylabs.com,Final
 host-suffix,fastlylb.net,Final
 host-suffix,faststone.org,Final
@@ -23567,6 +23572,7 @@ host-suffix,viu.com,Final
 host-suffix,viu.tv,Final
 host-suffix,vivaldi.com,Final
 host-suffix,vivaxnxx.com,Final
+host-suffix,vivox.com,Final
 host-suffix,vixen.com,Final
 host-suffix,vixengroup.com,Final
 host-suffix,vixvids.to,Final

@@ -148,6 +148,7 @@ host-suffix,buckbuild.com,Developer
 host-suffix,bugsnag.com,Developer
 host-suffix,builtwithnix.org,Developer
 host-suffix,busybox.net,Developer
+host-suffix,cachix.org,Developer
 host-suffix,cafe.github.com,Developer
 host-suffix,calendarserver.org,Developer
 host-suffix,canonical.com,Developer
@@ -184,6 +185,7 @@ host-suffix,dart.dev,Developer
 host-suffix,dartlang.org,Developer
 host-suffix,dartpad.dev,Developer
 host-suffix,datalore.io,Developer
+host-suffix,debian.map.fastlydns.net,Developer
 host-suffix,debian.org,Developer
 host-suffix,deno.com,Developer
 host-suffix,deno.land,Developer
@@ -655,6 +657,7 @@ host-suffix,visualstudio.co.uk,Developer
 host-suffix,visualstudio.com,Developer
 host-suffix,visualstudio.eu,Developer
 host-suffix,visualstudio.net,Developer
+host-suffix,vivox.com,Developer
 host-suffix,vsassets.io,Developer
 host-suffix,vscode-cdn.net,Developer
 host-suffix,vscode-unpkg.net,Developer

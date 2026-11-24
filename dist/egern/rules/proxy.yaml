@@ -291,6 +291,7 @@ domain_set:
 - copilot-telemetry.githubusercontent.com
 - copilot-workspace.githubnext.com
 - copilotprodattachments.blob.core.windows.net
+- courses.myecnu.org
 - crashlyticsreports-pa.googleapis.com
 - crl-lb.apple.com.akadns.net
 - crl.apple.com
@@ -6079,6 +6080,7 @@ domain_suffix_set:
 - cableav.xyz
 - cabletv.com.hk
 - cabletvdirectv.com
+- cachix.org
 - cad-mep.com
 - cadcamsystemsinc.com
 - cadduct.com
@@ -7458,6 +7460,7 @@ domain_suffix_set:
 - dealtree.org
 - deasians.com
 - debank.com
+- debian.map.fastlydns.net
 - debian.org
 - debot.ai
 - debug.com
@@ -9644,10 +9647,12 @@ domain_suffix_set:
 - fastlane.ci
 - fastlane.tools
 - fastly-edge.com
+- fastly-insights.com
 - fastly-terrarium.com
 - fastly.com
 - fastly.io
 - fastly.net
+- fastlydns.net
 - fastlylabs.com
 - fastlylb.net
 - faststone.org
@@ -23569,6 +23574,7 @@ domain_suffix_set:
 - viu.tv
 - vivaldi.com
 - vivaxnxx.com
+- vivox.com
 - vixen.com
 - vixengroup.com
 - vixvids.to
