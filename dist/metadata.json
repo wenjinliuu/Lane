@@ -9,7 +9,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "98c43cad27fa8f02043858763709fe4a95432ffb"
+      "revision": "e5f669692b33c189efc96cb1a972c69b390bbbc8"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -17,7 +17,7 @@
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "df36d05119c8002c8ec212616e49222538e8b7b484eed249c64ab26d240785cd",
+      "sha256": "e60182805d4d5bdbf770d5354df07efcfc148f68fcf9ca1a378fb1c4989d8c59",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -28,8 +28,8 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "9401dabc1837c0609857cb1662c3d5e457fe73a6",
-      "sha256": "639fb5129d800d1e4cb6c2ca4b3dc29ce2fb2a203465efcaf83f31bef23038a0",
+      "revision": "276fe1d02b102313f5feea81861cd86e4523f04c",
+      "sha256": "fc1ce8759a69ae6ec0335978885a99ca483dc371176a7d770899e1840cd80cce",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
@@ -38,13 +38,13 @@
       "maximum_snapshot_age_days": 3,
       "minimum_coverage_ratio": 0.5,
       "snapshot_dates": [
+        "2026-11-25",
         "2026-11-24",
         "2026-11-23",
         "2026-11-22",
         "2026-11-21",
         "2026-11-20",
-        "2026-11-19",
-        "2026-11-18"
+        "2026-11-19"
       ],
       "window_report": "cn-ip-window.json",
       "update_status": "updated"
@@ -364,9 +364,9 @@
     {
       "id": "proxy",
       "policy": "Final",
-      "rules": 26046,
+      "rules": 26057,
       "kinds": {
-        "domain": 24450,
+        "domain": 24461,
         "full": 1438,
         "regexp": 158
       },
@@ -397,10 +397,10 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9663,
+      "rules": 9704,
       "kinds": {
-        "ipcidr": 6219,
-        "ipcidr6": 3444
+        "ipcidr": 6258,
+        "ipcidr6": 3446
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
