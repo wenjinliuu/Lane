@@ -17,7 +17,7 @@
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "e60182805d4d5bdbf770d5354df07efcfc148f68fcf9ca1a378fb1c4989d8c59",
+      "sha256": "9cb2f010fef0e9e267360b4899742b5d0583962d3c0f25dd3c2a0f630ced0fd5",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -28,8 +28,8 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "276fe1d02b102313f5feea81861cd86e4523f04c",
-      "sha256": "fc1ce8759a69ae6ec0335978885a99ca483dc371176a7d770899e1840cd80cce",
+      "revision": "31f093f8325fefd9d7c6dbe68ac80008b2059d03",
+      "sha256": "a6c47d40c5a5a54edd551be0e986045a083a4b67b4b15525997d04a067281789",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
@@ -38,13 +38,13 @@
       "maximum_snapshot_age_days": 3,
       "minimum_coverage_ratio": 0.5,
       "snapshot_dates": [
+        "2026-11-26",
         "2026-11-25",
         "2026-11-24",
         "2026-11-23",
         "2026-11-22",
         "2026-11-21",
-        "2026-11-20",
-        "2026-11-19"
+        "2026-11-20"
       ],
       "window_report": "cn-ip-window.json",
       "update_status": "updated"
@@ -397,10 +397,10 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9704,
+      "rules": 9697,
       "kinds": {
-        "ipcidr": 6258,
-        "ipcidr6": 3446
+        "ipcidr": 6247,
+        "ipcidr6": 3450
       },
       "exact_duplicates_removed": 0,
       "redundancy_audit": {
