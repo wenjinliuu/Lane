@@ -28,30 +28,30 @@
         "reference_check": {
           "available": true,
           "role": "advisory-only",
-          "candidate_added_addresses": "512",
-          "added_addresses_supported": "0",
-          "candidate_removed_addresses": "26112",
-          "removed_addresses_supported": "26112"
+          "candidate_added_addresses": "256",
+          "added_addresses_supported": "256",
+          "candidate_removed_addresses": "256",
+          "removed_addresses_supported": "256"
         },
-        "candidate_changed_percent": 0.0077318132072803835,
-        "candidate_sha256": "83568dcf7f85e5ea49f4bcd9678749be10054640a25427e2f1e9f65e18374b0a",
-        "published_added_addresses": "512",
-        "published_removed_addresses": "26112",
+        "candidate_changed_percent": 0.000148699770513561,
+        "candidate_sha256": "2a13d7ca54fcf50f0f3283b7fe26508df17cbc48007cc764f9334028b3006b49",
+        "published_added_addresses": "256",
+        "published_removed_addresses": "256",
         "pending_added_addresses": "0",
         "pending_removed_addresses": "0",
         "observation_dates": [
+          "2026-11-27",
           "2026-11-26",
           "2026-11-25",
           "2026-11-24",
           "2026-11-23",
           "2026-11-22",
-          "2026-11-21",
-          "2026-11-20"
+          "2026-11-21"
         ],
         "invalid_snapshots": [],
-        "baseline_sha256": "1e4e4f84c9137fff3e86169000baa8fb2e959a9f0fd0ddf281511c102c54945e",
-        "baseline_revision": "276fe1d02b102313f5feea81861cd86e4523f04c",
-        "output_sha256": "83568dcf7f85e5ea49f4bcd9678749be10054640a25427e2f1e9f65e18374b0a"
+        "baseline_sha256": "83568dcf7f85e5ea49f4bcd9678749be10054640a25427e2f1e9f65e18374b0a",
+        "baseline_revision": "31f093f8325fefd9d7c6dbe68ac80008b2059d03",
+        "output_sha256": "2a13d7ca54fcf50f0f3283b7fe26508df17cbc48007cc764f9334028b3006b49"
       },
       "ipv6": {
         "status": "normal",
@@ -60,29 +60,48 @@
           "available": false,
           "role": "advisory-only"
         },
-        "candidate_changed_percent": 0.001458831886047426,
-        "candidate_sha256": "f2c4855cf670e3b444dcb5f0022fd034794538d7226ef601316f41bc1a07b25d",
-        "published_added_addresses": "79228162514264337593543950336",
-        "published_removed_addresses": "1208925819614629174706176",
+        "candidate_changed_percent": 4.451868730953857e-08,
+        "candidate_sha256": "7faab70500dc72b75f523d19ece01b2b96360640fdf01f40b615c64d684a226e",
+        "published_added_addresses": "0",
+        "published_removed_addresses": "2417851639229258349412352",
         "pending_added_addresses": "0",
         "pending_removed_addresses": "0",
         "observation_dates": [
+          "2026-11-27",
           "2026-11-26",
           "2026-11-25",
           "2026-11-24",
           "2026-11-23",
           "2026-11-22",
-          "2026-11-21",
-          "2026-11-20"
+          "2026-11-21"
         ],
         "invalid_snapshots": [],
-        "baseline_sha256": "f363ac3f5044b79d1437148303349eca1c54a4d3c1ab73e87ee6f09b792fb3ff",
-        "baseline_revision": "276fe1d02b102313f5feea81861cd86e4523f04c",
-        "output_sha256": "f2c4855cf670e3b444dcb5f0022fd034794538d7226ef601316f41bc1a07b25d"
+        "baseline_sha256": "f2c4855cf670e3b444dcb5f0022fd034794538d7226ef601316f41bc1a07b25d",
+        "baseline_revision": "31f093f8325fefd9d7c6dbe68ac80008b2059d03",
+        "output_sha256": "7faab70500dc72b75f523d19ece01b2b96360640fdf01f40b615c64d684a226e"
       }
     }
   },
   "snapshots": [
+    {
+      "date": "2026-11-27",
+      "revision": "15d8e5e564149dd77e79b24a3d7b9ff596d94183",
+      "committed_at": "2026-11-27T11:31:12Z",
+      "files": {
+        "ipv4": {
+          "path": "china.txt",
+          "sha256": "7fffdcc66c8d845742b1d19b4066ec6829bf6081fb2516933a08e0fec3e55a29",
+          "rules": 6235,
+          "addresses": "344316413"
+        },
+        "ipv6": {
+          "path": "china6.txt",
+          "sha256": "df009dfcf57d17aacdf4b8b5ad3131c30675f8bdef814284ea71841df87b36a0",
+          "rules": 3449,
+          "addresses": "5431093735543761583502346543955968"
+        }
+      }
+    },
     {
       "date": "2026-11-26",
       "revision": "31f093f8325fefd9d7c6dbe68ac80008b2059d03",
@@ -196,37 +215,18 @@
           "addresses": "5431014513425876417237898873536512"
         }
       }
-    },
-    {
-      "date": "2026-11-20",
-      "revision": "7e2773a184d01285feec0ab9cd6387533ede04c4",
-      "committed_at": "2026-11-20T10:35:20Z",
-      "files": {
-        "ipv4": {
-          "path": "china.txt",
-          "sha256": "d8b200cb5414a829a386958f4f5637854ff6ab68c1b4700eb2dcd46c5aabda92",
-          "rules": 6223,
-          "addresses": "344347645"
-        },
-        "ipv6": {
-          "path": "china6.txt",
-          "sha256": "4967a76f20c158f7f1cf83072cbfd36d93986e04ead092dfef9856556ece0e7f",
-          "rules": 3444,
-          "addresses": "5431014513425876417237898873536512"
-        }
-      }
     }
   ],
   "output": {
-    "sha256": "a6c47d40c5a5a54edd551be0e986045a083a4b67b4b15525997d04a067281789",
+    "sha256": "fdbee1511c2d3088c407d8ada75a0670f701827e6b7ededaf0e1c120e2f0d8b5",
     "coverage": {
       "ipv4": {
-        "rule_count": 6247,
+        "rule_count": 6240,
         "addresses": "344317949"
       },
       "ipv6": {
         "rule_count": 3450,
-        "addresses": "5431093739170539042346234068074496"
+        "addresses": "5431093736752687403116975718662144"
       }
     }
   }
