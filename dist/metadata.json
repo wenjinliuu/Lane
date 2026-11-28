@@ -9,7 +9,7 @@
   "sources": {
     "v2fly": {
       "repository": "https://github.com/v2fly/domain-list-community.git",
-      "revision": "f68dab92e2ce656bbd81a4ae424de79b179f0f77"
+      "revision": "33064264cf89ee6202d70c795d0df5bcc9888114"
     },
     "telegram_cidr": {
       "url": "https://core.telegram.org/resources/cidr.txt",
@@ -17,7 +17,7 @@
     },
     "cn_ipv4_reference": {
       "url": "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt",
-      "sha256": "4b58572d326d03079c45859c1851c5c8248ba1c556f884c3ef4587ce60f15aa1",
+      "sha256": "2c959dce70d7b6c9efc7599fef985d17c6fb16711e7b8ce4c607797e3944090e",
       "license": "CC-BY-SA-4.0"
     },
     "apple_cn": {
@@ -28,8 +28,8 @@
     "cn_ip_primary": {
       "repository": "https://github.com/gaoyifan/china-operator-ip.git",
       "ref": "ip-lists",
-      "revision": "15d8e5e564149dd77e79b24a3d7b9ff596d94183",
-      "sha256": "fdbee1511c2d3088c407d8ada75a0670f701827e6b7ededaf0e1c120e2f0d8b5",
+      "revision": "694f2ff3c1517a7e4bfe8f265752afd43f815e54",
+      "sha256": "7c0c0ccfc5045f815d93fd329bb951ccadab76f10d59c9b152d62c2903948a8f",
       "license": "MIT",
       "window_days": 5,
       "minimum_presence_days": 3,
@@ -38,13 +38,13 @@
       "maximum_snapshot_age_days": 3,
       "minimum_coverage_ratio": 0.5,
       "snapshot_dates": [
+        "2026-11-28",
         "2026-11-27",
         "2026-11-26",
         "2026-11-25",
         "2026-11-24",
         "2026-11-23",
-        "2026-11-22",
-        "2026-11-21"
+        "2026-11-22"
       ],
       "window_report": "cn-ip-window.json",
       "update_status": "updated"
@@ -397,9 +397,9 @@
     {
       "id": "cn-ip",
       "policy": "DIRECT",
-      "rules": 9690,
+      "rules": 9685,
       "kinds": {
-        "ipcidr": 6240,
+        "ipcidr": 6235,
         "ipcidr6": 3450
       },
       "exact_duplicates_removed": 0,
